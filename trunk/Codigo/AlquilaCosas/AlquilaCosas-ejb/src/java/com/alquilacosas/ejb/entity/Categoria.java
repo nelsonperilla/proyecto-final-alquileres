@@ -57,7 +57,7 @@ public class Categoria implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "categoriaFk")
     private List<Categoria> categoriaList;
     @JoinColumn(name = "CATEGORIA_FK", referencedColumnName = "CATEGORIA_ID")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = true)
     private Categoria categoriaFk;
 
     public Categoria() {

@@ -47,7 +47,6 @@ public class Login implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "FECHA_ULTIMO_INGRESO")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaUltimoIngreso;
