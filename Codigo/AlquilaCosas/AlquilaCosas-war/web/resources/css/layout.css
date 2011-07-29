@@ -1,0 +1,167 @@
+/* 
+    Document   : layout
+    Created on : Jul 14, 2011, 6:46:37 AM
+    Author     : jorge
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+body {
+    background: #ffffff;
+    
+    text-align: center;
+}
+
+form {
+    /*align: center;
+    min-width: 1024px;
+    max-width: 1024px;
+    width: 1024px;*/
+    text-align: center;
+    
+}
+
+#menu {
+    
+    vertical-align: top;
+}
+
+#menu td{
+    text-align:left;
+    padding: 0px 0px 0px 10px; 
+    background-image:url(../resources/images/categoryItemWhite.png);
+    height: 40px;
+    width: 200px;
+}
+
+#menu th{
+    text-align:center;
+    padding: 0px 0px 0px 0px; 
+    background-image:url(../resources/images/topCategoriesWhite.png);
+    height: 50px;
+    width: 200px;
+    font-size: 24px;
+    font-family: Ubuntu;
+    color: #2c2c2c;
+}
+
+
+
+
+
+#menu a:link {
+    text-decoration: none;
+} 
+
+#menu a:visited {color: #000000;
+    text-decoration: none;
+}  
+#menu a:active {color: #99FFFF}
+#menu a:hover {color: #aaaaaa;}
+
+#login td{
+    background: #0182dc;
+    padding: 0px 0px 0px 0px; 
+
+    
+}
+
+#login th{
+    background-image:url(../resources/images/topLogin.png);
+    padding: 0px 0px 0px 0px; 
+    height: 50px;
+    width: 200px;
+    font-size: 24px;
+    font-family: Ubuntu;
+    color: #2c2c2c;    
+    
+}
+
+#login .footer{
+    background-image:url(../resources/images/bottomLogin.png);
+    padding: 0px 0px 0px 0px; 
+    height: 50px;
+    width: 200px;
+    font-size: 16px;
+    font-family: Ubuntu;
+    color: #2c2c2c;    
+    vertical-align: middle;
+}
+
+
+#register tr{
+
+    
+    padding-right: 20px;
+    padding-left: 20px;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    margin-right: 20px;
+    margin-left: 20px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+#register td{
+    background: #ffffff;
+    padding: 0px 0px 0px 10px;
+    font-family: Trebuchet MS;
+    font-size: 16px;
+    text-align: left;
+    font-weight: bold;
+}
+
+#register label{
+    width: 200px;
+    
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+#register input{
+    width: 300px;
+}
+
+
+    
+
+#items .item{
+    background-image:url(../resources/images/item.png);
+    padding: 0px 0px 0px 0px; 
+    height: 100px;
+    width: 600px;
+    font-size: 24px;
+    font-family: Ubuntu;
+    color: #2c2c2c;  
+    
+
+}
+
+#items .itemInfo{
+
+    
+    font-size: 14px;
+    font-family: Trebuchet MS;
+    padding: 1px 1px 1px 1px;
+}
+
+#searchBar {
+    background-image:url(../resources/images/searchBar.png);
+    height: 50px;
+    width: 659px;
+    font-size: 18px;
+    font-family: Trebuchet MS;
+    color: #2c2c2c;        
+    
+}
+
+#searchBar td {
+    text-align:left; 
+    
+    padding: 0px 0px 0px 10px;
+}

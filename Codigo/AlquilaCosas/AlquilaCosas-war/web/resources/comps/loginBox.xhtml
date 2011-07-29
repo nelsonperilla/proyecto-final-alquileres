@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.prime.com.tr/ui">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+
+        <div id="login">
+            <h:form>
+                <table border="0" cellspacing="0">
+                    <tr>
+                        <th>
+                            Login
+                        </th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <h:panelGrid columns="1" cellpadding="2"
+                                         style="width:100%; text-align:left; padding-left: 5px " >
+                                <h:outputLabel  value="Usuario" />
+                                <p:inputText value="#{login.username}" style="width:175px" />
+                                <h:outputLabel value="Contraseña" />
+                                <p:password feedback="false" minLength="1" value="#{login.password}" 
+                                            style="width:175px; " />
+                            </h:panelGrid>
+                            <p:commandButton value="Entrar" actionListener="#{login.login}" 
+                                             onsuccess="location.reload(true);" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="footer">
+                                <h:commandLink value="Registrarse!" action="registrarUsuario" />
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </h:form>
+        </div>
+
+    </cc:implementation>
+</html>

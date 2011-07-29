@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.prime.com.tr/ui">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <div class="item">
+            <h:form>
+                <h:panelGrid columns="2" style="border: none; padding-left: 5px"
+                             cellspacing="0" cellpadding="0" >  
+                    <!--<p:graphicImage value="/resources/images/preview.png"/>   -->
+                    <h:panelGrid style="text-align: left; padding: 1px 1px 1px 1px" columns="1"  >
+                        <h:outputText value="Model: #{publicacionMBean.descripcion}" styleClass="itemInfo" />  
+                        <h:outputText value="Year: #{publicacionMBean.titulo}" styleClass="itemInfo"/>  
+                       <!-- <h:outputText value="Color: " styleClass="itemInfo"/>  -->
+                    </h:panelGrid>
+                </h:panelGrid>  
+            </h:form>
+        </div>
+    </cc:implementation>
+</html>
