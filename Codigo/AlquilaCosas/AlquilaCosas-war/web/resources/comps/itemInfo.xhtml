@@ -17,9 +17,9 @@
                              cellspacing="0" cellpadding="0" >  
                     <!--<p:graphicImage value="/resources/images/preview.png"/>   -->
                     <h:panelGrid style="text-align: left; padding: 1px 1px 1px 1px" columns="1"  >
-                        <h:outputText value="Model: #{publicacionMBean.descripcion}" styleClass="itemInfo" />  
-                        <h:outputText value="Year: #{publicacionMBean.titulo}" styleClass="itemInfo"/>  
-                       <!-- <h:outputText value="Color: " styleClass="itemInfo"/>  -->
+                        <h:outputText value="#{publicacionMBean.titulo}" styleClass="itemInfo" />  
+                        <h:outputText value="#{publicacionMBean.descripcion}" styleClass="itemInfo"/>  
+                        <h:outputText value="Cantidad disponible: #{publicacionMBean.cantidad}" styleClass="itemInfo"/>  
                     </h:panelGrid>
                 </h:panelGrid>  
             </h:form>

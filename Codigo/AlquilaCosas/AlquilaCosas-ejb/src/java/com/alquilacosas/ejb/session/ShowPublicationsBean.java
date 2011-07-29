@@ -5,7 +5,11 @@
 package com.alquilacosas.ejb.session;
 
 import com.alquilacosas.ejb.entity.Categoria;
+import com.alquilacosas.ejb.entity.ImagenPublicacion;
 import com.alquilacosas.ejb.entity.Publicacion;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.sql.Blob;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,6 +43,15 @@ public class ShowPublicationsBean implements ShowPublicationsBeanLocal {
         query.setParameter("categoria", filter);
         List<Publicacion> publicaciones = query.getResultList();
         return publicaciones;
+    }
+    
+    public byte[] getImage(int publicacion)
+    {
+        Publicacion filter=entityManager.find(Publicacion.class,publicacion);
+        Query query = entityManager.createNamedQuery("ImagenPublicacion.findAll");
+        //query.setParameter("publicacion", filter);
+        List<ImagenPublicacion> imagenes = query.getResultList();
+        return imagenes.get(0).getImagen();
     }
     
     
