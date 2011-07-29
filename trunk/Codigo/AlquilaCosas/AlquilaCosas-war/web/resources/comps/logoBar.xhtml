@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.prime.com.tr/ui">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <h:form>
+            <table>
+                <tr>
+                    <td id="logo">
+                        <h:graphicImage value="/resources/images/logo.png"/>  
+                    </td>
+                    <td >
+                        <table id="searchBar" >
+                            <tr>
+                                <td valign="center" width="550px"  > 
+                                    <h:inputText style="width:540px" />
+                                </td>
+                                <td valign="center"> 
+                                    <h:commandLink  value="Buscar" style="text-decoration: none" />
+                                </td>
+                            </tr>
+                        </table>
+                    </td>   
+                </tr>
+            </table> 
+        </h:form>
+
+
+    </cc:implementation>
+</html>

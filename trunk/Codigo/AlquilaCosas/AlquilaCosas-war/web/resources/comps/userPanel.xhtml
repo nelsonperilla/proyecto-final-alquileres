@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.prime.com.tr/ui" >
+
+    <!-- INTERFACE -->
+    <cc:interface>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <h:form>
+            <p:panel header="Usuario" style="text-align: center">
+                <h:panelGrid columns="1" style="width:90%">
+                    <h:commandLink value="Publicar" />
+                    <h:commandLink value="Mi cuenta" action="cuentaUsuario" />
+                    <h:commandLink value="Salir" />
+                </h:panelGrid>
+            </p:panel>
+        </h:form>
+    </cc:implementation>
+</html>

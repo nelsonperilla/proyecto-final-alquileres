@@ -1,0 +1,127 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.prime.com.tr/ui" 
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:comps="http://java.sun.com/jsf/composite/comps" >
+
+    <body>
+
+        <ui:composition template="./../resources/templates/masterPage.xhtml">
+
+            <ui:define name="logInfo">
+                <h:form>
+                    <h:commandLink value="Inicio" action="inicio.xhtml" />
+                </h:form>
+            </ui:define>
+
+            <ui:define name="right">
+                <comps:loginBox />
+            </ui:define>
+
+            <ui:define name="principal">
+                <h1>Registrar Usuario</h1>
+                <h:form>
+                    <h2>Datos de registro</h2>
+                    <h:panelGrid columns="3">
+                        <h:outputLabel value="Email" />
+                        <p:inputText id="email" value="#{usuario.email}" required="true"
+                                     requiredMessage="Valor requerido" />
+                        <p:message id="emailVal" for="email" showSummary="false" />
+                        <h:outputLabel value="Usuario" />
+                        <p:inputText id="usuario" value="#{usuario.username}" required="true"
+                                     requiredMessage="Valor requerido"/>
+                        <p:message id="usuarioVal" for="usuario" />
+                        <h:outputLabel value="Contraseña" />
+                        <p:password id="password" minLength="8" feedback="true" inline="true"
+                                    value="#{usuario.password}" required="true"
+                                    requiredMessage="Valor requerido">
+                            <p:ajax event="blur" update="passwordVal" />
+                        </p:password>
+                        <p:message id="passwordVal" for="password" />
+                        <h:outputLabel value="Repita contraseña" />
+                        <p:password id="password2" minLength="8" feedback="false" 
+                                    value="#{usuario.password2}" required="true" validator="#{usuario.validarPassword}"
+                                    requiredMessage="Valor requerido">
+                            <p:ajax event="blur" update="password2Val" />
+                        </p:password>
+                        <p:message id="password2Val" for="password2" />
+                    </h:panelGrid>
+                    <h2>Datos personales</h2>
+                    <h:panelGrid columns="3" >
+                        <h:outputLabel value="Nombre" />
+                        <p:inputText id="nombre" value="#{usuario.nombre}" required="true"
+                                     requiredMessage="Valor requerido"/>
+                        <p:message for="nombre" />
+                        <h:outputLabel value="Apellido" />
+                        <p:inputText id="apellido" value="#{usuario.apellido}" required="true"
+                                     requiredMessage="Valor requerido"/>
+                        <p:message for="apellido" />
+                        <h:outputLabel value="DNI" />
+                        <p:inputMask id="dni" value="#{usuario.dni}" required="true"
+                                     requiredMessage="Valor requerido" mask="99.999.999" />
+                        <p:message for="dni" />
+                        <h:outputLabel value="Telefono" />
+                        <p:inputText id="telefono" value="#{usuario.telefono}" />
+                        <p:message for="telefono" />
+                        <h:outputLabel value="Fecha Nacimiento" />
+                        <p:calendar id="fecha" value="#{usuario.fechaNacimiento}" navigator="true" 
+                                    maxdate="#{usuario.today}" yearRange="c-80:c" required="true"
+                                    requiredMessage="Valor requerido"/>
+                        <p:message for="fecha" />
+                    </h:panelGrid>
+                    <h2>Direccion</h2>
+                    <h:panelGrid columns="3" >
+                        <h:outputLabel value="Calle" />
+                        <p:inputText id="dir" value="#{usuario.calle}" required="true"
+                                     requiredMessage="Valor requerido"/>
+                        <p:message for="dir" />
+                        <h:outputLabel value="Numero" />
+                        <p:inputText id="numero" value="#{usuario.numero}" required="true"
+                                     requiredMessage="Valor requerido"/>
+                        <p:message for="numero" />
+                        <h:outputLabel value="Piso" />
+                        <p:inputText value="#{usuario.piso}" />
+                        <p/>
+                        <h:outputLabel value="Depto" />
+                        <p:inputText value="#{usuario.depto}" />
+                        <p/>
+                        <h:outputLabel value="Barrio" />
+                        <p:inputText id="barrio" value="#{usuario.barrio}" required="true"
+                                     requiredMessage="Valor requerido"/>
+                        <p:message for="barrio" />
+                        <h:outputLabel value="Ciudad" />
+                        <p:inputText id="ciudad" value="#{usuario.ciudad}" required="true"
+                                     requiredMessage="Valor requerido"/>
+                        <p:message for="ciudad" />
+                        <h:outputLabel value="Pais" />
+                        <h:selectOneMenu id="pais" value="#{usuario.selectedPais}" required="true"
+                                         requiredMessage="Valor requerido">
+                            <f:selectItem itemLabel="Seleccione un pais" itemValue="" />
+                            <f:selectItems value="#{usuario.paises}" />
+                            <p:ajax event="change" update="provincia growl" process="@this"
+                                    listener="#{usuario.actualizarProvincias}" />
+                        </h:selectOneMenu>
+                        <p:message for="pais" showDetail="false" />
+                        <h:outputLabel value="Provincia" />
+                        <h:selectOneMenu id="provincia" value="#{usuario.selectedProvincia}" 
+                                         required="true" requiredMessage="Valor requerido" >
+                            <f:selectItem itemLabel="Seleccione una provincia" itemValue="" />
+                            <f:selectItems value="#{usuario.provincias}" />
+                        </h:selectOneMenu>
+                        <p:message for="provincia" />
+                    </h:panelGrid>
+                    <p:commandButton value="Crear" actionListener="#{usuario.crearUsuario}" 
+                                     update="@form" />
+                    <p:commandButton  type="reset" value="Limpiar" />
+                    <p:growl id="growl" showDetail="true" globalOnly="true" />
+                </h:form>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>
