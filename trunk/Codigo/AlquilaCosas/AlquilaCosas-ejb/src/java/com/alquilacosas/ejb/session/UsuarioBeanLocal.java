@@ -4,7 +4,8 @@
  */
 package com.alquilacosas.ejb.session;
 
-import com.alquilacosas.ejb.entity.Domicilio;
+import com.alquilacosas.common.AlquilaCosasException;
+import com.alquilacosas.common.DomicilioFacade;
 import com.alquilacosas.ejb.entity.Pais;
 import com.alquilacosas.ejb.entity.Provincia;
 import java.util.Date;
@@ -16,14 +17,17 @@ import javax.ejb.Local;
  * @author damiancardozo
  */
 @Local
-public interface RegistrarUsuarioBeanLocal {
+public interface UsuarioBeanLocal {
     
     public void registrarUsuario(String username, String password, String nombre,
-            String apellido, List<Domicilio> domicilios, int provincia, 
-            Date fechaNacimiento, String dni, String telefono, String email);
+            String apellido, List<DomicilioFacade> domicilios, int provincia, 
+            Date fechaNacimiento, String dni, String telefono, String email)
+            throws AlquilaCosasException;
 
     List<Provincia> getProvincias(int pais);
 
     List<Pais> getPaises();
+
+    boolean usernameExistente(String username);
     
 }

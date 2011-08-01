@@ -8,10 +8,11 @@
     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
 
     <navigation-rule>
-        <from-view-id>/vistas/inicio.xhtml</from-view-id>
+        <from-view-id>*</from-view-id>
         <navigation-case>
             <from-outcome>registrarUsuario</from-outcome>
             <to-view-id>/vistas/registrarUsuario.xhtml</to-view-id>
+            <redirect />
         </navigation-case>
         <navigation-case>
             <from-outcome>cuentaUsuario</from-outcome>

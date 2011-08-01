@@ -32,7 +32,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "UsuarioXEstado.findByUsuarioFk", query = "SELECT u FROM UsuarioXEstado u WHERE u.usuarioXEstadoPK.usuarioFk = :usuarioFk"),
     @NamedQuery(name = "UsuarioXEstado.findByEstadoFk", query = "SELECT u FROM UsuarioXEstado u WHERE u.usuarioXEstadoPK.estadoFk = :estadoFk"),
     @NamedQuery(name = "UsuarioXEstado.findByFechaDesde", query = "SELECT u FROM UsuarioXEstado u WHERE u.fechaDesde = :fechaDesde"),
-    @NamedQuery(name = "UsuarioXEstado.findByFechaHasta", query = "SELECT u FROM UsuarioXEstado u WHERE u.fechaHasta = :fechaHasta")})
+    @NamedQuery(name = "UsuarioXEstado.findByFechaHasta", query = "SELECT u FROM UsuarioXEstado u WHERE u.fechaHasta = :fechaHasta"),
+    @NamedQuery(name = "UsuarioXEstado.findCurrentByUsuarioFk", query = "SELECT u FROM UsuarioXEstado u WHERE u.usuarioXEstadoPK.usuarioFk = :usuarioFk AND u.fechaHasta IS NULL")})
+
 public class UsuarioXEstado implements Serializable {
     @Basic(optional = false)
     @NotNull

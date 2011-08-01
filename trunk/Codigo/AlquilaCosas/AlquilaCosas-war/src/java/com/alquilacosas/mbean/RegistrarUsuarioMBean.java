@@ -4,10 +4,11 @@
  */
 package com.alquilacosas.mbean;
 
-import com.alquilacosas.ejb.entity.Domicilio;
+import com.alquilacosas.common.AlquilaCosasException;
+import com.alquilacosas.common.DomicilioFacade;
 import com.alquilacosas.ejb.entity.Pais;
 import com.alquilacosas.ejb.entity.Provincia;
-import com.alquilacosas.ejb.session.RegistrarUsuarioBeanLocal;
+import com.alquilacosas.ejb.session.UsuarioBeanLocal;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,14 +29,14 @@ import javax.faces.validator.ValidatorException;
  */
 @ManagedBean(name = "usuario")
 @ViewScoped
-public class UsuarioMBean implements Serializable {
+public class RegistrarUsuarioMBean implements Serializable {
 
     /** Creates a new instance of UsuarioMBean */
-    public UsuarioMBean() {
+    public RegistrarUsuarioMBean() {
     }
     
     @EJB
-    private RegistrarUsuarioBeanLocal usuarioBean;
+    private UsuarioBeanLocal usuarioBean;
     private String username;
     private String password;
     private String password2;
@@ -48,19 +49,23 @@ public class UsuarioMBean implements Serializable {
     private String depto;
     private String barrio;
     private String ciudad;
-    private int numero;
-    private int piso;
+    private Integer numero;
+    private Integer piso;
     private Date fechaNacimiento;
     private Date today;
     private List<SelectItem> provincias;
-    private int selectedProvincia;
+    private int provinciaSeleccionada;
     private List<SelectItem> paises;
-    private int selectedPais;
+    private int paisSeleccionado;
+    private List<DomicilioFacade> domicilios;
+    private DomicilioFacade domicilioSeleccionado;
+    private boolean creado;
     
     @PostConstruct
     public void init() {
         paises = new ArrayList<SelectItem>();
         provincias = new ArrayList<SelectItem>();
+        domicilios = new ArrayList<DomicilioFacade>();
         List<Pais> listaPais = usuarioBean.getPaises();
         for(Pais p: listaPais) {
             paises.add(new SelectItem(p.getPaisId(), p.getNombre()));
@@ -68,36 +73,70 @@ public class UsuarioMBean implements Serializable {
         today = new Date();
     }
     
-    public void crearUsuario() {
-        Domicilio dom = new Domicilio();
+    public void agregarDomicilio() {
+        DomicilioFacade dom = new DomicilioFacade();
         dom.setCalle(calle);
         dom.setNumero(numero);
-        dom.setPiso(piso);
-        dom.setDepto(depto);
+        if(piso != null)
+            dom.setPiso(piso);
+        if(!depto.equals(""))
+            dom.setDepto(depto);
         dom.setBarrio(barrio);
-        List<Domicilio> domicilios = new ArrayList<Domicilio>();
-        List<Provincia> provincias;
+        dom.setCiudad(ciudad);
         domicilios.add(dom);
-        
-        
+//        calle = "";
+//        numero = null;
+//        piso = null;
+//        depto = "";
+//        barrio = "";
+//        ciudad = "";
+    }
+    
+    public void borrarDomicilio() {
+        domicilios.remove(domicilioSeleccionado);
+    }
+    
+    public String crearUsuario() {   
         try {
             usuarioBean.registrarUsuario(username, password, nombre, apellido, domicilios,
-                selectedProvincia, fechaNacimiento, dni, telefono, email);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Usuario creado"));
-        } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null, 
+                provinciaSeleccionada, fechaNacimiento, dni, telefono, email);
+            return "usuarioCreado.xhtml?email=" + email;
+        } catch (AlquilaCosasException e) {
+                FacesContext.getCurrentInstance().addMessage(null, 
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, 
                     "Error al crear usuario", e.getMessage()));
+            return null;
         }
-        
-        
     }    
     
     public void actualizarProvincias() {
-        //selectedPais = ((SelectItem)e.getNewValue()).getLabel();
-        List<Provincia> prov = usuarioBean.getProvincias(selectedPais);
+        provincias.clear();
+        List<Provincia> prov = usuarioBean.getProvincias(paisSeleccionado);
         for(Provincia p: prov) {
             provincias.add(new SelectItem(p.getProvinciaId(), p.getNombre()));
+        }
+    }
+    
+    public void prepararDomicilio() {
+        
+    }
+    
+    public void validarUsername(FacesContext context, UIComponent toValidate, Object value) {
+        String user = (String) value;
+        if(user.equals(""))
+            return;
+        if(user.length() < 6) {
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                    "El usuario debe tener al menos 6 caracteres", 
+                    "El usuario debe tener al menos 6 caracteres");
+            throw new ValidatorException(message);
+        }
+        boolean existe = usuarioBean.usernameExistente(user);
+        if(existe) {
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                    "El usuario ya existe", 
+                    "El usuario ya existe");
+            throw new ValidatorException(message);
         }
     }
     
@@ -112,7 +151,7 @@ public class UsuarioMBean implements Serializable {
     
     
     /*
-     * 
+     * Getters & Setters
      */
     
     public String getApellido() {
@@ -179,11 +218,11 @@ public class UsuarioMBean implements Serializable {
         this.nombre = nombre;
     }
 
-    public int getNumero() {
+    public Integer getNumero() {
         return numero;
     }
 
-    public void setNumero(int numero) {
+    public void setNumero(Integer numero) {
         this.numero = numero;
     }
 
@@ -203,11 +242,11 @@ public class UsuarioMBean implements Serializable {
         this.password2 = password2;
     }
 
-    public int getPiso() {
+    public Integer getPiso() {
         return piso;
     }
 
-    public void setPiso(int piso) {
+    public void setPiso(Integer piso) {
         this.piso = piso;
     }
 
@@ -243,20 +282,20 @@ public class UsuarioMBean implements Serializable {
         this.provincias = provincias;
     }
 
-    public int getSelectedPais() {
-        return selectedPais;
+    public int getPaisSeleccionado() {
+        return paisSeleccionado;
     }
 
-    public void setSelectedPais(int selectedPais) {
-        this.selectedPais = selectedPais;
+    public void setPaisSeleccionado(int selectedPais) {
+        this.paisSeleccionado = selectedPais;
     }
 
-    public int getSelectedProvincia() {
-        return selectedProvincia;
+    public int getProvinciaSeleccionada() {
+        return provinciaSeleccionada;
     }
 
-    public void setSelectedProvincia(int selectedProvincia) {
-        this.selectedProvincia = selectedProvincia;
+    public void setProvinciaSeleccionada(int selectedProvincia) {
+        this.provinciaSeleccionada = selectedProvincia;
     }
 
     public String getCiudad() {
@@ -274,5 +313,30 @@ public class UsuarioMBean implements Serializable {
     public void setToday(Date today) {
         this.today = today;
     }
+
+    public boolean isCreado() {
+        return creado;
+    }
+
+    public void setCreado(boolean creado) {
+        this.creado = creado;
+    }
+
+    public List<DomicilioFacade> getDomicilios() {
+        return domicilios;
+    }
+
+    public void setDomicilios(List<DomicilioFacade> domicilios) {
+        this.domicilios = domicilios;
+    }
+
+    public DomicilioFacade getDomicilioSeleccionado() {
+        return domicilioSeleccionado;
+    }
+
+    public void setDomicilioSeleccionado(DomicilioFacade domicilioSeleccionado) {
+        this.domicilioSeleccionado = domicilioSeleccionado;
+    }
+    
     
 }
