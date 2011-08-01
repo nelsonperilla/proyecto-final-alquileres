@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:comps="http://java.sun.com/jsf/composite/comps">
+
+    <body>
+
+        <ui:composition template="./../resources/templates/masterPage.xhtml">
+
+            <ui:define name="logInfo">
+                
+            </ui:define>
+
+            <ui:define name="principal">
+                <p:outputPanel rendered="#{activarCuenta.activada}" >
+                    <h1>Cuenta activada</h1>
+                    Felicitaciones #{activarCuenta.usuario}, su cuenta ha sido activada.
+                    Ya puede ingresar al sistema para comenzar a publicar y alquilar productos.
+                </p:outputPanel>
+                
+                <p:outputPanel rendered="#{not activarCuenta.activada}" >
+                    <h1>Error al activar cuenta</h1>
+                    Se ha producido al tratar de activar su cuenta.
+                    Por favor, contacte a soporte técnico para solucionar su problema.
+                </p:outputPanel>
+            </ui:define>
+
+            <ui:define name="right">
+                <comps:loginBox />
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

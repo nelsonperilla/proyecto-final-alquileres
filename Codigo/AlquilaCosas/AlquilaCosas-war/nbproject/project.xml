@@ -10,7 +10,11 @@
                     <file>${reference.AlquilaCosas-ejb.dist}</file>
                 </library>
                 <library dirs="200">
-                    <file>${libs.primefaces.classpath}</file>
+                    <file>${file.reference.log4j-1.2.16.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library dirs="200">
+                    <file>${file.reference.primefaces-3.0.M2.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
             </web-module-libraries>

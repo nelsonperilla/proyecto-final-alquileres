@@ -165,3 +165,11 @@ form {
     
     padding: 0px 0px 0px 10px;
 }
+
+.ui-widget {
+    font-size: 85%;
+}
+
+#principal {
+    width: 600px;
+}

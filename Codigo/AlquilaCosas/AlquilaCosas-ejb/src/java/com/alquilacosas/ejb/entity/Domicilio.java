@@ -61,12 +61,10 @@ public class Domicilio implements Serializable {
     @Column(name = "NUMERO")
     private int numero;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "PISO")
     private int piso;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
+    @Size(max = 45)
     @Column(name = "DEPTO")
     private String depto;
     @Basic(optional = false)
@@ -85,7 +83,8 @@ public class Domicilio implements Serializable {
         this.domicilioId = domicilioId;
     }
 
-    public Domicilio(Integer domicilioId, String calle, int numero, int piso, String depto, String barrio) {
+    public Domicilio(Integer domicilioId, String calle, Integer numero, Integer piso, 
+            String depto, String barrio) {
         this.domicilioId = domicilioId;
         this.calle = calle;
         this.numero = numero;
