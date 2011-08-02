@@ -12,16 +12,23 @@
         <navigation-case>
             <from-outcome>registrarUsuario</from-outcome>
             <to-view-id>/vistas/registrarUsuario.xhtml</to-view-id>
-            <redirect />
+            <redirect/>
         </navigation-case>
         <navigation-case>
             <from-outcome>cuentaUsuario</from-outcome>
             <to-view-id>/vistas/usuario/cuentaUsuario.xhtml</to-view-id>
+            <redirect/>
         </navigation-case>
         <navigation-case>
             <from-outcome>nuevaPublicacion</from-outcome>
             <to-view-id>/vistas/usuario/nuevaPublicacion.xhtml</to-view-id>
+            <redirect/>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>mostrarPublicacion</from-outcome>
+            <to-view-id>/vistas/mostrarPublicacion.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>        
     </navigation-rule>
 
 </faces-config>

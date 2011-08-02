@@ -150,6 +150,16 @@ form {
     padding: 1px 1px 1px 1px;
 }
 
+
+#items .itemTitle{
+    font-size: 14px;
+    
+    font-family: Trebuchet MS;
+    
+    color: #0066ff;
+    text-decoration: underline;
+}
+
 #searchBar {
     background-image:url(../resources/images/searchBar.png);
     height: 50px;
