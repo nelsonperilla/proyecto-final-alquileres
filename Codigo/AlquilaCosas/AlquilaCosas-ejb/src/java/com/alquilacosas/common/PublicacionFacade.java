@@ -1,31 +1,24 @@
-package com.alquilacosas.mbean;
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.alquilacosas.common;
+
+import java.util.Date;
+import java.util.List;
+
 
 /**
  *
  * @author jorge
  */
-
-import com.alquilacosas.ejb.session.ShowPublicationsBeanLocal;
-import java.io.Serializable;
-import java.util.Date;
-import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-
-
-
-@ManagedBean
-public class PublicacionMBean implements Serializable{
-    
-    public PublicacionMBean() 
-    {
-        titulo="prod";
-        descripcion="call";
-    }
+public class PublicacionFacade {
     
     
-    public PublicacionMBean(String titulo,String descripcion, Date fecha_desde,
+    public PublicacionFacade(int id,String titulo,String descripcion, Date fecha_desde,
             Date fecha_hasta, boolean destacada,int cantidad)//, Categoria categoria,Usuario usuario) 
     {
+        this.id=id;
         this.titulo=titulo;
         this.descripcion=descripcion;
         this.fecha_desde=fecha_desde;
@@ -36,19 +29,18 @@ public class PublicacionMBean implements Serializable{
         //this.usuario=usuario;
     }
     
-    @EJB
-    private ShowPublicationsBeanLocal publicationBean;
+    private int id;
     private String titulo;
     private String descripcion;
     private Date fecha_desde;
     private Date fecha_hasta;
     private boolean destacada;
     private int cantidad;
+    private List<byte[]> imagenes;
+    private byte[] imagenPrincipal;         
     //private Categoria categoria;
     //private Usuario usuario;
     //private int pagina;
-
-    
     
     /**
      * @return the titulo
@@ -124,6 +116,7 @@ public class PublicacionMBean implements Serializable{
      * @return the cantidad
      */
     public int getCantidad() {
+        
         return cantidad;
     }
 
@@ -132,6 +125,52 @@ public class PublicacionMBean implements Serializable{
      */
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
+    }
+
+    /**
+     * @return the imagenPrincipal
+     */
+    public byte[] getImagenPrincipal() {
+        return imagenPrincipal;
+    }
+
+    /**
+     * @param imagenPrincipal the imagenPrincipal to set
+     */
+    public void setImagenPrincipal(byte[] imagenPrincipal) {
+        this.imagenPrincipal = imagenPrincipal;
+    }
+
+    /**
+     * @return the imagenes
+     */
+    public List<byte[]> getImagenes() {
+        return imagenes;
+    }
+
+    /**
+     * @param imagenes the imagenes to set
+     */
+    public void setImagenes(List<byte[]> imagenes) 
+    {
+        this.imagenes = imagenes;
+        imagenPrincipal=imagenes.get(0);
+        //ByteArrayInputStream i = new ByteArrayInputStream(getImagenes().get(0));
+        //imagenPrincipal =new DefaultStreamedContent(i);
+    }
+
+    /**
+     * @return the id
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(int id) {
+        this.id = id;
     }
 
     /**
@@ -162,6 +201,5 @@ public class PublicacionMBean implements Serializable{
         this.usuario = usuario;
     }
 */
-    
     
 }

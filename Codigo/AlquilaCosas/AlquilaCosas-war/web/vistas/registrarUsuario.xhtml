@@ -84,21 +84,23 @@
                     <p:panel id="domiciliosPanel" header="Domicilios" >
                         <h:panelGrid columns="3" >
                             <h:outputLabel value="Pais" />
-                            <p:selectOneMenu id="pais" value="#{usuario.paisSeleccionado}" required="true"
+                            
+                            <h:selectOneMenu id="pais" value="#{usuario.paisSeleccionado}" required="true"
                                              requiredMessage="Valor requerido" >
+                                
                                 <f:selectItem itemLabel="Seleccione un pais" itemValue="" noSelectionOption="true" />
                                 <f:selectItems value="#{usuario.paises}" />
                                 <p:ajax event="change" update="provincia growl" process="@this"
                                         listener="#{usuario.actualizarProvincias}" />
-                            </p:selectOneMenu>
+                            </h:selectOneMenu>
                             <p:message for="pais" />
                             <h:outputLabel value="Provincia" />
-                            <p:selectOneMenu id="provincia" value="#{usuario.provinciaSeleccionada}" 
+                            <h:selectOneMenu id="provincia" value="#{usuario.provinciaSeleccionada}" 
                                              required="true" requiredMessage="Valor requerido" >
                                 <f:selectItem itemLabel="Seleccione una provincia" itemValue="" />
                                 <f:selectItems value="#{usuario.provincias}" />
                                 <p:ajax event="change" process="@this" listener="#{usuario.prepararDomicilio}" />
-                            </p:selectOneMenu>
+                            </h:selectOneMenu>
                             <p:message for="provincia" />
                         </h:panelGrid>
                         <p:commandButton value="Agregar domicilio" type="button" 

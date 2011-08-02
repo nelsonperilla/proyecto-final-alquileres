@@ -30,6 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "ImagenPublicacion.findAll", query = "SELECT i FROM ImagenPublicacion i"),
+    @NamedQuery(name = "ImagenPublicacion.findByPublicacionId", query = "SELECT i FROM ImagenPublicacion i WHERE i.publicacionFk = :publicacion"),
     @NamedQuery(name = "ImagenPublicacion.findByImagenPublicacionId", query = "SELECT i FROM ImagenPublicacion i WHERE i.imagenPublicacionId = :imagenPublicacionId")})
 public class ImagenPublicacion implements Serializable {
     @Lob

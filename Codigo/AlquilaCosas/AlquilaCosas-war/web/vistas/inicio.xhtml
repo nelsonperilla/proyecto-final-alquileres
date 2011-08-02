@@ -4,7 +4,8 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.prime.com.tr/ui"
       xmlns:h="http://java.sun.com/jsf/html" 
-      xmlns:comps="http://java.sun.com/jsf/composite/comps" >
+      xmlns:comps="http://java.sun.com/jsf/composite/comps" 
+      xmlns:f="http://java.sun.com/jsf/core">
 
     <body>
 
@@ -25,18 +26,26 @@
                             <table >
                                 <tr>
                                     <td>
-                                        <p:graphicImage value="./../resources/images/titleBar.png"/>  
+                                        <p:graphicImage  value="./../resources/images/titleBar.png"/>  
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <div id="items">
+                                            <h:form>
                                             <h:dataTable  value="#{publicationsGroup.publicacionesRandom}"
                                                           var="publicacionMBean">
                                                 <h:column>
-                                                    <comps:itemInfo />
+                                                    
+                                                  <comps:itemInfo />
                                                 </h:column>
                                             </h:dataTable>
+                                               
+                                                </h:form>
+
+                                        </div>
+                                        <div>
+                                             <!--<p:graphicImage value="#{publicationsGroup.imagenPrincipal}"/>-->
                                         </div>
                                      </td>
                                 </tr>

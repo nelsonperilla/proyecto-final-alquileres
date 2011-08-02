@@ -40,7 +40,7 @@ public class CategoriaMBean implements Serializable{
      @PostConstruct
      public void init() {
           categorias = categoriaBean.getCategorias();
-          root = new DefaultTreeNode("Root", null);
+          root =  new DefaultTreeNode("Root", null);
           for (Categoria c : categorias){
                if (c.getCategoriaFk() == null){
                     TreeNode nuevoNodo = nuevoNodoConHijos(c,root);
