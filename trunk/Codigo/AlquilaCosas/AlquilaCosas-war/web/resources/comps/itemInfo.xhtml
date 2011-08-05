@@ -21,10 +21,10 @@
                     </p:graphicImage>
                     <h:panelGrid style="text-align: left; padding: 1px 1px 1px 10px" columns="1"  >
                         <h:commandLink value="#{publicacionMBean.titulo}"  
-                                       action="mostrarPublicacion" styleClass="itemTitle" >
+                                       action="#{publicationsGroup.seleccionarPublicacion}" 
+                                       styleClass="itemTitle" >
                         <f:setPropertyActionListener target="#{publicationsGroup.selectedPublicationId}"
                                                      value="#{publicacionMBean.id}" />
-                        
                         </h:commandLink>  
                         <h:outputText value="#{publicacionMBean.descripcion}" styleClass="itemInfo"/>  
                         <h:outputText value="Cantidad disponible: #{publicacionMBean.cantidad}" styleClass="itemInfo"/>  
