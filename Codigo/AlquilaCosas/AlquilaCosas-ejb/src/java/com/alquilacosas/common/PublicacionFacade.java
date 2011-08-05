@@ -173,33 +173,6 @@ public class PublicacionFacade {
         this.id = id;
     }
 
-    /**
-     * @return the categoria
-     */
-/*    public Categoria getCategoria() {
-        return categoria;
-    }
 
-    /**
-     * @param categoria the categoria to set
-     */
-/*    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
-    }
-
-    /**
-     * @return the usuario
-     */
-  /*  public Usuario getUsuario() {
-        return usuario;
-    }
-
-    /**
-     * @param usuario the usuario to set
-     */
-    /*public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-*/
     
 }

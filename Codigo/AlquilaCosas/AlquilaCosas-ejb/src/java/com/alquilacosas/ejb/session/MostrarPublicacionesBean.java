@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateful;
+import javax.ejb.Stateless;
 import javax.imageio.ImageIO;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -32,11 +33,8 @@ import javax.sql.rowset.serial.SerialException;
  *
  * @author jorge
  */
-@Stateful
+@Stateless
 public class MostrarPublicacionesBean implements MostrarPublicacionesBeanLocal {
-    
-    
-
     @PersistenceContext(unitName="AlquilaCosas-ejbPU") 
     private EntityManager entityManager;
     private Publicacion activePublication;
@@ -71,15 +69,15 @@ public class MostrarPublicacionesBean implements MostrarPublicacionesBeanLocal {
         return result;
     }
 
-    @Override
-    public void setSelectedPublication(int id) {
-        activePublication = entityManager.find(Publicacion.class, id);
-    }
-
-    @Override
-    public Publicacion getSelectedPublication() {
-        return activePublication;
-    }
+//    @Override
+//    public void setSelectedPublication(int id) {
+//        activePublication = entityManager.find(Publicacion.class, id);
+//    }
+//
+//    @Override
+//    public Publicacion getSelectedPublication() {
+//        return activePublication;
+//    }
     
     
 }

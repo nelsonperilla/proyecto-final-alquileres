@@ -25,6 +25,6 @@ public interface MostrarPublicacionesBeanLocal {
     List<Publicacion> getPublicacionesRandom(int pagina);
     List<Publicacion> getPublicacionesPoCategoria(int pagina,int categoria);
     List<byte[]> getImage(int id);
-    void setSelectedPublication(int id);
-    Publicacion getSelectedPublication();
+//    void setSelectedPublication(int id);
+//    Publicacion getSelectedPublication();
 }
