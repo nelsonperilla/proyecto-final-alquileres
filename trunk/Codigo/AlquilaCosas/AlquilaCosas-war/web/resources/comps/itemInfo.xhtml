@@ -26,7 +26,7 @@
                         <f:setPropertyActionListener target="#{publicationsGroup.selectedPublicationId}"
                                                      value="#{publicacionMBean.id}" />
                         </h:commandLink>  
-                        <h:outputText value="#{publicacionMBean.descripcion}" styleClass="itemInfo"/>  
+                        <h:outputText value="#{publicacionMBean.descripcion}" styleClass="itemInfo" escape="false"/>  
                         <h:outputText value="Cantidad disponible: #{publicacionMBean.cantidad}" styleClass="itemInfo"/>  
                     </h:panelGrid>
                 </h:panelGrid>  

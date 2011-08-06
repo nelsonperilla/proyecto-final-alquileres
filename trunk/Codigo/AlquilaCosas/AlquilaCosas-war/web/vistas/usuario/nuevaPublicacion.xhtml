@@ -2,23 +2,171 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:comps="http://java.sun.com/jsf/composite/comps" >
+      xmlns:comps="http://java.sun.com/jsf/composite/comps"
+      xmlns:p="http://primefaces.prime.com.tr/ui" 
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
 
     <body>
 
         <ui:composition template="./../../resources/templates/masterPage.xhtml">
 
             <ui:define name="logInfo">
+                logInfo
+            </ui:define>
+
+            <ui:define name="principal">
+
+                <h:form id="publicacionForm">
+
+                    <h1>Publicar</h1>
+                    <h:panelGrid columns="3" styleClass="formPanel">                       
+
+                        <h:outputLabel value="Titulo: "/>
+                        <p:inputText id="titulo" value="#{publicacion.titulo}" required="true"
+                                     requiredMessage="Valor requerido" >
+                            <f:validateLength maximum="45" />
+                        </p:inputText>
+                        <p:message id="tituloVal" for="titulo" showSummary="false" />
+
+                        <h:outputLabel value="Cantidad: " />
+                        <p:inputText id="cantidad" value="#{publicacion.cantidad}" required ="true"
+                                     requiredMessage="Valor requerido" converterMessage="Debe ingresr un numero" >
+                        </p:inputText>
+                        <p:message id="cantidadVal" for="cantidad"/>
+
+
+                        <h:outputLabel value="Categoria: " />
+                        <h:selectOneMenu id="categoria" value="#{publicacion.selectedCategoria}" required ="true"
+                                         requiredMessage="Valor requerido"> 
+                            <f:selectItem itemLabel="Categorias" itemValue="" />
+                            <f:selectItems value="#{publicacion.categorias}" />
+                        </h:selectOneMenu>
+                        <p/>
+                    </h:panelGrid>
+
+                    <br/>
+                    <br/>
+
+                    <p:editor value="#{publicacion.descripcion}" widgetVar="editor" width="600"/>
+
+                    <h2>Cargar imagenes</h2>
+                    <p:panel header="Cargar Imagenes" >
+
+                        <h:outputText value="Select the files to upload (maxim 2MB):"/>
+                        <br/>
+
+                        <p:fileUpload fileUploadListener="#{publicacion.handleFileUpload}"
+
+                                      update="messages"   
+                                      multiple="true"  
+                                      sizeLimit="2097152"   
+                                      allowTypes="*.jpg;*.png;*.gif;"/>          
+                    </p:panel>
+                </h:form>
+                <h2>Determina el precio del alquiler del producto</h2>
+
+                <p:panel id="panelPrecios" header="Precios" styleClass="formPanel">
+                    <h:form id="formPrecio">
+                        <h:panelGrid columns="3" >
+
+                            <h:outputLabel value="Periodo" />
+                            <h:selectOneMenu id="periodo" value="#{publicacion.selectedPeriodo}" required ="true"
+                                             requiredMessage="Valor requerido"> 
+                                <f:selectItem itemLabel="Periodos" itemValue="" />
+                                <f:selectItems value="#{publicacion.periodos}" />
+                            </h:selectOneMenu>
+                            <p/>
+
+                            <h:outputLabel value="Precio" />
+                            <p:inputText id="precio" value="#{publicacion.precio}" required="true"
+                                         requiredMessage="Valor requerido" styleClass="inputTextCorto"/>
+                            <p:message for="precio" />
+
+
+                            <p:commandButton value="Agregar" actionListener="#{publicacion.cargarPrecio}"
+                                             update="formTabla" />
+                            <p:commandButton value="Limpiar" type="reset" />
+
+
+                        </h:panelGrid>
+                    </h:form>
+                    
+                    <br/>
+                    <p:separator/>
+                    <br/>
+
+                    <h:form id="formTabla">
+                        <p:dataTable id="tablaPrecios" value="#{publicacion.precios}" var="p">
+                            <f:facet name="header" >
+                                Precios cargados
+                            </f:facet>
+
+                            <p:column headerText="precio" >
+                                <p:cellEditor>
+                                    <f:facet name="output" >
+                                        <h:outputText value="#{p.precio}" />
+                                    </f:facet>
+                                    <f:facet name="input" >
+                                        <p:inputText value="#{p.precio}" />
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+
+                            <p:column headerText="periodo">
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText value="#{p.periodoNombre}" />
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <h:selectOneMenu id="periodo" value="#{p.periodoNombre}" required ="true"
+                                                         requiredMessage="Valor requerido"> 
+                                            <f:selectItem itemLabel="Periodos" itemValue="" />
+                                            <f:selectItems value="#{publicacion.periodos}" />
+                                        </h:selectOneMenu>
+                                    </f:facet>
+                                </p:cellEditor> 
+                            </p:column>
+
+                            <p:column headerText="Options" style="width:50px">  
+                                <p:rowEditor />
+                                <p:commandButton oncomplete="confirmacion.show()"
+                                                 image="ui-icon ui-icon-trash" 
+                                                 title="Quitar" >
+                                    <f:setPropertyActionListener value="#{p}" target="#{publicacion.precioSeleccionado}" />
+                                </p:commandButton>  
+                            </p:column>
+
+                        </p:dataTable>
+
+                        <p:confirmDialog message="Esta seguro?" width="200" header="Confirmar"
+                                         severity="alert" widgetVar="confirmacion" >
+                            <p:commandButton value="Si" update="tablaPrecios" actionListener="#{publicacion.borrarPrecio}" 
+                                             oncomplete="confirmacion.hide()"/>
+                            <p:commandButton value="No" onclick="confirmacion.hide()" type="button" />
+                        </p:confirmDialog>
+
+                    </h:form>
+
+                   
+
+                </p:panel>
+                <h:form id="formButton">
+                    <br/>
+                    <br/>
+                    <p:commandButton value="Crear" action="#{publicacion.crearPublicacion}" 
+                                     ajax="false" process=":formTabla :formPrecio :publicacionForm" />
+                    <p:commandButton  type="reset" value="Limpiar" />
+                    <p:growl id="growl" showDetail="true" globalOnly="true" />
+                </h:form>
+
+
+
+
             </ui:define>
 
             <ui:define name="right">
                 <comps:loginBox />
-            </ui:define>
-
-            <ui:define name="principal">
-                <h1>
-                    Publicar producto
-                </h1>
             </ui:define>
 
         </ui:composition>

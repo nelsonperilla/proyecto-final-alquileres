@@ -10,6 +10,8 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -35,6 +37,10 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "EstadoPublicacion.findByNombre", query = "SELECT e FROM EstadoPublicacion e WHERE e.nombre = :nombre"),
     @NamedQuery(name = "EstadoPublicacion.findByDescripcion", query = "SELECT e FROM EstadoPublicacion e WHERE e.descripcion = :descripcion")})
 public class EstadoPublicacion implements Serializable {
+    
+    
+    public enum PublicacionEstado {ACTIVA, INACTIVA, SUSPENDIDA};
+    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,7 +52,8 @@ public class EstadoPublicacion implements Serializable {
     @NotNull
     @Size(min = 1, max = 45)
     @Column(name = "NOMBRE")
-    private String nombre;
+    @Enumerated(EnumType.STRING)
+    private PublicacionEstado nombre;
     @Size(max = 45)
     @Column(name = "DESCRIPCION")
     private String descripcion;
@@ -60,7 +67,7 @@ public class EstadoPublicacion implements Serializable {
         this.estadoPublicacionId = estadoPublicacionId;
     }
 
-    public EstadoPublicacion(Integer estadoPublicacionId, String nombre) {
+    public EstadoPublicacion(Integer estadoPublicacionId, PublicacionEstado nombre) {
         this.estadoPublicacionId = estadoPublicacionId;
         this.nombre = nombre;
     }
@@ -73,11 +80,11 @@ public class EstadoPublicacion implements Serializable {
         this.estadoPublicacionId = estadoPublicacionId;
     }
 
-    public String getNombre() {
+    public PublicacionEstado getNombre() {
         return nombre;
     }
 
-    public void setNombre(String nombre) {
+    public void setNombre(PublicacionEstado nombre) {
         this.nombre = nombre;
     }
 
