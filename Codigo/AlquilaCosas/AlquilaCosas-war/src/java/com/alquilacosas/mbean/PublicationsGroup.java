@@ -21,7 +21,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 import org.primefaces.model.DefaultStreamedContent;
@@ -80,9 +79,9 @@ public class PublicationsGroup implements Serializable
             publicacionesRandom.add(temp);
                     //publicacion.getCategoriaFk(),publicacion.getUsuarioFk()));
         }
-        byte[] img=publicacionesRandom.get(0).getImagenPrincipal();
-        ByteArrayInputStream i = new ByteArrayInputStream(img);
-        imagenPrincipal =new DefaultStreamedContent(i);        
+        //byte[] img=publicacionesRandom.get(0).getImagenPrincipal();
+        //ByteArrayInputStream i = new ByteArrayInputStream(img);
+        //imagenPrincipal =new DefaultStreamedContent(i);        
         
         
     }

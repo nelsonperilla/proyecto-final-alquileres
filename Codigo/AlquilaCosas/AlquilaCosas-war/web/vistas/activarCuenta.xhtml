@@ -11,7 +11,9 @@
         <ui:composition template="./../resources/templates/masterPage.xhtml">
 
             <ui:define name="logInfo">
-                
+                <h:form>
+                    <h:commandLink value="Inicio" action="inicio" />
+                </h:form>
             </ui:define>
 
             <ui:define name="principal">
@@ -30,6 +32,8 @@
 
             <ui:define name="right">
                 <comps:loginBox />
+                <comps:adminPanel />
+                <comps:userPanel />
             </ui:define>
 
         </ui:composition>

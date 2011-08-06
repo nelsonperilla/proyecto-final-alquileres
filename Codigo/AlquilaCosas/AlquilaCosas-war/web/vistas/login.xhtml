@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.prime.com.tr/ui" 
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:comps="http://java.sun.com/jsf/composite/comps" >
+
+    <body>
+
+        <ui:composition template="./../resources/templates/masterPage.xhtml">
+
+            <ui:define name="logInfo">
+                logInfo
+            </ui:define>
+
+            <ui:define name="principal">
+                <h:form>
+                    <h1>Login</h1>
+                    <h:panelGrid columns="3" >
+                        <h:outputLabel value="Usuario" />
+                        <p:inputText id="usuario" value="#{login.username}" />
+                        <p:message for="usuario" />
+                        
+                        <h:outputLabel value="Contraseña" />
+                        <p:password id="password" value="#{login.password}" 
+                                    feedback="false" minLength="8" />
+                        <p:message for="password" />
+                        
+                        <p:commandButton value="Entrar" action="#{login.login}"
+                                         ajax="false"/>
+                    </h:panelGrid>
+                    <p:messages globalOnly="true" showDetail="false" />
+                </h:form>
+            </ui:define>
+
+            <ui:define name="right">
+                
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

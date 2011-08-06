@@ -1,0 +1,100 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.prime.com.tr/ui" 
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:comps="http://java.sun.com/jsf/composite/comps" >
+
+    <body>
+
+        <ui:composition template="./../../resources/templates/masterPage.xhtml">
+
+            <ui:define name="logInfo">
+                
+            </ui:define>
+
+            <ui:define name="principal">
+                <h1>Mis Datos</h1>
+                
+                <p:panel header="Datos personales" >
+                    <h:panelGrid columns="2" cellpadding="2" >
+                        
+                        <h:outputLabel value="Nombre" />
+                        <h:outputText value="#{modUsuario.nombre}" />
+                        
+                        <h:outputLabel value="Apellido" />
+                        <h:outputText value="#{modUsuario.apellido}" />
+                        
+                        <h:outputLabel value="DNI" />
+                        <h:outputText value="#{modUsuario.dni}" />
+                        
+                        <h:outputLabel value="Email" />
+                        <h:outputText value="#{modUsuario.email}" />
+                        
+                        <h:outputLabel value="Telefono" />
+                        <h:outputText value="#{modUsuario.telefono}" />
+                                      
+                        <h:outputLabel value="Fecha de nacimiento" />
+                        <h:outputText value="#{modUsuario.fechaNacimiento}" >
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                        <!-- <p:commandButton value="Editar" type="button" /> -->
+                    </h:panelGrid>
+                    
+                </p:panel>
+                
+                <p:panel header="Domicilios" >
+                    
+                    <h:form>
+                        <p:dataTable id="table" value="#{modUsuario.domicilios}" var="dom" >
+
+                            <p:column headerText="Calle" >
+                                <h:outputText value="#{dom.calle}" />
+                            </p:column>
+
+                            <p:column headerText="Numero" >
+                                <h:outputText value="#{dom.numero}" />
+                            </p:column>
+
+                            <p:column headerText="Piso" style="width:40px" >
+                                <h:outputText value="#{dom.piso}" />
+                            </p:column>
+
+                            <p:column headerText="Depto" style="width:40px" >
+                                <h:outputText value="#{dom.depto}" />
+                            </p:column>
+
+                            <p:column headerText="Barrio" >
+                                <h:outputText value="#{dom.barrio}" />
+                            </p:column>
+
+                            <p:column headerText="Ciudad" >
+                                <h:outputText value="#{dom.ciudad}" />
+                            </p:column>
+
+                            <p:column headerText="Provincia" >
+                                <h:outputText value="#{dom.provincia}" />
+                            </p:column>
+                            
+                            <p:column headerText="Pais" >
+                                <h:outputText value="#{dom.pais}" />
+                            </p:column>
+                        </p:dataTable>
+                        
+                    </h:form>
+                    
+                </p:panel>
+                
+            </ui:define>
+
+            <ui:define name="right">
+                <comps:adminPanel />
+                <comps:userPanel />
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

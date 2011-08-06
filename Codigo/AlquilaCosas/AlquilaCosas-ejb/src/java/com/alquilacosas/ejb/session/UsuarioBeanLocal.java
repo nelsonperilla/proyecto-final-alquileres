@@ -6,8 +6,10 @@ package com.alquilacosas.ejb.session;
 
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.common.DomicilioFacade;
+import com.alquilacosas.common.UsuarioFacade;
 import com.alquilacosas.ejb.entity.Pais;
 import com.alquilacosas.ejb.entity.Provincia;
+import com.alquilacosas.ejb.entity.Usuario;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
@@ -19,8 +21,10 @@ import javax.ejb.Local;
 @Local
 public interface UsuarioBeanLocal {
     
+    UsuarioFacade getDatosUsuario(Integer id);
+    
     public void registrarUsuario(String username, String password, String nombre,
-            String apellido, List<DomicilioFacade> domicilios, int provincia, 
+            String apellido, DomicilioFacade domicilio, int provincia, 
             Date fechaNacimiento, String dni, String telefono, String email)
             throws AlquilaCosasException;
 
@@ -29,5 +33,7 @@ public interface UsuarioBeanLocal {
     List<Pais> getPaises();
 
     boolean usernameExistente(String username);
+
+    Integer loginUsuario(String username) throws AlquilaCosasException;
     
 }

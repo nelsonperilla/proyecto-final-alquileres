@@ -11,15 +11,11 @@
 
     <!-- IMPLEMENTATION -->
     <cc:implementation>
-        <p:outputPanel rendered="#{login.logueado}" >
+        <p:outputPanel rendered="#{login.administrador}" >
             <h:form>
-                <p:panel header="Usuario" style="text-align: center">
+                <p:panel header="Panel de Administracion" >
                     <h:panelGrid columns="1" cellpadding="2" >
-                        Hola #{login.username}
-                        <h:commandLink value="Publicar" action="nuevaPublicacion" />
-                        <h:commandLink value="Mis publicaciones" />
-                        <h:commandLink value="Mis datos" action="datosUsuario" />
-                        <h:commandLink value="Salir" action="#{login.logout}" />
+                        <h:commandLink value="Categorias" />
                     </h:panelGrid>
                 </p:panel>
             </h:form>
