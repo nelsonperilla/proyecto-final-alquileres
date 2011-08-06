@@ -30,6 +30,10 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Precio.findAll", query = "SELECT p FROM Precio p"),
     @NamedQuery(name = "Precio.findByPrecioId", query = "SELECT p FROM Precio p WHERE p.precioId = :precioId")})
 public class Precio implements Serializable {
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "PRECIO")
+    private double precio;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -98,6 +102,14 @@ public class Precio implements Serializable {
     @Override
     public String toString() {
         return "com.alquilacosas.ejb.entity.Precio[ precioId=" + precioId + " ]";
+    }
+
+    public double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(double precio) {
+        this.precio = precio;
     }
     
 }

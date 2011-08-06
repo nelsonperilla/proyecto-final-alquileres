@@ -188,3 +188,11 @@ form {
 .formPanel {
     text-align: left;
 }
+
+.formPanel {
+    text-align: left;
+}
+
+.inputTextCorto {
+    width: 70px;
+}
