@@ -182,4 +182,9 @@ form {
 
 #principal {
     width: 600px;
+    text-align: left;
+}
+
+.formPanel {
+    text-align: left;
 }

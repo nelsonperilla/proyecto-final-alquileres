@@ -12,38 +12,39 @@
     <!-- IMPLEMENTATION -->
     <cc:implementation>
 
-        <div id="login">
-            <h:form>
-                <table border="0" cellspacing="0">
-                    <tr>
-                        <th>
-                            Login
-                        </th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <h:panelGrid columns="1" cellpadding="2"
-                                         style="width:100%; text-align:left; padding-left: 5px " >
-                                <h:outputLabel  value="Usuario" />
-                                <p:inputText value="#{login.username}" style="width:175px" />
-                                <h:outputLabel value="Contraseña" />
-                                <p:password feedback="false" minLength="1" value="#{login.password}" 
-                                            style="width:175px; " />
-                            </h:panelGrid>
-                            <p:commandButton value="Entrar" actionListener="#{login.login}" 
-                                             onsuccess="location.reload(true);" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="footer">
-                                <h:commandLink value="Registrarse!" action="registrarUsuario" />
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-            </h:form>
-        </div>
-
+        <p:outputPanel rendered="#{not login.logueado}" >
+            <div id="login">
+                <h:form>
+                    <table border="0" cellspacing="0">
+                        <tr>
+                            <th>
+                                Login
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <h:panelGrid columns="1" cellpadding="2"
+                                             style="width:100%; text-align:left; padding-left: 5px " >
+                                    <h:outputLabel  value="Usuario" />
+                                    <p:inputText value="#{login.username}" style="width:175px" />
+                                    <h:outputLabel value="Contraseña" />
+                                    <p:password feedback="false" minLength="1" value="#{login.password}" 
+                                                style="width:175px; " />
+                                </h:panelGrid>
+                                <p:messages globalOnly="true" showDetail="false" />
+                                <p:commandButton value="Entrar" action="#{login.login}" ajax="false" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="footer">
+                                    <h:commandLink value="Registrarse!" action="registrarUsuario" />
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </h:form>
+            </div>
+        </p:outputPanel>
     </cc:implementation>
 </html>

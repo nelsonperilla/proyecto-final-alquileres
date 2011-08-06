@@ -7,6 +7,7 @@ package com.alquilacosas.ejb.session;
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.common.DomicilioFacade;
 import com.alquilacosas.common.NotificacionEmail;
+import com.alquilacosas.common.UsuarioFacade;
 import com.alquilacosas.ejb.entity.Domicilio;
 import com.alquilacosas.ejb.entity.EstadoUsuario;
 import com.alquilacosas.ejb.entity.EstadoUsuario.NombreEstado;
@@ -24,7 +25,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
+import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
@@ -42,6 +48,8 @@ import javax.persistence.Query;
  * @author damiancardozo
  */
 @Stateless
+@TransactionManagement(TransactionManagementType.CONTAINER)
+@TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class UsuarioBean implements UsuarioBeanLocal {
 
     @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
@@ -52,7 +60,31 @@ public class UsuarioBean implements UsuarioBeanLocal {
     
     @Resource(name = "jms/notificacionEmailQueue")
     private Destination destination;
+    
+    @Resource
+    private SessionContext context;
 
+    
+    @Override
+    public UsuarioFacade getDatosUsuario(Integer id) {
+        Usuario u = entityManager.find(Usuario.class, id);
+        UsuarioFacade userFacade = new UsuarioFacade(u.getUsuarioId(), u.getNombre(), 
+                u.getApellido(), u.getEmail(), u.getTelefono(), u.getDni(), u.getFechaNac());
+        List<DomicilioFacade> listaDom = new ArrayList<DomicilioFacade>();
+        for(Domicilio d: u.getDomicilioList()) {
+            DomicilioFacade dom = new DomicilioFacade(d.getCalle(), d.getNumero(),
+                    d.getPiso(), d.getDepto(), d.getBarrio(), d.getCiudad());
+            Provincia prov = d.getProvinciaFk();
+            dom.setProvinciaId(prov.getProvinciaId());
+            dom.setProvincia(prov.getNombre());
+            dom.setPaisId(prov.getPaisFk().getPaisId());
+            dom.setPais(prov.getPaisFk().getNombre());
+            listaDom.add(dom);
+        }
+        userFacade.setDomicilios(listaDom);
+        return userFacade;
+    }
+    
     @Override
     public boolean usernameExistente(String username) {
         Login login = null;
@@ -71,7 +103,7 @@ public class UsuarioBean implements UsuarioBeanLocal {
     
     @Override
     public void registrarUsuario(String username, String password, String nombre,
-            String apellido, List<DomicilioFacade> domicilios, int prov,
+            String apellido, DomicilioFacade dom, int prov,
             Date fechaNacimiento, String dni, String telefono, String email) 
             throws AlquilaCosasException {
 
@@ -99,20 +131,18 @@ public class UsuarioBean implements UsuarioBeanLocal {
         entityManager.persist(usuario);
 
         Provincia provincia = entityManager.find(Provincia.class, prov);
-        for (DomicilioFacade d : domicilios) {
-            Domicilio domicilio = new Domicilio();
-            domicilio.setCalle(d.getCalle());
-            domicilio.setNumero(d.getNumero());
-            if(d.getDepto() != null && !d.getDepto().equals(""))
-                domicilio.setDepto(d.getDepto());
-            if(d.getPiso() != null && d.getPiso() != 0)
-                domicilio.setPiso(d.getPiso());
-            domicilio.setBarrio(d.getBarrio());
-            domicilio.setCiudad(d.getCiudad());
-            domicilio.setProvinciaFk(provincia);
-            domicilio.setUsuarioFk(usuario);
-            entityManager.persist(domicilio);
-        }
+        Domicilio domicilio = new Domicilio();
+        domicilio.setCalle(dom.getCalle());
+        domicilio.setNumero(dom.getNumero());
+        if(dom.getDepto() != null && !dom.getDepto().equals(""))
+            domicilio.setDepto(dom.getDepto());
+        if(dom.getPiso() != null && dom.getPiso() != 0)
+            domicilio.setPiso(dom.getPiso());
+        domicilio.setBarrio(dom.getBarrio());
+        domicilio.setCiudad(dom.getCiudad());
+        domicilio.setProvinciaFk(provincia);
+        domicilio.setUsuarioFk(usuario);
+        entityManager.persist(domicilio);
 
         Login login = new Login();
         login.setFechaCreacion(new Date());
@@ -123,18 +153,30 @@ public class UsuarioBean implements UsuarioBeanLocal {
         String activacion = new BigInteger(130, random).toString(32);
         login.setCodigoActivacion(activacion);
 
-        Query getRolQuery = entityManager.createNamedQuery("Rol.findByNombre");
-        getRolQuery.setParameter("nombre", NombreRol.USUARIO);
-        Rol rol = (Rol) getRolQuery.getSingleResult();
+        Rol rol = null;
+        try {
+            Query getRolQuery = entityManager.createNamedQuery("Rol.findByNombre");
+            getRolQuery.setParameter("nombre", NombreRol.USUARIO);
+            rol = (Rol) getRolQuery.getSingleResult();
+        } catch(NoResultException e) {
+            context.setRollbackOnly();
+            throw new AlquilaCosasException("No se encontro el Rol 'Usuario' en la base de datos.");
+        }
         List<Rol> roles = new ArrayList<Rol>();
         roles.add(rol);
 
         login.setRolList(roles);
         entityManager.persist(login);
 
-        Query getEstadoQuery = entityManager.createNamedQuery("EstadoUsuario.findByNombre");
-        getEstadoQuery.setParameter("nombre", NombreEstado.REGISTRADO);
-        EstadoUsuario estado = (EstadoUsuario) getEstadoQuery.getSingleResult();
+        EstadoUsuario estado = null;
+        try {
+            Query getEstadoQuery = entityManager.createNamedQuery("EstadoUsuario.findByNombre");
+            getEstadoQuery.setParameter("nombre", NombreEstado.REGISTRADO);
+            estado = (EstadoUsuario) getEstadoQuery.getSingleResult();
+        } catch(NoResultException e) {
+            context.setRollbackOnly();
+            throw new AlquilaCosasException("No se encontro el estado de usuario 'Registrado' en la base de datos'");
+        }
 
         UsuarioXEstado uxe = new UsuarioXEstado();
         uxe.setEstadoUsuario(estado);
@@ -165,7 +207,8 @@ public class UsuarioBean implements UsuarioBeanLocal {
             connection.close();
             
         } catch (JMSException e) {
-            System.out.println("excepcion al enviar mensaje al mdb!!!! " + e);
+            context.setRollbackOnly();
+            throw new AlquilaCosasException("Error al enviar email de notificacion: " + e);
         }
     }
 
@@ -184,5 +227,26 @@ public class UsuarioBean implements UsuarioBeanLocal {
         List<Pais> paises = query.getResultList();
         return paises;
     }
+
+    @Override
+    public Integer loginUsuario(String username) throws AlquilaCosasException {
+        
+        Login login = null;
+        Query buscarLogin = entityManager.createNamedQuery("Login.findByUsername");
+        buscarLogin.setParameter("username", username);
+        try {
+            login = (Login) buscarLogin.getSingleResult();
+        } catch (Exception e) {
+            throw new AlquilaCosasException("Username no valido");
+        }
+        
+        Usuario usuario = login.getUsuarioFk();
+        if(usuario == null)
+            throw new AlquilaCosasException("Usuario no asociado a la cuenta.");
+        
+        return usuario.getUsuarioId();
+    }
+    
+    
 
 }

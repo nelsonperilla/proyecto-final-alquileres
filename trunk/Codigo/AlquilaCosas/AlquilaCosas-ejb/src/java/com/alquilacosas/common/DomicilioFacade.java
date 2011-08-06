@@ -12,9 +12,10 @@ import java.io.Serializable;
  */
 public class DomicilioFacade implements Serializable {
     
-    private String calle, depto, barrio, ciudad;
+    private String calle, depto, barrio, ciudad, provincia, pais;
     private int numero;
     private Integer piso;
+    private int provinciaId, paisId;
     
     public DomicilioFacade() {
         
@@ -84,6 +85,38 @@ public class DomicilioFacade implements Serializable {
 
     public void setPiso(Integer piso) {
         this.piso = piso;
+    }
+
+    public int getPaisId() {
+        return paisId;
+    }
+
+    public void setPaisId(int paisId) {
+        this.paisId = paisId;
+    }
+
+    public int getProvinciaId() {
+        return provinciaId;
+    }
+
+    public void setProvinciaId(int provinciaId) {
+        this.provinciaId = provinciaId;
+    }
+
+    public String getPais() {
+        return pais;
+    }
+
+    public void setPais(String pais) {
+        this.pais = pais;
+    }
+
+    public String getProvincia() {
+        return provincia;
+    }
+
+    public void setProvincia(String provincia) {
+        this.provincia = provincia;
     }
     
 }

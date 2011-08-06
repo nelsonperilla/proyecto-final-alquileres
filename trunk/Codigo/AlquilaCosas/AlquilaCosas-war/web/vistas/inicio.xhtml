@@ -17,8 +17,8 @@
             </ui:define>
             <ui:define name="principal">
                 <table>
-                     <tr>
-                         <td id="higligting" bgcolor="grey">
+                    <tr>
+                        <td id="higligting" bgcolor="grey">
                             <!-- Todavia no estan definidas las publicaciones
                                     <comps:highlightItems /> -->
                         </td>
@@ -35,21 +35,21 @@
                                     <td>
                                         <div id="items">
                                             <h:form>
-                                            <h:dataTable  value="#{publicationsGroup.publicacionesRandom}"
-                                                          var="publicacionMBean">
-                                                <h:column>
-                                                    
-                                                  <comps:itemInfo />
-                                                </h:column>
-                                            </h:dataTable>
-                                               
-                                                </h:form>
+                                                <h:dataTable  value="#{publicationsGroup.publicacionesRandom}"
+                                                              var="publicacionMBean">
+                                                    <h:column>
+
+                                                        <comps:itemInfo />
+                                                    </h:column>
+                                                </h:dataTable>
+
+                                            </h:form>
 
                                         </div>
                                         <div>
                                              <!--<p:graphicImage value="#{publicationsGroup.imagenPrincipal}"/>-->
                                         </div>
-                                     </td>
+                                    </td>
                                 </tr>
                             </table>
                         </td>
@@ -58,6 +58,8 @@
             </ui:define>
             <ui:define name="right" >
                 <comps:loginBox />
+                <comps:adminPanel />
+                <comps:userPanel />
             </ui:define>
         </ui:composition>
     </body>

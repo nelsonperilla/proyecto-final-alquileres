@@ -27,7 +27,7 @@ import javax.faces.validator.ValidatorException;
  *
  * @author damiancardozo
  */
-@ManagedBean(name = "usuario")
+@ManagedBean(name = "regUsuario")
 @ViewScoped
 public class RegistrarUsuarioMBean implements Serializable {
 
@@ -57,50 +57,40 @@ public class RegistrarUsuarioMBean implements Serializable {
     private int provinciaSeleccionada;
     private List<SelectItem> paises;
     private int paisSeleccionado;
-    private List<DomicilioFacade> domicilios;
-    private DomicilioFacade domicilioSeleccionado;
+    private DomicilioFacade domicilio;
     private boolean creado;
     
     @PostConstruct
     public void init() {
         paises = new ArrayList<SelectItem>();
         provincias = new ArrayList<SelectItem>();
-        domicilios = new ArrayList<DomicilioFacade>();
         List<Pais> listaPais = usuarioBean.getPaises();
-        for(Pais p: listaPais) {
-            paises.add(new SelectItem(p.getPaisId(), p.getNombre()));
+        if(!listaPais.isEmpty()) {
+            for(Pais p: listaPais) {
+                paises.add(new SelectItem(p.getPaisId(), p.getNombre()));
+            }
         }
         today = new Date();
     }
     
-    public void agregarDomicilio() {
-        DomicilioFacade dom = new DomicilioFacade();
-        dom.setCalle(calle);
-        dom.setNumero(numero);
+    public void crearDomicilio() {
+        domicilio = new DomicilioFacade();
+        domicilio.setCalle(calle);
+        domicilio.setNumero(numero);
         if(piso != null)
-            dom.setPiso(piso);
+            domicilio.setPiso(piso);
         if(!depto.equals(""))
-            dom.setDepto(depto);
-        dom.setBarrio(barrio);
-        dom.setCiudad(ciudad);
-        domicilios.add(dom);
-//        calle = "";
-//        numero = null;
-//        piso = null;
-//        depto = "";
-//        barrio = "";
-//        ciudad = "";
-    }
-    
-    public void borrarDomicilio() {
-        domicilios.remove(domicilioSeleccionado);
+            domicilio.setDepto(depto);
+        domicilio.setBarrio(barrio);
+        domicilio.setCiudad(ciudad);
     }
     
     public String crearUsuario() {   
+        crearDomicilio();
         try {
-            usuarioBean.registrarUsuario(username, password, nombre, apellido, domicilios,
+            usuarioBean.registrarUsuario(username, password, nombre, apellido, domicilio,
                 provinciaSeleccionada, fechaNacimiento, dni, telefono, email);
-            return "usuarioCreado.xhtml?email=" + email;
+            return "usuarioCreado";
         } catch (AlquilaCosasException e) {
                 FacesContext.getCurrentInstance().addMessage(null, 
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, 
@@ -111,9 +101,11 @@ public class RegistrarUsuarioMBean implements Serializable {
     
     public void actualizarProvincias() {
         provincias.clear();
-        List<Provincia> prov = usuarioBean.getProvincias(paisSeleccionado);
-        for(Provincia p: prov) {
-            provincias.add(new SelectItem(p.getProvinciaId(), p.getNombre()));
+        List<Provincia> provList = usuarioBean.getProvincias(paisSeleccionado);
+        if(!provList.isEmpty()) {
+            for(Provincia p: provList) {
+                provincias.add(new SelectItem(p.getProvinciaId(), p.getNombre()));
+            }
         }
     }
     
@@ -125,12 +117,18 @@ public class RegistrarUsuarioMBean implements Serializable {
         String user = (String) value;
         if(user.equals(""))
             return;
-        if(user.length() < 6) {
+        else if(user.length() < 6) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
                     "El usuario debe tener al menos 6 caracteres", 
                     "El usuario debe tener al menos 6 caracteres");
             throw new ValidatorException(message);
         }
+//        else if(!username.matches("[a-zA-Z_0-9]")) {
+//            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+//                    "El usuario solo puede contener letras y numeros", 
+//                    "El usuario solo puede contener letras y numeros");
+//            throw new ValidatorException(message);
+//        }
         boolean existe = usuarioBean.usernameExistente(user);
         if(existe) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
@@ -320,23 +318,6 @@ public class RegistrarUsuarioMBean implements Serializable {
 
     public void setCreado(boolean creado) {
         this.creado = creado;
-    }
-
-    public List<DomicilioFacade> getDomicilios() {
-        return domicilios;
-    }
-
-    public void setDomicilios(List<DomicilioFacade> domicilios) {
-        this.domicilios = domicilios;
-    }
-
-    public DomicilioFacade getDomicilioSeleccionado() {
-        return domicilioSeleccionado;
-    }
-
-    public void setDomicilioSeleccionado(DomicilioFacade domicilioSeleccionado) {
-        this.domicilioSeleccionado = domicilioSeleccionado;
-    }
-    
+    }    
     
 }
