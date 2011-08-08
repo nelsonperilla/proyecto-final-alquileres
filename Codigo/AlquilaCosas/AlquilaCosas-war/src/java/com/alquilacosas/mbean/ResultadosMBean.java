@@ -84,19 +84,7 @@ public class ResultadosMBean implements Serializable {
         return null;
     }
 
-    public StreamedContent getImagenPrincipal() {
-        String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("photo_id");
-        Integer photoId = Integer.parseInt(id);
-        if(photoId != null) {
-            for (PublicacionFacade pub : publicaciones) {
-                if (pub.getId() == photoId) {
-                    return new DefaultStreamedContent(
-                            new ByteArrayInputStream(pub.getImagenPrincipal()));
-                }
-            }
-        }
-        return new DefaultStreamedContent();
-    }
+
 
     public String getBusqueda() {
         return busqueda;

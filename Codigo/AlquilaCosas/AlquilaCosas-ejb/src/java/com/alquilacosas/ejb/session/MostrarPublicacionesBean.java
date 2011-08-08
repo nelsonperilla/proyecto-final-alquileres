@@ -4,6 +4,7 @@
  */
 package com.alquilacosas.ejb.session;
 
+import com.alquilacosas.common.PublicacionFacade;
 import com.alquilacosas.ejb.entity.Categoria;
 import com.alquilacosas.ejb.entity.ImagenPublicacion;
 import com.alquilacosas.ejb.entity.Publicacion;
@@ -25,19 +26,36 @@ public class MostrarPublicacionesBean implements MostrarPublicacionesBeanLocal {
     private Publicacion activePublication;
     
     @Override
-    public List<Publicacion> getPublicacionesRandom(int pagina) {
-       Query query = entityManager.createNamedQuery("Publicacion.findAll");
-       List<Publicacion> publicaciones = query.getResultList();
-       return publicaciones;
+    public List<PublicacionFacade> getPublicacionesRandom(int pagina) {
+//       Query query = entityManager.createNamedQuery("Publicacion.findAll");
+//       List<Publicacion> publicaciones = query.getResultList();
+//       return publicaciones;
+        Query query = entityManager.createNamedQuery("Publicacion.findAll");
+
+        List<Publicacion> publicaciones = query.getResultList();
+        List<PublicacionFacade> resultado = new ArrayList<PublicacionFacade>();
+        for(Publicacion publicacion: publicaciones) {
+            PublicacionFacade tempPublication = new PublicacionFacade(publicacion.getPublicacionId(), publicacion.getTitulo(),
+                    publicacion.getDescripcion(), publicacion.getFechaDesde(), publicacion.getFechaHasta(), publicacion.getDestacada(),
+                    publicacion.getCantidad());
+            List<Integer> imagenes = new ArrayList<Integer>();
+            for(ImagenPublicacion imagen: publicacion.getImagenPublicacionList()) {
+                imagenes.add(imagen.getImagenPublicacionId());
+            }
+            tempPublication.setImagenIds(imagenes);
+            resultado.add(tempPublication);
+        }
+        
+        return resultado;        
     }
 
     @Override
-    public List<Publicacion> getPublicacionesPoCategoria(int pagina, int categoria) {
+    public List<PublicacionFacade> getPublicacionesPoCategoria(int pagina, int categoria) {
         Categoria filter = entityManager.find(Categoria.class, categoria);
         Query query = entityManager.createNamedQuery("Publicacion.findByCategoria");
         query.setParameter("categoria", filter);
-        List<Publicacion> publicaciones = query.getResultList();
-        return publicaciones;
+        List<PublicacionFacade> publicaciones = query.getResultList();
+        return publicaciones;//reescribir metodo!
     }
     
     @Override

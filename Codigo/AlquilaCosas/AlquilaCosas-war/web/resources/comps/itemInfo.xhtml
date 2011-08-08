@@ -16,15 +16,17 @@
 
                 <h:panelGrid columns="2" style="border: none; padding-left: 5px"
                              cellspacing="0" cellpadding="0" > 
-                    <p:graphicImage value="#{publicationsGroup.imagenPrincipal}" height="90px" width="90px">
-                        <f:param  name="photo_id" value="#{publicacionMBean.id}"/>
-                    </p:graphicImage>
+                    <h:graphicImage value="/image?id=#{publicacionMBean.imagenId}" 
+                                    width="90" height="90" 
+                                    rendered="#{publicacionMBean.imagenId != -1}" />
+                    <h:graphicImage value="#{resource['images:noImage.png']}"
+                                    width="90" height="90"
+                                    rendered="#{publicacionMBean.imagenId == -1}" />
                     <h:panelGrid style="text-align: left; padding: 1px 1px 1px 10px" columns="1"  >
                         <h:commandLink value="#{publicacionMBean.titulo}"  
-                                       action="#{publicationsGroup.seleccionarPublicacion}" 
+                                       action="#" 
                                        styleClass="itemTitle" >
-                        <f:setPropertyActionListener target="#{publicationsGroup.selectedPublicationId}"
-                                                     value="#{publicacionMBean.id}" />
+                        
                         </h:commandLink>  
                         <h:outputText value="#{publicacionMBean.descripcion}" styleClass="itemInfo" escape="false"/>  
                         <h:outputText value="Cantidad disponible: #{publicacionMBean.cantidad}" styleClass="itemInfo"/>  
