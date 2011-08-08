@@ -144,7 +144,7 @@ public class Categoria implements Serializable {
 
     @Override
     public String toString() {
-        return "com.alquilacosas.ejb.entity.Categoria[ categoriaId=" + categoriaId + " ]";
+        return nombre;
     }
     
 }
