@@ -4,8 +4,10 @@
  */
 package com.alquilacosas.mbean;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 
 /**
  *
@@ -19,6 +21,12 @@ public class BuscarMBean {
     
     /** Creates a new instance of BuscarMBean */
     public BuscarMBean() {
+    }
+    
+    @PostConstruct
+    public void init() {
+        buscar = FacesContext.getCurrentInstance().getExternalContext()
+                .getRequestParameterMap().get("art");
     }
 
     public String buscar() {

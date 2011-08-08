@@ -4,11 +4,8 @@
  */
 package com.alquilacosas.common;
 
-import java.io.ByteArrayInputStream;
 import java.util.Date;
 import java.util.List;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
 
 
 /**

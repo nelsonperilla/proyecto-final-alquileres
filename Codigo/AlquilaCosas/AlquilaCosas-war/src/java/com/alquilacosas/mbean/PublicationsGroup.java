@@ -24,6 +24,7 @@ public class PublicationsGroup implements Serializable
     @EJB
     private MostrarPublicacionesBeanLocal publicationBean;
     private List<PublicacionFacade> publicacionesRandom;
+    private String selectedPublicationId;
 
     public PublicationsGroup() 
     {
@@ -34,6 +35,14 @@ public class PublicationsGroup implements Serializable
     public void init()
     {
         publicacionesRandom = publicationBean.getPublicacionesRandom(0);
+    }
+    
+    public String seleccionarPublicacion() {
+        return "mostrarPublicacion?id=" +  selectedPublicationId;
+    }
+    
+    public String getSelectedPublicationId() {
+        return selectedPublicationId;
     }
     
     public List<PublicacionFacade> getPublicacionesRandom()

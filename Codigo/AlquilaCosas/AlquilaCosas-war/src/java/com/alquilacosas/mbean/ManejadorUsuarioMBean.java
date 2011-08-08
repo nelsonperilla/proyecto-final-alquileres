@@ -5,9 +5,9 @@
 package com.alquilacosas.mbean;
 
 import com.alquilacosas.common.AlquilaCosasException;
-import com.alquilacosas.common.UsuarioFacade;
 import com.alquilacosas.ejb.session.UsuarioBeanLocal;
 import java.io.Serializable;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Remove;
 import javax.faces.application.FacesMessage;
@@ -16,6 +16,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  *
@@ -35,9 +36,21 @@ public class ManejadorUsuarioMBean implements Serializable {
     public ManejadorUsuarioMBean() {
     }
 
+    @PostConstruct
+    public void init() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+        System.out.println(request.getContextPath());
+        System.out.println(request.getPathInfo());
+        System.out.println(request.getRequestURL());
+    }
+    
     public String login() {
         FacesContext context = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+        System.out.println(request.getContextPath());
+        System.out.println(request.getPathInfo());
+        System.out.println(request.getRequestURL());
         try {
             request.login(this.username, this.password);
         } catch (Exception e) {
@@ -47,7 +60,7 @@ public class ManejadorUsuarioMBean implements Serializable {
         }
         try {
             usuarioId = usuarioBean.loginUsuario(username);
-            administrador =  context.getExternalContext().isUserInRole("ADMIN");
+            administrador = context.getExternalContext().isUserInRole("ADMIN");
         } catch (AlquilaCosasException e) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     e.getMessage(), e.getMessage()));
@@ -73,7 +86,7 @@ public class ManejadorUsuarioMBean implements Serializable {
         administrador = false;
         return "inicio";
     }
-    
+
     public boolean isAdministrador() {
         return administrador;
     }
@@ -112,5 +125,4 @@ public class ManejadorUsuarioMBean implements Serializable {
     public void setUsuarioId(Integer usuarioId) {
         this.usuarioId = usuarioId;
     }
-    
 }
