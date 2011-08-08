@@ -16,7 +16,7 @@
             </ui:define>
 
             <ui:define name="principal">
-
+                <h:outputScript library="javascript" name="util.js" />
                 <h:form id="publicacionForm">
 
                     <h1>Publicar</h1>
@@ -31,7 +31,9 @@
 
                         <h:outputLabel value="Cantidad: " />
                         <p:inputText id="cantidad" value="#{publicacion.cantidad}" required ="true"
-                                     requiredMessage="Valor requerido" converterMessage="Debe ingresr un numero" >
+                                     requiredMessage="Valor requerido" 
+                                     converterMessage="Debe ingresr un numero"
+                                     onblur="submit()" >
                         </p:inputText>
                         <p:message id="cantidadVal" for="cantidad"/>
 
@@ -48,7 +50,8 @@
                     <br/>
                     <br/>
 
-                    <p:editor value="#{publicacion.descripcion}" widgetVar="editor" width="600"/>
+                    <p:editor value="#{publicacion.descripcion}" widgetVar="editor" 
+                              width="600" />
 
                     <h2>Cargar imagenes</h2>
                     <p:panel header="Cargar Imagenes" >
@@ -57,8 +60,7 @@
                         <br/>
 
                         <p:fileUpload fileUploadListener="#{publicacion.handleFileUpload}"
-
-                                      update="messages"   
+                                      update="messages"  
                                       multiple="true"  
                                       sizeLimit="2097152"   
                                       allowTypes="*.jpg;*.png;*.gif;"/>          
@@ -155,7 +157,7 @@
                     <br/>
                     <br/>
                     <p:commandButton value="Crear" action="#{publicacion.crearPublicacion}" 
-                                     ajax="false" process=":formTabla :formPrecio :publicacionForm" />
+                                     ajax="false" />
                     <p:commandButton  type="reset" value="Limpiar" />
                     <p:growl id="growl" showDetail="true" globalOnly="true" />
                 </h:form>

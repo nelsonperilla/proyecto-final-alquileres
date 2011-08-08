@@ -12,3 +12,8 @@ function handleAgregarDomicilio(xhr, status, args) {
         dialogoDom.hide();
     }
 }
+
+function submitirFormsPublicacion() {
+    document.publicacionForm.submit();
+    document.formPrecio.submit();
+}

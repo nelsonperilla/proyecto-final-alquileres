@@ -4,8 +4,11 @@
  */
 package com.alquilacosas.common;
 
+import java.io.ByteArrayInputStream;
 import java.util.Date;
 import java.util.List;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 
 /**
@@ -37,7 +40,9 @@ public class PublicacionFacade {
     private boolean destacada;
     private int cantidad;
     private List<byte[]> imagenes;
-    private byte[] imagenPrincipal;         
+    private byte[] imagenPrincipal;
+    private int imagenId = -1;
+    private List<Integer> imagenIds;
     //private Categoria categoria;
     //private Usuario usuario;
     //private int pagina;
@@ -133,6 +138,14 @@ public class PublicacionFacade {
     public byte[] getImagenPrincipal() {
         return imagenPrincipal;
     }
+    
+    public StreamedContent getImagenPrincipalAsStream() {
+        if(imagenPrincipal != null) {
+            ByteArrayInputStream i = new ByteArrayInputStream(imagenPrincipal);
+            return new DefaultStreamedContent(i);
+        }
+        return null;
+    }
 
     /**
      * @param imagenPrincipal the imagenPrincipal to set
@@ -154,7 +167,8 @@ public class PublicacionFacade {
     public void setImagenes(List<byte[]> imagenes) 
     {
         this.imagenes = imagenes;
-        imagenPrincipal=imagenes.get(0);
+        if(imagenes != null && imagenes.size() > 0)
+            imagenPrincipal=imagenes.get(0);
         //ByteArrayInputStream i = new ByteArrayInputStream(getImagenes().get(0));
         //imagenPrincipal =new DefaultStreamedContent(i);
     }
@@ -171,6 +185,24 @@ public class PublicacionFacade {
      */
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getImagenId() {
+        return imagenId;
+    }
+
+    public void setImagenId(int imagenId) {
+        this.imagenId = imagenId;
+    }
+
+    public List<Integer> getImagenIds() {
+        return imagenIds;
+    }
+
+    public void setImagenIds(List<Integer> imagenIds) {
+        this.imagenIds = imagenIds;
+        if(imagenIds != null && !imagenIds.isEmpty())
+            imagenId = imagenIds.get(0);
     }
 
 

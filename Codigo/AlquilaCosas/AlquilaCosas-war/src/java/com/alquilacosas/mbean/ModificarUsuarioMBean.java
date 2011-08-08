@@ -4,10 +4,13 @@
  */
 package com.alquilacosas.mbean;
 
+import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.common.DomicilioFacade;
 import com.alquilacosas.common.UsuarioFacade;
 import com.alquilacosas.ejb.entity.Pais;
+import com.alquilacosas.ejb.entity.Provincia;
 import com.alquilacosas.ejb.session.UsuarioBeanLocal;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,18 +27,16 @@ import javax.faces.model.SelectItem;
  *
  * @author damiancardozo
  */
-@ManagedBean(name="modUsuario")
+@ManagedBean(name = "modUsuario")
 @ViewScoped
-public class ModificarUsuarioMBean {
+public class ModificarUsuarioMBean implements Serializable {
 
     @EJB
     private UsuarioBeanLocal usuarioBean;
-    @ManagedProperty(value="#{login}")
+    @ManagedProperty(value = "#{login}")
     private ManejadorUsuarioMBean usuarioMBean;
-    
-    
     private UsuarioFacade usuario;
-    private String nombre, apellido, dni, telefono, email;
+    private String telefono;
     private Date fechaNacimiento;
     private String calle, depto, barrio, ciudad;
     private Integer numero, piso;
@@ -44,80 +45,101 @@ public class ModificarUsuarioMBean {
     private int provinciaSeleccionada;
     private List<SelectItem> paises;
     private int paisSeleccionado;
-    private List<DomicilioFacade> domicilios;
-    private DomicilioFacade domicilioSeleccionado;
-    
+    private DomicilioFacade domicilio;
+    private boolean editando;
+
     /** Creates a new instance of ModificarUsuarioMBean */
     public ModificarUsuarioMBean() {
     }
-    
+
     @PostConstruct
     public void init() {
-        
+
         Integer id = usuarioMBean.getUsuarioId();
         usuario = usuarioBean.getDatosUsuario(id);
-        
-        nombre = usuario.getNombre();
-        apellido = usuario.getApellido();
-        dni = usuario.getDni();
-        email = usuario.getEmail();
+
         telefono = usuario.getTelefono();
         fechaNacimiento = usuario.getFechaNacimiento();
-        domicilios = usuario.getDomicilios();
+        domicilio = usuario.getDomicilio();
+        
+        paisSeleccionado = domicilio.getPaisId();
+        provinciaSeleccionada = domicilio.getProvinciaId();
+        
         
         paises = new ArrayList<SelectItem>();
         provincias = new ArrayList<SelectItem>();
-        
+        if(paisSeleccionado != 0) {
+            actualizarProvincias();
+        }
+
         List<Pais> listaPais = usuarioBean.getPaises();
-        if(!listaPais.isEmpty()) {
-            for(Pais p: listaPais) {
+        if (!listaPais.isEmpty()) {
+            for (Pais p : listaPais) {
                 paises.add(new SelectItem(p.getPaisId(), p.getNombre()));
             }
         }
         today = new Date();
     }
-    
-    public void agregarDomicilio() {
-        if(domicilios.size() >= 3) {
+
+    public void crearDomicilio() {
+        domicilio = new DomicilioFacade();
+        domicilio.setCalle(calle);
+        domicilio.setNumero(numero);
+        if (piso != null) {
+            domicilio.setPiso(piso);
+        }
+        if (!depto.equals("")) {
+            domicilio.setDepto(depto);
+        }
+        domicilio.setBarrio(barrio);
+        domicilio.setCiudad(ciudad);
+    }
+
+    public void actualizarUsuario() {
+        try {
+            usuario = usuarioBean.actualizarUsuario(usuario.getId(), telefono, 
+                    fechaNacimiento, domicilio);
+            editando = false;
+        } catch(AlquilaCosasException e) {
             FacesContext.getCurrentInstance().addMessage(null, 
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-                    "Error al agregar domicilio", 
-                    "Se permiten hasta 3 domicilios"));
-            return;
+                    "Error al actualizar usuario", e.getMessage()));
         }
-        DomicilioFacade dom = new DomicilioFacade();
-        dom.setCalle(calle);
-        dom.setNumero(numero);
-        if(piso != null)
-            dom.setPiso(piso);
-        if(!depto.equals(""))
-            dom.setDepto(depto);
-        dom.setBarrio(barrio);
-        dom.setCiudad(ciudad);
-        domicilios.add(dom);
-        calle = "";
-        numero = null;
-        piso = null;
-        depto = "";
-        barrio = "";
-        ciudad = "";
+    }
+
+    public void actualizarProvincias() {
+        provincias.clear();
+        List<Provincia> provList = usuarioBean.getProvincias(paisSeleccionado);
+        if (!provList.isEmpty()) {
+            for (Provincia p : provList) {
+                provincias.add(new SelectItem(p.getProvinciaId(), p.getNombre()));
+            }
+        }
+        for(SelectItem si: paises) {
+            if(si.getValue().equals(new Integer(paisSeleccionado))) {
+                domicilio.setPais(si.getLabel());
+                break;
+            }
+        }
+        for(SelectItem si: provincias) {
+            if(si.getValue().equals(new Integer(provinciaSeleccionada))) {
+                domicilio.setProvincia(si.getLabel());
+                break;
+            }
+        }
     }
     
-     public String crearUsuario() {   
-        if(domicilios.isEmpty()) {
-            FacesContext.getCurrentInstance().addMessage(null, 
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-                    "Error al crear usuario", "No se cargo ningun domicilio"));
-            return null;
-        }
-        return null;
-    }    
-
+    public void editar() {
+        editando = true;
+    }
     
+    public void cancelarEdicion() {
+        editando= false;
+    }
+
     /*
      * Getters & Setters
      */
-    
     public String getBarrio() {
         return barrio;
     }
@@ -150,20 +172,12 @@ public class ModificarUsuarioMBean {
         this.depto = depto;
     }
 
-    public DomicilioFacade getDomicilioSeleccionado() {
-        return domicilioSeleccionado;
+    public DomicilioFacade getDomicilio() {
+        return domicilio;
     }
 
-    public void setDomicilioSeleccionado(DomicilioFacade domicilioSeleccionado) {
-        this.domicilioSeleccionado = domicilioSeleccionado;
-    }
-
-    public List<DomicilioFacade> getDomicilios() {
-        return domicilios;
-    }
-
-    public void setDomicilios(List<DomicilioFacade> domicilios) {
-        this.domicilios = domicilios;
+    public void setDomicilio(DomicilioFacade domicilio) {
+        this.domicilio = domicilio;
     }
 
     public Date getFechaNacimiento() {
@@ -238,38 +252,6 @@ public class ModificarUsuarioMBean {
         this.today = today;
     }
 
-    public String getApellido() {
-        return apellido;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
-
-    public String getDni() {
-        return dni;
-    }
-
-    public void setDni(String dni) {
-        this.dni = dni;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public ManejadorUsuarioMBean getUsuarioMBean() {
         return usuarioMBean;
     }
@@ -278,4 +260,19 @@ public class ModificarUsuarioMBean {
         this.usuarioMBean = usuarioMBean;
     }
 
+    public UsuarioFacade getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(UsuarioFacade usuario) {
+        this.usuario = usuario;
+    }
+
+    public boolean isEditando() {
+        return editando;
+    }
+
+    public void setEditando(boolean editando) {
+        this.editando = editando;
+    }
 }

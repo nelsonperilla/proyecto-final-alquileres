@@ -12,81 +12,161 @@
         <ui:composition template="./../../resources/templates/masterPage.xhtml">
 
             <ui:define name="logInfo">
-                
+                <h:form>
+                    <h:commandLink value="Inicio" action="inicio" />
+                </h:form>
             </ui:define>
 
             <ui:define name="principal">
                 <h1>Mis Datos</h1>
-                
-                <p:panel header="Datos personales" >
-                    <h:panelGrid columns="2" cellpadding="2" >
-                        
-                        <h:outputLabel value="Nombre" />
-                        <h:outputText value="#{modUsuario.nombre}" />
-                        
-                        <h:outputLabel value="Apellido" />
-                        <h:outputText value="#{modUsuario.apellido}" />
-                        
-                        <h:outputLabel value="DNI" />
-                        <h:outputText value="#{modUsuario.dni}" />
-                        
-                        <h:outputLabel value="Email" />
-                        <h:outputText value="#{modUsuario.email}" />
-                        
-                        <h:outputLabel value="Telefono" />
-                        <h:outputText value="#{modUsuario.telefono}" />
-                                      
-                        <h:outputLabel value="Fecha de nacimiento" />
-                        <h:outputText value="#{modUsuario.fechaNacimiento}" >
-                            <f:convertDateTime pattern="dd/MM/yyyy" />
-                        </h:outputText>
-                        <!-- <p:commandButton value="Editar" type="button" /> -->
-                    </h:panelGrid>
-                    
-                </p:panel>
-                
-                <p:panel header="Domicilios" >
-                    
-                    <h:form>
-                        <p:dataTable id="table" value="#{modUsuario.domicilios}" var="dom" >
+                <h:form id="datos">
+                    <p:outputPanel rendered="#{not modUsuario.editando}" >
+                        <p:panel header="Datos personales" styleClass="formPanel" >
+                            <h:panelGrid columns="2" cellpadding="2" >
 
-                            <p:column headerText="Calle" >
-                                <h:outputText value="#{dom.calle}" />
-                            </p:column>
+                                <h:outputLabel value="Nombre" />
+                                <h:outputText value="#{modUsuario.usuario.nombre}" />
 
-                            <p:column headerText="Numero" >
-                                <h:outputText value="#{dom.numero}" />
-                            </p:column>
+                                <h:outputLabel value="Apellido" />
+                                <h:outputText value="#{modUsuario.usuario.apellido}" />
 
-                            <p:column headerText="Piso" style="width:40px" >
-                                <h:outputText value="#{dom.piso}" />
-                            </p:column>
+                                <h:outputLabel value="DNI" />
+                                <h:outputText value="#{modUsuario.usuario.dni}" />
 
-                            <p:column headerText="Depto" style="width:40px" >
-                                <h:outputText value="#{dom.depto}" />
-                            </p:column>
+                                <h:outputLabel value="Email" />
+                                <h:outputText value="#{modUsuario.usuario.email}" />
 
-                            <p:column headerText="Barrio" >
-                                <h:outputText value="#{dom.barrio}" />
-                            </p:column>
+                                <h:outputLabel value="Telefono" />
+                                <h:outputText value="#{modUsuario.usuario.telefono}" />
 
-                            <p:column headerText="Ciudad" >
-                                <h:outputText value="#{dom.ciudad}" />
-                            </p:column>
+                                <h:outputLabel value="Fecha de nacimiento" />
+                                <h:outputText value="#{modUsuario.usuario.fechaNacimiento}" >
+                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                </h:outputText>
+                            </h:panelGrid>
 
-                            <p:column headerText="Provincia" >
-                                <h:outputText value="#{dom.provincia}" />
-                            </p:column>
-                            
-                            <p:column headerText="Pais" >
-                                <h:outputText value="#{dom.pais}" />
-                            </p:column>
-                        </p:dataTable>
-                        
-                    </h:form>
-                    
-                </p:panel>
-                
+                        </p:panel>
+
+                        <p:panel header="Domicilio" styleClass="formPanel" >
+
+                            <h:panelGrid columns="2" cellpadding="2" >
+
+                                <h:outputLabel value="Pais" />
+                                <h:outputText value="#{modUsuario.domicilio.pais}" />
+
+                                <h:outputLabel value="Provincia" />
+                                <h:outputText value="#{modUsuario.domicilio.provincia}" />
+
+                                <h:outputLabel value="Ciudad" />
+                                <h:outputText value="#{modUsuario.domicilio.ciudad}" />
+
+                                <h:outputLabel value="Barrio" />
+                                <h:outputText value="#{modUsuario.domicilio.barrio}" />
+
+                                <h:outputLabel value="Calle" />
+                                <h:outputText value="#{modUsuario.domicilio.calle}" />
+
+                                <h:outputLabel value="Numero" />
+                                <h:outputText value="#{modUsuario.domicilio.numero}" />
+
+                                <h:outputLabel value="Piso" />
+                                <h:outputText value="#{modUsuario.domicilio.piso}" />
+
+                                <h:outputLabel value="Depto" />
+                                <h:outputText value="#{modUsuario.domicilio.depto}" />
+
+                            </h:panelGrid>
+
+                        </p:panel>
+                        <p:commandButton value="Editar" actionListener="#{modUsuario.editar}"
+                                         update=":datos :editor"/>
+                    </p:outputPanel>
+                </h:form>
+                <h:form id="editor" >
+                    <p:outputPanel rendered="#{modUsuario.editando}" >
+
+                        <p:panel header="Datos personales" styleClass="formPanel" >
+                            <h:panelGrid columns="2" cellpadding="2" >
+
+                                <h:outputLabel value="Nombre" />
+                                <h:outputText value="#{modUsuario.usuario.nombre}" />
+
+                                <h:outputLabel value="Apellido" />
+                                <h:outputText value="#{modUsuario.usuario.apellido}" />
+
+                                <h:outputLabel value="DNI" />
+                                <h:outputText value="#{modUsuario.usuario.dni}" />
+
+                                <h:outputLabel value="Email" />
+                                <h:outputText value="#{modUsuario.usuario.email}" />
+
+                                <h:outputLabel value="Telefono" />
+                                <p:inputText value="#{modUsuario.telefono}" />
+
+                                <h:outputLabel value="Fecha de nacimiento" />
+                                <p:calendar value="#{modUsuario.fechaNacimiento}"
+                                            required="true" pattern="dd/MM/yyyy" />
+                            </h:panelGrid>
+
+                        </p:panel>
+
+                        <p:panel header="Domicilio" styleClass="formPanel" >
+                            <h:panelGrid columns="3" cellpadding="2" >
+
+                                <h:outputLabel value="Pais" />
+                                <h:selectOneMenu id="pais" value="#{modUsuario.domicilio.paisId}" required="true"
+                                                 requiredMessage="Valor requerido" >                                
+                                    <f:selectItem itemLabel="Seleccione un pais" itemValue="" />
+                                    <f:selectItems value="#{modUsuario.paises}" />
+                                    <p:ajax event="change" update="provincia growl" process="@this"
+                                            listener="#{modUsuario.actualizarProvincias}" />
+                                </h:selectOneMenu>
+                                <p:message for="pais" />
+
+                                <h:outputLabel value="Provincia" />
+                                <h:selectOneMenu id="provincia" value="#{modUsuario.domicilio.provinciaId}" 
+                                                 required="true" requiredMessage="Valor requerido" >
+                                    <f:selectItem itemLabel="Seleccione una provincia" itemValue="" />
+                                    <f:selectItems value="#{modUsuario.provincias}" />
+                                    <p:ajax event="change" process="@this" />
+                                </h:selectOneMenu>
+                                <p:message for="provincia" />
+
+                                <h:outputLabel value="Ciudad" />
+                                <p:inputText id="ciudad" value="#{modUsuario.domicilio.ciudad}" />
+                                <p:message for="ciudad" />
+
+                                <h:outputLabel value="Barrio" />
+                                <p:inputText id="barrio" value="#{modUsuario.domicilio.barrio}" />
+                                <p:message for="barrio" />
+
+                                <h:outputLabel value="Calle" />
+                                <p:inputText id="calle" value="#{modUsuario.domicilio.calle}" />
+                                <p:message for="calle" />
+
+                                <h:outputLabel value="Numero" />
+                                <p:inputText id="numero" value="#{modUsuario.domicilio.numero}" />
+                                <p:message for="numero" />
+
+                                <h:outputLabel value="Piso" />
+                                <p:inputText id="piso" value="#{modUsuario.domicilio.piso}" />
+                                <p:message for="piso" />
+
+                                <h:outputLabel value="Depto" />
+                                <p:inputText id="depto" value="#{modUsuario.domicilio.depto}" />
+                                <p:message for="depto" />
+
+                                <p:commandButton value="Aceptar" actionListener="#{modUsuario.actualizarUsuario}"
+                                                 update=":datos :editor" />
+                                <p:commandButton value="Cancelar" actionListener="#{modUsuario.cancelarEdicion}"
+                                                 update=":datos :editor" />
+                            </h:panelGrid>
+                            <p:growl id="growl" globalOnly="true" />    
+
+                        </p:panel>
+
+                    </p:outputPanel>
+                </h:form>
             </ui:define>
 
             <ui:define name="right">
