@@ -4,6 +4,7 @@
  */
 package com.alquilacosas.ejb.session;
 
+import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.ejb.entity.Categoria;
 import java.util.List;
 import javax.ejb.Local;
@@ -16,4 +17,10 @@ import javax.ejb.Local;
 public interface CategoriaBeanLocal {
 
      List<Categoria> getCategorias();
+
+     void registrarCategoria (String nombre, String descripcion, Categoria categoriaPadre) throws AlquilaCosasException;
+
+     void borrarCategoria(Categoria categoria);
+
+     void modificarCategoria(Categoria categoria);
 }

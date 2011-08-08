@@ -13,7 +13,12 @@ function handleAgregarDomicilio(xhr, status, args) {
     }
 }
 
-function submitirFormsPublicacion() {
-    document.publicacionForm.submit();
-    document.formPrecio.submit();
+function handleModificarCategoria(xhr, status, args) {
+    if(args.validationFailed) {
+        jQuery('#dialogo').effect("shake", {
+            times:3
+        }, 100);
+    } else {
+        dialogoModifCat.hide();
+    }
 }

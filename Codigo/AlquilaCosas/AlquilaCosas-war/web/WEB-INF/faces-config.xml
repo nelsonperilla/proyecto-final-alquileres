@@ -39,14 +39,10 @@
             <to-view-id>/vistas/resultados.xhtml?art=#{buscarBean.buscar}</to-view-id>
             <redirect/>
         </navigation-case>
-    </navigation-rule>
-    
-    <navigation-rule>
-        <from-view-id>/vistas/registrarUsuario.xhtml</from-view-id>
         <navigation-case>
-            <from-action>#{regUsuario.crearUsuario}</from-action>
-            <to-view-id>/vistas/usuarioCreado.xhtml?email=#{regUsuario.email}</to-view-id>
-            <redirect />
+            <from-outcome>categorias</from-outcome>
+            <to-view-id>/vistas/admin/categorias.xhtml</to-view-id>
+            <redirect/>
         </navigation-case>
     </navigation-rule>
 
