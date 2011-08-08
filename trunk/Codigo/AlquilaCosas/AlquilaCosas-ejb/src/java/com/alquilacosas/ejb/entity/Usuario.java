@@ -42,7 +42,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Usuario.findByDni", query = "SELECT u FROM Usuario u WHERE u.dni = :dni"),
     @NamedQuery(name = "Usuario.findByFechaNac", query = "SELECT u FROM Usuario u WHERE u.fechaNac = :fechaNac")})
 public class Usuario implements Serializable {
-    @Basic(optional = false)
+    @Basic(optional =     false)
     @NotNull
     @Column(name = "FECHA_NAC")
     @Temporal(TemporalType.DATE)

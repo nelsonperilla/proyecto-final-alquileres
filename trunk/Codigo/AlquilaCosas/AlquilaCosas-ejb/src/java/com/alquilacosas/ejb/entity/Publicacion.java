@@ -47,12 +47,12 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Publicacion.findByCategoria", query = "SELECT p FROM Publicacion p WHERE p.categoriaFk = :categoriaFk"),
     @NamedQuery(name = "Publicacion.findByPalabraClaveAndCat", query = "SELECT p FROM Publicacion p WHERE p.categoriaFk = :categoriaFk AND (p.titulo LIKE :?1 OR p.descripcion LIKE ?1)")})
 public class Publicacion implements Serializable {
-    @Basic(optional = false)
+    @Basic(optional =     false)
     @NotNull
     @Column(name = "FECHA_DESDE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaDesde;
-    @Basic(optional = false)
+    @Basic(optional =     false)
     @NotNull
     @Column(name = "FECHA_HASTA")
     @Temporal(TemporalType.TIMESTAMP)

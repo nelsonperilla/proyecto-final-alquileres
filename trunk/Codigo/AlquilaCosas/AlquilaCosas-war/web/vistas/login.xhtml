@@ -20,16 +20,16 @@
                     <h1>Login</h1>
                     <h:panelGrid columns="3" >
                         <h:outputLabel value="Usuario" />
-                        <p:inputText id="usuario" value="#{login.username}" />
-                        <p:message for="usuario" />
+                        <p:inputText id="j_username" value="#{login.username}" />
+                        <p:message for="j_username" />
                         
                         <h:outputLabel value="Contraseña" />
-                        <p:password id="password" value="#{login.password}" 
+                        <p:password id="j_password" value="#{login.password}" 
                                     feedback="false" minLength="8" />
-                        <p:message for="password" />
+                        <p:message for="j_password" />
                         
                         <p:commandButton value="Entrar" action="#{login.login}"
-                                         ajax="false"/>
+                                         ajax="false" />
                     </h:panelGrid>
                     <p:messages globalOnly="true" showDetail="false" />
                 </h:form>

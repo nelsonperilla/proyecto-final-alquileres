@@ -50,10 +50,6 @@ form {
     color: #2c2c2c;
 }
 
-
-
-
-
 #menu a:link {
     text-decoration: none;
 } 
@@ -67,8 +63,6 @@ form {
 #login td{
     background: #0182dc;
     padding: 0px 0px 0px 0px; 
-
-    
 }
 
 #login th{
@@ -79,7 +73,6 @@ form {
     font-size: 24px;
     font-family: Ubuntu;
     color: #2c2c2c;    
-    
 }
 
 #login .footer{
@@ -158,8 +151,7 @@ form {
     width: 659px;
     font-size: 18px;
     font-family: Trebuchet MS;
-    color: #2c2c2c;        
-    
+    color: #2c2c2c;           
 }
 
 #searchBar td {
@@ -187,6 +179,14 @@ form {
 
 .inputTextCorto {
     width: 70px;
+}
+
+.itemsTable.ui-datatable, .itemsTable.ui-datatable table {
+    border: none !important;
+}
+
+.ui-datatable.itemsTable table {
+    border: none !important;
 }
 
 .itemsTable.ui-datatable .ui-datatable-data td,

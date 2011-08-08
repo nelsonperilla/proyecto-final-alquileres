@@ -36,6 +36,7 @@ public class ResultadosMBean implements Serializable {
     private PublicacionFacade publicacionActual;
     private String busqueda;
     private int categoria;
+    private int publicacionSeleccionada;
 
     /** Creates a new instance of BuscarPublicacionMBean */
     public ResultadosMBean() {
@@ -46,10 +47,10 @@ public class ResultadosMBean implements Serializable {
         publicaciones = new ArrayList<PublicacionFacade>();
         busqueda = FacesContext.getCurrentInstance().getExternalContext()
                 .getRequestParameterMap().get("art");
-        String cat = FacesContext.getCurrentInstance().getExternalContext()
-                .getRequestParameterMap().get("cat");
-        if(cat != null && !cat.equals(""))
-            categoria = Integer.valueOf(cat);
+//        String cat = FacesContext.getCurrentInstance().getExternalContext()
+//                .getRequestParameterMap().get("cat");
+//        if(cat != null && !cat.equals(""))
+//            categoria = Integer.valueOf(cat);
         
         model = new LazyDataModel<PublicacionFacade>() {
 
@@ -84,7 +85,9 @@ public class ResultadosMBean implements Serializable {
         return null;
     }
 
-
+    public String verPublicacion() {
+        return "";
+    }
 
     public String getBusqueda() {
         return busqueda;
@@ -116,5 +119,13 @@ public class ResultadosMBean implements Serializable {
 
     public void setModel(LazyDataModel model) {
         this.model = model;
+    }
+
+    public int getPublicacionSeleccionada() {
+        return publicacionSeleccionada;
+    }
+
+    public void setPublicacionSeleccionada(int publicacionSeleccionada) {
+        this.publicacionSeleccionada = publicacionSeleccionada;
     }
 }
