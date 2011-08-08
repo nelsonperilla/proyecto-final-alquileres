@@ -70,35 +70,18 @@ public class UsuarioBean implements UsuarioBeanLocal {
         Usuario u = entityManager.find(Usuario.class, id);
         UsuarioFacade userFacade = new UsuarioFacade(u.getUsuarioId(), u.getNombre(), 
                 u.getApellido(), u.getEmail(), u.getTelefono(), u.getDni(), u.getFechaNac());
-        List<DomicilioFacade> listaDom = new ArrayList<DomicilioFacade>();
-        for(Domicilio d: u.getDomicilioList()) {
-            DomicilioFacade dom = new DomicilioFacade(d.getCalle(), d.getNumero(),
-                    d.getPiso(), d.getDepto(), d.getBarrio(), d.getCiudad());
-            Provincia prov = d.getProvinciaFk();
-            dom.setProvinciaId(prov.getProvinciaId());
-            dom.setProvincia(prov.getNombre());
-            dom.setPaisId(prov.getPaisFk().getPaisId());
-            dom.setPais(prov.getPaisFk().getNombre());
-            listaDom.add(dom);
-        }
-        userFacade.setDomicilios(listaDom);
+        Domicilio d = u.getDomicilioList().get(0);
+        
+        DomicilioFacade dom = new DomicilioFacade(d.getCalle(), d.getNumero(),
+                d.getPiso(), d.getDepto(), d.getBarrio(), d.getCiudad());
+        Provincia prov = d.getProvinciaFk();
+        dom.setProvinciaId(prov.getProvinciaId());
+        dom.setProvincia(prov.getNombre());
+        dom.setPaisId(prov.getPaisFk().getPaisId());
+        dom.setPais(prov.getPaisFk().getNombre());
+        
+        userFacade.setDomicilio(dom);
         return userFacade;
-    }
-    
-    @Override
-    public boolean usernameExistente(String username) {
-        Login login = null;
-        try {
-            Query query = entityManager.createNamedQuery("Login.findByUsername");
-            query.setParameter("username", username);
-            login = (Login) query.getSingleResult();
-        } catch(NoResultException e) {
-            return false;
-        }
-        if(login == null)
-            return false;
-        else
-            return true;
     }
     
     @Override
@@ -211,21 +194,54 @@ public class UsuarioBean implements UsuarioBeanLocal {
             throw new AlquilaCosasException("Error al enviar email de notificacion: " + e);
         }
     }
-
+    
     @Override
-    public List<Provincia> getProvincias(int pais) {
-        Pais p = entityManager.find(Pais.class, pais);
-        Query query = entityManager.createNamedQuery("Provincia.findByPais");
-        query.setParameter("pais", p);
-        List<Provincia> provincias = query.getResultList();
-        return provincias;
+     public UsuarioFacade actualizarUsuario(int idUsuario, String telefono, Date fechaNacimiento, 
+             DomicilioFacade dom) throws AlquilaCosasException {
+        Usuario usuario = entityManager.find(Usuario.class, idUsuario);
+        usuario.setTelefono(telefono);
+        usuario.setFechaNac(fechaNacimiento);
+        
+        List<Domicilio> domicilios = usuario.getDomicilioList();
+        Domicilio domicilio = domicilios.get(0);
+        
+        if(!domicilio.getProvinciaFk().getProvinciaId().equals(dom.getProvinciaId())) {
+            Provincia prov = entityManager.find(Provincia.class, dom.getProvinciaId());
+            domicilio.setProvinciaFk(prov);
+            dom.setProvincia(prov.getNombre());
+            dom.setPais(prov.getPaisFk().getNombre());
+        }
+        domicilio.setCiudad(dom.getCiudad());
+        domicilio.setBarrio(dom.getBarrio());
+        domicilio.setCalle(dom.getCalle());
+        domicilio.setNumero(dom.getNumero());
+        domicilio.setPiso(dom.getPiso());
+        domicilio.setDepto(dom.getDepto());
+        
+        entityManager.merge(domicilio);
+        entityManager.merge(usuario);
+        
+        UsuarioFacade uFacade = new UsuarioFacade(usuario.getUsuarioId(), usuario.getNombre(),
+                usuario.getApellido(), usuario.getEmail(), usuario.getTelefono(), usuario.getDni(), 
+                usuario.getFechaNac());
+        uFacade.setDomicilio(dom);
+        return uFacade;
     }
-
+    
     @Override
-    public List<Pais> getPaises() {
-        Query query = entityManager.createNamedQuery("Pais.findAll");
-        List<Pais> paises = query.getResultList();
-        return paises;
+    public boolean usernameExistente(String username) {
+        Login login = null;
+        try {
+            Query query = entityManager.createNamedQuery("Login.findByUsername");
+            query.setParameter("username", username);
+            login = (Login) query.getSingleResult();
+        } catch(NoResultException e) {
+            return false;
+        }
+        if(login == null)
+            return false;
+        else
+            return true;
     }
 
     @Override
@@ -247,6 +263,20 @@ public class UsuarioBean implements UsuarioBeanLocal {
         return usuario.getUsuarioId();
     }
     
-    
+    @Override
+    public List<Provincia> getProvincias(int pais) {
+        Pais p = entityManager.find(Pais.class, pais);
+        Query query = entityManager.createNamedQuery("Provincia.findByPais");
+        query.setParameter("pais", p);
+        List<Provincia> provincias = query.getResultList();
+        return provincias;
+    }
+
+    @Override
+    public List<Pais> getPaises() {
+        Query query = entityManager.createNamedQuery("Pais.findAll");
+        List<Pais> paises = query.getResultList();
+        return paises;
+    }
 
 }

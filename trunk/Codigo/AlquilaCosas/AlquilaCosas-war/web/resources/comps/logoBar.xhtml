@@ -21,10 +21,12 @@
                         <table id="searchBar" >
                             <tr>
                                 <td valign="center" width="550px"  > 
-                                    <h:inputText style="width:540px" />
+                                    <h:inputText value="#{buscarBean.buscar}" 
+                                                 style="width:540px" />
                                 </td>
                                 <td valign="center"> 
-                                    <h:commandLink  value="Buscar" style="text-decoration: none" />
+                                    <p:commandLink action="#{buscarBean.buscar}" ajax="false"
+                                                   value="Buscar" style="text-decoration: none" />
                                 </td>
                             </tr>
                         </table>

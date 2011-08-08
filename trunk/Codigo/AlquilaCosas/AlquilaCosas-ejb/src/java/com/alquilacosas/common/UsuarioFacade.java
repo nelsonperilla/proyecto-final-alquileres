@@ -16,7 +16,7 @@ public class UsuarioFacade {
     private Integer id;
     private String nombre, apellido, email, telefono, dni;
     private Date fechaNacimiento;
-    private List<DomicilioFacade> domicilios;
+    private DomicilioFacade domicilio;
 
     public UsuarioFacade(Integer id, String nombre, String apellido, String email, 
             String telefono, String dni, Date fechaNacimiento) {
@@ -37,12 +37,12 @@ public class UsuarioFacade {
         this.dni = dni;
     }
 
-    public List<DomicilioFacade> getDomicilios() {
-        return domicilios;
+    public DomicilioFacade getDomicilio() {
+        return domicilio;
     }
 
-    public void setDomicilios(List<DomicilioFacade> domicilios) {
-        this.domicilios = domicilios;
+    public void setDomicilio(DomicilioFacade domicilio) {
+        this.domicilio = domicilio;
     }
 
     public Date getFechaNacimiento() {

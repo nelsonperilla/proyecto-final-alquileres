@@ -126,8 +126,6 @@ form {
 #register input{
     width: 300px;
 }
-
-
     
 
 #items .item{
@@ -138,13 +136,9 @@ form {
     font-size: 24px;
     font-family: Ubuntu;
     color: #2c2c2c;  
-    
-
 }
 
 #items .itemInfo{
-
-    
     font-size: 14px;
     font-family: Trebuchet MS;
     padding: 1px 1px 1px 1px;
@@ -152,10 +146,8 @@ form {
 
 
 #items .itemTitle{
-    font-size: 14px;
-    
+    font-size: 14px;    
     font-family: Trebuchet MS;
-    
     color: #0066ff;
     text-decoration: underline;
 }
@@ -196,3 +188,20 @@ form {
 .inputTextCorto {
     width: 70px;
 }
+
+.itemsTable.ui-datatable .ui-datatable-data td,
+ .itemsTable.ui-datatable .ui-datatable-data-empty td{
+    border: none;
+    padding: 1px;
+}
+
+.itemImgCol {
+    width: 60px;
+    padding: 2px;
+}
+
+.itemContentCol {
+    width: 350px;
+    text-align: left;
+}
+
