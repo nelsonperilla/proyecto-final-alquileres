@@ -39,8 +39,6 @@ public class PublicacionFacade {
     private Date fecha_hasta;
     private boolean destacada;
     private int cantidad;
-    private List<byte[]> imagenes;
-    private byte[] imagenPrincipal;
     private int imagenId = -1;
     private List<Integer> imagenIds;
     //private Categoria categoria;
@@ -132,46 +130,6 @@ public class PublicacionFacade {
         this.cantidad = cantidad;
     }
 
-    /**
-     * @return the imagenPrincipal
-     */
-    public byte[] getImagenPrincipal() {
-        return imagenPrincipal;
-    }
-    
-    public StreamedContent getImagenPrincipalAsStream() {
-        if(imagenPrincipal != null) {
-            ByteArrayInputStream i = new ByteArrayInputStream(imagenPrincipal);
-            return new DefaultStreamedContent(i);
-        }
-        return null;
-    }
-
-    /**
-     * @param imagenPrincipal the imagenPrincipal to set
-     */
-    public void setImagenPrincipal(byte[] imagenPrincipal) {
-        this.imagenPrincipal = imagenPrincipal;
-    }
-
-    /**
-     * @return the imagenes
-     */
-    public List<byte[]> getImagenes() {
-        return imagenes;
-    }
-
-    /**
-     * @param imagenes the imagenes to set
-     */
-    public void setImagenes(List<byte[]> imagenes) 
-    {
-        this.imagenes = imagenes;
-        if(imagenes != null && imagenes.size() > 0)
-            imagenPrincipal=imagenes.get(0);
-        //ByteArrayInputStream i = new ByteArrayInputStream(getImagenes().get(0));
-        //imagenPrincipal =new DefaultStreamedContent(i);
-    }
 
     /**
      * @return the id
