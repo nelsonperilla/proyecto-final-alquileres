@@ -17,7 +17,7 @@
 
             <ui:define name="principal">
                 <h:outputScript library="javascript" name="util.js" />
-                <h:form id="publicacionForm">
+                <h:form id="formPublicacion">
 
                     <h1>Publicar</h1>
                     <h:panelGrid columns="3" styleClass="formPanel">                       
@@ -60,102 +60,32 @@
                         <br/>
 
                         <p:fileUpload fileUploadListener="#{publicacion.handleFileUpload}"
-                                      update="messages"  
-                                      multiple="true"  
+                                      update="messages imgTemp" 
+                                      multiple="true"
                                       sizeLimit="2097152"   
                                       allowTypes="*.jpg;*.png;*.gif;"/>          
+                     
                     </p:panel>
-                </h:form>
-                <h2>Determina el precio del alquiler del producto</h2>
 
-                <p:panel id="panelPrecios" header="Precios" styleClass="formPanel">
-                    <h:form id="formPrecio">
-                        <h:panelGrid columns="3" >
+                    <h2>Determina el precio del alquiler del producto</h2>
 
-                            <h:outputLabel value="Periodo" />
-                            <h:selectOneMenu id="periodo" value="#{publicacion.selectedPeriodo}" required ="true"
-                                             requiredMessage="Valor requerido"> 
-                                <f:selectItem itemLabel="Periodos" itemValue="" />
-                                <f:selectItems value="#{publicacion.periodos}" />
-                            </h:selectOneMenu>
-                            <p/>
+                    <p:panel id="panelPrecios" header="Precios" styleClass="formPanel">
 
-                            <h:outputLabel value="Precio" />
-                            <p:inputText id="precio" value="#{publicacion.precio}" required="true"
-                                         requiredMessage="Valor requerido" styleClass="inputTextCorto"/>
-                            <p:message for="precio" />
+                        <ui:repeat value="#{publicacion.precios}" var="precio">
 
+                            <h:panelGrid columns="2" >
 
-                            <p:commandButton value="Agregar" actionListener="#{publicacion.cargarPrecio}"
-                                             update="formTabla" />
-                            <p:commandButton value="Limpiar" type="reset" />
+                                <h:outputText value="#{precio.periodoNombre}" />
+                                <p:inputText value="#{precio.precio}" styleClass="inputTextCorto"/>
 
+                            </h:panelGrid>
+                        </ui:repeat>
 
-                        </h:panelGrid>
-                    </h:form>
-                    
-                    <br/>
-                    <p:separator/>
-                    <br/>
+                    </p:panel>
 
-                    <h:form id="formTabla">
-                        <p:dataTable id="tablaPrecios" value="#{publicacion.precios}" var="p">
-                            <f:facet name="header" >
-                                Precios cargados
-                            </f:facet>
-
-                            <p:column headerText="precio" >
-                                <p:cellEditor>
-                                    <f:facet name="output" >
-                                        <h:outputText value="#{p.precio}" />
-                                    </f:facet>
-                                    <f:facet name="input" >
-                                        <p:inputText value="#{p.precio}" />
-                                    </f:facet>
-                                </p:cellEditor>
-                            </p:column>
-
-                            <p:column headerText="periodo">
-                                <p:cellEditor>
-                                    <f:facet name="output">
-                                        <h:outputText value="#{p.periodoNombre}" />
-                                    </f:facet>
-                                    <f:facet name="input">
-                                        <h:selectOneMenu id="periodo" value="#{p.periodoNombre}" required ="true"
-                                                         requiredMessage="Valor requerido"> 
-                                            <f:selectItem itemLabel="Periodos" itemValue="" />
-                                            <f:selectItems value="#{publicacion.periodos}" />
-                                        </h:selectOneMenu>
-                                    </f:facet>
-                                </p:cellEditor> 
-                            </p:column>
-
-                            <p:column headerText="Options" style="width:50px">  
-                                <p:rowEditor />
-                                <p:commandButton oncomplete="confirmacion.show()"
-                                                 image="ui-icon ui-icon-trash" 
-                                                 title="Quitar" >
-                                    <f:setPropertyActionListener value="#{p}" target="#{publicacion.precioSeleccionado}" />
-                                </p:commandButton>  
-                            </p:column>
-
-                        </p:dataTable>
-
-                        <p:confirmDialog message="Esta seguro?" width="200" header="Confirmar"
-                                         severity="alert" widgetVar="confirmacion" >
-                            <p:commandButton value="Si" update="tablaPrecios" actionListener="#{publicacion.borrarPrecio}" 
-                                             oncomplete="confirmacion.hide()"/>
-                            <p:commandButton value="No" onclick="confirmacion.hide()" type="button" />
-                        </p:confirmDialog>
-
-                    </h:form>
-
-                   
-
-                </p:panel>
-                <h:form id="formButton">
                     <br/>
                     <br/>
+
                     <p:commandButton value="Crear" action="#{publicacion.crearPublicacion}" 
                                      ajax="false" />
                     <p:commandButton  type="reset" value="Limpiar" />
@@ -169,6 +99,8 @@
 
             <ui:define name="right">
                 <comps:loginBox />
+                <comps:adminPanel />
+                <comps:userPanel />
             </ui:define>
 
         </ui:composition>

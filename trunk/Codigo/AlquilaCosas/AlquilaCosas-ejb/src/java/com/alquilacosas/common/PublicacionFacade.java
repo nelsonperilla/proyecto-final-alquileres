@@ -4,6 +4,10 @@
  */
 package com.alquilacosas.common;
 
+import com.alquilacosas.ejb.entity.Categoria;
+import com.alquilacosas.ejb.entity.EstadoPublicacion;
+import com.alquilacosas.ejb.entity.ImagenPublicacion;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,21 +18,6 @@ import java.util.List;
  */
 public class PublicacionFacade {
     
-    
-    public PublicacionFacade(int id,String titulo,String descripcion, Date fecha_desde,
-            Date fecha_hasta, boolean destacada,int cantidad)//, Categoria categoria,Usuario usuario) 
-    {
-        this.id=id;
-        this.titulo=titulo;
-        this.descripcion=descripcion;
-        this.fecha_desde=fecha_desde;
-        this.fecha_hasta=fecha_hasta;
-        this.destacada=destacada;
-        this.cantidad=cantidad;
-        //this.categoria=categoria;
-        //this.usuario=usuario;
-    }
-    
     private int id;
     private String titulo;
     private String descripcion;
@@ -38,10 +27,77 @@ public class PublicacionFacade {
     private int cantidad;
     private int imagenId = -1;
     private List<Integer> imagenIds;
-    //private Categoria categoria;
-    //private Usuario usuario;
-    //private int pagina;
+    private Categoria categoria;
+    private List<PrecioFacade> precios;
+    private EstadoPublicacion estado;
+    private List<ImagenPublicacion> imagenes;
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
+
+    public EstadoPublicacion getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoPublicacion estado) {
+        this.estado = estado;
+    }
+
+    public List<PrecioFacade> getPrecios() {
+        return precios;
+    }
+
+    public void setPrecios(List<PrecioFacade> precios) {
+        this.precios = precios;
+    }
     
+    public PublicacionFacade(int id,String titulo,String descripcion, 
+            Date fecha_desde, Date fecha_hasta, boolean destacada,
+            int cantidad, Categoria categoria,
+            List<ImagenPublicacion> imagenes, EstadoPublicacion estado)
+    {
+        this.id = id;
+        this.titulo = titulo;
+        this.descripcion = descripcion;
+        this.fecha_desde = fecha_desde;
+        this.fecha_hasta = fecha_hasta;
+        this.destacada = destacada;
+        this.cantidad = cantidad;
+        this.categoria = categoria;
+        this.imagenes = imagenes;
+        precios = new ArrayList<PrecioFacade>();
+        this.estado = estado;
+    }
+    
+    public PublicacionFacade(int id,String titulo,String descripcion, 
+            Date fecha_desde, Date fecha_hasta, boolean destacada,
+            int cantidad)//, Categoria categoria,Usuario usuario) 
+    {
+        this.id = id;
+        this.titulo = titulo;
+        this.descripcion = descripcion;
+        this.fecha_desde = fecha_desde;
+        this.fecha_hasta = fecha_hasta;
+        this.destacada = destacada;
+        this.cantidad = cantidad;
+
+    }
+
+    public List<ImagenPublicacion> getImagenes() {
+        return imagenes;
+    }
+
+    public void setImagenes(List<ImagenPublicacion> imagenes) {
+        this.imagenes = imagenes;
+    }
+    
+    
+
     /**
      * @return the titulo
      */
@@ -161,5 +217,6 @@ public class PublicacionFacade {
     }
 
 
+    
     
 }

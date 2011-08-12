@@ -1,0 +1,157 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:comps="http://java.sun.com/jsf/composite/comps"
+      xmlns:p="http://primefaces.prime.com.tr/ui" 
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <style type="text/css">
+div.img
+  {
+  margin:2px;
+  border:1px solid #0000ff;
+  height:auto;
+  width:auto;
+  float:left;
+  text-align:center;
+  }
+div.img h:graphicImage
+  {
+  display:inline;
+  margin:3px;
+  border:1px solid #ffffff;
+  }
+div.img a:hover h:graphicImage
+  {
+  border:1px solid #0000ff;
+  }
+
+.borrarBoton{
+      width: 80px; 
+      height: 25px; 
+      border: 1px; 
+      margin: 2px;
+      background-color: white;
+      float: none;
+  }
+.text_line
+{
+clear:both;
+margin-bottom:2px;
+}
+.imagenes {
+    width: 600px;
+    height: 600px;
+}
+</style>
+    </h:head>
+    <body>
+
+        <ui:composition template="./../../resources/templates/masterPage.xhtml">
+
+            <ui:define name="logInfo">
+                logInfo
+            </ui:define>
+
+            <ui:define name="principal">
+
+                <h:form id="formPublicacion">
+
+                    <h1>Publicar</h1>
+                    <h:panelGrid columns="3" styleClass="formPanel">                       
+
+                        <h:outputLabel value="Titulo: "/>
+                        <p:inputText id="titulo" value="#{modPublicacion.titulo}" required="true"
+                                     requiredMessage="Valor requerido" >
+                            <f:validateLength maximum="45" />
+                        </p:inputText>
+                        <p:message id="tituloVal" for="titulo" showSummary="false" />
+
+                        <h:outputLabel value="Cantidad: " />
+                        <p:inputText id="cantidad" value="#{modPublicacion.cantidad}" required ="true"
+                                     requiredMessage="Valor requerido" converterMessage="Debe ingresr un numero" >
+                        </p:inputText>
+                        <p:message id="cantidadVal" for="cantidad"/>
+
+
+                        <h:outputLabel value="Categoria: " />
+                        <h:selectOneMenu id="categoria" value="#{modPublicacion.selectedCategoria}" required ="true"
+                                         requiredMessage="Valor requerido"> 
+                            <f:selectItem itemLabel="Categorias" itemValue=""/>
+                            <f:selectItems value="#{publicacion.categorias}" />
+                        </h:selectOneMenu>
+                        <p/>
+
+                        <h:outputLabel value="Estado: " />
+                        <h:selectOneMenu id="estado" value="#{modPublicacion.selectedEstado}" required ="true"
+                                         requiredMessage="Valor requerido"> 
+                            <f:selectItem itemLabel="Estados" itemValue="" />
+                            <f:selectItems value="#{modPublicacion.estados}" />
+                        </h:selectOneMenu>
+                        <p/>
+                    </h:panelGrid>
+
+                    <br/>
+                    <br/>
+
+                    <p:editor value="#{modPublicacion.descripcion}" widgetVar="editor" width="600" />
+                    
+                    <br/>
+                    <br/>
+
+                    <p:panel id="panelImagenes" header="Imagenes del producto" styleClass="formPanel" >
+                        
+                        <div class="imagenes">
+                            <div class="img" >                                
+                                <ui:repeat value="#{modPublicacion.imagenIds}" var="img" >
+                                    <h:graphicImage value="/image?id=#{img}"
+                                                width="90" height="90" 
+                                                />
+                                    <br/>
+                                <h:commandButton styleClass="borrarBoton" value="borrar"/>
+                                </ui:repeat>   
+                            </div>
+                         </div>   
+
+                    </p:panel>
+
+                        <h2>Determina el precio del alquiler del producto</h2>
+
+                        <p:panel id="panelPrecios" header="Precios" styleClass="formPanel">
+
+                            <ui:repeat value="#{modPublicacion.precios}" var="precio">
+
+                                <h:panelGrid columns="2" >
+
+                                    <h:outputText value="#{precio.periodoNombre}" />
+                                    <p:inputText value="#{precio.precio}" styleClass="inputTextCorto"/>
+
+                                </h:panelGrid>
+                            </ui:repeat>
+
+                        </p:panel>
+
+                        <br/>
+                        <br/>
+
+                        <p:commandButton value="Guardar" action="#{modPublicacion.actualizarPublicacion}" 
+                                         ajax="false" />
+                        <p:commandButton  type="reset" value="Limpiar" />
+                        <p:growl id="growl" showDetail="true" globalOnly="true" />
+                </h:form>
+
+            </ui:define>
+
+            <ui:define name="right">
+                <comps:loginBox />
+                <comps:adminPanel />
+                <comps:userPanel />
+            </ui:define>
+
+
+        </ui:composition>
+
+    </body>
+</html>
