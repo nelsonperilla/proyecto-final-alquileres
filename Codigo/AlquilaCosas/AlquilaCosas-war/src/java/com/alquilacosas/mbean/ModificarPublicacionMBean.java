@@ -1,17 +1,18 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.alquilacosas.mbean;
 
-/**
- *
- * @author jorge
- */
-
+import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.common.PrecioFacade;
+import com.alquilacosas.common.PublicacionFacade;
 import com.alquilacosas.ejb.entity.Categoria;
+import com.alquilacosas.ejb.entity.EstadoPublicacion;
 import com.alquilacosas.ejb.entity.ImagenPublicacion;
-import com.alquilacosas.ejb.entity.Periodo;
 import com.alquilacosas.ejb.session.CategoriaBeanLocal;
+import com.alquilacosas.ejb.session.MisPublicacionesBeanLocal;
 import com.alquilacosas.ejb.session.PublicacionBeanLocal;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,27 +20,30 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import org.primefaces.event.FileUploadEvent;
 
-
-
-@ManagedBean(name = "publicacion")
+/**
+ *
+ * @author ignaciogiagante
+ */
+@ManagedBean( name = "modPublicacion" )
 @ViewScoped
-public class PublicacionMBean implements Serializable{
-    
-    public PublicacionMBean() 
-    {
-    }   
-    
-    @EJB
+public class ModificarPublicacionMBean {
+
+    @EJB 
     private PublicacionBeanLocal publicacionBean;
-    
-    
-    @EJB
+    @EJB 
     private CategoriaBeanLocal categoriaBean;
+    @EJB 
+    private MisPublicacionesBeanLocal misPublicacionesBean;
+    
+    @ManagedProperty (value = "#{login}")
+    private ManejadorUsuarioMBean login;
+    
+    private PublicacionFacade pf;
     
     //Datos de la publicacion
     private String titulo;
@@ -48,123 +52,103 @@ public class PublicacionMBean implements Serializable{
     private Date fechaHasta;
     private boolean destacada;
     private int cantidad;
-    
+    private Categoria categoria;
     //Select Items
     private List<SelectItem> categorias;
     private int selectedCategoria;
-    
-    private List<SelectItem> periodos;
-    private String selectedPeriodo;
-   
-    
+    private List<SelectItem> estados;
+    private int selectedEstado;
     //Object Precio
-    private double precio;
     private List<PrecioFacade> precios;
     private PrecioFacade precioFacade;
     
     private Date today;
     private List<ImagenPublicacion> imagenes;
-
+    private List<Integer> imagenIds;
+    private int publicacionId;
+    private List<EstadoPublicacion> estadosPublicaciones;
     
-    private PrecioFacade precioSeleccionado;
-        
+    
+    public ModificarPublicacionMBean() {
+    }
     
     @PostConstruct
     public void init() {
-     
-        imagenes = new ArrayList<ImagenPublicacion>();
-        precios  = new ArrayList<PrecioFacade>();
+        
+        publicacionId = Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext()
+                .getRequestParameterMap().get("id"));
+        
+        pf = publicacionBean.getDatosPublicacion(publicacionId);
+        
+        titulo = pf.getTitulo();
+        descripcion = pf.getDescripcion();
+        fechaDesde = pf.getFecha_desde();
+        fechaHasta = pf.getFecha_hasta();
+        destacada = pf.getDestacada();
+        cantidad = pf.getCantidad();
+        categoria = pf.getCategoria();
+        selectedCategoria = categoria.getCategoriaId();
+        precios = pf.getPrecios();
+        imagenes = pf.getImagenes();
+        imagenIds = new ArrayList<Integer>();
+        
+        for( ImagenPublicacion ip : imagenes ){
+            imagenIds.add(ip.getImagenPublicacionId());
+        }
+        
         today = new Date();
         categorias = new ArrayList<SelectItem>();
-        periodos = new ArrayList<SelectItem>();
-
-        imagenes = new ArrayList<ImagenPublicacion>();
+        estados = new ArrayList<SelectItem>();
         
         List<Categoria> listaCategoria = categoriaBean.getCategorias();
-        for(Categoria categoria : listaCategoria) {
-           categorias.add(new SelectItem(categoria.getCategoriaId(), categoria.getNombre()));
-       }
+        for(Categoria category : listaCategoria) {
+           categorias.add(new SelectItem(category.getCategoriaId(), category.getNombre()));
+        }
         
-       List<Periodo> listaPeriodos = publicacionBean.getPeriodos();
-       for(Periodo p : listaPeriodos){
-           periodos.add( new SelectItem(p.getNombre()) );    
-       }
-
-    }
+        estadosPublicaciones = misPublicacionesBean.getEstados();
+        for( EstadoPublicacion ep : estadosPublicaciones ){
+            estados.add( new SelectItem( ep.getEstadoPublicacionId(), 
+                    ep.getNombre().name() ));
+        }
+        
+        selectedEstado = pf.getEstado().getEstadoPublicacionId();
+        
+        }
     
-        public void crearPublicacion(){
-        
+    public void actualizarPublicacion(){
         try {
-            
-            publicacionBean.registrarPublicacion(titulo, descripcion, 
-                    new Date(), new Date(), destacada, cantidad, 
-                    1 , selectedCategoria, precios, imagenes);
-            
+            publicacionBean.actualizarPublicacion(publicacionId, titulo, 
+                    descripcion, fechaDesde, fechaHasta, destacada, cantidad, 
+                    login.getUsuarioId(), selectedCategoria, precios, imagenes, 
+                    selectedEstado);
             FacesContext.getCurrentInstance().addMessage(null, 
-                    new FacesMessage("Publicacion Creada"));
-        } catch (Exception e) {
+                    new FacesMessage("Los datos fueron guardados correctamente"));
+        } catch(AlquilaCosasException e) {
             FacesContext.getCurrentInstance().addMessage(null, 
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-                    "Todo mal", e.getMessage()));
+                    "Error al actualizar usuario", e.getMessage()));
         }
     }
-    
-    public void cargarPrecio(){
-        
-        if( !existPrecio() ){
 
-            precioFacade = new PrecioFacade();
-            precioFacade.setPeriodoNombre(selectedPeriodo);
-            precioFacade.setPrecio(precio);
+    public List<Integer> getImagenIds() {
+        return imagenIds;
+    }
 
-            precios.add(precioFacade); 
-        }else{
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-                "No se puede agregar el precio", "Ya existe otro precio con el mismo periodo"));
-        }
-        
-        
+    public void setImagenIds(List<Integer> imagenIds) {
+        this.imagenIds = imagenIds;
     }
-    
-    public void handleFileUpload(FileUploadEvent event){
-       
-        ImagenPublicacion ip = new ImagenPublicacion();
 
-        ip.setImagen(event.getFile().getContents());
-        imagenes.add(ip);
-        System.out.println("llamaaaa");
-        
-        try {
-            
-            FacesMessage msg = new FacesMessage("Successful", 
-                    event.getFile().getFileName() + "is uploaded");
-        
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-            
-        } catch (Exception e) {
-            
-            FacesMessage error = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-                    "The files were not uploaded!", " ");
-            FacesContext.getCurrentInstance().addMessage(null, error);
-        }      
-       
+    
+
+    public int getPublicacionId() {
+        return publicacionId;
+    }
+
+    public void setPublicacionId(int publicacionId) {
+        this.publicacionId = publicacionId;
     }
     
-    public void borrarPrecio(){
-        System.out.println("ejecutando borrarPrecio");
-        precios.remove(precioSeleccionado);
-        System.out.println("jajja");
-    }
     
-    public boolean existPrecio(){
-        
-        for( PrecioFacade p : precios ){
-            if( p.getPeriodoNombre().equals(selectedPeriodo) )
-                return true;
-        }
-        return false;
-    }
-            
 
     public int getCantidad() {
         return cantidad;
@@ -172,6 +156,14 @@ public class PublicacionMBean implements Serializable{
 
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
+    }
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
     }
 
     public CategoriaBeanLocal getCategoriaBean() {
@@ -206,6 +198,14 @@ public class PublicacionMBean implements Serializable{
         this.destacada = destacada;
     }
 
+    public List<SelectItem> getEstados() {
+        return estados;
+    }
+
+    public void setEstados(List<SelectItem> estados) {
+        this.estados = estados;
+    }
+
     public Date getFechaDesde() {
         return fechaDesde;
     }
@@ -230,20 +230,20 @@ public class PublicacionMBean implements Serializable{
         this.imagenes = imagenes;
     }
 
-    public List<SelectItem> getPeriodos() {
-        return periodos;
+    public ManejadorUsuarioMBean getLogin() {
+        return login;
     }
 
-    public void setPeriodos(List<SelectItem> periodos) {
-        this.periodos = periodos;
+    public void setLogin(ManejadorUsuarioMBean login) {
+        this.login = login;
     }
 
-    public double getPrecio() {
-        return precio;
+    public PublicacionFacade getPf() {
+        return pf;
     }
 
-    public void setPrecio(double precio) {
-        this.precio = precio;
+    public void setPf(PublicacionFacade pf) {
+        this.pf = pf;
     }
 
     public PrecioFacade getPrecioFacade() {
@@ -278,6 +278,14 @@ public class PublicacionMBean implements Serializable{
         this.selectedCategoria = selectedCategoria;
     }
 
+    public int getSelectedEstado() {
+        return selectedEstado;
+    }
+
+    public void setSelectedEstado(int selectedEstado) {
+        this.selectedEstado = selectedEstado;
+    }
+
     public String getTitulo() {
         return titulo;
     }
@@ -294,22 +302,6 @@ public class PublicacionMBean implements Serializable{
         this.today = today;
     }
     
-    public PrecioFacade getPrecioSeleccionado() {
-        return precioSeleccionado;
-    }
-
-    public void setPrecioSeleccionado(PrecioFacade precioSeleccionado) {
-        this.precioSeleccionado = precioSeleccionado;
-        System.out.println("target: " + precioSeleccionado.getPrecio());
-    }
-
-    public String getSelectedPeriodo() {
-        return selectedPeriodo;
-    }
-
-    public void setSelectedPeriodo(String selectedPeriodo) {
-        this.selectedPeriodo = selectedPeriodo;
-    }
     
     
 }

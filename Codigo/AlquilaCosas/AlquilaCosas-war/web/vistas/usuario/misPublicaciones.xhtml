@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../../resources/templates/masterPage.xhtml"
+                xmlns:comps="http://java.sun.com/jsf/composite/comps"
+                xmlns:p="http://primefaces.prime.com.tr/ui" 
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:define name="logInfo">
+        logInfo
+    </ui:define>
+
+    <ui:define name="principal">
+        
+        <div id="items" >
+        <h:form prependId="false">
+
+            <p:dataTable id="grid" value="#{misPublicaciones.publicacionesFacade}" var="pub" 
+                         rows="10" paginator="true" 
+                         styleClass="itemsTable" >
+
+                <p:column>
+                    
+                    <comps:itemInfo var="#{pub}" bean="#{misPublicaciones}"
+                                    method="editarPublicacion" 
+                                    property="publicacionId"/>
+                    
+                </p:column>
+
+            </p:dataTable>
+
+            <p:growl id="growl" globalOnly="true" />
+        </h:form>
+        </div>
+    </ui:define>
+
+    <ui:define name="right">
+        <comps:loginBox />
+        <comps:adminPanel />
+        <comps:userPanel />
+    </ui:define>
+
+</ui:composition>

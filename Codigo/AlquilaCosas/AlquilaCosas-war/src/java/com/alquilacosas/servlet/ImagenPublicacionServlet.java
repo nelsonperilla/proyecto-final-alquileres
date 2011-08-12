@@ -85,7 +85,6 @@ public class ImagenPublicacionServlet extends HttpServlet {
         BufferedInputStream input = null;
         try {
             output = new BufferedOutputStream(response.getOutputStream(), DEFAULT_BUFFER_SIZE);
-            int length;
             output.write(img, 0, img.length);
         } finally {
             // Gently close streams.

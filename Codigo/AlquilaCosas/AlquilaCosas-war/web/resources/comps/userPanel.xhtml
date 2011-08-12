@@ -17,7 +17,7 @@
                     <h:panelGrid columns="1" cellpadding="2" >
                         Hola #{login.username}
                         <h:commandLink value="Publicar" action="nuevaPublicacion" />
-                        <h:commandLink value="Mis publicaciones" />
+                        <h:commandLink value="Mis publicaciones" action="misPublicaciones"/>
                         <h:commandLink value="Mis datos" action="datosUsuario" />
                         <h:commandLink value="Salir" action="#{login.logout}" />
                     </h:panelGrid>
