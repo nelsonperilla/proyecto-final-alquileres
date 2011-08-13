@@ -106,10 +106,8 @@ public class NuevaPublicacionMBean implements Serializable{
     public void handleFileUpload(FileUploadEvent event){
        
         ImagenPublicacion ip = new ImagenPublicacion();
-
         ip.setImagen(event.getFile().getContents());
-        System.out.println("llamaaaa");
-        
+        imagenes.add(ip);
         try {
             
             FacesMessage msg = new FacesMessage("Excelente", 

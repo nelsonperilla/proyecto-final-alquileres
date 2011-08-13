@@ -39,9 +39,12 @@ public class MisPublicacionesMBean {
     
     @PostConstruct
     public void init() {
-        publicaciones = new ArrayList<Publicacion>();
-        publicaciones = misPublicacionesBean.getPublicaciones(usuarioMBean.getUsuarioId());
-        publicacionesFacade = getListPublicaciones(publicaciones);
+        if( usuarioMBean.getUsuarioId() != null ){
+            publicaciones = new ArrayList<Publicacion>();
+            publicaciones = misPublicacionesBean.getPublicaciones(usuarioMBean.getUsuarioId());
+            publicacionesFacade = getListPublicaciones(publicaciones);
+        }
+  
     }
     
     public List<PublicacionFacade> getListPublicaciones( List<Publicacion> publicaciones ){

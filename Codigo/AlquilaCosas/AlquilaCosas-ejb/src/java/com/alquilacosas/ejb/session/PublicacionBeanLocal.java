@@ -9,6 +9,7 @@ import com.alquilacosas.common.PrecioFacade;
 import com.alquilacosas.common.PublicacionFacade;
 import com.alquilacosas.ejb.entity.ImagenPublicacion;
 import com.alquilacosas.ejb.entity.Periodo;
+import com.alquilacosas.ejb.entity.Publicacion;
 import com.alquilacosas.ejb.entity.PublicacionXEstado;
 import java.util.Date;
 import java.util.List;
@@ -39,7 +40,7 @@ public interface PublicacionBeanLocal {
             int usuarioId, int categoria, List<PrecioFacade> precios, 
             List<ImagenPublicacion> imagenes, int estadoPublicacion ) throws AlquilaCosasException;
 
-    public PublicacionXEstado getPublicacionEstado(int publicacionId);
+    public PublicacionXEstado getPublicacionEstado( Publicacion p );
 
 
     

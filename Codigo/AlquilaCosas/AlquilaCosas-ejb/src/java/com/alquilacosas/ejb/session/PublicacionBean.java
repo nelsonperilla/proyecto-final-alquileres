@@ -92,11 +92,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
                     + " en la base de datos." + e.getMessage());
         }
    
-        PublicacionXEstado pxe = new PublicacionXEstado();
-        pxe.setPublicacion(publicacion);
-        pxe.setEstadoPublicacion(estadoPublicacion);
-        pxe.setFechaDesde(new Date());
-        
+        PublicacionXEstado pxe = new PublicacionXEstado(publicacion, estadoPublicacion);
         entityManager.persist(pxe);
 
         Precio precio = null;
@@ -113,30 +109,25 @@ public class PublicacionBean implements PublicacionBeanLocal {
             entityManager.persist(precio);
         }
 
-        try {
-           
-            if( imagenes.size() < 1 )
+ 
+         if( imagenes.size() < 1 ){
+                context.setRollbackOnly();
                 throw new AlquilaCosasException( "La publicacion debe contener "
-                        + "por lo menos una imagen" );
+                        + "por lo menos una imagen" );     
+            }
             
-            for( ImagenPublicacion ip : imagenes ){
+         for( ImagenPublicacion ip : imagenes ){
                 ip.setPublicacionFk(publicacion);
                 entityManager.persist(ip);
-            }   
-        } catch (NoResultException e) {
-            context.setRollbackOnly();
-            throw new AlquilaCosasException("La publicacion debe contener "
-                    + "por lo menos una imagen"
-                    + e.getMessage());
-        }
+         }   
     
     }
-    
+        
     @Override
     public PublicacionFacade getDatosPublicacion(int publicacionId) {
         
         Publicacion p = entityManager.find(Publicacion.class, publicacionId);
-        PublicacionXEstado pxe = this.getPublicacionEstado(publicacionId);
+        PublicacionXEstado pxe = this.getPublicacionEstado(p);
         
         PublicacionFacade pf = new PublicacionFacade( 
                 p.getPublicacionId(), p.getTitulo(), p.getDescripcion(), 
@@ -205,7 +196,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
         }
         
         EstadoPublicacion ep = entityManager.find(EstadoPublicacion.class, estadoPublicacion);
-        PublicacionXEstado pxe = this.getPublicacionEstado(publicacionId);
+        PublicacionXEstado pxe = this.getPublicacionEstado(publicacion);
         
         if( !pxe.getEstadoPublicacion().getEstadoPublicacionId().equals(ep.getEstadoPublicacionId()) ){
 
@@ -213,11 +204,11 @@ public class PublicacionBean implements PublicacionBeanLocal {
             entityManager.merge(pxe);
             
             PublicacionXEstado pxeNuevo = new PublicacionXEstado(publicacion, ep);
+            pxeNuevo.setFechaDesde(new Date());
             entityManager.persist(pxeNuevo);
         }
         
         entityManager.merge(publicacion);
-
             
         for( PrecioFacade precioFacade : precios ){
            
@@ -244,6 +235,17 @@ public class PublicacionBean implements PublicacionBeanLocal {
                                 precioNuevo);
                     entityManager.persist(precioNuevo);
                 }  
+           }
+          
+          if( imagenes.size() < 1 ){
+                context.setRollbackOnly();
+                throw new AlquilaCosasException( "La publicacion debe contener "
+                        + "por lo menos una imagen" );     
+            }
+            
+          for( ImagenPublicacion ip : imagenes ){
+                ip.setPublicacionFk(publicacion);
+                entityManager.persist(ip);
           }
         }
    }             
@@ -265,19 +267,29 @@ public class PublicacionBean implements PublicacionBeanLocal {
     }
 
     @Override
-    public PublicacionXEstado getPublicacionEstado( int publicacionId ) {
-        
+    public PublicacionXEstado getPublicacionEstado( Publicacion p ) {
+       
+//        Query query = entityManager.createNamedQuery("PublicacionXEstado.findByPublicacionFk");
+//        query.setParameter("publicacion", p);
+            
         Query query = entityManager.createQuery(
-                "SELECT pxe FROM PublicacionXEstado pxe, "
-                + "Publicacion p, EstadoPublicacion ep "
-                + "WHERE pxe.publicacionXEstadoPK.publicacionFk = :p "
-                + "AND pxe.publicacionXEstadoPK.publicacionFk = p.publicacionId "
-                + "AND pxe.publicacionXEstadoPK.estadoFk = ep.estadoPublicacionId "
-                + "AND pxe.fechaHasta IS NULL "
-                 );
-        query.setParameter("p", publicacionId);      
-        Object object = (Object) query.getSingleResult();    
-        PublicacionXEstado pxe = (PublicacionXEstado) object;
+                "SELECT pxe FROM PublicacionXEstado pxe "
+                + "WHERE pxe.publicacion = :publicacion "
+                + "AND pxe.fechaHasta IS NULL"
+                );
+        query.setParameter("publicacion", p);
+//        
+//        Query query = entityManager.createQuery(
+//                "SELECT pxe FROM PublicacionXEstado pxe, "
+//                + "Publicacion p, EstadoPublicacion ep "
+//                + "WHERE pxe.publicacionXEstadoPK.publicacionFk = :p "
+//                + "AND pxe.publicacionXEstadoPK.publicacionFk = p.publicacionId "
+//                + "AND pxe.publicacionXEstadoPK.estadoFk = ep.estadoPublicacionId "
+//                + "AND pxe.fechaDesde = ( SELECT MAX(pxe1.fechaDesde) FROM  PublicacionXEstado pxe1 "
+//                + "WHERE pxe.publicacionXEstadoPK.publicacionFk = pxe1.publicacionXEstadoPK.publicacionFk )"
+//                 );
+      
+        PublicacionXEstado pxe = (PublicacionXEstado) query.getSingleResult();
 
         return pxe;
     }

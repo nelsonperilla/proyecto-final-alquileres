@@ -23,7 +23,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
+import org.primefaces.event.FileUploadEvent;
 
 /**
  *
@@ -67,6 +69,7 @@ public class ModificarPublicacionMBean {
     private List<Integer> imagenIds;
     private int publicacionId;
     private List<EstadoPublicacion> estadosPublicaciones;
+    private int imagenABorrar;
     
     
     public ModificarPublicacionMBean() {
@@ -129,6 +132,40 @@ public class ModificarPublicacionMBean {
                     "Error al actualizar usuario", e.getMessage()));
         }
     }
+    
+    public void handleFileUpload(FileUploadEvent event){
+       
+        ImagenPublicacion ip = new ImagenPublicacion();
+        ip.setImagen(event.getFile().getContents());
+        imagenes.add(ip);
+        
+        try {
+            
+            FacesMessage msg = new FacesMessage("Excelente", 
+                    event.getFile().getFileName() + "fue cargado correctamente");      
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            
+        } catch (Exception e) {
+            
+            FacesMessage error = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                    "El archivo no pudo ser cargado!", " ");
+            FacesContext.getCurrentInstance().addMessage(null, error);
+        }      
+       
+    }
+    
+    public void removerImagen( ActionEvent e ){
+        Integer id = (Integer) e.getComponent().getAttributes().get("idBorrar");
+        imagenIds.remove(id);
+        System.out.println("jjj");
+//        for( int i = 0; i < imagenes.size(); i++ ){
+//            ImagenPublicacion ip = imagenes.get(i);
+//            if( ip.getImagenPublicacionId() == id ){
+//                imagenes.remove(ip);
+//            }
+//        }
+    }
+    
 
     public List<Integer> getImagenIds() {
         return imagenIds;
@@ -301,6 +338,15 @@ public class ModificarPublicacionMBean {
     public void setToday(Date today) {
         this.today = today;
     }
+
+    public int getImagenABorrar() {
+        return imagenABorrar;
+    }
+
+    public void setImagenABorrar(int imagenABorrar) {
+        this.imagenABorrar = imagenABorrar;
+    }
+    
     
     
     
