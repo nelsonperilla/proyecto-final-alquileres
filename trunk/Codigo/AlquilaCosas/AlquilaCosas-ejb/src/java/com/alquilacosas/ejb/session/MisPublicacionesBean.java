@@ -30,7 +30,6 @@ public class MisPublicacionesBean implements MisPublicacionesBeanLocal {
     public List<Publicacion> getPublicaciones( int usuarioId ){
        
         usuario = entityManager.find(Usuario.class, usuarioId);
-        
         listaPublicaciones = usuario.getPublicacionList();
 
         return listaPublicaciones;
@@ -66,9 +65,7 @@ public class MisPublicacionesBean implements MisPublicacionesBeanLocal {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
-    }
-    
-        
+    }     
     
     @Override
     public List<EstadoPublicacion> getEstados() {

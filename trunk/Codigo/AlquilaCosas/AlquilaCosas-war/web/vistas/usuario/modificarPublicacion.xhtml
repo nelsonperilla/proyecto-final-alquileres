@@ -8,44 +8,44 @@
       xmlns:f="http://java.sun.com/jsf/core">
     <h:head>
         <style type="text/css">
-div.img
-  {
-  margin:2px;
-  border:1px solid #0000ff;
-  height:auto;
-  width:auto;
-  float:left;
-  text-align:center;
-  }
-div.img h:graphicImage
-  {
-  display:inline;
-  margin:3px;
-  border:1px solid #ffffff;
-  }
-div.img a:hover h:graphicImage
-  {
-  border:1px solid #0000ff;
-  }
+            div.img
+            {
+                margin:2px;
+                border:1px solid #0000ff;
+                height:auto;
+                width:auto;
+                float:left;
+                text-align:center;
+            }
+            div.img h:graphicImage
+            {
+                display:inline;
+                margin:3px;
+                border:1px solid #ffffff;
+            }
+            div.img a:hover h:graphicImage
+            {
+                border:1px solid #0000ff;
+            }
 
-.borrarBoton{
-      width: 80px; 
-      height: 25px; 
-      border: 1px; 
-      margin: 2px;
-      background-color: white;
-      float: none;
-  }
-.text_line
-{
-clear:both;
-margin-bottom:2px;
-}
-.imagenes {
-    width: 600px;
-    height: 600px;
-}
-</style>
+            .borrarBoton{
+                width: 80px; 
+                height: 25px; 
+                border: 1px; 
+                margin: 2px;
+                background-color: white;
+                float: none;
+            }
+            .text_line
+            {
+                clear:both;
+                margin-bottom:2px;
+            }
+            .imagenes {
+                width: 600px;
+                height: 600px;
+            }
+        </style>
     </h:head>
     <body>
 
@@ -97,49 +97,62 @@ margin-bottom:2px;
                     <br/>
 
                     <p:editor value="#{modPublicacion.descripcion}" widgetVar="editor" width="600" />
-                    
+
                     <br/>
                     <br/>
 
                     <p:panel id="panelImagenes" header="Imagenes del producto" styleClass="formPanel" >
-                        
-                        <div class="imagenes">
-                            <div class="img" >                                
-                                <ui:repeat value="#{modPublicacion.imagenIds}" var="img" >
-                                    <h:graphicImage value="/image?id=#{img}"
-                                                width="90" height="90" 
-                                                />
-                                    <br/>
-                                <h:commandButton styleClass="borrarBoton" value="borrar"/>
-                                </ui:repeat>   
-                            </div>
-                         </div>   
+
+                        <p:dataGrid id="imagenes" var="img" value="#{modPublicacion.imagenIds}" columns="5">
+
+                            <p:column>
+                                <p:panel header="#{img}" style="text-align:center">
+                                    <h:panelGrid columns="1" style="width:100%">
+                                        <h:graphicImage value="/image?id=#{img}"
+                                                        width="90" height="90" 
+                                                        /> 
+                                        <p:commandLink title="Remove" update="PanelImagenes" actionListener="#{modPublicacion.removerImagen}" >
+                                            <p:graphicImage value="/images/search.png"/> 
+                                            <f:attribute name="idBorrar" value="#{img}" />
+                                        </p:commandLink>
+                                    </h:panelGrid>
+                                </p:panel>
+                            </p:column>
+
+                        </p:dataGrid>
+
+
+                        <h:outputText value="Select the files to upload (maxim 2MB):"/>
+                        <br/>
+
+                        <p:fileUpload fileUploadListener="#{modPublicacion.handleFileUpload}"
+                                      update="messages" 
+                                      multiple="true"
+                                      sizeLimit="2097152"   
+                                      allowTypes="*.jpg;*.png;*.gif;"
+                                      description="images"/>   
 
                     </p:panel>
 
-                        <h2>Determina el precio del alquiler del producto</h2>
+                    <h2>Determina el precio del alquiler del producto</h2>
 
-                        <p:panel id="panelPrecios" header="Precios" styleClass="formPanel">
+                    <p:panel id="panelPrecios" header="Precios" styleClass="formPanel">
+                        <ui:repeat value="#{modPublicacion.precios}" var="precio">
 
-                            <ui:repeat value="#{modPublicacion.precios}" var="precio">
+                            <h:outputText value="#{precio.periodoNombre}" />
+                            <p:inputText value="#{precio.precio}" style="text-align: right; margin-left: 3px; width: 50px"/>
+                            <p:spacer width="25" />
 
-                                <h:panelGrid columns="2" >
+                        </ui:repeat>
+                    </p:panel>
 
-                                    <h:outputText value="#{precio.periodoNombre}" />
-                                    <p:inputText value="#{precio.precio}" styleClass="inputTextCorto"/>
+                    <br/>
+                    <br/>
 
-                                </h:panelGrid>
-                            </ui:repeat>
-
-                        </p:panel>
-
-                        <br/>
-                        <br/>
-
-                        <p:commandButton value="Guardar" action="#{modPublicacion.actualizarPublicacion}" 
-                                         ajax="false" />
-                        <p:commandButton  type="reset" value="Limpiar" />
-                        <p:growl id="growl" showDetail="true" globalOnly="true" />
+                    <p:commandButton value="Guardar" action="#{modPublicacion.actualizarPublicacion}" 
+                                     ajax="false" />
+                    <p:commandButton  type="reset" value="Limpiar" />
+                    <p:growl id="growl" showDetail="true" globalOnly="true" />
                 </h:form>
 
             </ui:define>

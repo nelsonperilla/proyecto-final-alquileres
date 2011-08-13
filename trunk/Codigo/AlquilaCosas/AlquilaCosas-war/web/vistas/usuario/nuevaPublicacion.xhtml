@@ -56,14 +56,15 @@
                     <h2>Cargar imagenes</h2>
                     <p:panel header="Cargar Imagenes" >
 
-                        <h:outputText value="Select the files to upload (maxim 2MB):"/>
-                        <br/>
+                            <h:outputText value="Select the files to upload (maxim 2MB):"/>
+                            <br/>
 
-                        <p:fileUpload fileUploadListener="#{publicacion.handleFileUpload}"
-                                      update="messages imgTemp" 
-                                      multiple="true"
-                                      sizeLimit="2097152"   
-                                      allowTypes="*.jpg;*.png;*.gif;"/>          
+                            <p:fileUpload fileUploadListener="#{publicacion.handleFileUpload}"
+                                          update="messages" 
+                                          multiple="true"
+                                          sizeLimit="2097152"   
+                                          allowTypes="*.jpg;*.png;*.gif;"
+                                          description="images"/>          
                      
                     </p:panel>
 
@@ -88,13 +89,9 @@
 
                     <p:commandButton value="Crear" action="#{publicacion.crearPublicacion}" 
                                      ajax="false" />
-                    <p:commandButton  type="reset" value="Limpiar" />
+                    <p:commandButton  type="reset" value="Limpiar" action="misPublicaciones"/>
                     <p:growl id="growl" showDetail="true" globalOnly="true" />
                 </h:form>
-
-
-
-
             </ui:define>
 
             <ui:define name="right">

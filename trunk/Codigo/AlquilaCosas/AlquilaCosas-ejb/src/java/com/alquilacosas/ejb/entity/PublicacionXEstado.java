@@ -42,7 +42,7 @@ public class PublicacionXEstado implements Serializable {
     @NotNull
     @Column(name = "PUBLICACION_X_ESTADO_ID")
     private Integer publicacionXEstadoId;
-    @Basic(optional =     false)
+    @Basic(optional = false)
     @NotNull
     @Column(name = "FECHA_DESDE")
     @Temporal(TemporalType.TIMESTAMP)
@@ -51,10 +51,10 @@ public class PublicacionXEstado implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaHasta;
     private static final long serialVersionUID = 1L;
-    @JoinColumn(name = "ESTADO_FK", referencedColumnName = "ESTADO_PUBLICACION_ID", insertable = false, updatable = false)
+    @JoinColumn(name = "ESTADO_FK", referencedColumnName = "ESTADO_PUBLICACION_ID")
     @ManyToOne(optional = false)
     private EstadoPublicacion estadoPublicacion;
-    @JoinColumn(name = "PUBLICACION_FK", referencedColumnName = "PUBLICACION_ID", insertable = false, updatable = false)
+    @JoinColumn(name = "PUBLICACION_FK", referencedColumnName = "PUBLICACION_ID")
     @ManyToOne(optional = false)
     private Publicacion publicacion;
 
