@@ -17,11 +17,51 @@
                 </h:form>
             </ui:define>
 
+            <ui:define name="left" >
+                <h:form>
+                    <p:panel header="Categoria" >
+                        <p:commandLink value="Cualquiera" update="@form grid"
+                                       actionListener="#{resultadosBean.noFiltrarCategoria}"
+                                       rendered="#{not empty resultadosBean.busqueda}"
+                                       styleClass="#{resultadosBean.categoria == null ? 'filtroActual': null}" /> 
+                        <br/>
+                        <ui:repeat value="#{resultadosBean.categorias}" var="cat" >
+                            <p:commandLink value="#{cat.nombre}" 
+                                           actionListener="#{resultadosBean.filtrarCategoria}"
+                                           styleClass="#{resultadosBean.categoria == cat.id ? 'filtroActual': null}"
+                                           update="@form grid" >
+                                <f:attribute name="cat" value="#{cat.id}" />
+                            </p:commandLink>
+                            <br />
+                        </ui:repeat>
+                    </p:panel>
+                    <p:panel header="Ubicacion" >
+                        <p:commandLink value="Cualquiera" /> <br/><br/>
+                        <p:panel style="text-align: left">
+                        <h:panelGrid columns="1" >
+                            <h:outputLabel value="Ciudad:" />
+                            <p:inputText />
+                            <h:outputLabel value="Barrio:" />
+                            <p:inputText />
+                            <p:commandButton value="Filtrar" />
+                        </h:panelGrid>
+                        </p:panel>
+                    </p:panel>
+                    <p:panel header="Precio" >
+                        <p:commandLink value="Cualquiera" /> <br/><br/>
+                        <p:panel>
+                            <h:outputLabel value="Desde" />
+                            <p:inputText />
+                        </p:panel>
+                    </p:panel>
+                </h:form>
+            </ui:define>
+
             <ui:define name="principal">
-                
+
                 <div id="items" >
                     <h:form prependId="false">
-                        
+
                         <p:dataTable id="grid" value="#{resultadosBean.model}" var="pub" 
                                      rows="10" paginator="true" lazy="true" 
                                      paginatorPosition="bottom"

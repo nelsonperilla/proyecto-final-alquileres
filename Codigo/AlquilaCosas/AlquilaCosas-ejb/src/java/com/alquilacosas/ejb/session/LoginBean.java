@@ -10,7 +10,6 @@ import com.alquilacosas.ejb.entity.EstadoUsuario.NombreEstado;
 import com.alquilacosas.ejb.entity.Login;
 import com.alquilacosas.ejb.entity.Usuario;
 import com.alquilacosas.ejb.entity.UsuarioXEstado;
-import com.alquilacosas.ejb.entity.UsuarioXEstadoPK;
 import java.util.Date;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -44,7 +43,7 @@ public class LoginBean implements LoginBeanLocal {
             UsuarioXEstado ultimoUxe = null;
             try {
                 Query uxeQuery = entityManager.createNamedQuery("UsuarioXEstado.findCurrentByUsuarioFk");
-                uxeQuery.setParameter("usuarioFk", usuario.getUsuarioId());
+                uxeQuery.setParameter("usuario", usuario);
                 ultimoUxe = (UsuarioXEstado) uxeQuery.getSingleResult();
             } catch(NoResultException e) {
                  System.out.println("error!");
@@ -60,18 +59,11 @@ public class LoginBean implements LoginBeanLocal {
             EstadoUsuario estado = (EstadoUsuario) estadoActivoQuery.getSingleResult();
 
             
-            Query query2 = entityManager.createNamedQuery("UsuarioXEstado.findByUsuarioFk");
-            query2.setParameter("usuarioFk", usuario.getUsuarioId());
-            UsuarioXEstado uxe = (UsuarioXEstado) query2.getSingleResult();
-            uxe.setFechaHasta(new Date());
-            entityManager.persist(uxe);            
+            ultimoUxe.setFechaHasta(new Date());
+            entityManager.merge(ultimoUxe);           
             
-            UsuarioXEstado nuevoUxE = new UsuarioXEstado();
-            nuevoUxE.setEstadoUsuario(estado);
-            nuevoUxE.setUsuario(usuario);
+            UsuarioXEstado nuevoUxE = new UsuarioXEstado(usuario, estado);
             nuevoUxE.setFechaDesde(new Date());
-            UsuarioXEstadoPK nuevoUxEPk = new UsuarioXEstadoPK(usuario.getUsuarioId(), estado.getEstadoUsuarioId());
-            nuevoUxE.setUsuarioXEstadoPK(nuevoUxEPk);
             entityManager.persist(nuevoUxE);
             return true;
             

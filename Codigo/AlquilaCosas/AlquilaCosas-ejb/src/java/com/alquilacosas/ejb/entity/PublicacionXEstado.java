@@ -8,8 +8,10 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -29,12 +31,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "PublicacionXEstado.findAll", query = "SELECT p FROM PublicacionXEstado p"),
-    @NamedQuery(name = "PublicacionXEstado.findByPublicacionFk", query = "SELECT p FROM PublicacionXEstado p WHERE p.publicacionXEstadoPK.publicacionFk = :publicacionFk"),
-    @NamedQuery(name = "PublicacionXEstado.findByEstadoFk", query = "SELECT p FROM PublicacionXEstado p WHERE p.publicacionXEstadoPK.estadoFk = :estadoFk"),
+    @NamedQuery(name = "PublicacionXEstado.findByPublicacionFk", query = "SELECT p FROM PublicacionXEstado p WHERE p.publicacion = :publicacion"),
+    @NamedQuery(name = "PublicacionXEstado.findByEstadoFk", query = "SELECT p FROM PublicacionXEstado p WHERE p.estadoPublicacion = :estadoPublicacion"),
     @NamedQuery(name = "PublicacionXEstado.findByFechaDesde", query = "SELECT p FROM PublicacionXEstado p WHERE p.fechaDesde = :fechaDesde"),
     @NamedQuery(name = "PublicacionXEstado.findByFechaHasta", query = "SELECT p FROM PublicacionXEstado p WHERE p.fechaHasta = :fechaHasta")})
 public class PublicacionXEstado implements Serializable {
+    @Id()
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
+    @NotNull
+    @Column(name = "PUBLICACION_X_ESTADO_ID")
+    private Integer publicacionXEstadoId;
+    @Basic(optional =     false)
     @NotNull
     @Column(name = "FECHA_DESDE")
     @Temporal(TemporalType.TIMESTAMP)
@@ -43,8 +51,6 @@ public class PublicacionXEstado implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaHasta;
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected PublicacionXEstadoPK publicacionXEstadoPK;
     @JoinColumn(name = "ESTADO_FK", referencedColumnName = "ESTADO_PUBLICACION_ID", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private EstadoPublicacion estadoPublicacion;
@@ -54,26 +60,11 @@ public class PublicacionXEstado implements Serializable {
 
     public PublicacionXEstado() {
     }
-
-    public PublicacionXEstado(PublicacionXEstadoPK publicacionXEstadoPK) {
-        this.publicacionXEstadoPK = publicacionXEstadoPK;
-    }
-
-    public PublicacionXEstado(PublicacionXEstadoPK publicacionXEstadoPK, Date fechaDesde) {
-        this.publicacionXEstadoPK = publicacionXEstadoPK;
-        this.fechaDesde = fechaDesde;
-    }
-
-    public PublicacionXEstado(int publicacionFk, int estadoFk) {
-        this.publicacionXEstadoPK = new PublicacionXEstadoPK(publicacionFk, estadoFk);
-    }
-
-    public PublicacionXEstadoPK getPublicacionXEstadoPK() {
-        return publicacionXEstadoPK;
-    }
-
-    public void setPublicacionXEstadoPK(PublicacionXEstadoPK publicacionXEstadoPK) {
-        this.publicacionXEstadoPK = publicacionXEstadoPK;
+    
+    public PublicacionXEstado(Publicacion publicacion, EstadoPublicacion estado) {
+        this.publicacion = publicacion;
+        this.estadoPublicacion = estado;
+        fechaDesde = new Date();
     }
 
     public Date getFechaDesde() {
@@ -108,10 +99,27 @@ public class PublicacionXEstado implements Serializable {
         this.publicacion = publicacion;
     }
 
+    public PublicacionXEstado(Integer publicacionXEstadoId) {
+        this.publicacionXEstadoId = publicacionXEstadoId;
+    }
+
+    public PublicacionXEstado(Integer publicacionXEstadoId, Date fechaDesde) {
+        this.publicacionXEstadoId = publicacionXEstadoId;
+        this.fechaDesde = fechaDesde;
+    }
+
+    public Integer getPublicacionXEstadoId() {
+        return publicacionXEstadoId;
+    }
+
+    public void setPublicacionXEstadoId(Integer publicacionXEstadoId) {
+        this.publicacionXEstadoId = publicacionXEstadoId;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (publicacionXEstadoPK != null ? publicacionXEstadoPK.hashCode() : 0);
+        hash += (publicacionXEstadoId != null ? publicacionXEstadoId.hashCode() : 0);
         return hash;
     }
 
@@ -122,7 +130,7 @@ public class PublicacionXEstado implements Serializable {
             return false;
         }
         PublicacionXEstado other = (PublicacionXEstado) object;
-        if ((this.publicacionXEstadoPK == null && other.publicacionXEstadoPK != null) || (this.publicacionXEstadoPK != null && !this.publicacionXEstadoPK.equals(other.publicacionXEstadoPK))) {
+        if ((this.publicacionXEstadoId == null && other.publicacionXEstadoId != null) || (this.publicacionXEstadoId != null && !this.publicacionXEstadoId.equals(other.publicacionXEstadoId))) {
             return false;
         }
         return true;
@@ -130,7 +138,7 @@ public class PublicacionXEstado implements Serializable {
 
     @Override
     public String toString() {
-        return "com.alquilacosas.ejb.entity.PublicacionXEstado[ publicacionXEstadoPK=" + publicacionXEstadoPK + " ]";
+        return "com.alquilacosas.ejb.entity.PublicacionXEstado[ publicacionXEstadoId=" + publicacionXEstadoId + " ]";
     }
     
 }

@@ -5,7 +5,9 @@
 package com.alquilacosas.ejb.session;
 
 import com.alquilacosas.common.AlquilaCosasException;
+import com.alquilacosas.common.CategoriaFacade;
 import com.alquilacosas.ejb.entity.Categoria;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -61,6 +63,23 @@ public class CategoriaBean implements CategoriaBeanLocal {
           modifCategoria.setNombre(categoria.getNombre());
           modifCategoria.setDescripcion(categoria.getDescripcion());
           entityManager.merge(modifCategoria);
+     }
+     
+     public List<CategoriaFacade> getCategoriaFacade() {
+         List<Categoria> categorias;
+          Query query = entityManager.createNamedQuery("Categoria.findAll");
+          categorias = query.getResultList();
+          List<CategoriaFacade> catFacade = new ArrayList<CategoriaFacade>();
+          for(Categoria c: categorias) {
+              Categoria padre = c.getCategoriaFk();
+              int padreId = 0;
+              if(padre != null)
+                  padreId = padre.getCategoriaId();
+              CategoriaFacade cat = new CategoriaFacade(c.getCategoriaId(), 
+                      padreId, c.getNombre(), c.getDescripcion());
+              catFacade.add(cat);
+          }
+          return catFacade;
      }
 
 }

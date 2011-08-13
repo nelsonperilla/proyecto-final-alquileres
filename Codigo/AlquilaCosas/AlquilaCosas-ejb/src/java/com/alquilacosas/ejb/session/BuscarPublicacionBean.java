@@ -4,6 +4,8 @@
  */
 package com.alquilacosas.ejb.session;
 
+import com.alquilacosas.common.Busqueda;
+import com.alquilacosas.common.CategoriaFacade;
 import com.alquilacosas.common.PublicacionFacade;
 import com.alquilacosas.ejb.entity.Categoria;
 import com.alquilacosas.ejb.entity.ImagenPublicacion;
@@ -31,7 +33,8 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
     private SessionContext context;
     
     @Override
-    public List<PublicacionFacade> buscarPublicaciones(String palabra, int registros, int desde) {
+    public Busqueda buscarPublicaciones(String palabra, int registros, int desde) {
+        System.out.println("buscando...");
         Query publicacionesQuery = entityManager.createNamedQuery("Publicacion.findByPalabraClave");
         palabra = "%" + palabra + "%";
         publicacionesQuery.setParameter(1, palabra);
@@ -40,6 +43,7 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
         
         List<Publicacion> publicaciones = publicacionesQuery.getResultList();
         List<PublicacionFacade> pubFacadeList = new ArrayList<PublicacionFacade>();
+        List<Categoria> categorias = new ArrayList<Categoria>();
         for(Publicacion p: publicaciones) {
             PublicacionFacade facade = new PublicacionFacade(p.getPublicacionId(), p.getTitulo(),
                     p.getDescripcion(), p.getFechaDesde(), p.getFechaHasta(), p.getDestacada(),
@@ -50,13 +54,22 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
             }
             facade.setImagenIds(imagenes);
             pubFacadeList.add(facade);
+            Categoria c = p.getCategoriaFk();
+            if(!categorias.contains(c))
+                categorias.add(c);
         }
         
-        return pubFacadeList;
+        List<CategoriaFacade> catFacade = new ArrayList<CategoriaFacade>();
+        for(Categoria c: categorias) {
+            CategoriaFacade categoria = new CategoriaFacade(c.getCategoriaId(), c.getNombre());
+            catFacade.add(categoria);
+        }
+        Busqueda busqueda = new Busqueda(pubFacadeList, catFacade);
+        return busqueda;
     }
     
     @Override
-    public List<PublicacionFacade> buscarPublicaciones(String palabra, int categoriaId, 
+    public Busqueda buscarPublicaciones(String palabra, int categoriaId, 
             int registros, int desde) {
         Categoria categoria = entityManager.find(Categoria.class, categoriaId);
         
@@ -69,6 +82,7 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
         
         List<Publicacion> publicaciones = publicacionesQuery.getResultList();
         List<PublicacionFacade> pubFacadeList = new ArrayList<PublicacionFacade>();
+        List<Categoria> categorias = new ArrayList<Categoria>();
         for(Publicacion p: publicaciones) {
             PublicacionFacade facade = new PublicacionFacade(p.getPublicacionId(), p.getTitulo(),
                     p.getDescripcion(), p.getFechaDesde(), p.getFechaHasta(), p.getDestacada(),
@@ -81,11 +95,17 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
             pubFacadeList.add(facade);
         }
         
-        return pubFacadeList;
+        List<CategoriaFacade> catFacade = new ArrayList<CategoriaFacade>();
+        for(Categoria c: categorias) {
+            CategoriaFacade cat = new CategoriaFacade(c.getCategoriaId(), c.getNombre());
+            catFacade.add(cat);
+        }
+        Busqueda busqueda = new Busqueda(pubFacadeList, catFacade);
+        return busqueda;
     }
     
     @Override
-    public List<PublicacionFacade> buscarPublicacionesPorCategoria(int categoriaId, int registros, int desde) {
+    public Busqueda buscarPublicacionesPorCategoria(int categoriaId, int registros, int desde) {
         Categoria categoria = entityManager.find(Categoria.class, categoriaId);
         
         Query publicacionesQuery = entityManager.createNamedQuery("Publicacion.findByCategoria");
@@ -107,7 +127,11 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
             pubFacadeList.add(facade);
         }
         
-        return pubFacadeList;
+        List<CategoriaFacade> categorias = new ArrayList<CategoriaFacade>();
+        categorias.add(new CategoriaFacade(categoria.getCategoriaId(), categoria.getNombre()));
+        
+        Busqueda busqueda = new Busqueda(pubFacadeList, categorias);
+        return busqueda;
     }
 
     @Override

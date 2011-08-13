@@ -10,6 +10,9 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -29,53 +32,48 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "UsuarioXEstado.findAll", query = "SELECT u FROM UsuarioXEstado u"),
-    @NamedQuery(name = "UsuarioXEstado.findByUsuarioFk", query = "SELECT u FROM UsuarioXEstado u WHERE u.usuarioXEstadoPK.usuarioFk = :usuarioFk"),
-    @NamedQuery(name = "UsuarioXEstado.findByEstadoFk", query = "SELECT u FROM UsuarioXEstado u WHERE u.usuarioXEstadoPK.estadoFk = :estadoFk"),
+    @NamedQuery(name = "UsuarioXEstado.findByUsuarioFk", query = "SELECT u FROM UsuarioXEstado u WHERE u.usuario = :usuario"),
+    @NamedQuery(name = "UsuarioXEstado.findByEstadoFk", query = "SELECT u FROM UsuarioXEstado u WHERE u.estadoUsuario = :estadoUsuario"),
     @NamedQuery(name = "UsuarioXEstado.findByFechaDesde", query = "SELECT u FROM UsuarioXEstado u WHERE u.fechaDesde = :fechaDesde"),
     @NamedQuery(name = "UsuarioXEstado.findByFechaHasta", query = "SELECT u FROM UsuarioXEstado u WHERE u.fechaHasta = :fechaHasta"),
-    @NamedQuery(name = "UsuarioXEstado.findCurrentByUsuarioFk", query = "SELECT u FROM UsuarioXEstado u WHERE u.usuarioXEstadoPK.usuarioFk = :usuarioFk AND u.fechaHasta IS NULL")})
+    @NamedQuery(name = "UsuarioXEstado.findCurrentByUsuarioFk", query = "SELECT u FROM UsuarioXEstado u WHERE u.usuario = :usuario AND u.fechaHasta IS NULL")})
 
 public class UsuarioXEstado implements Serializable {
+    @Id()
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
+    @NotNull
+    @Column(name = "USUARIO_X_ESTADO_ID")
+    private Integer usuarioXEstadoId;
+    
+    @Basic(optional =     false)
     @NotNull
     @Column(name = "FECHA_DESDE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaDesde;
+    
     @Column(name = "FECHA_HASTA")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaHasta;
-    private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected UsuarioXEstadoPK usuarioXEstadoPK;
+    
     @JoinColumn(name = "ESTADO_FK", referencedColumnName = "ESTADO_USUARIO_ID", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private EstadoUsuario estadoUsuario;
+    
     @JoinColumn(name = "USUARIO_FK", referencedColumnName = "USUARIO_ID", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Usuario usuario;
 
     public UsuarioXEstado() {
     }
-
-    public UsuarioXEstado(UsuarioXEstadoPK usuarioXEstadoPK) {
-        this.usuarioXEstadoPK = usuarioXEstadoPK;
+    
+    public UsuarioXEstado(Integer usuarioXEstadoId) {
+        this.usuarioXEstadoId = usuarioXEstadoId;
     }
 
-    public UsuarioXEstado(UsuarioXEstadoPK usuarioXEstadoPK, Date fechaDesde) {
-        this.usuarioXEstadoPK = usuarioXEstadoPK;
-        this.fechaDesde = fechaDesde;
-    }
-
-    public UsuarioXEstado(int usuarioFk, int estadoFk) {
-        this.usuarioXEstadoPK = new UsuarioXEstadoPK(usuarioFk, estadoFk);
-    }
-
-    public UsuarioXEstadoPK getUsuarioXEstadoPK() {
-        return usuarioXEstadoPK;
-    }
-
-    public void setUsuarioXEstadoPK(UsuarioXEstadoPK usuarioXEstadoPK) {
-        this.usuarioXEstadoPK = usuarioXEstadoPK;
+    public UsuarioXEstado(Usuario usuario, EstadoUsuario estadoUsuario) {
+        this.usuario = usuario;
+        this.estadoUsuario = estadoUsuario;
     }
 
     public Date getFechaDesde() {
@@ -110,10 +108,18 @@ public class UsuarioXEstado implements Serializable {
         this.usuario = usuario;
     }
 
+    public Integer getUsuarioXEstadoId() {
+        return usuarioXEstadoId;
+    }
+
+    public void setUsuarioXEstadoId(Integer usuarioXEstadoId) {
+        this.usuarioXEstadoId = usuarioXEstadoId;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (usuarioXEstadoPK != null ? usuarioXEstadoPK.hashCode() : 0);
+        hash += (usuarioXEstadoId != null ? usuarioXEstadoId.hashCode() : 0);
         return hash;
     }
 
@@ -124,7 +130,7 @@ public class UsuarioXEstado implements Serializable {
             return false;
         }
         UsuarioXEstado other = (UsuarioXEstado) object;
-        if ((this.usuarioXEstadoPK == null && other.usuarioXEstadoPK != null) || (this.usuarioXEstadoPK != null && !this.usuarioXEstadoPK.equals(other.usuarioXEstadoPK))) {
+        if ((this.usuarioXEstadoId == null && other.usuarioXEstadoId != null) || (this.usuarioXEstadoId != null && !this.usuarioXEstadoId.equals(other.usuarioXEstadoId))) {
             return false;
         }
         return true;
@@ -132,7 +138,7 @@ public class UsuarioXEstado implements Serializable {
 
     @Override
     public String toString() {
-        return "com.alquilacosas.ejb.entity.UsuarioXEstado[ usuarioXEstadoPK=" + usuarioXEstadoPK + " ]";
+        return "com.alquilacosas.ejb.entity.UsuarioXEstado[ usuarioXEstadoId=" + usuarioXEstadoId + " ]";
     }
     
 }

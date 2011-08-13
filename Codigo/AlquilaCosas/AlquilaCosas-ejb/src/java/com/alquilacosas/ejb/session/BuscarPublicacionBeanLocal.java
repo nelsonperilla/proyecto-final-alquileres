@@ -4,6 +4,7 @@
  */
 package com.alquilacosas.ejb.session;
 
+import com.alquilacosas.common.Busqueda;
 import com.alquilacosas.common.PublicacionFacade;
 import java.util.List;
 import javax.ejb.Local;
@@ -15,12 +16,12 @@ import javax.ejb.Local;
 @Local
 public interface BuscarPublicacionBeanLocal {
 
-    List<PublicacionFacade> buscarPublicaciones(String palabra, int registros, int desde);
+    Busqueda buscarPublicaciones(String palabra, int registros, int desde);
 
-    List<PublicacionFacade> buscarPublicaciones(String palabra, int categoria, 
+    Busqueda buscarPublicaciones(String palabra, int categoria, 
             int registros, int desde);
     
-    List<PublicacionFacade> buscarPublicacionesPorCategoria(int categoriaId, int registros, int desde);
+    Busqueda buscarPublicacionesPorCategoria(int categoriaId, int registros, int desde);
     
     byte[] leerImagen(int id);
     

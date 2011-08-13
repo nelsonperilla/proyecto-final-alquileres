@@ -21,15 +21,12 @@ import javax.persistence.Query;
  */
 @Stateless
 public class MostrarPublicacionesBean implements MostrarPublicacionesBeanLocal {
+    
     @PersistenceContext(unitName="AlquilaCosas-ejbPU") 
     private EntityManager entityManager;
-    private Publicacion activePublication;
     
     @Override
     public List<PublicacionFacade> getPublicacionesRandom(int pagina) {
-//       Query query = entityManager.createNamedQuery("Publicacion.findAll");
-//       List<Publicacion> publicaciones = query.getResultList();
-//       return publicaciones;
         Query query = entityManager.createNamedQuery("Publicacion.findAll");
 
         List<Publicacion> publicaciones = query.getResultList();
@@ -71,16 +68,6 @@ public class MostrarPublicacionesBean implements MostrarPublicacionesBeanLocal {
             result.add(image.getImagen());
         return result;
     }
-
-//    @Override
-//    public void setSelectedPublication(int id) {
-//        activePublication = entityManager.find(Publicacion.class, id);
-//    }
-//
-//    @Override
-//    public Publicacion getSelectedPublication() {
-//        return activePublication;
-//    }
     
     
 }

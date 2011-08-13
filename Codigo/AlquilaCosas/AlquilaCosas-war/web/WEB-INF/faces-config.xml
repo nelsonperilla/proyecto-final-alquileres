@@ -50,6 +50,16 @@
             <redirect/>
         </navigation-case>
         <navigation-case>
+            <from-outcome>test</from-outcome>
+            <to-view-id>/vistas/mostrarPublicacion.xhtml?id=#{publicationsGroup.selectedPublicationId}</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>verCategoria</from-outcome>
+            <to-view-id>/vistas/verCategoria.xhtml?cat=#{menuCatBean.categoriaSeleccionada}</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
             <from-outcome>modificarPublicacion</from-outcome>
             <to-view-id>/vistas/usuario/modificarPublicacion.xhtml?id=#{misPublicaciones.publicacionId}</to-view-id>
             <redirect/>

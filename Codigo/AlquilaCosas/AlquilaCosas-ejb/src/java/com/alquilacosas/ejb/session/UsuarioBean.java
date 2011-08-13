@@ -18,7 +18,6 @@ import com.alquilacosas.ejb.entity.Rol;
 import com.alquilacosas.ejb.entity.Rol.NombreRol;
 import com.alquilacosas.ejb.entity.Usuario;
 import com.alquilacosas.ejb.entity.UsuarioXEstado;
-import com.alquilacosas.ejb.entity.UsuarioXEstadoPK;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -161,12 +160,8 @@ public class UsuarioBean implements UsuarioBeanLocal {
             throw new AlquilaCosasException("No se encontro el estado de usuario 'Registrado' en la base de datos'");
         }
 
-        UsuarioXEstado uxe = new UsuarioXEstado();
-        uxe.setEstadoUsuario(estado);
-        uxe.setUsuario(usuario);
+        UsuarioXEstado uxe = new UsuarioXEstado(usuario, estado);
         uxe.setFechaDesde(new Date());
-        UsuarioXEstadoPK uxePk = new UsuarioXEstadoPK(usuario.getUsuarioId(), estado.getEstadoUsuarioId());
-        uxe.setUsuarioXEstadoPK(uxePk);
         entityManager.persist(uxe);
 
         try {
