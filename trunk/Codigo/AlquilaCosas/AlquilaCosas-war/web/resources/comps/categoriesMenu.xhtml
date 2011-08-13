@@ -2,8 +2,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.prime.com.tr/ui" 
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.prime.com.tr/ui">
+      xmlns:f="http://java.sun.com/jsf/core" >
 
     <!-- INTERFACE -->
     <cc:interface>
@@ -12,7 +14,33 @@
     <!-- IMPLEMENTATION -->
     <cc:implementation>  
 
-        <div id="menu">
+        <div id="category" >
+            <h:form>
+                <ul>
+                    <ui:repeat value="#{menuCatBean.categorias}" var="cat" >
+                        <li>
+                            <h:commandLink value="#{cat.nombre}" action="verCategoria" >
+                                <f:setPropertyActionListener target="#{menuCatBean.categoriaSeleccionada}" 
+                                                             value="#{cat.id}" />
+                            </h:commandLink>
+                            <ul>
+                                <ui:repeat value="#{cat.subcategorias}" var="subcat" >
+                                    <li>
+                                        <h:commandLink value="#{subcat.nombre}"
+                                                       action="verCategoria">
+                                            <f:setPropertyActionListener target="#{menuCatBean.categoriaSeleccionada}" 
+                                                                         value="#{subcat.id}" />
+                                        </h:commandLink>
+                                    </li>
+                                </ui:repeat>
+                            </ul>
+                        </li>
+                    </ui:repeat>
+                </ul>
+            </h:form>
+        </div>
+
+        <!-- <div id="menu">
             <table width="200" border="0" cellspacing="0">
                 <tr>
                     <th>
@@ -35,6 +63,6 @@
                     </td>
                 </tr>
             </table>
-        </div> 
+        </div> -->
     </cc:implementation>
 </html>

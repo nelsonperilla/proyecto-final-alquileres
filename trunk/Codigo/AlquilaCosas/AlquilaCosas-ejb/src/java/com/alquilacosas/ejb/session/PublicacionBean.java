@@ -15,7 +15,6 @@ import com.alquilacosas.ejb.entity.Periodo;
 import com.alquilacosas.ejb.entity.Precio;
 import com.alquilacosas.ejb.entity.Publicacion;
 import com.alquilacosas.ejb.entity.PublicacionXEstado;
-import com.alquilacosas.ejb.entity.PublicacionXEstadoPK;
 import com.alquilacosas.ejb.entity.Usuario;
 import java.util.Date;
 import java.util.List;
@@ -94,14 +93,9 @@ public class PublicacionBean implements PublicacionBeanLocal {
         }
    
         PublicacionXEstado pxe = new PublicacionXEstado();
-        PublicacionXEstadoPK pxepk = new PublicacionXEstadoPK(
-                publicacion.getPublicacionId(), 
-                estadoPublicacion.getEstadoPublicacionId());
-
         pxe.setPublicacion(publicacion);
         pxe.setEstadoPublicacion(estadoPublicacion);
         pxe.setFechaDesde(new Date());
-        pxe.setPublicacionXEstadoPK(pxepk);
         
         entityManager.persist(pxe);
 
@@ -218,12 +212,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
             pxe.setFechaHasta(new Date());
             entityManager.merge(pxe);
             
-            PublicacionXEstado pxeNuevo = new PublicacionXEstado();
-            PublicacionXEstadoPK pxepk = new PublicacionXEstadoPK();
-            pxeNuevo.setEstadoPublicacion(ep);
-            pxeNuevo.setPublicacion(publicacion);
-            pxeNuevo.setFechaDesde(new Date());
-            pxeNuevo.setPublicacionXEstadoPK(pxepk);
+            PublicacionXEstado pxeNuevo = new PublicacionXEstado(publicacion, ep);
             entityManager.persist(pxeNuevo);
         }
         

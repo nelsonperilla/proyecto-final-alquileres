@@ -53,7 +53,7 @@ public class EstadoUsuario implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "NOMBRE")
     @Enumerated(EnumType.STRING)
-    private NombreEstado nombre; 
+    private NombreEstado nombre;
     
     @Basic(optional = false)
     @NotNull
@@ -84,16 +84,12 @@ public class EstadoUsuario implements Serializable {
         this.estadoUsuarioId = estadoUsuarioId;
     }
 
-    public NombreEstado getNombre() {
-        return nombre;
-    }
-
     public void setNombre(NombreEstado nombre) {
         this.nombre = nombre;
     }
     
-    public void setNombre(String nombre) {
-        this.nombre = NombreEstado.valueOf(nombre);
+    public NombreEstado getNombre() {
+        return nombre;
     }
 
     public String getDescripcion() {

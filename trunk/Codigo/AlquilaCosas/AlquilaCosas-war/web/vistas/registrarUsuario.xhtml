@@ -17,6 +17,10 @@
                 </h:form>
             </ui:define>
 
+            <ui:define name="left" >
+                <comps:categoriesMenu />
+            </ui:define>
+
             <ui:define name="right">
                 <comps:loginBox />
                 <comps:adminPanel />
@@ -27,8 +31,8 @@
                 <h:outputScript library="javascript" name="util.js" />
                 <h:form>
                     <h1>Registrar Usuario</h1>
-
-                    <p:panel header="Datos de registro" styleClass="formPanel" >
+                    <h2>Datos de registro</h2>
+                    <!-- <p:panel header="Datos de registro" styleClass="formPanel" > -->
                         <h:panelGrid columns="3">
                             <h:outputLabel value="Email" />
                             <p:inputText id="email" value="#{regUsuario.email}" required="true"
@@ -61,9 +65,9 @@
                             </p:password>
                             <p:message id="password2Val" for="password2" />
                         </h:panelGrid>
-                    </p:panel>
-
-                    <p:panel header="Datos Personales" styleClass="formPanel" >
+                    <!-- </p:panel> -->
+                    <h2>Datos Personales</h2>
+                    <!-- <p:panel header="Datos Personales" styleClass="formPanel" > -->
                         <h:panelGrid columns="3" >
                             <h:outputLabel value="Nombre" />
                             <p:inputText id="nombre" value="#{regUsuario.nombre}" required="true"
@@ -98,12 +102,12 @@
                             </p:calendar>
                             <p:message for="fecha" />
                         </h:panelGrid>
-                    </p:panel>
-                    
-                    <p:panel id="domiciliosPanel" header="Domicilio" styleClass="formPanel" >
+                    <!-- </p:panel> -->
+                    <h2>Domicilio</h2>
+                    <!-- <p:panel id="domiciliosPanel" header="Domicilio" styleClass="formPanel" > -->
                         <h:panelGrid columns="3" >
                             <h:outputLabel value="Pais" />
-                            
+
                             <h:selectOneMenu id="pais" value="#{regUsuario.paisSeleccionado}" required="true"
                                              requiredMessage="Valor requerido" >                                
                                 <f:selectItem itemLabel="Seleccione un pais" itemValue="" />
@@ -112,7 +116,7 @@
                                         listener="#{regUsuario.actualizarProvincias}" />
                             </h:selectOneMenu>
                             <p:message for="pais" />
-                            
+
                             <h:outputLabel value="Provincia" />
                             <h:selectOneMenu id="provincia" value="#{regUsuario.provinciaSeleccionada}" 
                                              required="true" requiredMessage="Valor requerido" >
@@ -122,7 +126,7 @@
                                         listener="#{regUsuario.prepararDomicilio}" />
                             </h:selectOneMenu>
                             <p:message for="provincia" />
-                            
+
                             <h:outputLabel value="Ciudad" />
                             <p:inputText id="ciudad" value="#{regUsuario.ciudad}" required="true"
                                          requiredMessage="Valor requerido" 
@@ -130,7 +134,7 @@
                                 <f:validateLength maximum="45" />
                             </p:inputText>
                             <p:message for="ciudad" display="icon" />
-                            
+
                             <h:outputLabel value="Barrio" />
                             <p:inputText id="barrio" value="#{regUsuario.barrio}" required="true"
                                          requiredMessage="Valor requerido"
@@ -138,7 +142,7 @@
                                 <f:validateLength maximum="45" />
                             </p:inputText>
                             <p:message for="barrio" display="icon" />
-                            
+
                             <h:outputLabel value="Calle" />
                             <p:inputText id="calle" value="#{regUsuario.calle}" required="true"
                                          requiredMessage="Valor requerido"
@@ -146,22 +150,22 @@
                                 <f:validateLength maximum="45" />
                             </p:inputText>
                             <p:message for="calle" display="icon" />
-                            
+
                             <h:outputLabel value="Numero" />
                             <p:inputText id="numero" value="#{regUsuario.numero}" required="true"
                                          requiredMessage="Valor requerido"/>
                             <p:message for="numero" display="icon" />
-                            
+
                             <h:outputLabel value="Piso" />
                             <p:inputText value="#{regUsuario.piso}" />
                             <p/>
-                            
+
                             <h:outputLabel value="Depto" />
                             <p:inputText value="#{regUsuario.depto}" />
                             <p/>
-                            
+
                         </h:panelGrid>
-                    </p:panel>
+                    <!-- </p:panel> -->
                     
                     <p:commandButton value="Crear" action="#{regUsuario.crearUsuario}"
                                      ajax="false" />

@@ -158,20 +158,20 @@ public class Comentario implements Serializable {
         return "com.alquilacosas.ejb.entity.Comentario[ comentarioId=" + comentarioId + " ]";
     }
 
-    public Date getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
-    }
-
     public Boolean getPregunta() {
         return pregunta;
     }
 
     public void setPregunta(Boolean pregunta) {
         this.pregunta = pregunta;
+    }
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
     }
     
 }

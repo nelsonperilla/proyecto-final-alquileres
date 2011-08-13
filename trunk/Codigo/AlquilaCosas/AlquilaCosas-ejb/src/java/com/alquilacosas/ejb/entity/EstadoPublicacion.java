@@ -37,8 +37,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "EstadoPublicacion.findByNombre", query = "SELECT e FROM EstadoPublicacion e WHERE e.nombre = :nombre"),
     @NamedQuery(name = "EstadoPublicacion.findByDescripcion", query = "SELECT e FROM EstadoPublicacion e WHERE e.descripcion = :descripcion")})
 public class EstadoPublicacion implements Serializable {
-    
-    
     public enum PublicacionEstado {ACTIVA, INACTIVA, SUSPENDIDA};
     
     private static final long serialVersionUID = 1L;
@@ -48,12 +46,14 @@ public class EstadoPublicacion implements Serializable {
     @NotNull
     @Column(name = "ESTADO_PUBLICACION_ID")
     private Integer estadoPublicacionId;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
-    @Column(name = "NOMBRE")
     @Enumerated(EnumType.STRING)
+    @Column(name = "NOMBRE")
     private PublicacionEstado nombre;
+    
     @Size(max = 45)
     @Column(name = "DESCRIPCION")
     private String descripcion;
@@ -87,7 +87,7 @@ public class EstadoPublicacion implements Serializable {
     public void setNombre(PublicacionEstado nombre) {
         this.nombre = nombre;
     }
-
+    
     public String getDescripcion() {
         return descripcion;
     }

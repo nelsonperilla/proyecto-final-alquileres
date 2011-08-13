@@ -7,29 +7,28 @@
         <Node id="vistas/usuario/nuevaPublicacion.xhtml" x="1150" y="150" zoom="true"/>
     </Scope>
     <Scope Scope="Project">
-        <Node id="resources/comps/highlightItems.xhtml" x="400" y="150" zoom="true"/>
-        <Node id="resources/templates/masterPage.xhtml" x="400" y="450" zoom="true"/>
-        <Node id="vistas/admin/categorias.xhtml" x="150" y="750" zoom="true"/>
         <Node id="resources/comps/itemInfo.xhtml" x="150" y="300" zoom="true"/>
-        <Node id="vistas/inicio.xhtml" x="150" y="150" zoom="true"/>
-        <Node id="vistas/activarCuenta.xhtml" x="650" y="450" zoom="true"/>
-        <Node id="*" x="1150" y="300" zoom="true"/>
-        <Node id="vistas/usuario/datosUsuario.xhtml" x="900" y="450" zoom="true"/>
-        <Node id="vistas/login.xhtml" x="650" y="600" zoom="true"/>
-        <Node id="resources/comps/userPanel.xhtml" x="150" y="600" zoom="true"/>
+        <Node id="vistas/admin/categorias.xhtml" x="400" y="750" zoom="true"/>
+        <Node id="vistas/usuario/datosUsuario.xhtml" x="150" y="900" zoom="true"/>
+        <Node id="vistas/mostrarPublicacion.xhtml?id=#{publicationsGroup.selectedPublicationId}" x="1400" y="300" zoom="true"/>
         <Node id="resources/comps/logoBar.xhtml" x="400" y="300" zoom="true"/>
-        <Node id="resources/comps/adminPanel.xhtml" x="1400" y="150" zoom="true"/>
-        <Node id="vistas/resultados.xhtml?art=#{buscarBean.buscar}" x="1150" y="450" zoom="true"/>
-        <Node id="vistas/mostrarPublicacion.xhtml" x="150" y="900" zoom="true"/>
-        <Node id="index.xhtml" x="150" y="450" zoom="true"/>
-        <Node id="vistas/usuario/modificarPublicacion.xhtml" x="1650" y="150" zoom="true"/>
-        <Node id="resources/comps/loginBox.xhtml" x="900" y="150" zoom="true"/>
+        <Node id="vistas/mostrarPublicacion.xhtml" x="1650" y="150" zoom="true"/>
         <Node id="vistas/registrarUsuario.xhtml" x="650" y="300" zoom="true"/>
-        <Node id="vistas/usuario/misPublicaciones.xhtml" x="1400" y="300" zoom="true"/>
         <Node id="vistas/usuarioCreado.xhtml" x="400" y="600" zoom="true"/>
         <Node id="vistas/usuario/modificarUsuario.xhtml" x="900" y="300" zoom="true"/>
-        <Node id="vistas/resultados.xhtml" x="400" y="750" zoom="true"/>
+        <Node id="vistas/resultados.xhtml" x="1400" y="150" zoom="true"/>
         <Node id="vistas/usuario/nuevaPublicacion.xhtml" x="1150" y="150" zoom="true"/>
+        <Node id="resources/comps/highlightItems.xhtml" x="400" y="150" zoom="true"/>
+        <Node id="resources/templates/masterPage.xhtml" x="400" y="450" zoom="true"/>
+        <Node id="vistas/inicio.xhtml" x="150" y="150" zoom="true"/>
+        <Node id="*" x="150" y="750" zoom="true"/>
+        <Node id="vistas/activarCuenta.xhtml" x="650" y="450" zoom="true"/>
+        <Node id="vistas/login.xhtml" x="650" y="600" zoom="true"/>
+        <Node id="resources/comps/userPanel.xhtml" x="150" y="600" zoom="true"/>
+        <Node id="resources/comps/adminPanel.xhtml" x="900" y="450" zoom="true"/>
+        <Node id="vistas/resultados.xhtml?art=#{buscarBean.buscar}" x="1150" y="300" zoom="true"/>
+        <Node id="index.xhtml" x="150" y="450" zoom="true"/>
+        <Node id="resources/comps/loginBox.xhtml" x="900" y="150" zoom="true"/>
         <Node id="resources/comps/categoriesMenu.xhtml" x="650" y="150" zoom="true"/>
     </Scope>
     <Scope Scope="All Faces Configurations">
