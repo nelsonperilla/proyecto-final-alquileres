@@ -17,16 +17,18 @@ body {
     text-align: center;
 }
 
-form {
-    text-align: left;
-}
-
 h1 {font: normal 1.8em sans-serif;}
 h2 {font: normal 1.6em sans-serif;}
 h3 {font: normal 1.4em sans-serif;}
 h4 {font: normal 1.2em sans-serif;}
 h5 {font: bold 1em sans-serif;}
 h6 {font: bold 0.9em sans-serif;}
+
+#columnaIzq {
+    width:220px;
+    max-width: 220px;
+    _width:220px;
+}
 
 #menu {
 
@@ -38,7 +40,7 @@ h6 {font: bold 0.9em sans-serif;}
     padding: 0px 0px 0px 10px; 
     background-image:url(../resources/images/categoryItemWhite.png);
     height: 40px;
-    width: 200px;
+    width: 220px;
 }
 
 #menu th{
@@ -93,8 +95,6 @@ h6 {font: bold 0.9em sans-serif;}
 
 
 #register tr{
-
-
     padding-right: 20px;
     padding-left: 20px;
     padding-bottom: 20px;
@@ -144,14 +144,13 @@ h6 {font: bold 0.9em sans-serif;}
 
 
 #items .itemTitle{
-    font-size: 14px;    
+    font-size: 16px;    
     font-family: Trebuchet MS;
     color: #0066ff;
     text-decoration: underline;
 }
 
 #simpleItem .dataPrincipal {
-    
     border-right-style: solid;
     border-left-style: solid;
     border-bottom-style: solid;
@@ -258,7 +257,7 @@ h6 {font: bold 0.9em sans-serif;}
 }
 
 #principal {
-    width: 600px;
+    width: 620px;
     text-align: left;
 }
 
@@ -325,20 +324,29 @@ h6 {font: bold 0.9em sans-serif;}
     text-align: left;
 }
 
-.formPanel {
-    text-align: left;
-}
-
 .inputTextCorto {
     width: 70px;
 }
 
-.itemsTable.ui-datatable, .itemsTable.ui-datatable table {
-    border: none !important;
+.encabezado {
+    text-align: right;
 }
+
+.encabezado a {
+    color: black;
+    font-family: Tahoma;
+}
+
+.labelColumn {
+    width: 120px;
+    text-align: right;
+}
+
+/* Data table en resultados.xhtml */
 
 .ui-datatable.itemsTable table {
     border: none !important;
+    border-color: white;
 }
 
 .itemsTable.ui-datatable .ui-datatable-data td,
@@ -347,14 +355,32 @@ h6 {font: bold 0.9em sans-serif;}
     padding: 1px;
 }
 
+.itemsTable.ui-datatable .ui-paginator-bottom {
+    background: none;
+}
+
+.itemsTable .ui-widget-header {
+    border: none !important;
+}
+
+.itemsTable tr.ui-widget-content {
+    border: none !important;
+} /* Fin de data table en resultados.xhtml */
+
 .itemImgCol {
-    width: 60px;
-    padding: 2px;
+    width: 40px;
+    padding: 2px 2px 2px 5px;
 }
 
 .itemContentCol {
-    width: 350px;
+    width: 330px;
     text-align: left;
+    font-size: 14px;
+}
+
+.itemPriceCol {
+    width: 70px;
+    font-size: 14px;
 }
 
 .filtroActual {
@@ -365,6 +391,18 @@ h6 {font: bold 0.9em sans-serif;}
 
 .filtroActual.ui-widget-content a {
     color: chocolate;
+}
+
+.controlPanel a {
+    text-decoration: none;
+}
+
+.labelBienvenida {
+    font-weight: bold;
+}
+
+.panelFiltro {
+    width: 180px;
 }
 
 /* Menu Categorias --------------------- */
@@ -389,7 +427,7 @@ h6 {font: bold 0.9em sans-serif;}
     height:100%;
     width:100%;
     position: relative;
-    background: aliceblue;
+    background: lightskyblue;
     border-bottom:1px solid #fff;
     float:left; /* Make sure (in IE) there is no margin between the menu items */
 /*    border: 1px solid goldenrod;*/
@@ -411,7 +449,7 @@ h6 {font: bold 0.9em sans-serif;}
     
 }
 #category ul li ul li{
-    background: aliceblue;
+    background: lightskyblue;
     border: 1px solid goldenrod;
 }
 #category ul li ul li a:hover{

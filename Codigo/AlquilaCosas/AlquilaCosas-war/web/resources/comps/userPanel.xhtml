@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:cc="http://java.sun.com/jsf/composite"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.prime.com.tr/ui" >
+      xmlns:p="http://primefaces.prime.com.tr/ui" 
+      xmlns:f="http://java.sun.com/jsf/core">
 
     <!-- INTERFACE -->
     <cc:interface>
@@ -13,14 +14,16 @@
     <cc:implementation>
         <p:outputPanel rendered="#{login.logueado}" >
             <h:form>
-                <p:panel header="Usuario" style="text-align: center">
+                <p:panel header="Usuario" styleClass="controlPanel">
                     <h:panelGrid columns="1" cellpadding="2" >
-                        Hola #{login.username}
+                        <h:outputLabel value="Hola #{login.username}" styleClass="labelBienvenida" />
                         <h:commandLink value="Publicar" action="nuevaPublicacion" />
                         <h:commandLink value="Mis publicaciones" action="misPublicaciones"/>
                         <h:commandLink value="Mis datos" action="datosUsuario" />
-                        <h:commandLink value="Salir" action="#{login.logout}" />
                     </h:panelGrid>
+                    <f:facet name="footer" >
+                        <h:commandLink value="Salir" action="#{login.logout}" />
+                    </f:facet>
                 </p:panel>
             </h:form>
         </p:outputPanel>

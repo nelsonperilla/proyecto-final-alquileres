@@ -12,29 +12,39 @@
         <cc:attribute name="bean" type="java.lang.Object" required="true"  />    
         <cc:attribute name="method" type="java.lang.String" required="true" />
         <cc:attribute name="property" type="java.lang.String" required="true" />
+        <cc:attribute name="editable" type="java.lang.Boolean" default="false" />
+        <cc:attribute name="editMethod" type="java.lang.String" />
     </cc:interface>
 
     <!-- IMPLEMENTATION -->
     <cc:implementation>
         <div class="item">
             
-                <h:panelGrid columns="2" style="border: none; padding-left: 5px"
+                <h:panelGrid columns="3" style="border: none; padding: 5px 10px;"
                              cellspacing="0" cellpadding="0" 
-                             columnClasses="itemImgCol,itemContentCol" > 
+                             columnClasses="itemImgCol,itemContentCol,itemPriceCol" > 
                     <h:graphicImage value="/image?id=#{cc.attrs.var.imagenId}" 
-                                    width="90" height="90" 
+                                    width="113" height="85" style="border: 1px solid gray"
                                     rendered="#{cc.attrs.var.imagenId != -1}" />
-                    <h:graphicImage value="#{resource['images:noImage.png']}"
-                                    width="90" height="90"
+                    <h:graphicImage value="#{resource['images:no_imagen.jpg']}"
+                                    width="113" height="85" style="border: 1px solid gray"
                                     rendered="#{cc.attrs.var.imagenId == -1}" />
-                    <h:panelGrid style="text-align: left; padding: 1px 1px 1px 10px" columns="1"  >
-                        <p:commandLink value="#{cc.attrs.var.titulo}" ajax="false"
+                    <h:panelGrid style="padding: 0 10px" columns="1"  >
+                        <h:commandLink value="#{cc.attrs.var.titulo}"
                                        action="#{cc.attrs.bean[cc.attrs.method]}" 
                                        styleClass="itemTitle" >
                             <f:setPropertyActionListener value="#{cc.attrs.var.id}" target="#{cc.attrs.bean[cc.attrs.property]}" />
-                        </p:commandLink>  
-                        <h:outputText value="#{cc.attrs.var.descripcion}" styleClass="itemInfo" escape="false"/>  
+                        </h:commandLink>
+                        <h:outputText value="(#{cc.attrs.var.barrio}, #{cc.attrs.var.ciudad})" />
+                        <h:outputText value="#{cc.attrs.var.descripcion}" styleClass="itemInfo" />  
                         <h:outputText value="Cantidad disponible: #{cc.attrs.var.cantidad}" styleClass="itemInfo"/>  
+                    </h:panelGrid>
+                    <h:panelGrid columns="1" >
+                        <h:commandLink value="editar" rendered="#{cc.attrs.editable}" />
+                        <h:outputText value="Precios" />
+                        <h:outputText value="Dia" />
+                        <h:outputText value="Semana" />
+                        <h:outputText value="Mes" />
                     </h:panelGrid>
                 </h:panelGrid>  
         </div>

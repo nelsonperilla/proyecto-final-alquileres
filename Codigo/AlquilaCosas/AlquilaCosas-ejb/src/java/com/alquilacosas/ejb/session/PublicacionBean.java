@@ -225,8 +225,8 @@ public class PublicacionBean implements PublicacionBeanLocal {
                     precioViejo.setPrecio(precioFacade.getPrecio());
                     precioViejo.setPeriodoFk(this.getPeriodo(precioFacade.getPeriodoNombre()));
                     precioViejo.setPublicacionFk(publicacion);
-                    publicacion.getPrecioList().set( precioFacade.getPeriodoId() - 1,                            
-                                precioViejo);
+//                    publicacion.getPrecioList().set( precioFacade.getPeriodoId() - 1,                            
+//                                precioViejo);
                     entityManager.merge(precioViejo);
                 }  
            }else{
@@ -236,9 +236,10 @@ public class PublicacionBean implements PublicacionBeanLocal {
                     precioNuevo.setPrecio(precioFacade.getPrecio());
                     precioNuevo.setPeriodoFk(this.getPeriodo(precioFacade.getPeriodoNombre()));
                     precioNuevo.setPublicacionFk(publicacion);
-                    publicacion.getPrecioList().set( precioFacade.getPeriodoId() - 1,                            
-                                precioNuevo);
                     entityManager.persist(precioNuevo);
+                    //publicacion.getPrecioList().set( precioFacade.getPeriodoId() - 1,                            
+                    //            precioNuevo);
+                    
                 }  
            }
           

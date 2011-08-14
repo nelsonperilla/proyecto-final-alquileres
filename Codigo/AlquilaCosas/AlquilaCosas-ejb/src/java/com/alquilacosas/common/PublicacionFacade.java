@@ -33,6 +33,7 @@ public class PublicacionFacade {
     private List<PrecioFacade> precios;
     private EstadoPublicacion estado;
     private List<ImagenPublicacion> imagenes;
+    private String barrio, ciudad;
 
     public Categoria getCategoria() {
         return categoria;
@@ -218,7 +219,22 @@ public class PublicacionFacade {
             imagenId = imagenIds.get(0);
     }
 
-    /**
+    public String getBarrio() {
+        return barrio;
+    }
+
+    public void setBarrio(String barrio) {
+        this.barrio = barrio;
+    }
+
+    public String getCiudad() {
+        return ciudad;
+    }
+
+    public void setCiudad(String ciudad) {
+        this.ciudad = ciudad;
+    }
+        /**
      * @return the categoriaF
      */
     public CategoriaFacade getCategoriaF() {
@@ -231,8 +247,5 @@ public class PublicacionFacade {
     public void setCategoriaF(CategoriaFacade categoriaF) {
         this.categoriaF = categoriaF;
     }
-
-
-    
     
 }

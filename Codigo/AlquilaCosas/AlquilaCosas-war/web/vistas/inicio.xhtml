@@ -23,7 +23,27 @@
             <ui:define name="principal">
                 <table>
                     <tr>
-                        <td id="higligting" bgcolor="grey">
+                        <td>
+                            <p:carousel autoPlayInterval="3500" rows="1"
+                                        effect="easeInStrong" circular="true"
+                                        itemStyle="height:130px;width:600px;" >
+                                <p:tab title="1" >
+                                    <br/>
+                                    <h1>Alquilar productos ahora es muy facil!</h1>
+                                </p:tab>
+                                <p:tab title="2">
+                                    <br/>
+                                    <h1>Comienza a publicar y alquilar productos ya mismo</h1>
+                                </p:tab>
+                                <p:tab title="3">
+                                    <br/>
+                                    <h1>¡Es totalmente gratis!</h1>
+                                </p:tab>
+                            </p:carousel>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="destacados" bgcolor="grey">
                             <!-- Todavia no estan definidas las publicaciones
                                     <comps:highlightItems /> -->
                         </td>
@@ -33,7 +53,7 @@
                             <table >
                                 <tr>
                                     <td>
-                                        <p:graphicImage  value="./../resources/images/titleBar.png"/>  
+                                        <!-- <p:graphicImage  value="./../resources/images/titleBar.png"/> -->
                                     </td>
                                 </tr>
                                 <tr>

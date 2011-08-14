@@ -36,11 +36,6 @@ public class MenuCategoriasMBean implements Serializable {
         categorias = catBean.getCategoriaFacade();
         for(int i= 0; i < categorias.size(); i++) {
             CategoriaFacade fc = categorias.get(i);
-            if(fc.getId() == 5) {
-                categorias.remove(fc);
-                i--;
-                continue;
-            }
             for(int j= 0; j < categorias.size(); j++) {
                 CategoriaFacade fc2 = categorias.get(j);
                 if(fc2.getPadreId() == fc.getId()) {

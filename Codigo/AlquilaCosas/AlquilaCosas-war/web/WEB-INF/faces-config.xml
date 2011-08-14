@@ -8,6 +8,15 @@
     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
 
     <navigation-rule>
+        <from-view-id>/vistas/resultados.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>mostrarPublicacion</from-outcome>
+            <to-view-id>/vistas/mostrarPublicacion.xhtml?id=#{resultadosBean.publicacionSeleccionada}</to-view-id>
+            <redirect/>
+        </navigation-case>
+    </navigation-rule>
+
+    <navigation-rule>
         <from-view-id>*</from-view-id>
         <navigation-case>
             <from-outcome>inicio</from-outcome>
@@ -51,7 +60,12 @@
         </navigation-case>
         <navigation-case>
             <from-outcome>verCategoria</from-outcome>
-            <to-view-id>/vistas/verCategoria.xhtml?cat=#{menuCatBean.categoriaSeleccionada}</to-view-id>
+            <to-view-id>/vistas/verCategoria.xhtml?id=#{menuCatBean.categoriaSeleccionada}</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>verSubCategoria</from-outcome>
+            <to-view-id>/vistas/verCategoria.xhtml?id=#{verCategoriaBean.subcategoriaSeleccionada}</to-view-id>
             <redirect/>
         </navigation-case>
         <navigation-case>

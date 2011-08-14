@@ -14,6 +14,7 @@ public class Busqueda {
     
     private List<PublicacionFacade> publicaciones;
     private List<CategoriaFacade> categorias;
+    private int totalRegistros;
 
     public Busqueda(List<PublicacionFacade> publicaciones, List<CategoriaFacade> categorias) {
         this.publicaciones = publicaciones;
@@ -34,6 +35,14 @@ public class Busqueda {
 
     public void setPublicaciones(List<PublicacionFacade> publicaciones) {
         this.publicaciones = publicaciones;
+    }
+
+    public int getTotalRegistros() {
+        return totalRegistros;
+    }
+
+    public void setTotalRegistros(int totalRegistros) {
+        this.totalRegistros = totalRegistros;
     }
     
 }
