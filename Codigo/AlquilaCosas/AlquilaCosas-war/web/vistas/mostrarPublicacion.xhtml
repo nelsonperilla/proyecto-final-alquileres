@@ -36,26 +36,25 @@
                         </td>
                         <td   width="100%">
                             <h:panelGrid  styleClass="dataPrincipal" columns="1"  >
-                                <h:outputText value="Finaliza el" 
-                                              styleClass="itemInfo" escape="false"/>  
-                                <h:panelGrid columns="2" style="width: 100%">
-                                            <h:outputText value="Precio por dia:" 
+                                <h:dataTable value="#{publicacionDesplegada.publicacion.precios}"
+                                             var="precio" style="width: 100%" >
+                                    <h:column>
+                                        <h:outputText value="Precio por #{precio.periodoNombre}:" 
                                               styleClass="itemInfo"/>  
-                                            <h:outputText value=" $ 10.5" 
+                                    </h:column>        
+                                    <h:column>
+                                        <h:outputText value=" $ #{precio.precio}" 
                                               styleClass="itemPrice"/>  
-                                           <h:outputText value="Precio por semana:" 
-                                              styleClass="itemInfo"/>  
-                                            <h:outputText value=" $ 60" 
-                                              styleClass="itemPrice"/>  
-                                            <h:outputText value="Precio por mes:" 
-                                              styleClass="itemInfo"/>  
-                                            <h:outputText value=" $ 290" 
-                                              styleClass="itemPrice"/>  
-                                </h:panelGrid>
-
+                                    </h:column>
+                                </h:dataTable>
+                                <h:outputText value="Categoria: #{publicacionDesplegada.publicacion.categoriaF.nombre}" 
+                                  styleClass="itemInfo" escape="false"/>  
+                                <h:outputText value="Finaliza el #{publicacionDesplegada.fecha_hasta}" 
+                                  styleClass="itemInfo" escape="false"/>  
                                 <h:outputText value="Cantidad disponible: #{publicacionDesplegada.publicacion.cantidad}" 
-                                              styleClass="itemInfo"/>  
-                                <h:commandButton value="Alquilar"/>
+                                  styleClass="itemInfo"/>  
+                                <h:commandButton value="Alquilar" style="margin-left: 100px"/>
+
                             </h:panelGrid>                            
                         </td>
                     </tr>
