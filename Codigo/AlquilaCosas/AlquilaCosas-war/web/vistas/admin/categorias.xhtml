@@ -12,9 +12,13 @@
           <ui:composition template="./../../resources/templates/masterPage.xhtml">
 
                <ui:define name="logInfo">
-                    <h:form>
+                         <h:form>
                          <h:commandLink value="Inicio" action="inicio.xhtml" />
                     </h:form>
+               </ui:define>
+               
+               <ui:define name="left">
+                    <comps:categoriesMenu />
                </ui:define>
 
                <ui:define name="principal">
@@ -28,8 +32,7 @@
                                         <p:inputText id="nombre" value="#{categoria.nombre}" required="true"
                                                      requiredMessage="Ingrese Nombre" maxlength="45" />
                                         <h:outputText  value="Descripción" />
-                                        <p:inputText id="descripcion" value="#{categoria.descripcion}" required="true" 
-                                                     requiredMessage="Ingrese Descripcion" maxlength="45" />
+                                        <p:inputText id="descripcion" value="#{categoria.descripcion}" maxlength="45" />
                                         <h:outputText  value="Pertenece a:" />
                                    </h:panelGrid>  
                                    <p:tree id="treeCategoria" value="#{categoria.rootNuevo}" var="node"
@@ -38,7 +41,7 @@
                                              <h:outputText value="#{node}" />  
                                         </p:treeNode>  
                                   </p:tree>  
-                                  <p:commandButton value="Guardar" update="messages"  
+                                  <p:commandButton value="Guardar" update="messages,treeCategoria"
                                    actionListener="#{categoria.registrarNuevaCategoria}" /> 
                              </h:form>
                          </p:tab>
@@ -46,16 +49,27 @@
                               <h:form id="formModificar">
                                    <p:growl id="messagesModificar" />
                                    <p:treeTable id="treeCategoriaModificar" value="#{categoria.rootModificar}" var="cat" style="text-align: left" >
-                                        <p:column headerText="Nombre" >  
+                                        <p:column>
+                                             <f:facet name="header">
+                                                  <h:outputText value="Nombre"/>
+                                             </f:facet>
                                              <h:outputText value="#{cat.nombre}" /> 
                                         </p:column> 
-                                        <p:column headerText="Descripción" >  
+                                        <p:column>
+                                             <f:facet name="header">
+                                                  <h:outputText value="Descripcion"/>
+                                             </f:facet>
                                              <h:outputText value="#{cat.descripcion}" /> 
                                         </p:column> 
-                                        <p:column headerText="Opciones" >  
-                                             <p:commandButton update="treeCategoriaModificar" oncomplete="dialogoModifCat.show()" 
+                                        <p:column>  
+                                             <f:facet name="header">
+                                                  <h:outputText value="Opciones"/>
+                                             </f:facet>
+                                             <p:commandButton update="catDialog" oncomplete="dialogoModifCat.show()" 
                                                                 image="ui-icon ui-icon-pencil" title="Modificar" >
                                                   <f:setPropertyActionListener value="#{cat}" target="#{categoria.categoriaSeleccionadaModificar}" />
+                                                  <f:setPropertyActionListener value="#{cat.nombre}" target="#{categoria.nombreM}" />
+                                                  <f:setPropertyActionListener value="#{cat.descripcion}" target="#{categoria.descripcionM}" />
                                              </p:commandButton>
                                              <p:commandButton update="treeCategoriaModificar" oncomplete="confirmacion.show()" 
                                                                 image="ui-icon ui-icon-trash" title="Quitar" >
@@ -75,12 +89,11 @@
                                    <h:form id="catDialog">
                                        <h:panelGrid columns="3" >
                                            <h:outputLabel value="Nombre" />
-                                           <p:inputText id="nombreModificar" value="#{categoria.nombre}" required="true"
+                                           <p:inputText id="nombreModificar" value="#{categoria.nombreM}" required="true"
                                                         requiredMessage="Valor requerido"/>
                                            <p:message for="nombreModificar" />
                                            <h:outputLabel value="Numero" />
-                                           <p:inputText id="descModificar" value="#{categoria.descripcion}" required="true"
-                                                        requiredMessage="Valor requerido"/>
+                                           <p:inputText id="descModificar" value="#{categoria.descripcionM}" />
                                            <p:message for="descModificar" />
                                            <f:facet name="footer" >
                                                <p:commandButton value="Guardar" actionListener="#{categoria.modificarCategoria}"
@@ -97,6 +110,8 @@
 
                <ui:define name="right">
                     <comps:loginBox />
+                    <comps:adminPanel />
+                    <comps:userPanel />
                </ui:define>
 
           </ui:composition>

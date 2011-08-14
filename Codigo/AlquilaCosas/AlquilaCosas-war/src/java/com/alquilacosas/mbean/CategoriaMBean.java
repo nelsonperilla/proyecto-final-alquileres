@@ -38,23 +38,33 @@ public class CategoriaMBean implements Serializable{
      List<Categoria> categorias;
      private TreeNode rootNuevo;  
      private TreeNode selectedNode; 
+     private TreeNode nodoPrincipal;  
      // Modificar
      private TreeNode rootModificar;
      private Categoria categoriaSeleccionadaModificar;
-          
+     private String nombreM;
+     private String descripcionM;
+     
      @PostConstruct
      public void init() {
+          cargarTrees();
+     }
+     
+     public void cargarTrees() {
           categorias = categoriaBean.getCategorias();
-          rootNuevo =  new DefaultTreeNode(new Categoria(null, "ROOT"), null);
-          for (Categoria c : categorias){
-               if (c.getCategoriaFk() == null){
-                    TreeNode nuevoNodo = nuevoNodoConHijos(c,rootNuevo);
-                    nuevoNodo.setExpanded(true);
+          rootNuevo = new DefaultTreeNode(new Categoria(null, "ROOT"), null);
+          nodoPrincipal = new DefaultTreeNode(new Categoria(null, "CATEGORIAS"),rootNuevo);
+          nodoPrincipal.setExpanded(true);
+          for (Categoria c : categorias) {
+               if (c.getCategoriaFk() == null) {
+                    TreeNode nuevoNodo = nuevoNodoConHijos(c, nodoPrincipal);
+                    nuevoNodo.setExpanded(false);
                }
           }
-          for (Categoria c : categorias){
-               if (c.getCategoriaFk() == null){
-                    TreeNode nuevoNodo = nuevoNodoConHijos(c,null);
+          rootModificar = new DefaultTreeNode(new Categoria(null, "ROOT"), null);
+          for (Categoria c : categorias) {
+               if (c.getCategoriaFk() == null) {
+                    TreeNode nuevoNodo = nuevoNodoConHijos(c, rootModificar);
                     nuevoNodo.setExpanded(true);
                }
           }
@@ -63,12 +73,9 @@ public class CategoriaMBean implements Serializable{
      /*funcion recursiva que devuelve un nodo con sus hijos*/
      public TreeNode nuevoNodoConHijos(Categoria categoriaPadre, TreeNode padre){
           TreeNode nuevo = new DefaultTreeNode(categoriaPadre,padre);
-          if (categoriaPadre.getCategoriaFk() == null){
-               rootModificar =  nuevo;
-          }
           for (Categoria c : categoriaPadre.getCategoriaList()){
                TreeNode nuevoNodo = nuevoNodoConHijos(c, nuevo);
-               nuevoNodo.setExpanded(false);
+               nuevoNodo.setExpanded(true);
           }
           return nuevo;
      }
@@ -78,30 +85,75 @@ public class CategoriaMBean implements Serializable{
                //Crear Nueva Categoria
                try{
                     Categoria categoriaPadre = (Categoria)selectedNode.getData();
-                    categoriaBean.registrarCategoria(nombre, descripcion, categoriaPadre);
+                    if(categoriaPadre.getNombre().equals("CATEGORIAS"))
+                         categoriaPadre = null;
+                    if (!existeCategoria(nombre,categoriaPadre)){
+                         categoriaBean.registrarCategoria(nombre, descripcion, categoriaPadre);
+                         cargarTrees();
+                         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Categoria Creada", selectedNode.getData().toString());  
+                         FacesContext.getCurrentInstance().addMessage(null, message);                         
+                    }
+                    else{
+                         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "La Categoria ya Existe", "");  
+                         FacesContext.getCurrentInstance().addMessage(null, message); 
+                    }
                }
                catch(AlquilaCosasException e){
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.toString());  
                     FacesContext.getCurrentInstance().addMessage(null, message);
-               }               
-               FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Categoria Creada", selectedNode.getData().toString());  
-               FacesContext.getCurrentInstance().addMessage(null, message);  
+               } 
           }
           else {
                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Seleccione Categoria", "Seleccione Categoria");  
                FacesContext.getCurrentInstance().addMessage(null, message);  
           }
      }
-     
+
      public void modificarCategoria(){
-          categoriaSeleccionadaModificar.setNombre(nombre);
-          categoriaSeleccionadaModificar.setDescripcion(descripcion);
-          categoriaBean.modificarCategoria(categoriaSeleccionadaModificar);
+          boolean existe = false;
+          for(Categoria c : categorias)
+               if (c.getNombre().equals(nombreM) && c.getCategoriaFk() == categoriaSeleccionadaModificar.getCategoriaFk() && c.getCategoriaId() != categoriaSeleccionadaModificar.getCategoriaId())
+                    existe=true;
+          if (!existe){
+               categoriaSeleccionadaModificar.setNombre(nombreM);
+               categoriaSeleccionadaModificar.setDescripcion(descripcionM);
+               categoriaBean.modificarCategoria(categoriaSeleccionadaModificar);
+               FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Categoria Modificada", "");  
+               FacesContext.getCurrentInstance().addMessage(null, message); 
+          }
+          else{
+               FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "La Categoria ya Existe", "");  
+               FacesContext.getCurrentInstance().addMessage(null, message); 
+          }
      }
      
      public void borrarCategoria(){
           categoriaBean.borrarCategoria(categoriaSeleccionadaModificar);
      }
+     
+     public boolean existeCategoria(String nombre, Categoria padre){
+          boolean existe = false;
+          for (Categoria c : categorias)
+               if (c.getNombre().equals(nombre) && c.getCategoriaFk().equals(padre))
+                    existe = true;
+          return existe;
+     }
+     
+     public String getDescripcionM() {
+          return descripcionM;
+     }
+
+     public void setDescripcionM(String descripcionM) {
+          this.descripcionM = descripcionM;
+     }
+
+     public String getNombreM() {
+          return nombreM;
+     }
+
+     public void setNombreM(String nombreM) {
+          this.nombreM = nombreM;
+     }     
     
      public List<Categoria> getCategorias() {
           return categorias;

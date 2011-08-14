@@ -40,7 +40,8 @@ public class CategoriaBean implements CategoriaBeanLocal {
           Categoria nuevaCategoria = new Categoria();
           nuevaCategoria.setNombre(nombre);
           nuevaCategoria.setDescripcion(descripcion);
-          nuevaCategoria.setCategoriaFk(categoriaPadre);
+          if(categoriaPadre != null)
+               nuevaCategoria.setCategoriaFk(categoriaPadre);
           try{
                entityManager.persist(nuevaCategoria);
           }
