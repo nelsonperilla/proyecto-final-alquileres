@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+        <!-- INTERFACE -->
+    <cc:interface>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <div id="itemPregunta">
+            <table cellspacing="0" cellpadding="5">
+                <tr>
+                    <td width="30px">
+                        <h:outputText value="Pregunta:"  />  
+                    </td>
+                    <td width="500px">
+                        <h:outputText value="#{pregunta.comentario}"/> 
+                    </td>
+                    <td width="30px">
+                        <p:commandLink value="Denunciar" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h:outputText value="Respuesta:" rendered="#{pregunta.respuesta != null}"/>  
+                    </td>
+                    <td>
+                        <h:outputText value="#{pregunta.respuesta.comentario}" rendered="#{pregunta.respuesta != null}"/>  
+                    </td>
+                    <td>
+                        <p:commandLink value="Denunciar" style="text-align: right" rendered="#{pregunta.respuesta != null}"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </cc:implementation>
+</html>
