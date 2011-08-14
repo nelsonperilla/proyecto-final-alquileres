@@ -13,7 +13,7 @@
         <h:outputStylesheet library="css" name="layout.css" />
             <table id="form:panel" width="1024px" align="center" >
                 <tr>
-                    <td colspan="3">
+                    <td colspan="3" class="encabezado">
                         <ui:insert name="logInfo"/>
                     </td>
                 </tr>
@@ -23,13 +23,13 @@
                     </td>
                 </tr>
                 <tr>    
-                    <td valign="top">
+                    <td valign="top" class="columnaIzq">
                         <ui:insert name="left" />
                     </td>
                     <td id="principal" valign="top" >
                         <ui:insert name="principal"/>
                     </td>
-                    <td id="login" width="200px" valign="top">
+                    <td width="200px" valign="top">
                         <ui:insert name="right" />
                     </td> 
                 </tr>

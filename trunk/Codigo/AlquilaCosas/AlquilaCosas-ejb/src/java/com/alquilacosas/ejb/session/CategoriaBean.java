@@ -66,6 +66,7 @@ public class CategoriaBean implements CategoriaBeanLocal {
           entityManager.merge(modifCategoria);
      }
      
+    @Override
      public List<CategoriaFacade> getCategoriaFacade() {
          List<Categoria> categorias;
           Query query = entityManager.createNamedQuery("Categoria.findAll");
@@ -82,5 +83,21 @@ public class CategoriaBean implements CategoriaBeanLocal {
           }
           return catFacade;
      }
+
+    @Override
+    public List<CategoriaFacade> getSubCategorias(int categoria) {
+        
+        Categoria cat = entityManager.find(Categoria.class, categoria);
+        Query subcatQuery = entityManager.createNamedQuery("Categoria.findByCategoriaFk");
+        subcatQuery.setParameter("categoria", cat);
+        List<Categoria> categorias = subcatQuery.getResultList();
+        List<CategoriaFacade> subcategorias = new ArrayList<CategoriaFacade>();
+        for(Categoria c: categorias) {
+            subcategorias.add(new CategoriaFacade(c.getCategoriaId(), c.getNombre()));
+        }
+        return subcategorias;        
+    }
+    
+    
 
 }

@@ -24,11 +24,12 @@
                         <tr>
                             <td>
                                 <h:panelGrid columns="1" cellpadding="2"
-                                             style="width:100%;  padding-left: 5px " >
+                                             style="width:100%;  padding-left: 5px; text-align: left; " >
                                     <h:outputLabel  value="Usuario" />
                                     <p:inputText value="#{login.username}" style="width:175px" />
                                     <h:outputLabel value="Contraseña" />
-                                    <p:password feedback="false" minLength="1" value="#{login.password}" 
+                                    <p:password feedback="false" minLength="1" 
+                                                value="#{login.password}" 
                                                 style="width:175px; " />
                                 </h:panelGrid>
                                 <p:messages globalOnly="true" showDetail="false" />

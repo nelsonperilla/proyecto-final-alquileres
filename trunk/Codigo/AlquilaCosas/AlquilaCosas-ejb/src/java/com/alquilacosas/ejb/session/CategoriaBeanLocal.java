@@ -26,4 +26,6 @@ public interface CategoriaBeanLocal {
      void modificarCategoria(Categoria categoria);
      
      List<CategoriaFacade> getCategoriaFacade();
+
+    List<CategoriaFacade> getSubCategorias(int categoria);
 }

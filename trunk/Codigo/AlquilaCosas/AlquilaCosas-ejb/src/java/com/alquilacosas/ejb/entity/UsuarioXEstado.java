@@ -56,11 +56,11 @@ public class UsuarioXEstado implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaHasta;
     
-    @JoinColumn(name = "ESTADO_FK", referencedColumnName = "ESTADO_USUARIO_ID", insertable = false, updatable = false)
+    @JoinColumn(name = "ESTADO_FK", referencedColumnName = "ESTADO_USUARIO_ID")
     @ManyToOne(optional = false)
     private EstadoUsuario estadoUsuario;
     
-    @JoinColumn(name = "USUARIO_FK", referencedColumnName = "USUARIO_ID", insertable = false, updatable = false)
+    @JoinColumn(name = "USUARIO_FK", referencedColumnName = "USUARIO_ID")
     @ManyToOne(optional = false)
     private Usuario usuario;
 

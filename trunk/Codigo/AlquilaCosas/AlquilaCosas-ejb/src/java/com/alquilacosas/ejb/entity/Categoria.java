@@ -35,7 +35,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Categoria.findAll", query = "SELECT c FROM Categoria c"),
     @NamedQuery(name = "Categoria.findByCategoriaId", query = "SELECT c FROM Categoria c WHERE c.categoriaId = :categoriaId"),
     @NamedQuery(name = "Categoria.findByNombre", query = "SELECT c FROM Categoria c WHERE c.nombre = :nombre"),
-    @NamedQuery(name = "Categoria.findByDescripcion", query = "SELECT c FROM Categoria c WHERE c.descripcion = :descripcion")})
+    @NamedQuery(name = "Categoria.findByDescripcion", query = "SELECT c FROM Categoria c WHERE c.descripcion = :descripcion"),
+    @NamedQuery(name = "Categoria.findByCategoriaFk", query = "SELECT c FROM Categoria c WHERE c.categoriaFk = :categoria")})
 public class Categoria implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

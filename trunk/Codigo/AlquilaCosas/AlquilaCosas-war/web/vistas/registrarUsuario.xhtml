@@ -13,7 +13,7 @@
 
             <ui:define name="logInfo">
                 <h:form>
-                    <h:commandLink value="Inicio" action="inicio" />
+                    <h:commandLink value="inicio" action="inicio" />
                 </h:form>
             </ui:define>
 
@@ -33,7 +33,7 @@
                     <h1>Registrar Usuario</h1>
                     <h2>Datos de registro</h2>
                     <!-- <p:panel header="Datos de registro" styleClass="formPanel" > -->
-                        <h:panelGrid columns="3">
+                    <h:panelGrid columns="3" columnClasses="labelColumn" >
                             <h:outputLabel value="Email" />
                             <p:inputText id="email" value="#{regUsuario.email}" required="true"
                                          requiredMessage="Valor requerido" />
@@ -68,7 +68,7 @@
                     <!-- </p:panel> -->
                     <h2>Datos Personales</h2>
                     <!-- <p:panel header="Datos Personales" styleClass="formPanel" > -->
-                        <h:panelGrid columns="3" >
+                        <h:panelGrid columns="3" columnClasses="labelColumn" >
                             <h:outputLabel value="Nombre" />
                             <p:inputText id="nombre" value="#{regUsuario.nombre}" required="true"
                                          requiredMessage="Valor requerido"
@@ -96,7 +96,7 @@
                             <h:outputLabel value="Fecha Nacimiento" />
                             <p:calendar id="fecha" value="#{regUsuario.fechaNacimiento}" navigator="true" 
                                         maxdate="#{regUsuario.today}" yearRange="c-80:c" required="true"
-                                        requiredMessage="Valor requerido"
+                                        requiredMessage="Valor requerido" pattern="dd/MM/yyyy"
                                         validatorMessage="maximo 45 caracteres" >
                                 <f:validateLength maximum="45" />
                             </p:calendar>
@@ -105,7 +105,7 @@
                     <!-- </p:panel> -->
                     <h2>Domicilio</h2>
                     <!-- <p:panel id="domiciliosPanel" header="Domicilio" styleClass="formPanel" > -->
-                        <h:panelGrid columns="3" >
+                        <h:panelGrid columns="3" columnClasses="labelColumn" >
                             <h:outputLabel value="Pais" />
 
                             <h:selectOneMenu id="pais" value="#{regUsuario.paisSeleccionado}" required="true"
@@ -164,11 +164,12 @@
                             <p:inputText value="#{regUsuario.depto}" />
                             <p/>
 
+                            <p:commandButton value="Crear" action="#{regUsuario.crearUsuario}"
+                                     ajax="false" />
+                            <p:commandButton type="reset" value="Limpiar" />
                         </h:panelGrid>
                     <!-- </p:panel> -->
                     
-                    <p:commandButton value="Crear" action="#{regUsuario.crearUsuario}"
-                                     ajax="false" />
                     <p:growl id="growl" showDetail="true" globalOnly="true" />
 
                 </h:form>

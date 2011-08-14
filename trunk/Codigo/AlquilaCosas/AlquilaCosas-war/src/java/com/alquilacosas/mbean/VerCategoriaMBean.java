@@ -31,10 +31,13 @@ public class VerCategoriaMBean {
     @EJB
     private BuscarPublicacionBeanLocal buscarBean;
     private Integer id, publicacionSeleccionada;
+    private String nombreCategoria;
     private LazyDataModel model;
     private List<PublicacionFacade> publicaciones;
     private List<CategoriaFacade> subcategorias;
-    private boolean primeraVez = true;
+    private Integer subcategoriaSeleccionada;
+    private int totalRegistros;
+    private boolean noBuscarEnModel = true;
     
     /** Creates a new instance of VerCategoriaMBean */
     public VerCategoriaMBean() {
@@ -48,31 +51,47 @@ public class VerCategoriaMBean {
             id = Integer.valueOf(param);
         if(id != null) {
             buscar(0, 10);
+            subcategorias = categoriaBean.getSubCategorias(id);
         }
+        buscar(0, 10);
         
         model = new LazyDataModel<PublicacionFacade>() {
 
             @Override
             public List<PublicacionFacade> load(int first, int pageSize, String sortFielf,
                     boolean sort, Map<String, String> filters) {
-                if(!primeraVez)
+                if(noBuscarEnModel) {
+                    noBuscarEnModel = false;
+                } else {
                     buscar(first, pageSize);
+                }
                 return publicaciones;
             }
         };
-        model.setRowCount(10);
+        model.setRowCount(totalRegistros);
     }
     
     public void buscar(int first, int pageSize) {
+        if(id == null)
+            return;
         Busqueda b = buscarBean.buscarPublicacionesPorCategoria(id, pageSize, first);
         publicaciones = b.getPublicaciones();        
+        if(b.getCategorias() != null && !b.getCategorias().isEmpty())
+            nombreCategoria = b.getCategorias().get(0).getNombre();
         
-        if(primeraVez)
-            primeraVez = false;
+        if(first == 0) {
+            totalRegistros = b.getTotalRegistros();
+            if(model != null)
+                model.setRowCount(totalRegistros);
+        }
     }
     
     public String verPublicacion() {
         return "";
+    }
+    
+    public String verSubcategoria() {
+        return "verSubCategoria";
     }
 
     public Integer getId() {
@@ -114,6 +133,21 @@ public class VerCategoriaMBean {
     public void setPublicacionSeleccionada(Integer publicacionSeleccionada) {
         this.publicacionSeleccionada = publicacionSeleccionada;
     }
-    
+
+    public String getNombreCategoria() {
+        return nombreCategoria;
+    }
+
+    public void setNombreCategoria(String nombreCategoria) {
+        this.nombreCategoria = nombreCategoria;
+    }
+
+    public Integer getSubcategoriaSeleccionada() {
+        return subcategoriaSeleccionada;
+    }
+
+    public void setSubcategoriaSeleccionada(Integer subcategoriaSeleccionada) {
+        this.subcategoriaSeleccionada = subcategoriaSeleccionada;
+    }
     
 }
