@@ -4,9 +4,12 @@
  */
 package com.alquilacosas.mbean;
 
+import com.alquilacosas.common.CategoriaFacade;
 import com.alquilacosas.common.ComentarioFacade;
+import com.alquilacosas.common.PrecioFacade;
 import com.alquilacosas.common.PublicacionFacade;
 import com.alquilacosas.ejb.session.PublicacionBeanLocal;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -26,46 +29,15 @@ public class DesplieguePublicacionMBean {
 
     @EJB
     private PublicacionBeanLocal publicationBean;
-    
     @ManagedProperty (value="#{login}")
     private ManejadorUsuarioMBean usuarioLogueado;
-    
-//    
-//    @EJB
-//    private CategoriaBean categoriaBean;
-    
-    //Datos de la publicacion
-//    private String titulo;
-//    private String descripcion;
-//    private Date fechaDesde;
-//    private Date fechaHasta;
-//    private boolean destacada;
-//    private int cantidad;
-//    
-//    //Select Items
-//    private List<Categoria> categorias;
-//    private int selectedCategoria;
-//    
-////    private List<SelectItem> periodos;
-////    private String selectedPeriodo;
-//   
-//    
-//    //Object Precio
-//    private double precio;
-//    private List<PrecioFacade> precios;
-//    private PrecioFacade precioFacade;
-//    
-//    private Date today;
-//    private List<Integer> idImagenes;
-//
-//    
-//    private PrecioFacade precioSeleccionado;
+    //private CategoriaFacade categoria;
+    //private List<PrecioFacade> precios;
     private PublicacionFacade publicacion;
     private String effect;
-    
-    /* Comentarios */
     private List<ComentarioFacade> comentarios;
     private ComentarioFacade nuevaPregunta; 
+    private String fecha_hasta;
     
     /** Creates a new instance of DesplieguePublicacionMBean */
     public DesplieguePublicacionMBean() { }
@@ -81,6 +53,8 @@ public class DesplieguePublicacionMBean {
             int publicationId = Integer.parseInt(id);
             setPublicacion(publicationBean.getPublicacion(publicationId));
             setComentarios(publicationBean.getComentarios(publicationId));
+            setFecha_hasta(DateFormat.getDateInstance(DateFormat.SHORT).format(publicacion.getFecha_hasta()));
+
         }
     }
 
@@ -163,6 +137,48 @@ public class DesplieguePublicacionMBean {
      */
     public void setUsuarioLogueado(ManejadorUsuarioMBean usuarioLogueado) {
         this.usuarioLogueado = usuarioLogueado;
+    }
+
+//    /**
+//     * @return the categoria
+//     */
+//    public CategoriaFacade getCategoria() {
+//        return categoria;
+//    }
+//
+//    /**
+//     * @param categoria the categoria to set
+//     */
+//    public void setCategoria(CategoriaFacade categoria) {
+//        this.categoria = categoria;
+//    }
+//
+//    /**
+//     * @return the precios
+//     */
+//    public List<PrecioFacade> getPrecios() {
+//        return precios;
+//    }
+//
+//    /**
+//     * @param precios the precios to set
+//     */
+//    public void setPrecios(List<PrecioFacade> precios) {
+//        this.precios = precios;
+//    }
+
+    /**
+     * @return the fecha_hasta
+     */
+    public String getFecha_hasta() {
+        return fecha_hasta;
+    }
+
+    /**
+     * @param fecha_hasta the fecha_hasta to set
+     */
+    public void setFecha_hasta(String fecha_hasta) {
+        this.fecha_hasta = fecha_hasta;
     }
 
 

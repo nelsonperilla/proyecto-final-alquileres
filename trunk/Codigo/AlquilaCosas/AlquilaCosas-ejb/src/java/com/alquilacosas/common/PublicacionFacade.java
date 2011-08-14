@@ -7,6 +7,7 @@ package com.alquilacosas.common;
 import com.alquilacosas.ejb.entity.Categoria;
 import com.alquilacosas.ejb.entity.EstadoPublicacion;
 import com.alquilacosas.ejb.entity.ImagenPublicacion;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,6 +29,7 @@ public class PublicacionFacade {
     private int imagenId = -1;
     private List<Integer> imagenIds;
     private Categoria categoria;
+    private CategoriaFacade categoriaF; 
     private List<PrecioFacade> precios;
     private EstadoPublicacion estado;
     private List<ImagenPublicacion> imagenes;
@@ -144,7 +146,7 @@ public class PublicacionFacade {
      * @return the fecha_hasta
      */
    public Date getFecha_hasta() {
-        return fecha_hasta;
+       return fecha_hasta;
     }
 
     /**
@@ -214,6 +216,20 @@ public class PublicacionFacade {
         this.imagenIds = imagenIds;
         if(imagenIds != null && !imagenIds.isEmpty())
             imagenId = imagenIds.get(0);
+    }
+
+    /**
+     * @return the categoriaF
+     */
+    public CategoriaFacade getCategoriaF() {
+        return categoriaF;
+    }
+
+    /**
+     * @param categoriaF the categoriaF to set
+     */
+    public void setCategoriaF(CategoriaFacade categoriaF) {
+        this.categoriaF = categoriaF;
     }
 
 

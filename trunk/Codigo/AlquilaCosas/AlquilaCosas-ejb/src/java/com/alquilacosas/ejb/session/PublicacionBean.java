@@ -7,6 +7,7 @@ package com.alquilacosas.ejb.session;
 
 import com.alquilacosas.common.ComentarioFacade;
 import com.alquilacosas.common.AlquilaCosasException;
+import com.alquilacosas.common.CategoriaFacade;
 import com.alquilacosas.common.PrecioFacade;
 import com.alquilacosas.common.PublicacionFacade;
 import com.alquilacosas.ejb.entity.Categoria;
@@ -307,15 +308,37 @@ public class PublicacionBean implements PublicacionBeanLocal {
             resultado = new PublicacionFacade(publicacion.getPublicacionId(), publicacion.getTitulo(),
                     publicacion.getDescripcion(), publicacion.getFechaDesde(), publicacion.getFechaHasta(), publicacion.getDestacada(),
                     publicacion.getCantidad());
-            List<Integer> imagenes = new ArrayList<Integer>();
-            for(ImagenPublicacion imagen: publicacion.getImagenPublicacionList()) {
-                imagenes.add(imagen.getImagenPublicacionId());
-            }
-            resultado.setImagenIds(imagenes);            
+
+            resultado.setImagenIds(getImagesIds(publicacion));            
+            resultado.setPrecios(getPrecios(publicacion));
+            resultado.setCategoriaF(new CategoriaFacade(publicacion.getCategoriaFk().getCategoriaId(),
+                    publicacion.getCategoriaFk().getNombre()));
         }
         return resultado;
     }
 
+    private List<Integer> getImagesIds(Publicacion publicacion){
+        List<Integer> imagenes = new ArrayList<Integer>();
+        for(ImagenPublicacion imagen: publicacion.getImagenPublicacionList()) {
+            imagenes.add(imagen.getImagenPublicacionId());
+        }
+        return imagenes;
+    }
+
+    private List<PrecioFacade> getPrecios(Publicacion filter){
+        List<PrecioFacade> resultado = new ArrayList<PrecioFacade>();
+        List<Precio> precios;
+        Query query = entityManager.createNamedQuery("Precio.findByPublicacion");
+        query.setParameter("publicacion", filter);
+        precios = query.getResultList();   
+        
+        for(Precio precio: precios)
+            resultado.add(new PrecioFacade(precio.getPrecio(), precio.getPeriodoFk().getNombre()));
+        
+        return resultado;
+
+    }
+    
     @Override
     public List<ComentarioFacade> getComentarios(int publicationId) {
         List<Comentario> comentarios;
