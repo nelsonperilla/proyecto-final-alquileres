@@ -41,10 +41,10 @@
                                         <div id="items">
                                             <h:form>
                                                 <h:dataTable  value="#{publicationsGroup.publicacionesRandom}"
-                                                              var="pub">
+                                                              var="publication">
                                                     <h:column>
 
-                                                        <comps:itemInfo var="#{pub}" bean="#{publicationsGroup}"
+                                                        <comps:itemInfo var="#{publication}" bean="#{publicationsGroup}"
                                                                         method="seleccionarPublicacion" 
                                                                         property="selectedPublicationId"/>
                                                     </h:column>

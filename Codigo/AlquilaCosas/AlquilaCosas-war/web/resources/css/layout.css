@@ -147,6 +147,94 @@ h6 {font: bold 0.9em sans-serif;}
     text-decoration: underline;
 }
 
+#simpleItem .dataPrincipal {
+    
+    border-right-style: solid;
+    border-left-style: solid;
+    border-bottom-style: solid;
+    border-top-style: solid;
+    border-right-width: 2px;
+    border-left-width: 2px;
+    border-bottom-width: 2px;
+    border-top-width: 2px;
+    text-align: left;
+    padding: 10px 1px 1px 1px;
+    width: 300px;
+    height: 300px;
+    
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    border-right-color: #aaaaaa;
+    border-left-color: #aaaaaa;
+    border-bottom-color: #aaaaaa;
+    border-top-color: #aaaaaa;
+}
+
+#simpleItem .data {
+    
+    border-right-style: solid;
+    border-left-style: solid;
+    border-bottom-style: solid;
+    border-top-style: solid;
+    border-right-width: 1px;
+    border-left-width: 1px;
+    border-bottom-width: 1px;
+    border-top-width: 1px;
+    text-align: left;
+    margin: 20px 20px 1px 1px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    width: 100%;
+    
+    
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    border-right-color: #d2d0d0;
+    border-left-color: #d2d0d0;
+    border-bottom-color: #d2d0d0;
+    border-top-color: #d2d0d0;
+}
+
+#simpleItem td {
+    
+    text-align: left;
+    vertical-align: top;
+    font-family: Trebuchet MS;
+}
+
+#simpleItem .itemTitle{
+    font-size: 28px;    
+    font-family: Trebuchet MS;
+    color: #556275;
+    text-decoration: underline;
+    font-weight: bold;
+    padding-right: 3px;
+    padding-left: 3px;
+    padding-bottom: 3px;
+    padding-top: 3px;
+}
+
+#simpleItem .itemInfo{
+    font-size: 14px;
+    font-family: Trebuchet MS;
+    padding-top: 2px;
+    font-weight: bold;
+}
+
+#simpleItem .itemPrice{
+    
+    color: #0000ff;
+    font-size: 18px;
+    
+    text-align: right;
+}
+
+#simpleItem .itemDescription{
+    font-size: 20px;
+    font-family: Trebuchet MS;
+    padding: 10px 0px 0px 0px;
+}
+
 #searchBar {
     background-image:url(../resources/images/searchBar.png);
     height: 50px;

@@ -38,13 +38,18 @@ public class PublicationsGroup implements Serializable
     }
     
     public String seleccionarPublicacion() {
+
+        return "mostrarPublicacion";//"mostrarPublicacion.xhtml?id=" +  getSelectedPublicationId();
+
         //return "mostrarPublicacion?id=" +  selectedPublicationId;
-        return "test";
+
     }
     
     public int getSelectedPublicationId() {
         return selectedPublicationId;
     }
+
+ 
     
     public void setSelectedPublicationId(int id) {
         selectedPublicationId = id;
@@ -54,4 +59,6 @@ public class PublicationsGroup implements Serializable
     {
         return publicacionesRandom;
     }
+
+
 }

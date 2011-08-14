@@ -36,7 +36,7 @@
         </navigation-case>
         <navigation-case>
             <from-outcome>mostrarPublicacion</from-outcome>
-            <to-view-id>/vistas/mostrarPublicacion.xhtml</to-view-id>
+            <to-view-id>/vistas/mostrarPublicacion.xhtml?id=#{publicationsGroup.selectedPublicationId}</to-view-id>
             <redirect/>
         </navigation-case>
         <navigation-case>

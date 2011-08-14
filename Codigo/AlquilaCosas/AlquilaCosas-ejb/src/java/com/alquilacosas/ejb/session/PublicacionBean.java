@@ -4,10 +4,13 @@
  */
 package com.alquilacosas.ejb.session;
 
+
+import com.alquilacosas.common.ComentarioFacade;
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.common.PrecioFacade;
 import com.alquilacosas.common.PublicacionFacade;
 import com.alquilacosas.ejb.entity.Categoria;
+import com.alquilacosas.ejb.entity.Comentario;
 import com.alquilacosas.ejb.entity.EstadoPublicacion;
 import com.alquilacosas.ejb.entity.EstadoPublicacion.PublicacionEstado;
 import com.alquilacosas.ejb.entity.ImagenPublicacion;
@@ -16,6 +19,7 @@ import com.alquilacosas.ejb.entity.Precio;
 import com.alquilacosas.ejb.entity.Publicacion;
 import com.alquilacosas.ejb.entity.PublicacionXEstado;
 import com.alquilacosas.ejb.entity.Usuario;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
@@ -293,7 +297,63 @@ public class PublicacionBean implements PublicacionBeanLocal {
 
         return pxe;
     }
-   
+
+    
+    @Override
+    public PublicacionFacade getPublicacion(int id){
+        Publicacion publicacion=entityManager.find(Publicacion.class,id);
+        PublicacionFacade resultado = null;
+        if(publicacion!=null){
+            resultado = new PublicacionFacade(publicacion.getPublicacionId(), publicacion.getTitulo(),
+                    publicacion.getDescripcion(), publicacion.getFechaDesde(), publicacion.getFechaHasta(), publicacion.getDestacada(),
+                    publicacion.getCantidad());
+            List<Integer> imagenes = new ArrayList<Integer>();
+            for(ImagenPublicacion imagen: publicacion.getImagenPublicacionList()) {
+                imagenes.add(imagen.getImagenPublicacionId());
+            }
+            resultado.setImagenIds(imagenes);            
+        }
+        return resultado;
+    }
+
+    @Override
+    public List<ComentarioFacade> getComentarios(int publicationId) {
+        List<Comentario> comentarios;
+        List<ComentarioFacade> resultado = new ArrayList<ComentarioFacade>();
+        Publicacion filter=entityManager.find(Publicacion.class,publicationId);
+        Query query = entityManager.createNamedQuery("Comentario.findPreguntasByPublicacion");
+        query.setParameter("publicacion", filter);
+        comentarios = query.getResultList();   
+        Comentario respuestaTemp;
+        ComentarioFacade respuesta;
+        for(Comentario comentario : comentarios){
+            respuesta = null;
+            respuestaTemp = comentario.getRespuesta();
+            if(respuestaTemp != null)
+                respuesta = new ComentarioFacade(respuestaTemp.getComentarioId(),
+                    respuestaTemp.getComentario(), respuestaTemp.getFecha(), 
+                    respuestaTemp.getUsuarioFk().getUsuarioId(), 
+                    respuestaTemp.getUsuarioFk().getNombre(), null);
+            
+            resultado.add(new ComentarioFacade(comentario.getComentarioId(),
+                    comentario.getComentario(), comentario.getFecha(), 
+                    comentario.getUsuarioFk().getUsuarioId(), 
+                    comentario.getUsuarioFk().getNombre(), respuesta ));
+        }
+        return resultado;
+    }
+
+    @Override
+    public void setComentario(int publicacionId, ComentarioFacade nuevaPregunta) {
+        Comentario pregunta=new Comentario();
+        pregunta.setPublicacionFk(entityManager.find(Publicacion.class, publicacionId));
+        pregunta.setComentario(nuevaPregunta.getComentario());
+        pregunta.setFecha(nuevaPregunta.getFecha());
+        pregunta.setPregunta(Boolean.TRUE);
+        pregunta.setUsuarioFk(entityManager.find(Usuario.class, nuevaPregunta.getUsuarioId()));
+        entityManager.persist(pregunta);
+    }
+
 }
 
 

@@ -4,6 +4,8 @@
  */
 package com.alquilacosas.ejb.session;
 
+
+import com.alquilacosas.common.ComentarioFacade;
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.common.PrecioFacade;
 import com.alquilacosas.common.PublicacionFacade;
@@ -31,7 +33,12 @@ public interface PublicacionBeanLocal {
     
     public Periodo getPeriodo( String nombrePeriodo );
     
-   // public Publicacion getPublicacion( int id_publicacion );
+
+    public PublicacionFacade getPublicacion(int id);
+
+    public List<ComentarioFacade> getComentarios(int publicationId);
+
+    public void setComentario(int publicacionId,ComentarioFacade nuevaPregunta);
 
     public PublicacionFacade getDatosPublicacion(int publicacionId);
 
@@ -42,6 +49,4 @@ public interface PublicacionBeanLocal {
 
     public PublicacionXEstado getPublicacionEstado( Publicacion p );
 
-
-    
 }
