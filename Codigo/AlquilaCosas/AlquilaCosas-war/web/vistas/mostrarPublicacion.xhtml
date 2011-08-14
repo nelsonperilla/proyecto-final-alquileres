@@ -97,26 +97,18 @@
                                         <h:outputText value="" />  
                                     </f:facet>  
                                 </p:ajaxStatus>  
-
-                                <p:outputPanel id="preguntas" style=" text-align:left">  
-                                    <p:commandButton value="Hacer una pregunta" update="books msgs @parent"  
+                                <div class="preguntas">
+                                <p:outputPanel id="preguntas" >  
+                                    <p:commandButton style="margin: 10px 10px 0px 5px;" value="Hacer una pregunta" 
                                                         onclick="nuevaPregunta.show()"/>  
-                                    <p:dataTable  value="#{publicacionDesplegada.comentarios}" var="pregunta">  
+                                    <h:dataTable value="#{publicacionDesplegada.comentarios}" var="pregunta">  
                                         <p:column>  
-                                            <h:panelGrid columns="3" style="border:#aaaaaa">
-                                                <h:outputText value="Pregunta:" />  
-                                                <h:outputText value="#{pregunta.comentario}" /> 
-                                                <p:commandLink value="Denunciar" />
-                                                <h:outputText value="Respuesta:" />  
-                                                <h:outputText value="#{pregunta.respuesta.comentario}" />  
-                                                <p:commandLink value="Denunciar" />
-                                            </h:panelGrid>
+                                            <comps:itemPreguntas/>
                                         </p:column>  
-                                    </p:dataTable>  
+                                    </h:dataTable>  
                                 </p:outputPanel>  
+                                </div>
                             </h:form>                                  
-
-                            
                         </td>
                     </tr>
                 </table>
