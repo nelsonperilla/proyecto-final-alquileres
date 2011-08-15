@@ -9,7 +9,6 @@ import com.alquilacosas.common.DomicilioFacade;
 import com.alquilacosas.common.UsuarioFacade;
 import com.alquilacosas.ejb.entity.Pais;
 import com.alquilacosas.ejb.entity.Provincia;
-import com.alquilacosas.ejb.entity.Usuario;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
@@ -38,5 +37,9 @@ public interface UsuarioBeanLocal {
 
     UsuarioFacade actualizarUsuario(int idUsuario, String telefono, Date fechaNacimiento, 
             DomicilioFacade dom) throws AlquilaCosasException;
+
+    List<UsuarioFacade> getUsuariosList();
+
+    void setRoles(UsuarioFacade usuarioFacade, List<Integer> roles);
     
 }

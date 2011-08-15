@@ -28,4 +28,6 @@ public interface CategoriaBeanLocal {
      List<CategoriaFacade> getCategoriaFacade();
 
      List<CategoriaFacade> getSubCategorias(int categoria);
+
+    List<Categoria> getCategoriasPrincipal();
 }

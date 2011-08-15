@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
+import javax.annotation.security.DeclareRoles;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -43,6 +45,7 @@ import javax.persistence.Query;
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
+@DeclareRoles ({"USER", "ADMIN"})
 public class PublicacionBean implements PublicacionBeanLocal {
     
     @PersistenceContext(unitName="AlquilaCosas-ejbPU") 
@@ -53,6 +56,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
     
     private Publicacion publicacion;
     private Usuario usuario;
+    
     @Override
     public void registrarPublicacion( String titulo, String descripcion, 
             Date fecha_desde, Date fecha_hasta, boolean destacada, int cantidad,
@@ -103,15 +107,30 @@ public class PublicacionBean implements PublicacionBeanLocal {
 
         Precio precio = null;
         Periodo periodo = null;
+        double pre = precios.get(1).getPrecio();
+        
         
         for( PrecioFacade p : precios ){
-
+            
             periodo = this.getPeriodo(p.getPeriodoNombre());
             precio = new Precio();
+            
+            if( p.getPrecio() == 0 ){
+                if( p.getPeriodoNombre().equalsIgnoreCase("hora") ){
+                    p.setPrecio(pre / 10.0);
+                }else if( p.getPeriodoNombre().equalsIgnoreCase("semana") ){
+                    p.setPrecio(pre * 7.0);
+                }else if( p.getPeriodoNombre().equalsIgnoreCase("mes") ){
+                    p.setPrecio(pre * 30.0);
+                } 
+            }else{
+                precio.setPrecio(p.getPrecio());
+            }
+            
+            
             precio.setPeriodoFk(periodo);
-            precio.setPrecio(p.getPrecio());
             precio.setPublicacionFk(publicacion);
-
+            
             entityManager.persist(precio);
         }
 
@@ -163,10 +182,11 @@ public class PublicacionBean implements PublicacionBeanLocal {
     
     
     @Override
+    @RolesAllowed ({"USER", "ADMIN"})
     public void actualizarPublicacion( int publicacionId, String titulo, String descripcion, 
             Date fecha_desde, Date fecha_hasta, boolean destacada, int cantidad,
             int usuarioId, int categoria, List<PrecioFacade> precios, 
-            List<ImagenPublicacion> imagenes, int estadoPublicacion ) throws AlquilaCosasException {
+            List<byte[]> imagenesAgregar, List<Integer> imagenesABorrar, int estadoPublicacion ) throws AlquilaCosasException {
         
         try {
             publicacion = entityManager.find(Publicacion.class, publicacionId);
@@ -215,46 +235,80 @@ public class PublicacionBean implements PublicacionBeanLocal {
         }
         
         entityManager.merge(publicacion);
+        
+        Periodo periodo = null;
+        double pre = precios.get(1).getPrecio();
             
         for( PrecioFacade precioFacade : precios ){
            
           if( precioFacade.getPrecioId() != 0 ){
+              
+              periodo = this.getPeriodo(precioFacade.getPeriodoNombre());
                 
               Precio precioViejo = entityManager.find(Precio.class, precioFacade.getPrecioId());
 
                 if( precioFacade != null ){
-                    precioViejo.setPrecio(precioFacade.getPrecio());
-                    precioViejo.setPeriodoFk(this.getPeriodo(precioFacade.getPeriodoNombre()));
-                    precioViejo.setPublicacionFk(publicacion);
-//                    publicacion.getPrecioList().set( precioFacade.getPeriodoId() - 1,                            
-//                                precioViejo);
-                    entityManager.merge(precioViejo);
+                    
+                  if( precioFacade.getPrecio() == 0 ){
+                    if( precioFacade.getPeriodoNombre().equalsIgnoreCase("hora") ){
+                        precioFacade.setPrecio(pre / 10.0);
+                    }else if( precioFacade.getPeriodoNombre().equalsIgnoreCase("semana") ){
+                        precioFacade.setPrecio(pre * 7.0);
+                    }else if( precioFacade.getPeriodoNombre().equalsIgnoreCase("mes") ){
+                        precioFacade.setPrecio(pre * 30.0);
+                    } 
+                  }else{
+                   precioViejo.setPrecio(precioFacade.getPrecio());
+                  }
+                  precioViejo.setPeriodoFk(this.getPeriodo(precioFacade.getPeriodoNombre()));
+                  precioViejo.setPublicacionFk(publicacion);
+                  entityManager.merge(precioViejo);
                 }  
            }else{
                 Precio precioNuevo = new Precio();
                 
                 if( precioFacade != null ){
+                    if( precioFacade.getPrecio() == 0 ){
+                        if( precioFacade.getPeriodoNombre().equalsIgnoreCase("hora") ){
+                            precioFacade.setPrecio(pre / 10.0);
+                        }else if( precioFacade.getPeriodoNombre().equalsIgnoreCase("semana") ){
+                            precioFacade.setPrecio(pre * 7.0);
+                        }else if( precioFacade.getPeriodoNombre().equalsIgnoreCase("mes") ){
+                            precioFacade.setPrecio(pre * 30.0);
+                        } 
+                    }else{
+                        precioNuevo.setPrecio(precioFacade.getPrecio());
+                    }
                     precioNuevo.setPrecio(precioFacade.getPrecio());
                     precioNuevo.setPeriodoFk(this.getPeriodo(precioFacade.getPeriodoNombre()));
                     precioNuevo.setPublicacionFk(publicacion);
+
                     entityManager.persist(precioNuevo);
                     //publicacion.getPrecioList().set( precioFacade.getPeriodoId() - 1,                            
                     //            precioNuevo);
                     
                 }  
-           }
-          
-          if( imagenes.size() < 1 ){
+           } 
+        }
+        
+          if( imagenesABorrar != null && imagenesABorrar.size() >= publicacion.getImagenPublicacionList().size() ){
                 context.setRollbackOnly();
                 throw new AlquilaCosasException( "La publicacion debe contener "
                         + "por lo menos una imagen" );     
+            }else if( imagenesABorrar != null ){
+                for( Integer i : imagenesABorrar ){
+                    ImagenPublicacion ip = new ImagenPublicacion(imagenesABorrar.get(i));
+                    entityManager.remove(entityManager.merge(ip));
+                }
+                
             }
             
-          for( ImagenPublicacion ip : imagenes ){
+          for( byte[] imagen : imagenesAgregar ){
+                ImagenPublicacion ip = new ImagenPublicacion();
+                ip.setImagen(imagen);        
                 ip.setPublicacionFk(publicacion);
                 entityManager.persist(ip);
           }
-        }
    }             
     
 

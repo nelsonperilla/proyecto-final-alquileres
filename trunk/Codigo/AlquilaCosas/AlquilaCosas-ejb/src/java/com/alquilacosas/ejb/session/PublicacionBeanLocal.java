@@ -49,7 +49,8 @@ public interface PublicacionBeanLocal {
     public void actualizarPublicacion( int publicacionId, String titulo, String descripcion, 
             Date fecha_desde, Date fecha_hasta, boolean destacada, int cantidad,
             int usuarioId, int categoria, List<PrecioFacade> precios, 
-            List<ImagenPublicacion> imagenes, int estadoPublicacion ) throws AlquilaCosasException;
+            List<byte[]> imagenesAgregar, List<Integer> imagenesABorrar, 
+            int estadoPublicacion  ) throws AlquilaCosasException;
 
     public PublicacionXEstado getPublicacionEstado( Publicacion p );
 

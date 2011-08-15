@@ -40,7 +40,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Login.findByLoginId", query = "SELECT l FROM Login l WHERE l.loginId = :loginId"),
     @NamedQuery(name = "Login.findByUsername", query = "SELECT l FROM Login l WHERE l.username = :username"),
     @NamedQuery(name = "Login.findByPassword", query = "SELECT l FROM Login l WHERE l.password = :password"),
-    @NamedQuery(name = "Login.findByCodigoActivacion", query = "SELECT l FROM Login l WHERE l.codigoActivacion = :codigoActivacion")})
+    @NamedQuery(name = "Login.findByCodigoActivacion", query = "SELECT l FROM Login l WHERE l.codigoActivacion = :codigoActivacion"),
+    @NamedQuery(name = "Login.findByUsuarioFk", query = "SELECT l FROM Login l WHERE l.usuarioFk = :usuarioFk")})
 public class Login implements Serializable {
     @Basic(optional = false)
     @NotNull

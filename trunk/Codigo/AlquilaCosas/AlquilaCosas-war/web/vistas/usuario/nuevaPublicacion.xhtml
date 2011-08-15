@@ -12,7 +12,13 @@
         <ui:composition template="./../../resources/templates/masterPage.xhtml">
 
             <ui:define name="logInfo">
-                logInfo
+                <h:form>
+                    <h:commandLink value="Inicio" action="inicio" />
+                </h:form>
+            </ui:define>
+
+            <ui:define name="left" >
+                <comps:categoriesMenu />
             </ui:define>
 
             <ui:define name="principal">
@@ -33,7 +39,7 @@
                         <p:inputText id="cantidad" value="#{publicacion.cantidad}" required ="true"
                                      requiredMessage="Valor requerido" 
                                      converterMessage="Debe ingresr un numero"
-                                     onblur="submit()" >
+                                     style="width: 50px" >
                         </p:inputText>
                         <p:message id="cantidadVal" for="cantidad"/>
 
@@ -43,29 +49,53 @@
                                          requiredMessage="Valor requerido"> 
                             <f:selectItem itemLabel="Categorias" itemValue="" />
                             <f:selectItems value="#{publicacion.categorias}" />
+                            <p:ajax event="change" update="subcategoria labelSubCategoria growl" 
+                                    listener="#{publicacion.actualizarCategorias}" />
                         </h:selectOneMenu>
                         <p/>
+
+                        <h:outputLabel id="labelSubCategoria" value="SubCategorias: "/>
+                        <h:selectOneMenu id="subcategoria" value="#{publicacion.selectedSubCategoria}" 
+                                         required="true" requiredMessage="Valor requerido" 
+                                         disabled="#{not publicacion.subCategoriaRender}">
+                            <f:selectItem itemLabel="Subcategorias de #{publicacion.selectedCategoria}" itemValue="" />
+                            <f:selectItems value="#{publicacion.subCategorias}" />
+                            <p:ajax event="change" update="subcategoria1 labelSubCategoria1 growl" 
+                                    listener="#{publicacion.actualizarSubCategorias}" />   
+                        </h:selectOneMenu>
+                        <p/>
+
+                        <h:outputLabel id="labelSubCategoria1" value="SubCategorias: "/>
+                        <h:selectOneMenu id="subcategoria1" value="#{publicacion.selectedSubCategoria1}" 
+                                         required="true" requiredMessage="Valor requerido" 
+                                         disabled="#{not publicacion.subCategoria1Render}">
+                            <f:selectItem itemLabel="Subcategorias de #{publicacion.selectedSubCategoria}" itemValue="" />
+                            <f:selectItems value="#{publicacion.subCategorias1}" />
+                        </h:selectOneMenu>
+                        <p/>
+
                     </h:panelGrid>
+
 
                     <br/>
                     <br/>
 
                     <p:editor value="#{publicacion.descripcion}" widgetVar="editor" 
-                              width="600" />
+                              width="600" required="true"/>
 
                     <h2>Cargar imagenes</h2>
                     <p:panel header="Cargar Imagenes" >
 
-                            <h:outputText value="Select the files to upload (maxim 2MB):"/>
-                            <br/>
+                        <h:outputText value="Select the files to upload (maxim 2MB):"/>
+                        <br/>
 
-                            <p:fileUpload fileUploadListener="#{publicacion.handleFileUpload}"
-                                          update="messages" 
-                                          multiple="true"
-                                          sizeLimit="2097152"   
-                                          allowTypes="*.jpg;*.png;*.gif;"
-                                          description="images"/>          
-                     
+                        <p:fileUpload fileUploadListener="#{publicacion.handleFileUpload}"
+                                      update="messages" 
+                                      multiple="true"
+                                      sizeLimit="2097152"   
+                                      allowTypes="*.jpg;*.png;*.gif;"
+                                      description="images"/>          
+
                     </p:panel>
 
                     <h2>Determina el precio del alquiler del producto</h2>
@@ -74,12 +104,10 @@
 
                         <ui:repeat value="#{publicacion.precios}" var="precio">
 
-                            <h:panelGrid columns="2" >
+                            <h:outputText value="#{precio.periodoNombre}" />
+                            <p:inputText value="#{precio.precio}" style="text-align: right; margin-left: 3px; width: 50px"/>
+                            <p:spacer width="25" />
 
-                                <h:outputText value="#{precio.periodoNombre}" />
-                                <p:inputText value="#{precio.precio}" styleClass="inputTextCorto"/>
-
-                            </h:panelGrid>
                         </ui:repeat>
 
                     </p:panel>

@@ -8,7 +8,7 @@
       xmlns:f="http://java.sun.com/jsf/core">
     <h:head>
         <style type="text/css">
-            div.img
+            #div1
             {
                 margin:2px;
                 border:1px solid #0000ff;
@@ -17,13 +17,13 @@
                 float:left;
                 text-align:center;
             }
-            div.img h:graphicImage
+            #div1 img
             {
                 display:inline;
                 margin:3px;
                 border:1px solid #ffffff;
             }
-            div.img a:hover h:graphicImage
+            #div1 a:hover img
             {
                 border:1px solid #0000ff;
             }
@@ -52,7 +52,13 @@
         <ui:composition template="./../../resources/templates/masterPage.xhtml">
 
             <ui:define name="logInfo">
-                logInfo
+                <h:form>
+                    <h:commandLink value="Inicio" action="inicio" />
+                </h:form>
+            </ui:define>
+
+            <ui:define name="left" >
+                <comps:categoriesMenu />
             </ui:define>
 
             <ui:define name="principal">
@@ -102,27 +108,26 @@
                     <br/>
 
                     <p:panel id="panelImagenes" header="Imagenes del producto" styleClass="formPanel" >
-
-                        <p:dataGrid id="imagenes" var="img" value="#{modPublicacion.imagenIds}" columns="5">
-
+                        
+                        <p:dataGrid id="imagenes" var="img" value="#{modPublicacion.imagenIds}" columns="3">
                             <p:column>
-                                <p:panel header="#{img}" style="text-align:center">
+                                <div id="div1" >
                                     <h:panelGrid columns="1" style="width:100%">
                                         <h:graphicImage value="/image?id=#{img}"
-                                                        width="90" height="90" 
+                                                        width="100" height="85" styleClass="img"
                                                         /> 
-                                        <p:commandLink title="Remove" update="PanelImagenes" actionListener="#{modPublicacion.removerImagen}" >
-                                            <p:graphicImage value="/images/search.png"/> 
+                                        <p:commandLink title="Remove" update="imagenes" 
+                                                       actionListener="#{modPublicacion.removeImagen}" >
+                                                <p:graphicImage value="#{resource['images:icono_borrar.gif']}"/> 
                                             <f:attribute name="idBorrar" value="#{img}" />
                                         </p:commandLink>
                                     </h:panelGrid>
-                                </p:panel>
+                                </div>
                             </p:column>
 
                         </p:dataGrid>
+                       
 
-
-                        <h:outputText value="Select the files to upload (maxim 2MB):"/>
                         <br/>
 
                         <p:fileUpload fileUploadListener="#{modPublicacion.handleFileUpload}"
@@ -130,7 +135,9 @@
                                       multiple="true"
                                       sizeLimit="2097152"   
                                       allowTypes="*.jpg;*.png;*.gif;"
-                                      description="images"/>   
+                                      description="images"
+                                      label="Examinar"
+                                      />   
 
                     </p:panel>
 

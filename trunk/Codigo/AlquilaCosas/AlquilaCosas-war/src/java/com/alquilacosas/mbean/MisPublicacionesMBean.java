@@ -28,7 +28,7 @@ public class MisPublicacionesMBean {
     private MisPublicacionesBeanLocal misPublicacionesBean;
     @ManagedProperty(value="#{login}")
     private ManejadorUsuarioMBean usuarioMBean;
-    
+
     private List<Publicacion> publicaciones;
     private List<PublicacionFacade> publicacionesFacade;
     private int publicacionId;
@@ -110,4 +110,11 @@ public class MisPublicacionesMBean {
     public String editarPublicacion(){
         return "modificarPublicacion";
     }
+    
+    public String mostrarPublicacion(){
+       
+        return "mostrarPublicacion";
+        
+    }
+    
 }

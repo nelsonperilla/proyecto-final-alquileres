@@ -51,7 +51,8 @@ public class DesplieguePublicacionMBean {
             int publicationId = Integer.parseInt(id);
             setPublicacion(publicationBean.getPublicacion(publicationId));
             setComentarios(publicationBean.getPreguntas(publicationId));
-            setFecha_hasta(DateFormat.getDateInstance(DateFormat.SHORT).format(publicacion.getFecha_hasta()));
+            if(publicacion != null && publicacion.getFecha_hasta() != null)
+                setFecha_hasta(DateFormat.getDateInstance(DateFormat.SHORT).format(publicacion.getFecha_hasta()));
 
         }
     }
