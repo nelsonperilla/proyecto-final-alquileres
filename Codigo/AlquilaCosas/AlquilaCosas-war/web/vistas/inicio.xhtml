@@ -60,15 +60,15 @@
                                     <td>
                                         <div id="items">
                                             <h:form>
-                                                <h:dataTable  value="#{publicationsGroup.publicacionesRandom}"
-                                                              var="publication">
-                                                    <h:column>
+                                                <p:dataTable  value="#{publicationsGroup.publicacionesRandom}"
+                                                              var="publication" styleClass="itemsTable">
+                                                    <p:column>
 
                                                         <comps:itemInfo var="#{publication}" bean="#{publicationsGroup}"
                                                                         method="seleccionarPublicacion" 
                                                                         property="selectedPublicationId"/>
-                                                    </h:column>
-                                                </h:dataTable>
+                                                    </p:column>
+                                                </p:dataTable>
 
                                             </h:form>
 

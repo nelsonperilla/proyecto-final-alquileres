@@ -25,15 +25,19 @@
                 <h1>#{verCategoriaBean.nombreCategoria}</h1>
 
                 <p:outputPanel rendered="#{not empty verCategoriaBean.subcategorias}" >
-                    <h:form>
-                        <ui:repeat value="#{verCategoriaBean.subcategorias}" var="sub" >
-                            <h:commandLink value="#{sub.nombre}" action="#{verCategoriaBean.verSubcategoria}" >
-                                <f:setPropertyActionListener target="#{verCategoriaBean.subcategoriaSeleccionada}"
-                                                             value="#{sub.id}"/>
-                            </h:commandLink>
-                            <br/>
-                        </ui:repeat>
-                    </h:form>
+                    <p:panel style="width:600px">
+                        <b>Subcategorías:</b>
+                        <br/><br/>
+                        <h:form>
+                            <ui:repeat value="#{verCategoriaBean.subcategorias}" var="sub" >
+                                <h:commandLink value="#{sub.nombre}" action="#{verCategoriaBean.verSubcategoria}" >
+                                    <f:setPropertyActionListener target="#{verCategoriaBean.subcategoriaSeleccionada}"
+                                                                 value="#{sub.id}"/>
+                                </h:commandLink>
+                                <br/>
+                            </ui:repeat>
+                        </h:form>
+                    </p:panel>
                 </p:outputPanel>
 
                 <p:outputPanel rendered="#{not empty verCategoriaBean.model}" >
