@@ -82,6 +82,16 @@ public class Rol implements Serializable {
         this.rolId = rolId;
     }
 
+    public NombreRol getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(NombreRol nombre) {
+        this.nombre = nombre;
+    }
+    
+    
+
     public String getDescripcion() {
         return descripcion;
     }

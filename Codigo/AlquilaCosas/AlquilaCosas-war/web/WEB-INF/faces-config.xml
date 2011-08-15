@@ -20,6 +20,15 @@
             <redirect/>
         </navigation-case>
     </navigation-rule>
+    
+    <navigation-rule>
+        <from-view-id>/vistas/usuario/misPublicaciones.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>mostrarPublicacion</from-outcome>
+            <to-view-id>/vistas/mostrarPublicacion.xhtml?id=#{misPublicaciones.publicacionId}</to-view-id>
+            <redirect/>
+        </navigation-case>
+    </navigation-rule>
 
     <navigation-rule>
         <from-view-id>*</from-view-id>
@@ -81,6 +90,11 @@
         <navigation-case>
             <from-outcome>modificarPublicacion</from-outcome>
             <to-view-id>/vistas/usuario/modificarPublicacion.xhtml?id=#{misPublicaciones.publicacionId}</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>administrarUsuarios</from-outcome>
+            <to-view-id>/vistas/admin/administrarUsuarios.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
         <navigation-case>

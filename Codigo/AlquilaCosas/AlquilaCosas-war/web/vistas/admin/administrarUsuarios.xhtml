@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:comps="http://java.sun.com/jsf/composite/comps"
+      xmlns:p="http://primefaces.prime.com.tr/ui" 
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../../resources/templates/masterPage.xhtml">
+
+            <ui:define name="logInfo">
+                <h:form>
+                    <h:commandLink value="Inicio" action="inicio" />
+                </h:form>
+            </ui:define>
+
+            <ui:define name="left" >
+                <comps:categoriesMenu />
+            </ui:define>
+
+            <ui:define name="principal">
+                <h:form>
+                    <h1>Lista de usuarios</h1>
+                        <p:dataTable var="usuario" value="#{administrarUsuarios.usuarios}" paginatorPosition="bottom"
+                                     paginator="true" rows="10" rowEditListener="#{administrarUsuarios.asignarRol}"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="5,10,15">
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="username" />
+                                </f:facet>
+                                <h:outputText value="#{usuario.username}" />
+                            </p:column>
+
+                            
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Nombre" />
+                                </f:facet>
+                                <h:outputText value="#{usuario.nombre}" />
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Apellido" />
+                                </f:facet>
+                                <h:outputText value="#{usuario.apellido}" />
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Fecha Registro" />
+                                </f:facet>
+                                <h:outputText value="#{usuario.fechaDeRegistro}" >
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Rol"/>
+                                </f:facet>
+                                <p:cellEditor >
+                                    <f:facet name="output"> 
+                                        <h:outputText value="Usuario"/>
+                                        <h:selectBooleanCheckbox value="#{usuario.usuarioRol}" disabled="true" />
+                                        <br/>
+                                        <h:outputText value="Admin"/>
+                                        <h:selectBooleanCheckbox value="#{usuario.adminRol}" disabled="true" />
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <h:outputText value="Usuario"/>
+                                        <h:selectBooleanCheckbox value="#{usuario.usuarioRol}" />
+                                        <br/>
+                                        <h:outputText value="Admin"/>
+                                        <h:selectBooleanCheckbox value="#{usuario.adminRol}" />
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+
+                            <p:column >
+                                <p:rowEditor />
+                            </p:column>
+                        </p:dataTable>
+                </h:form>
+            </ui:define>
+
+            <ui:define name="right">
+                <comps:loginBox />
+                <comps:adminPanel />
+                <comps:userPanel />
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

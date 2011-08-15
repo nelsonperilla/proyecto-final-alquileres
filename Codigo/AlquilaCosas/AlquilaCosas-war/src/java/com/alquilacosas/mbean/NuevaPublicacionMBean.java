@@ -5,6 +5,8 @@ package com.alquilacosas.mbean;
  * @author jorge
  */
 
+import com.alquilacosas.common.AlquilaCosasException;
+import com.alquilacosas.common.CategoriaFacade;
 import com.alquilacosas.common.PrecioFacade;
 import com.alquilacosas.ejb.entity.Categoria;
 import com.alquilacosas.ejb.entity.Domicilio;
@@ -54,6 +56,12 @@ public class NuevaPublicacionMBean implements Serializable{
     //Select Items
     private List<SelectItem> categorias;
     private int selectedCategoria;
+    private List<SelectItem> subCategorias;
+    private int selectedSubCategoria;
+    private List<SelectItem> subCategorias1;
+    private int selectedSubCategoria1; 
+    private boolean subCategoriaRender;
+    private boolean subCategoria1Render;
     
     //Object Precio
     private List<PrecioFacade> precios;
@@ -77,17 +85,23 @@ public class NuevaPublicacionMBean implements Serializable{
         precios.add( new PrecioFacade( 0, 4, 0.0, "mes") );
         today = new Date();
         categorias = new ArrayList<SelectItem>();
-        
-        List<Categoria> listaCategoria = categoriaBean.getCategorias();
+        subCategorias = new ArrayList<SelectItem>();
+        subCategorias1 = new ArrayList<SelectItem>();
+        subCategoriaRender = false;
+        subCategoria1Render = false;
+        List<Categoria> listaCategoria = categoriaBean.getCategoriasPrincipal();
         for(Categoria categoria : listaCategoria) {
            categorias.add(new SelectItem(categoria.getCategoriaId(), categoria.getNombre()));
         }
 
     }
     
-        public void crearPublicacion(){
+     public void crearPublicacion(){
         
         try {
+            
+            if( precios.get(1).getPrecio() == 0 )
+                throw new AlquilaCosasException("El precio por dia es obligatorio!");
             
             publicacionBean.registrarPublicacion(titulo, descripcion, 
                     new Date(), new Date(), destacada, cantidad, 
@@ -104,16 +118,20 @@ public class NuevaPublicacionMBean implements Serializable{
 
     
     public void handleFileUpload(FileUploadEvent event){
+       try {
        
-        ImagenPublicacion ip = new ImagenPublicacion();
-        ip.setImagen(event.getFile().getContents());
-        imagenes.add(ip);
-        try {
-            
-            FacesMessage msg = new FacesMessage("Excelente", 
+          if( imagenes.size() <  6 ){
+                ImagenPublicacion ip = new ImagenPublicacion();
+                ip.setImagen(event.getFile().getContents());
+                imagenes.add(ip);
+          }else{
+               throw new AlquilaCosasException("No se puede cargar más de 5 fotos");
+          }
+         
+         FacesMessage msg = new FacesMessage("Excelente", 
                     event.getFile().getFileName() + "fue cargado correctamente");
         
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+         FacesContext.getCurrentInstance().addMessage(null, msg);
             
         } catch (Exception e) {
             
@@ -122,6 +140,34 @@ public class NuevaPublicacionMBean implements Serializable{
             FacesContext.getCurrentInstance().addMessage(null, error);
         }      
        
+    }
+    
+    public void actualizarCategorias(){
+        subCategorias.clear();
+        List<CategoriaFacade> categoriaList = categoriaBean.getSubCategorias(selectedCategoria);
+        if(!categoriaList.isEmpty()) {
+            subCategoriaRender = true;
+            for(CategoriaFacade c : categoriaList) {
+                subCategorias.add(new SelectItem( c.getId(), c.getNombre() ));
+            }
+        }else{
+            subCategoriaRender = false;
+            subCategoria1Render = false;
+        }
+            
+    }
+    
+    public void actualizarSubCategorias(){
+        subCategorias1.clear();
+        List<CategoriaFacade> categoriaList = categoriaBean.getSubCategorias(selectedSubCategoria);
+        if(!categoriaList.isEmpty()) {
+            subCategoria1Render = true;
+            for(CategoriaFacade c : categoriaList) {
+                subCategorias1.add(new SelectItem( c.getId(), c.getNombre() ));
+            }
+        }else{
+            subCategoria1Render = false;
+        }
     }
 
     public int getCantidad() {
@@ -246,4 +292,62 @@ public class NuevaPublicacionMBean implements Serializable{
         this.login = login;
     }
 
+    public int getSelectedSubcategoria() {
+        return selectedSubCategoria;
+    }
+
+    public void setSelectedSubcategoria(int selectedSubcategoria) {
+        this.selectedSubCategoria = selectedSubcategoria;
+    }
+
+    public List<SelectItem> getSubCategorias() {
+        return subCategorias;
+    }
+
+    public void setSubCategorias(List<SelectItem> subCategorias) {
+        this.subCategorias = subCategorias;
+    }
+
+    public int getSelectedSubCategoria() {
+        return selectedSubCategoria;
+    }
+
+    public void setSelectedSubCategoria(int selectedSubCategoria) {
+        this.selectedSubCategoria = selectedSubCategoria;
+    }
+
+    public int getSelectedSubCategoria1() {
+        return selectedSubCategoria1;
+    }
+
+    public void setSelectedSubCategoria1(int selectedSubCategoria1) {
+        this.selectedSubCategoria1 = selectedSubCategoria1;
+    }
+
+    public List<SelectItem> getSubCategorias1() {
+        return subCategorias1;
+    }
+
+    public void setSubCategorias1(List<SelectItem> subCategorias1) {
+        this.subCategorias1 = subCategorias1;
+    }
+
+    public boolean isSubCategoria1Render() {
+        return subCategoria1Render;
+    }
+
+    public void setSubCategoria1Render(boolean subCategoria1Render) {
+        this.subCategoria1Render = subCategoria1Render;
+    }
+
+    public boolean isSubCategoriaRender() {
+        return subCategoriaRender;
+    }
+
+    public void setSubCategoriaRender(boolean subCategoriaRender) {
+        this.subCategoriaRender = subCategoriaRender;
+    }
+    
+    
+    
 }

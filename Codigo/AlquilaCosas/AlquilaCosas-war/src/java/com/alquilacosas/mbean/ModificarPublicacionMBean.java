@@ -66,6 +66,8 @@ public class ModificarPublicacionMBean {
     
     private Date today;
     private List<ImagenPublicacion> imagenes;
+    private List<byte[]> imagenesAgregar;
+    private List<Integer> imagenesABorrar;
     private List<Integer> imagenIds;
     private int publicacionId;
     private List<EstadoPublicacion> estadosPublicaciones;
@@ -94,7 +96,8 @@ public class ModificarPublicacionMBean {
         precios = pf.getPrecios();
         imagenes = pf.getImagenes();
         imagenIds = new ArrayList<Integer>();
-        
+        imagenesAgregar = new ArrayList<byte[]>();
+        imagenesABorrar = new ArrayList<Integer>();
         for( ImagenPublicacion ip : imagenes ){
             imagenIds.add(ip.getImagenPublicacionId());
         }
@@ -118,12 +121,12 @@ public class ModificarPublicacionMBean {
         
         }
     
-    public void actualizarPublicacion(){
+    public String actualizarPublicacion(){
         try {
             publicacionBean.actualizarPublicacion(publicacionId, titulo, 
                     descripcion, fechaDesde, fechaHasta, destacada, cantidad, 
-                    login.getUsuarioId(), selectedCategoria, precios, imagenes, 
-                    selectedEstado);
+                    login.getUsuarioId(), selectedCategoria, precios, imagenesAgregar, 
+                    imagenesABorrar, selectedEstado);
             FacesContext.getCurrentInstance().addMessage(null, 
                     new FacesMessage("Los datos fueron guardados correctamente"));
         } catch(AlquilaCosasException e) {
@@ -131,16 +134,13 @@ public class ModificarPublicacionMBean {
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, 
                     "Error al actualizar usuario", e.getMessage()));
         }
+        return "misPublicaciones";
     }
     
     public void handleFileUpload(FileUploadEvent event){
        
-        ImagenPublicacion ip = new ImagenPublicacion();
-        ip.setImagen(event.getFile().getContents());
-        imagenes.add(ip);
-        
-        try {
-            
+     imagenesAgregar.add(event.getFile().getContents()); 
+      try {
             FacesMessage msg = new FacesMessage("Excelente", 
                     event.getFile().getFileName() + "fue cargado correctamente");      
             FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -154,9 +154,10 @@ public class ModificarPublicacionMBean {
        
     }
     
-    public void removerImagen( ActionEvent e ){
+    public void removeImagen( ActionEvent e ){
         Integer id = (Integer) e.getComponent().getAttributes().get("idBorrar");
         imagenIds.remove(id);
+        imagenesABorrar.add(id);
         System.out.println("jjj");
 //        for( int i = 0; i < imagenes.size(); i++ ){
 //            ImagenPublicacion ip = imagenes.get(i);
@@ -165,8 +166,23 @@ public class ModificarPublicacionMBean {
 //            }
 //        }
     }
-    
 
+    public List<Integer> getImagenesABorrar() {
+        return imagenesABorrar;
+    }
+
+    public void setImagenesABorrar(List<Integer> imagenesABorrar) {
+        this.imagenesABorrar = imagenesABorrar;
+    }
+
+    public List<byte[]> getImagenesAgregar() {
+        return imagenesAgregar;
+    }
+
+    public void setImagenesAgregar(List<byte[]> imagenesAgregar) {
+        this.imagenesAgregar = imagenesAgregar;
+    }
+ 
     public List<Integer> getImagenIds() {
         return imagenIds;
     }
@@ -175,8 +191,6 @@ public class ModificarPublicacionMBean {
         this.imagenIds = imagenIds;
     }
 
-    
-
     public int getPublicacionId() {
         return publicacionId;
     }
@@ -184,9 +198,7 @@ public class ModificarPublicacionMBean {
     public void setPublicacionId(int publicacionId) {
         this.publicacionId = publicacionId;
     }
-    
-    
-
+  
     public int getCantidad() {
         return cantidad;
     }

@@ -83,6 +83,17 @@ public class CategoriaBean implements CategoriaBeanLocal {
           }
           return catFacade;
      }
+    
+    
+    @Override
+    public List<Categoria> getCategoriasPrincipal() {
+            
+        Query query = entityManager.createQuery(""
+                    + "select cat FROM Categoria cat "
+                    + "where cat.categoriaFk IS NULL");
+            List<Categoria> categorias = query.getResultList();
+            return categorias;
+    }
 
     @Override
     public List<CategoriaFacade> getSubCategorias(int categoria) {
@@ -97,6 +108,7 @@ public class CategoriaBean implements CategoriaBeanLocal {
         }
         return subcategorias;        
     }
+
     
     
 
