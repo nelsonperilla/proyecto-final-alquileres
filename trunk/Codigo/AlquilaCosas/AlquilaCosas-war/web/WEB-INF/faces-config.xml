@@ -64,6 +64,11 @@
             <redirect/>
         </navigation-case>
         <navigation-case>
+            <from-outcome>periodos</from-outcome>
+            <to-view-id>/vistas/admin/periodosAlquiler.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
             <from-outcome>verCategoria</from-outcome>
             <to-view-id>/vistas/verCategoria.xhtml?id=#{menuCatBean.categoriaSeleccionada}</to-view-id>
             <redirect/>

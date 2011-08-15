@@ -22,3 +22,13 @@ function handleModificarCategoria(xhr, status, args) {
         dialogoModifCat.hide();
     }
 }
+
+function handleNuevoPeriodo(xhr, status, args) {
+    if(args.validationFailed) {
+        jQuery('#dialogo').effect("shake", {
+            times:3
+        }, 100);
+    } else {
+        dialogoNuevo.hide();
+    }
+}
