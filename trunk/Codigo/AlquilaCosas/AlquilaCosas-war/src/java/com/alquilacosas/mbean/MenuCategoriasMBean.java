@@ -7,7 +7,6 @@ package com.alquilacosas.mbean;
 import com.alquilacosas.common.CategoriaFacade;
 import com.alquilacosas.ejb.session.CategoriaBeanLocal;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -40,21 +39,16 @@ public class MenuCategoriasMBean implements Serializable {
                 CategoriaFacade fc2 = categorias.get(j);
                 if(fc2.getPadreId() == fc.getId()) {
                     fc.getSubcategorias().add(fc2);
-                    categorias.remove(fc2);
-                    j--;
                 }
             }
         }
-    }
-    
-    public List<CategoriaFacade> getCategoriasPrincipales() {
-        List<CategoriaFacade> cat = new ArrayList<CategoriaFacade>();
-        cat.addAll(categorias);
-        for(CategoriaFacade c: cat) {
-            if(c.getPadreId() != 5)
-                cat.remove(c);
+        for(int i = 0; i < categorias.size(); i++) {
+            CategoriaFacade fc = categorias.get(i);
+            if(fc.getPadreId() > 0) {
+                categorias.remove(fc);
+                i--;
+            }
         }
-        return cat;
     }
 
     public List<CategoriaFacade> getCategorias() {

@@ -26,153 +26,159 @@
                 <comps:adminPanel />
                 <comps:userPanel />
             </ui:define>
-
             <ui:define name="principal">
                 <h:outputScript library="javascript" name="util.js" />
                 <h:form>
                     <h1>Registrar Usuario</h1>
-                    <h2>Datos de registro</h2>
-                    <!-- <p:panel header="Datos de registro" styleClass="formPanel" > -->
+                    <h3>Datos de registro</h3>
                     <h:panelGrid columns="3" columnClasses="labelColumn" >
-                            <h:outputLabel value="Email" />
-                            <p:inputText id="email" value="#{regUsuario.email}" required="true"
-                                         requiredMessage="Valor requerido" />
-                            <p:message id="emailVal" for="email" showSummary="false" />
-                            <h:outputLabel value="Nombre de usuario" />
-                            <p:inputText id="usuario" value="#{regUsuario.username}" required="true"
-                                         validator="#{regUsuario.validarUsername}"
-                                         requiredMessage="Valor requerido"
-                                         validatorMessage="Usuario invalido" >
-                                <f:validateLength maximum="45" />
-                                <p:ajax event="blur" update="usuarioVal" />
-                            </p:inputText>
-                            <p:message id="usuarioVal" for="usuario" />
-                            <h:outputLabel value="Contraseña" />
-                            <p:password id="password" minLength="8" feedback="true"
-                                        value="#{regUsuario.password}" required="true"
-                                        requiredMessage="Valor requerido"
-                                        validatorMessage="maximo 45 caracteres" >
-                                <f:validateLength maximum="45" />
-                                <p:ajax event="blur" update="passwordVal" />
-                            </p:password>
-                            <p:message id="passwordVal" for="password" />
-                            <h:outputLabel value="Repita contraseña" />
-                            <p:password id="password2" minLength="8" feedback="false" 
-                                        value="#{regUsuario.password2}" required="true" 
-                                        validator="#{regUsuario.validarPassword}"
-                                        requiredMessage="Valor requerido">
-                                <p:ajax event="blur" update="password2Val" />
-                            </p:password>
-                            <p:message id="password2Val" for="password2" />
+                        <h:outputLabel value="Email" />
+                        <p:inputText id="email" value="#{regUsuario.email}" required="true"
+                                     requiredMessage="Valor requerido" />
+                        <p:message id="emailVal" for="email" showSummary="false" />
+                        <h:outputLabel value="Nombre de usuario" />
+                        <p:inputText id="usuario" value="#{regUsuario.username}" required="true"
+                                     validator="#{regUsuario.validarUsername}"
+                                     requiredMessage="Valor requerido"
+                                     validatorMessage="Usuario invalido" >
+                            <f:validateLength maximum="45" />
+                            <p:ajax event="blur" update="usuarioVal" />
+                        </p:inputText>
+                        <p:message id="usuarioVal" for="usuario" />
+                        <h:outputLabel value="Contraseña" />
+                        <p:password id="password" minLength="8" feedback="true"
+                                    value="#{regUsuario.password}" required="true"
+                                    requiredMessage="Valor requerido"
+                                    validatorMessage="maximo 45 caracteres" >
+                            <f:validateLength maximum="45" />
+                            <p:ajax event="blur" update="passwordVal" />
+                        </p:password>
+                        <p:message id="passwordVal" for="password" />
+                        <h:outputLabel value="Repita contraseña" />
+                        <p:password id="password2" minLength="8" feedback="false" 
+                                    value="#{regUsuario.password2}" required="true" 
+                                    validator="#{regUsuario.validarPassword}"
+                                    requiredMessage="Valor requerido">
+                            <p:ajax event="blur" update="password2Val" />
+                        </p:password>
+                        <p:message id="password2Val" for="password2" />
+                    </h:panelGrid>
+                    <p:separator />
+                    <h3>Datos Personales</h3>
+
+                    <h:panelGrid columns="3" columnClasses="labelColumn" >
+                        <h:outputLabel value="Nombre" />
+                        <p:inputText id="nombre" value="#{regUsuario.nombre}" required="true"
+                                     requiredMessage="Valor requerido"
+                                     validatorMessage="maximo 45 caracteres" >
+                            <f:validateLength maximum="45" />
+                        </p:inputText>
+                        <p:message for="nombre" />
+                        <h:outputLabel value="Apellido" />
+                        <p:inputText id="apellido" value="#{regUsuario.apellido}" required="true"
+                                     requiredMessage="Valor requerido"
+                                     validatorMessage="maximo 45 caracteres" >
+                            <f:validateLength maximum="45" />
+                        </p:inputText>
+                        <p:message for="apellido" />
+                        <h:outputLabel value="DNI" />
+                        <p:inputText id="dni" value="#{regUsuario.dni}" required="true"
+                                     requiredMessage="Valor requerido"
+                                     validatorMessage="maximo 45 caracteres" >
+                            <f:validateLength maximum="45" />
+                        </p:inputText>
+                        <p:message for="dni" />
+                        <h:outputLabel value="Telefono" />
+                        <p:inputText id="telefono" value="#{regUsuario.telefono}" />
+                        <p:message for="telefono" />
+                        <h:outputLabel value="Fecha Nacimiento" />
+                        <p:calendar id="fecha" value="#{regUsuario.fechaNacimiento}" navigator="true" 
+                                    maxdate="#{regUsuario.today}" yearRange="c-80:c" required="true"
+                                    requiredMessage="Valor requerido" pattern="dd/MM/yyyy"
+                                    validatorMessage="maximo 45 caracteres" >
+                            <f:validateLength maximum="45" />
+                        </p:calendar>
+                        <p:message for="fecha" />
+                    </h:panelGrid>
+                    <p:separator />
+
+                    <h3>Domicilio</h3>
+                    <h:panelGrid columns="3" columnClasses="labelColumn" >
+                        <h:outputLabel value="Pais" />
+
+                        <h:selectOneMenu id="pais" value="#{regUsuario.paisSeleccionado}" required="true"
+                                         requiredMessage="Valor requerido" >                                
+                            <f:selectItem itemLabel="Seleccione un pais" itemValue="" />
+                            <f:selectItems value="#{regUsuario.paises}" />
+                            <p:ajax event="change" update="provincia agregar growl" process="@this"
+                                    listener="#{regUsuario.actualizarProvincias}" />
+                        </h:selectOneMenu>
+                        <p:message for="pais" />
+
+                        <h:outputLabel value="Provincia" />
+                        <h:selectOneMenu id="provincia" value="#{regUsuario.provinciaSeleccionada}" 
+                                         required="true" requiredMessage="Valor requerido" >
+                            <f:selectItem itemLabel="Seleccione una provincia" itemValue="" />
+                            <f:selectItems value="#{regUsuario.provincias}" />
+                            <p:ajax event="change" process="@this" update="agregar" 
+                                    listener="#{regUsuario.prepararDomicilio}" />
+                        </h:selectOneMenu>
+                        <p:message for="provincia" />
+
+                        <h:outputLabel value="Ciudad" />
+                        <p:inputText id="ciudad" value="#{regUsuario.ciudad}" required="true"
+                                     requiredMessage="Valor requerido" 
+                                     validatorMessage="maximo 45 caracteres" >
+                            <f:validateLength maximum="45" />
+                        </p:inputText>
+                        <p:message for="ciudad" display="icon" />
+
+                        <h:outputLabel value="Barrio" />
+                        <p:inputText id="barrio" value="#{regUsuario.barrio}" required="true"
+                                     requiredMessage="Valor requerido"
+                                     validatorMessage="maximo 45 caracteres" >
+                            <f:validateLength maximum="45" />
+                        </p:inputText>
+                        <p:message for="barrio" display="icon" />
+
+                        <h:outputLabel value="Calle" />
+                        <p:inputText id="calle" value="#{regUsuario.calle}" required="true"
+                                     requiredMessage="Valor requerido"
+                                     validatorMessage="maximo 45 caracteres" >
+                            <f:validateLength maximum="45" />
+                        </p:inputText>
+                        <p:message for="calle" display="icon" />
+
+                        <h:outputLabel value="Numero" />
+                        <p:inputText id="numero" value="#{regUsuario.numero}" required="true"
+                                     requiredMessage="Valor requerido"/>
+                        <p:message for="numero" display="icon" />
+
+                        <h:outputLabel value="Piso" />
+                        <p:inputText value="#{regUsuario.piso}" />
+                        <p/>
+
+                        <h:outputLabel value="Depto" />
+                        <p:inputText value="#{regUsuario.depto}" />
+                        <p/>
+                        <h:selectBooleanCheckbox id="terminos" required="true" requiredMessage="Debe aceptar los terminos y condiciones" >
+                            <f:validator validatorId="checkboxRequeridoValidator" />
+                        </h:selectBooleanCheckbox>
+                        <h:panelGrid columns="2" >
+                            <h:outputText value="Acepto los " />
+                            <p:lightBox iframe="true" width="85%" height="80%" >
+                                <h:outputLink value="http://localhost:8080/AlquilaCosas-war/vistas/terminos.html" title="Terminos y Condiciones" >
+                                    <h:outputText value="terminos y condiciones" />
+                                </h:outputLink>
+                            </p:lightBox>
                         </h:panelGrid>
-                    <!-- </p:panel> -->
-                    <h2>Datos Personales</h2>
-                    <!-- <p:panel header="Datos Personales" styleClass="formPanel" > -->
-                        <h:panelGrid columns="3" columnClasses="labelColumn" >
-                            <h:outputLabel value="Nombre" />
-                            <p:inputText id="nombre" value="#{regUsuario.nombre}" required="true"
-                                         requiredMessage="Valor requerido"
-                                         validatorMessage="maximo 45 caracteres" >
-                                <f:validateLength maximum="45" />
-                            </p:inputText>
-                            <p:message for="nombre" />
-                            <h:outputLabel value="Apellido" />
-                            <p:inputText id="apellido" value="#{regUsuario.apellido}" required="true"
-                                         requiredMessage="Valor requerido"
-                                         validatorMessage="maximo 45 caracteres" >
-                                <f:validateLength maximum="45" />
-                            </p:inputText>
-                            <p:message for="apellido" />
-                            <h:outputLabel value="DNI" />
-                            <p:inputText id="dni" value="#{regUsuario.dni}" required="true"
-                                         requiredMessage="Valor requerido"
-                                         validatorMessage="maximo 45 caracteres" >
-                                <f:validateLength maximum="45" />
-                            </p:inputText>
-                            <p:message for="dni" />
-                            <h:outputLabel value="Telefono" />
-                            <p:inputText id="telefono" value="#{regUsuario.telefono}" />
-                            <p:message for="telefono" />
-                            <h:outputLabel value="Fecha Nacimiento" />
-                            <p:calendar id="fecha" value="#{regUsuario.fechaNacimiento}" navigator="true" 
-                                        maxdate="#{regUsuario.today}" yearRange="c-80:c" required="true"
-                                        requiredMessage="Valor requerido" pattern="dd/MM/yyyy"
-                                        validatorMessage="maximo 45 caracteres" >
-                                <f:validateLength maximum="45" />
-                            </p:calendar>
-                            <p:message for="fecha" />
-                        </h:panelGrid>
-                    <!-- </p:panel> -->
-                    <h2>Domicilio</h2>
-                    <!-- <p:panel id="domiciliosPanel" header="Domicilio" styleClass="formPanel" > -->
-                        <h:panelGrid columns="3" columnClasses="labelColumn" >
-                            <h:outputLabel value="Pais" />
+                        <p:message for="terminos" />
 
-                            <h:selectOneMenu id="pais" value="#{regUsuario.paisSeleccionado}" required="true"
-                                             requiredMessage="Valor requerido" >                                
-                                <f:selectItem itemLabel="Seleccione un pais" itemValue="" />
-                                <f:selectItems value="#{regUsuario.paises}" />
-                                <p:ajax event="change" update="provincia agregar growl" process="@this"
-                                        listener="#{regUsuario.actualizarProvincias}" />
-                            </h:selectOneMenu>
-                            <p:message for="pais" />
+                        <p:commandButton value="Crear" action="#{regUsuario.crearUsuario}"
+                                         ajax="false" />
+                        <p:commandButton type="reset" value="Limpiar" />
+                    </h:panelGrid>
 
-                            <h:outputLabel value="Provincia" />
-                            <h:selectOneMenu id="provincia" value="#{regUsuario.provinciaSeleccionada}" 
-                                             required="true" requiredMessage="Valor requerido" >
-                                <f:selectItem itemLabel="Seleccione una provincia" itemValue="" />
-                                <f:selectItems value="#{regUsuario.provincias}" />
-                                <p:ajax event="change" process="@this" update="agregar" 
-                                        listener="#{regUsuario.prepararDomicilio}" />
-                            </h:selectOneMenu>
-                            <p:message for="provincia" />
-
-                            <h:outputLabel value="Ciudad" />
-                            <p:inputText id="ciudad" value="#{regUsuario.ciudad}" required="true"
-                                         requiredMessage="Valor requerido" 
-                                         validatorMessage="maximo 45 caracteres" >
-                                <f:validateLength maximum="45" />
-                            </p:inputText>
-                            <p:message for="ciudad" display="icon" />
-
-                            <h:outputLabel value="Barrio" />
-                            <p:inputText id="barrio" value="#{regUsuario.barrio}" required="true"
-                                         requiredMessage="Valor requerido"
-                                         validatorMessage="maximo 45 caracteres" >
-                                <f:validateLength maximum="45" />
-                            </p:inputText>
-                            <p:message for="barrio" display="icon" />
-
-                            <h:outputLabel value="Calle" />
-                            <p:inputText id="calle" value="#{regUsuario.calle}" required="true"
-                                         requiredMessage="Valor requerido"
-                                         validatorMessage="maximo 45 caracteres" >
-                                <f:validateLength maximum="45" />
-                            </p:inputText>
-                            <p:message for="calle" display="icon" />
-
-                            <h:outputLabel value="Numero" />
-                            <p:inputText id="numero" value="#{regUsuario.numero}" required="true"
-                                         requiredMessage="Valor requerido"/>
-                            <p:message for="numero" display="icon" />
-
-                            <h:outputLabel value="Piso" />
-                            <p:inputText value="#{regUsuario.piso}" />
-                            <p/>
-
-                            <h:outputLabel value="Depto" />
-                            <p:inputText value="#{regUsuario.depto}" />
-                            <p/>
-                            <h:selectBooleanCheckbox />
-                            <h:outputText value="Acepto los terminos y condiciones" />
-                            <p/>
-                            
-                            <p:commandButton value="Crear" action="#{regUsuario.crearUsuario}"
-                                     ajax="false" />
-                            <p:commandButton type="reset" value="Limpiar" />
-                        </h:panelGrid>
-                    <!-- </p:panel> -->
-                    
                     <p:growl id="growl" showDetail="true" globalOnly="true" />
 
                 </h:form>

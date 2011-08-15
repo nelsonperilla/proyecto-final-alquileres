@@ -184,7 +184,7 @@ public class UsuarioBean implements UsuarioBeanLocal {
             session.close();
             connection.close();
             
-        } catch (JMSException e) {
+        } catch (Exception e) {
             context.setRollbackOnly();
             throw new AlquilaCosasException("Error al enviar email de notificacion: " + e);
         }

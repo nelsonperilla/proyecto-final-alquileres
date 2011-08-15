@@ -25,84 +25,97 @@
                 <h1>Mis Datos</h1>
                 <h:form id="datos">
                     <p:outputPanel rendered="#{not modUsuario.editando}" >
-                        <p:panel header="Datos personales" styleClass="formPanel" >
-                            <h:panelGrid columns="2" cellpadding="2" >
+                        <h3>Datos Personales</h3>
+                            <h:panelGrid columns="2" cellpadding="2" columnClasses="labelColumn" >
 
                                 <h:outputLabel value="Nombre" />
-                                <h:outputText value="#{modUsuario.usuario.nombre}" />
+                                <p:inputText value="#{modUsuario.usuario.nombre}"
+                                             disabled="true"/>
 
                                 <h:outputLabel value="Apellido" />
-                                <h:outputText value="#{modUsuario.usuario.apellido}" />
+                                <p:inputText value="#{modUsuario.usuario.apellido}"
+                                             disabled="true"/>
 
                                 <h:outputLabel value="DNI" />
-                                <h:outputText value="#{modUsuario.usuario.dni}" />
+                                <p:inputText value="#{modUsuario.usuario.dni}"
+                                             disabled="true"/>
 
                                 <h:outputLabel value="Email" />
-                                <h:outputText value="#{modUsuario.usuario.email}" />
+                                <p:inputText value="#{modUsuario.usuario.email}" 
+                                             disabled="true" />
 
                                 <h:outputLabel value="Telefono" />
-                                <h:outputText value="#{modUsuario.usuario.telefono}" />
+                                <p:inputText value="#{modUsuario.usuario.telefono}"
+                                             disabled="true" />
 
                                 <h:outputLabel value="Fecha de nacimiento" />
-                                <h:outputText value="#{modUsuario.usuario.fechaNacimiento}" >
-                                    <f:convertDateTime pattern="dd/MM/yyyy" />
-                                </h:outputText>
+                                <p:calendar value="#{modUsuario.usuario.fechaNacimiento}"
+                                            pattern="dd/MM/yyyy" disabled="true" />
                             </h:panelGrid>
+                        <p:separator />
 
-                        </p:panel>
-
-                        <p:panel header="Domicilio" styleClass="formPanel" >
-
-                            <h:panelGrid columns="2" cellpadding="2" >
+                        <h3>Domicilio</h3>
+                            <h:panelGrid columns="2" cellpadding="2" columnClasses="labelColumn" >
 
                                 <h:outputLabel value="Pais" />
-                                <h:outputText value="#{modUsuario.domicilio.pais}" />
+                                <p:inputText value="#{modUsuario.domicilio.pais}"
+                                             disabled="true" />
 
                                 <h:outputLabel value="Provincia" />
-                                <h:outputText value="#{modUsuario.domicilio.provincia}" />
+                                <p:inputText value="#{modUsuario.domicilio.provincia}"
+                                              disabled="true" />
 
                                 <h:outputLabel value="Ciudad" />
-                                <h:outputText value="#{modUsuario.domicilio.ciudad}" />
+                                <p:inputText value="#{modUsuario.domicilio.ciudad}"
+                                             disabled="true" />
 
                                 <h:outputLabel value="Barrio" />
-                                <h:outputText value="#{modUsuario.domicilio.barrio}" />
+                                <p:inputText value="#{modUsuario.domicilio.barrio}"
+                                             disabled="true" />
 
                                 <h:outputLabel value="Calle" />
-                                <h:outputText value="#{modUsuario.domicilio.calle}" />
+                                <p:inputText value="#{modUsuario.domicilio.calle}"
+                                             disabled="true"/>
 
                                 <h:outputLabel value="Numero" />
                                 <h:outputText value="#{modUsuario.domicilio.numero}" />
 
                                 <h:outputLabel value="Piso" />
-                                <h:outputText value="#{modUsuario.domicilio.piso}" />
+                                <p:inputText value="#{modUsuario.domicilio.piso}"
+                                             disabled="true"/>
 
                                 <h:outputLabel value="Depto" />
-                                <h:outputText value="#{modUsuario.domicilio.depto}" />
+                                <p:inputText value="#{modUsuario.domicilio.depto}" 
+                                             disabled="true" />
+                                
+                                <p:commandButton value="Editar" actionListener="#{modUsuario.editar}"
+                                         update=":datos :editor"/>
 
                             </h:panelGrid>
 
-                        </p:panel>
-                        <p:commandButton value="Editar" actionListener="#{modUsuario.editar}"
-                                         update=":datos :editor"/>
                     </p:outputPanel>
+                    
                 </h:form>
                 <h:form id="editor" >
                     <p:outputPanel rendered="#{modUsuario.editando}" >
-
-                        <p:panel header="Datos personales" styleClass="formPanel" >
-                            <h:panelGrid columns="2" cellpadding="2" >
+                        <h3>Datos Personales</h3>
+                            <h:panelGrid columns="2" cellpadding="2" columnClasses="labelColumn" >
 
                                 <h:outputLabel value="Nombre" />
-                                <h:outputText value="#{modUsuario.usuario.nombre}" />
+                                <p:inputText value="#{modUsuario.usuario.nombre}" 
+                                             disabled="true" />
 
                                 <h:outputLabel value="Apellido" />
-                                <h:outputText value="#{modUsuario.usuario.apellido}" />
+                                <p:inputText value="#{modUsuario.usuario.apellido}" 
+                                             disabled="true" />
 
                                 <h:outputLabel value="DNI" />
-                                <h:outputText value="#{modUsuario.usuario.dni}" />
+                                <p:inputText value="#{modUsuario.usuario.dni}" 
+                                             disabled="true" />
 
                                 <h:outputLabel value="Email" />
-                                <h:outputText value="#{modUsuario.usuario.email}" />
+                                <p:inputText value="#{modUsuario.usuario.email}" 
+                                             disabled="true" />
 
                                 <h:outputLabel value="Telefono" />
                                 <p:inputText value="#{modUsuario.telefono}" />
@@ -112,10 +125,8 @@
                                             required="true" pattern="dd/MM/yyyy" />
                             </h:panelGrid>
 
-                        </p:panel>
-
-                        <p:panel header="Domicilio" styleClass="formPanel" >
-                            <h:panelGrid columns="3" cellpadding="2" >
+                        <h3>Domicilio</h3>    
+                        <h:panelGrid columns="3" cellpadding="2" columnClasses="labelColumn" >
 
                                 <h:outputLabel value="Pais" />
                                 <h:selectOneMenu id="pais" value="#{modUsuario.domicilio.paisId}" required="true"
@@ -167,7 +178,7 @@
                             </h:panelGrid>
                             <p:growl id="growl" globalOnly="true" />    
 
-                        </p:panel>
+                        <!-- </p:panel> -->
 
                     </p:outputPanel>
                 </h:form>
