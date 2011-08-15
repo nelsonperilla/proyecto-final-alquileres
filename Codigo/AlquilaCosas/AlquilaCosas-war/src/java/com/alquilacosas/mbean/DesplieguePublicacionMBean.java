@@ -31,8 +31,6 @@ public class DesplieguePublicacionMBean {
     private PublicacionBeanLocal publicationBean;
     @ManagedProperty (value="#{login}")
     private ManejadorUsuarioMBean usuarioLogueado;
-    //private CategoriaFacade categoria;
-    //private List<PrecioFacade> precios;
     private PublicacionFacade publicacion;
     private String effect;
     private List<ComentarioFacade> comentarios;
@@ -61,8 +59,8 @@ public class DesplieguePublicacionMBean {
     
      public String guardarPregunta() {  
          
-        nuevaPregunta.setUsuarioId(1);//usuarioLogueado.getUsuarioId());
-        nuevaPregunta.setUsuario("pepe");//usuarioLogueado.getUsername());
+        nuevaPregunta.setUsuarioId(usuarioLogueado.getUsuarioId());
+        nuevaPregunta.setUsuario(usuarioLogueado.getUsername());
         nuevaPregunta.setFecha(new Date());
         publicationBean.setPregunta(publicacion.getId(), nuevaPregunta);
         setNuevaPregunta(new ComentarioFacade());  

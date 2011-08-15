@@ -12,6 +12,7 @@ import com.alquilacosas.common.PrecioFacade;
 import com.alquilacosas.common.PublicacionFacade;
 import com.alquilacosas.ejb.entity.Categoria;
 import com.alquilacosas.ejb.entity.Comentario;
+import com.alquilacosas.ejb.entity.Domicilio;
 import com.alquilacosas.ejb.entity.EstadoPublicacion;
 import com.alquilacosas.ejb.entity.EstadoPublicacion.PublicacionEstado;
 import com.alquilacosas.ejb.entity.ImagenPublicacion;
@@ -310,6 +311,10 @@ public class PublicacionBean implements PublicacionBeanLocal {
                     publicacion.getDescripcion(), publicacion.getFechaDesde(), publicacion.getFechaHasta(), publicacion.getDestacada(),
                     publicacion.getCantidad());
 
+            Domicilio domicilio = publicacion.getUsuarioFk().getDomicilioList().get(0);
+            resultado.setPais(domicilio.getProvinciaFk().getPaisFk().getNombre());
+            resultado.setCiudad(domicilio.getProvinciaFk().getNombre());            
+            
             resultado.setImagenIds(getImagesIds(publicacion));            
             resultado.setPrecios(getPrecios(publicacion));
             resultado.setCategoriaF(new CategoriaFacade(publicacion.getCategoriaFk().getCategoriaId(),

@@ -138,6 +138,9 @@ h6 {font: bold 0.9em sans-serif;}
 
 #items .itemInfo{
     font-size: 14px;
+    text-overflow: ellipsis;
+    white-space: nowrap; 
+    overflow: hidden;
     font-family: Trebuchet MS;
     padding: 1px 1px 1px 1px;
 }
@@ -236,6 +239,23 @@ h6 {font: bold 0.9em sans-serif;}
     font-family: Trebuchet MS;
     padding: 10px 0px 0px 0px;
 }
+
+#simpleItem .buttom{
+    font-size: 14px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    background-image: -moz-linear-gradient(top, #F58585, #DF4D4D 14px, #E03131 12px, #E40000);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#F58585), 
+		       color-stop(0.3, #DF4D4D), color-stop(0.3, #E03131), to(#E40000));    
+    font-family: Trebuchet MS;
+    padding-top: 2px;
+    margin-left: 100px;
+    text-decoration: none;
+    width: 30px;
+    height: 15px;
+    color: #ffffff;
+}
+
 
 #searchBar {
     background-image:url(../resources/images/searchBar.png);
@@ -378,13 +398,14 @@ h6 {font: bold 0.9em sans-serif;}
 }
 
 .itemContentCol {
-    width: 330px;
+    width: 320px;
     text-align: left;
     font-size: 14px;
 }
 
 .itemPriceCol {
-    width: 70px;
+    text-align: left;
+    width: 130px;
     font-size: 14px;
 }
 

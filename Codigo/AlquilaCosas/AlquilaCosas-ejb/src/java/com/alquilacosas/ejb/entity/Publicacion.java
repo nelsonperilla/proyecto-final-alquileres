@@ -104,7 +104,7 @@ public class Publicacion implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "TITULO")
     private String titulo;
-    @Size(max = 45)
+    @Size(max = 2000)
     @Column(name = "DESCRIPCION")
     private String descripcion;
     @Basic(optional = false)
