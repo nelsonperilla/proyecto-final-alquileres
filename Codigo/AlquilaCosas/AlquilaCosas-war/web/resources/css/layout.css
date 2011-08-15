@@ -397,6 +397,13 @@ h6 {font: bold 0.9em sans-serif;}
     text-decoration: none;
 }
 
+.controlPanel {
+    background-image: -moz-linear-gradient(top, #0620E2, #384CE2 40px, #6F7DE8 12px, #E0E3F8);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#0620E2), 
+		    color-stop(0.3, #384CE2), color-stop(0.3, #6F7DE8), to(#E0E3F8));    
+   
+}
+
 .labelBienvenida {
     font-weight: bold;
 }
@@ -406,6 +413,24 @@ h6 {font: bold 0.9em sans-serif;}
 }
 
 /* Menu Categorias --------------------- */
+/*
+#category {
+    border-right-style: solid;
+    border-left-style: solid;
+    border-bottom-style: solid;
+    border-top-style: solid;
+    border-right-width: 1px;
+    border-left-width: 1px;
+    border-bottom-width: 1px;
+    border-top-width: 1px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    border-right-color: #d2d0d0;
+    border-left-color: #d2d0d0;
+    border-bottom-color: #d2d0d0;
+    border-top-color: #d2d0d0; 
+    padding: 2px 2px 2px 2px;
+}*/
 
 #category ul {
     list-style: none; /* Remove the bullets */
@@ -427,7 +452,11 @@ h6 {font: bold 0.9em sans-serif;}
     height:100%;
     width:100%;
     position: relative;
-    background: lightskyblue;
+    /*background: lightskyblue;*/
+    /*background-image: -moz-linear-gradient(top, #0620E2, #384CE2 14px, #4F7DE8 12px, #E0E3F8);*/
+    background-image: -moz-linear-gradient(top, #E0E3F8, #4F7DE8 14px, #384CE2 12px, #0620E2);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#E0E3F8), 
+		    color-stop(0.3, #4F7DE8), color-stop(0.3, #384CE2), to(#0620E2)); 
     border-bottom:1px solid #fff;
     float:left; /* Make sure (in IE) there is no margin between the menu items */
 /*    border: 1px solid goldenrod;*/
@@ -438,7 +467,11 @@ h6 {font: bold 0.9em sans-serif;}
 }
 #category ul li a:hover {
     color: #fff;
-    background: cornflowerblue;
+    /*background: cornflowerblue;*/
+    background-image: -moz-linear-gradient(top, #0620E2, #384CE2 14px, #4F7DE8 12px, #E0E3F8);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#E0E3F8), 
+		    color-stop(0.3, #4F7DE8), color-stop(0.3, #384CE2), to(#0620E2)); 
+
 }
 
 /* Primer submenu */
@@ -449,11 +482,17 @@ h6 {font: bold 0.9em sans-serif;}
     
 }
 #category ul li ul li{
-    background: lightskyblue;
+    /*background: lightskyblue;*/
+    background-image: -moz-linear-gradient(top, #E0E3F8, #4F7DE8 14px, #384CE2 12px, #0620E2);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#E0E3F8), 
+		    color-stop(0.3, #4F7DE8), color-stop(0.3, #384CE2), to(#0620E2));     
     border: 1px solid goldenrod;
 }
 #category ul li ul li a:hover{
-    background: cornflowerblue;
+    /*background: cornflowerblue;*/
+    background-image: -moz-linear-gradient(top, #0620E2, #384CE2 14px, #4F7DE8 12px, #E0E3F8);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#E0E3F8), 
+		    color-stop(0.3, #4F7DE8), color-stop(0.3, #384CE2), to(#0620E2)); 
 }
 #category ul li:hover ul{
     display: block; /* Make sure the submenu is displayed as blocks as well. */

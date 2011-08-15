@@ -18,6 +18,7 @@ public class ComentarioFacade {
     private int usuarioId;
     private String usuario;
     private ComentarioFacade respuesta;
+    private int publicacionId;
 
     public ComentarioFacade(){ }
     
@@ -33,6 +34,21 @@ public class ComentarioFacade {
         else
             respuesta=new ComentarioFacade();
     }
+    
+    public ComentarioFacade(int id, String comentario, Date fecha, int usuarioId,
+            String usuario,int publicacionId, ComentarioFacade respuesta){
+        this.id=id;
+        this.comentario=comentario;
+        this.fecha=fecha;
+        this.usuarioId=usuarioId;
+        this.usuario=usuario;
+        if(respuesta!=null)
+            this.respuesta=respuesta;
+        else{
+            respuesta=new ComentarioFacade();
+            respuesta.setId(-1);
+        }
+    }    
     
     public boolean equals(ComentarioFacade other){
         return this.id == other.id;
@@ -120,6 +136,20 @@ public class ComentarioFacade {
      */
     public void setUsuario(String usuario) {
         this.usuario = usuario;
+    }
+
+    /**
+     * @return the publicacionId
+     */
+    public int getPublicacionId() {
+        return publicacionId;
+    }
+
+    /**
+     * @param publicacionId the publicacionId to set
+     */
+    public void setPublicacionId(int publicacionId) {
+        this.publicacionId = publicacionId;
     }
     
     

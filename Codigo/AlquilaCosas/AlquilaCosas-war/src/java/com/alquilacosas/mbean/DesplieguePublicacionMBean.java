@@ -52,7 +52,7 @@ public class DesplieguePublicacionMBean {
         if(id != null){
             int publicationId = Integer.parseInt(id);
             setPublicacion(publicationBean.getPublicacion(publicationId));
-            setComentarios(publicationBean.getComentarios(publicationId));
+            setComentarios(publicationBean.getPreguntas(publicationId));
             setFecha_hasta(DateFormat.getDateInstance(DateFormat.SHORT).format(publicacion.getFecha_hasta()));
 
         }
@@ -64,7 +64,7 @@ public class DesplieguePublicacionMBean {
         nuevaPregunta.setUsuarioId(1);//usuarioLogueado.getUsuarioId());
         nuevaPregunta.setUsuario("pepe");//usuarioLogueado.getUsername());
         nuevaPregunta.setFecha(new Date());
-        publicationBean.setComentario(publicacion.getId(), nuevaPregunta);
+        publicationBean.setPregunta(publicacion.getId(), nuevaPregunta);
         setNuevaPregunta(new ComentarioFacade());  
         return null;  
     }  

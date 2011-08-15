@@ -323,6 +323,8 @@ public class PublicacionBean implements PublicacionBeanLocal {
         for(ImagenPublicacion imagen: publicacion.getImagenPublicacionList()) {
             imagenes.add(imagen.getImagenPublicacionId());
         }
+        if(imagenes.isEmpty())
+            imagenes.add(new Integer(-1));
         return imagenes;
     }
 
@@ -341,7 +343,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
     }
     
     @Override
-    public List<ComentarioFacade> getComentarios(int publicationId) {
+    public List<ComentarioFacade> getPreguntas(int publicationId) {
         List<Comentario> comentarios;
         List<ComentarioFacade> resultado = new ArrayList<ComentarioFacade>();
         Publicacion filter=entityManager.find(Publicacion.class,publicationId);
@@ -368,7 +370,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
     }
 
     @Override
-    public void setComentario(int publicacionId, ComentarioFacade nuevaPregunta) {
+    public void setPregunta(int publicacionId, ComentarioFacade nuevaPregunta) {
         Comentario pregunta=new Comentario();
         pregunta.setPublicacionFk(entityManager.find(Publicacion.class, publicacionId));
         pregunta.setComentario(nuevaPregunta.getComentario());
@@ -377,6 +379,39 @@ public class PublicacionBean implements PublicacionBeanLocal {
         pregunta.setUsuarioFk(entityManager.find(Usuario.class, nuevaPregunta.getUsuarioId()));
         entityManager.persist(pregunta);
     }
+
+    @Override
+    public List<ComentarioFacade> getPreguntasSinResponder(int usuarioId) {
+        List<Comentario> comentarios;
+        List<ComentarioFacade> resultado = new ArrayList<ComentarioFacade>();
+        Usuario filter=entityManager.find(Usuario.class,usuarioId);
+        Query query = entityManager.createNamedQuery("Comentario.findPreguntasSinResponderByUsuario");
+        query.setParameter("usuario", filter);
+        comentarios = query.getResultList();   
+        Comentario respuesta;
+        for(Comentario comentario : comentarios)
+            //if((respuesta = comentario.getRespuesta()) == null)
+                resultado.add(new ComentarioFacade(comentario.getComentarioId(),
+                    comentario.getComentario(), comentario.getFecha(), 
+                    comentario.getUsuarioFk().getUsuarioId(), 
+                    comentario.getUsuarioFk().getNombre(),comentario.getPublicacionFk().getPublicacionId(), null ));
+        
+        return resultado;
+    }    
+
+    @Override 
+    public void setRespuesta(ComentarioFacade preguntaConRespuesta) {
+        Comentario respuesta = new Comentario();
+        Comentario pregunta = entityManager.find(Comentario.class , preguntaConRespuesta.getId());
+        respuesta.setPublicacionFk(pregunta.getPublicacionFk());
+        respuesta.setComentario(preguntaConRespuesta.getRespuesta().getComentario());
+        respuesta.setFecha(preguntaConRespuesta.getRespuesta().getFecha());
+        respuesta.setPregunta(Boolean.FALSE);
+        respuesta.setUsuarioFk(entityManager.find(Usuario.class, preguntaConRespuesta.getRespuesta().getUsuarioId()));
+        pregunta.setRespuesta(respuesta);
+        entityManager.persist(respuesta);
+
+    }    
 
 }
 

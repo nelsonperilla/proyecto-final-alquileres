@@ -73,5 +73,10 @@
             <to-view-id>/vistas/usuario/modificarPublicacion.xhtml?id=#{misPublicaciones.publicacionId}</to-view-id>
             <redirect/>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>responderPreguntas</from-outcome>
+            <to-view-id>/vistas/usuario/responderPreguntas.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>        
     </navigation-rule>
 </faces-config>

@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:comps="http://java.sun.com/jsf/composite/comps" 
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <body>
+       <ui:composition template="./../../resources/templates/masterPage.xhtml">
+            <ui:define name="logInfo">
+                
+            </ui:define>
+            <ui:define name="left" >
+                <comps:categoriesMenu />
+            </ui:define>           
+           <ui:define name="principal">
+               <h:form id="desplieguePreguntas" style="width: 100%">  
+               <p:growl id="msgs"/>
+                <p:dialog header="Ingrese su pregunta" widgetVar="nuevaPregunta" modal="true"
+                          showEffect="fade" width="280" >
+                     <h:panelGrid columns="1" id="grid" style="text-align: center; width: 250px">  
+                        <h:outputLabel value="Pregunta: " for="txt_title"></h:outputLabel>  
+                        <p:inputTextarea id="txt_title" autoResize="false" rows="5"     
+                                        value="#{desplieguePreguntas.nuevaRespuesta.comentario}" 
+                                        style="width: 200px;" />  
+                        <h:panelGrid columns="2">
+                            <p:commandButton value="Limpiar" type="reset"/>  
+                            <p:commandButton value="Enviar respuesta" update="preguntas msgs @parent"  
+                                            action="#{desplieguePreguntas.guardarPregunta}"
+                                            onclick="nuevaPregunta.hide()">  
+                                <p:collector value="#{desplieguePreguntas.selectedPregunta}"
+                                             removeFrom="#{desplieguePreguntas.comentarios}"/>                                 
+                            </p:commandButton>  
+                        </h:panelGrid>
+                    </h:panelGrid>  
+                </p:dialog>
+                <p:ajaxStatus style="width:16px;height:16px;">  
+                    <f:facet name="start">  
+                        <h:graphicImage value="/resources/images/loading.gif" />  
+                    </f:facet>  
+                    <f:facet name="complete">  
+                        <h:outputText value="" />  
+                    </f:facet>  
+                </p:ajaxStatus> 
+               <h3>Preguntas pendientes</h3> 
+                <div class="preguntas">
+                    <h:outputText value="No hay preguntas pendientes para responder"
+                                  rendered="#{desplieguePreguntas.cantidad == 0}"
+                                  style="margin: 80px"/>
+                    <p:outputPanel id="preguntas" rendered="#{desplieguePreguntas.cantidad != 0}">  
+                        <h:dataTable value="#{desplieguePreguntas.comentarios}" var="pregunta">  
+                            <p:column>  
+                                 <div id="itemPregunta">
+                                    <table cellspacing="0" cellpadding="5">
+                                        <tr>
+                                            <td width="30px">
+                                                <h:outputText value="Pregunta:"  />  
+                                            </td>
+                                            <td width="500px">
+                                                <h:outputText value="#{pregunta.comentario}"/> 
+                                            </td>
+                                            <td width="30px">
+                                                <p:commandLink value="Responder" 
+                                                               onclick="nuevaPregunta.show()" >
+                                                    <f:setPropertyActionListener 
+                                                        value="#{pregunta}" 
+                                                        target="#{desplieguePreguntas.selectedPregunta}" />
+                                                </p:commandLink>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                 </div>
+                            </p:column>  
+                        </h:dataTable>  
+                    </p:outputPanel>  
+                </div>               
+             </h:form> 
+           </ui:define>
+            <ui:define name="right" >
+                <comps:loginBox />
+                <comps:adminPanel />
+                <comps:userPanel />
+            </ui:define>            
+        </ui:composition>               
+        
+    </body>
+</html>

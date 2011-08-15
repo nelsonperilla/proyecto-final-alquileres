@@ -36,9 +36,13 @@ public interface PublicacionBeanLocal {
 
     public PublicacionFacade getPublicacion(int id);
 
-    public List<ComentarioFacade> getComentarios(int publicationId);
+    public List<ComentarioFacade> getPreguntas(int publicationId);
 
-    public void setComentario(int publicacionId,ComentarioFacade nuevaPregunta);
+    public void setPregunta(int publicacionId,ComentarioFacade nuevaPregunta);
+    
+    public List<ComentarioFacade> getPreguntasSinResponder(int usuarioId);
+    
+    public void setRespuesta(ComentarioFacade preguntaConRespuesta);
 
     public PublicacionFacade getDatosPublicacion(int publicacionId);
 
