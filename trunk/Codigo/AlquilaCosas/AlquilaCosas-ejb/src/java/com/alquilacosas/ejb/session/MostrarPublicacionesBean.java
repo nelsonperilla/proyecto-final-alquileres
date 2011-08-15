@@ -4,9 +4,12 @@
  */
 package com.alquilacosas.ejb.session;
 
+import com.alquilacosas.common.PrecioFacade;
 import com.alquilacosas.common.PublicacionFacade;
 import com.alquilacosas.ejb.entity.Categoria;
+import com.alquilacosas.ejb.entity.Domicilio;
 import com.alquilacosas.ejb.entity.ImagenPublicacion;
+import com.alquilacosas.ejb.entity.Precio;
 import com.alquilacosas.ejb.entity.Publicacion;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +42,11 @@ public class MostrarPublicacionesBean implements MostrarPublicacionesBeanLocal {
             for(ImagenPublicacion imagen: publicacion.getImagenPublicacionList()) {
                 imagenes.add(imagen.getImagenPublicacionId());
             }
+            Domicilio domicilio = publicacion.getUsuarioFk().getDomicilioList().get(0);
+            tempPublication.setPais(domicilio.getProvinciaFk().getPaisFk().getNombre());
+            tempPublication.setCiudad(domicilio.getProvinciaFk().getNombre());               
             tempPublication.setImagenIds(imagenes);
+            tempPublication.setPrecios(getPrecios(publicacion));
             resultado.add(tempPublication);
         }
         
@@ -68,6 +75,19 @@ public class MostrarPublicacionesBean implements MostrarPublicacionesBeanLocal {
             result.add(image.getImagen());
         return result;
     }
-    
+
+    private List<PrecioFacade> getPrecios(Publicacion filter){
+        List<PrecioFacade> resultado = new ArrayList<PrecioFacade>();
+        List<Precio> precios;
+        Query query = entityManager.createNamedQuery("Precio.findByPublicacion");
+        query.setParameter("publicacion", filter);
+        precios = query.getResultList();   
+        
+        for(Precio precio: precios)
+            resultado.add(new PrecioFacade(precio.getPrecio(), precio.getPeriodoFk().getNombre()));
+        
+        return resultado;
+
+    }    
     
 }

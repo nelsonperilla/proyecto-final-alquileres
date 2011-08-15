@@ -42,6 +42,7 @@
                             </h:form>
                         </td>
                         <td   width="100%">
+                            <h:form>
                             <h:panelGrid  styleClass="dataPrincipal" columns="1"  >
                                 <h:dataTable value="#{publicacionDesplegada.publicacion.precios}"
                                              var="precio" style="width: 100%" >
@@ -63,9 +64,10 @@
                                   styleClass="itemInfo" escape="false"/>  
                                 <h:outputText value="Cantidad disponible: #{publicacionDesplegada.publicacion.cantidad}" 
                                   styleClass="itemInfo"/>  
-                                <h:commandButton value="Alquilar" style="margin-left: 100px"/>
+                                <h:commandLink value="Alquilar" styleClass="buttom"/>
 
                             </h:panelGrid>                            
+                            </h:form>
                         </td>
                     </tr>
                     <tr>
