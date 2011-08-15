@@ -33,7 +33,9 @@ public class PublicacionFacade {
     private List<PrecioFacade> precios;
     private EstadoPublicacion estado;
     private List<ImagenPublicacion> imagenes;
-    private String barrio, ciudad;
+    private String ciudad;
+    private String barrio;
+    private String pais;
 
     public Categoria getCategoria() {
         return categoria;
@@ -246,6 +248,20 @@ public class PublicacionFacade {
      */
     public void setCategoriaF(CategoriaFacade categoriaF) {
         this.categoriaF = categoriaF;
+    }
+
+    /**
+     * @return the pais
+     */
+    public String getPais() {
+        return pais;
+    }
+
+    /**
+     * @param pais the pais to set
+     */
+    public void setPais(String pais) {
+        this.pais = pais;
     }
     
 }

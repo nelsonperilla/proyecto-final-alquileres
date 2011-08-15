@@ -61,7 +61,7 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
             }
             facade.setImagenIds(imagenes);
             Domicilio d = p.getUsuarioFk().getDomicilioList().get(0);
-            facade.setBarrio(d.getBarrio());
+            facade.setPais(d.getProvinciaFk().getPaisFk().getNombre());
             facade.setCiudad(d.getProvinciaFk().getNombre());
             
             pubFacadeList.add(facade);
