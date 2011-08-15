@@ -347,6 +347,7 @@ h6 {font: bold 0.9em sans-serif;}
 .ui-datatable.itemsTable table {
     border: none !important;
     border-color: white;
+    text-align: center;
 }
 
 .itemsTable.ui-datatable .ui-datatable-data td,
@@ -360,6 +361,10 @@ h6 {font: bold 0.9em sans-serif;}
 }
 
 .itemsTable .ui-widget-header {
+    border: none !important;
+}
+
+.itemsTable .ui-state-default {
     border: none !important;
 }
 
@@ -409,7 +414,7 @@ h6 {font: bold 0.9em sans-serif;}
 }
 
 .panelFiltro {
-    width: 180px;
+    width: 200px;
 }
 
 /* Menu Categorias --------------------- */

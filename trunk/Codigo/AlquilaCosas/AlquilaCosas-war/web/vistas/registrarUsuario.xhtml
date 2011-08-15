@@ -38,7 +38,7 @@
                             <p:inputText id="email" value="#{regUsuario.email}" required="true"
                                          requiredMessage="Valor requerido" />
                             <p:message id="emailVal" for="email" showSummary="false" />
-                            <h:outputLabel value="Usuario" />
+                            <h:outputLabel value="Nombre de usuario" />
                             <p:inputText id="usuario" value="#{regUsuario.username}" required="true"
                                          validator="#{regUsuario.validarUsername}"
                                          requiredMessage="Valor requerido"
@@ -163,7 +163,10 @@
                             <h:outputLabel value="Depto" />
                             <p:inputText value="#{regUsuario.depto}" />
                             <p/>
-
+                            <h:selectBooleanCheckbox />
+                            <h:outputText value="Acepto los terminos y condiciones" />
+                            <p/>
+                            
                             <p:commandButton value="Crear" action="#{regUsuario.crearUsuario}"
                                      ajax="false" />
                             <p:commandButton type="reset" value="Limpiar" />
