@@ -53,7 +53,6 @@ public class CategoriaBean implements CategoriaBeanLocal {
      
      @Override
      public void borrarCategoria(Categoria categoria) {
-          //no se como se hace...
           Categoria modifCategoria = entityManager.find(Categoria.class, categoria.getCategoriaId());
           entityManager.remove(modifCategoria);
      }
