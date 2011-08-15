@@ -66,7 +66,8 @@ public class CategoriaBean implements CategoriaBeanLocal {
           entityManager.merge(modifCategoria);
      }
      
-    @Override
+
+     @Override
      public List<CategoriaFacade> getCategoriaFacade() {
          List<Categoria> categorias;
           Query query = entityManager.createNamedQuery("Categoria.findAll");

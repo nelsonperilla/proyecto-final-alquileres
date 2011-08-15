@@ -59,6 +59,7 @@
             <web-resource-name>admin pages</web-resource-name>
             <description/>
             <url-pattern>/faces/vistas/admin/*</url-pattern>
+            <url-pattern>/faces/vistas/usuario/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>ADMIN</role-name>

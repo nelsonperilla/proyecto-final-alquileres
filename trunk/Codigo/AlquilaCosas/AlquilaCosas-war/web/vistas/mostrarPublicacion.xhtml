@@ -13,6 +13,10 @@
             <ui:define name="logInfo">
                 
             </ui:define>
+            <ui:define name="left" >
+                <comps:categoriesMenu />
+            </ui:define>
+            
             <ui:define name="principal">
                 <table id="simpleItem">
                     <tr>
@@ -29,7 +33,10 @@
                                     <ui:repeat value="#{publicacionDesplegada.publicacion.imagenIds}" 
                                                var="image">  
                                         <h:graphicImage value="/image?id=#{image}"  
-                                                        alt="Description goes here" rendered="true"/>  
+                                                        alt="Description goes here" 
+                                                        rendered="#{image != -1}"/> 
+                                        <h:graphicImage value="#{resource['images:noImage.png']}"
+                                                        rendered="#{image == -1}" />                                        
                                     </ui:repeat>  
                                 </p:galleria>  
                             </h:form>

@@ -18,12 +18,14 @@
                     <h:panelGrid columns="1" cellpadding="2" >
                         <h:outputLabel value="Hola #{login.username}" styleClass="labelBienvenida" />
                         <h:commandLink value="Publicar" action="nuevaPublicacion" />
+                        <h:commandLink value="Responder preguntas" action="responderPreguntas" />
                         <h:commandLink value="Mis publicaciones" action="misPublicaciones"/>
                         <h:commandLink value="Mis datos" action="datosUsuario" />
+                    
+                        <f:facet name="footer" >
+                            <h:commandLink value="Salir" action="#{login.logout}" />
+                        </f:facet>
                     </h:panelGrid>
-                    <f:facet name="footer" >
-                        <h:commandLink value="Salir" action="#{login.logout}" />
-                    </f:facet>
                 </p:panel>
             </h:form>
         </p:outputPanel>

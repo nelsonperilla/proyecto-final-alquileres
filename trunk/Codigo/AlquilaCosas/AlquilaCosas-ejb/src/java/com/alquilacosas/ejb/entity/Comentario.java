@@ -38,6 +38,10 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Comentario.findAll", query = "SELECT c FROM Comentario c"),
     @NamedQuery(name = "Comentario.findPreguntasByPublicacion", query = "SELECT c FROM Comentario c WHERE c.publicacionFk = :publicacion AND"
         + " c.pregunta = true ORDER BY c.fecha ASC"),
+    @NamedQuery(name = "Comentario.findPreguntasSinResponderByUsuario", query = 
+        "SELECT c FROM Comentario c, Publicacion p WHERE c.publicacionFk = p "
+        + "AND p.usuarioFk = :usuario AND c.pregunta = true AND "
+        + "c.respuesta IS NULL ORDER BY c.fecha ASC"),
     @NamedQuery(name = "Comentario.findByComentarioId", query = "SELECT c FROM Comentario c WHERE c.comentarioId = :comentarioId"),
     @NamedQuery(name = "Comentario.findByComentario", query = "SELECT c FROM Comentario c WHERE c.comentario = :comentario"),
     @NamedQuery(name = "Comentario.findByFecha", query = "SELECT c FROM Comentario c WHERE c.fecha = :fecha")})
