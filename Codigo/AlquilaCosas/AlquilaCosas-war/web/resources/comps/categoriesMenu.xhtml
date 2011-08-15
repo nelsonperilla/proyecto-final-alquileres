@@ -14,8 +14,9 @@
     <!-- IMPLEMENTATION -->
     <cc:implementation>  
 
-        <div id="category" >
+        <div id="menu" >
             <h:form>
+                <nav id="topNav">
                 <ul>
                     <ui:repeat value="#{menuCatBean.categorias}" var="cat" >
                         <li>
@@ -37,32 +38,10 @@
                         </li>
                     </ui:repeat>
                 </ul>
+                </nav>
             </h:form>
         </div>
 
-        <!-- <div id="menu">
-            <table width="200" border="0" cellspacing="0">
-                <tr>
-                    <th>
-                        Categorias
-                    </th>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="#">Medias</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="#">Fosforos</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="#">Escobas</a>
-                    </td>
-                </tr>
-            </table>
-        </div> -->
+
     </cc:implementation>
 </html>
