@@ -35,7 +35,7 @@
                                        styleClass="itemTitle" >
                             <f:setPropertyActionListener value="#{cc.attrs.var.id}" target="#{cc.attrs.bean[cc.attrs.property]}" />
                         </h:commandLink>
-                        <h:outputText value="(#{cc.attrs.var.barrio}, #{cc.attrs.var.ciudad})" />
+                        <h:outputText value="(#{cc.attrs.var.ciudad}, #{cc.attrs.var.pais})" />
                         <h:outputText value="#{cc.attrs.var.descripcion}" styleClass="itemInfo" />  
                         <h:outputText value="Cantidad disponible: #{cc.attrs.var.cantidad}" styleClass="itemInfo"/>  
                     </h:panelGrid>

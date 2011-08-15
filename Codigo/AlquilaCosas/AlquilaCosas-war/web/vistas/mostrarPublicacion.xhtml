@@ -54,6 +54,9 @@
                                               styleClass="itemPrice"/>  
                                     </h:column>
                                 </h:dataTable>
+                                <h:outputText value="Origen: #{publicacionDesplegada.publicacion.ciudad}, 
+                                              #{publicacionDesplegada.publicacion.pais}" 
+                                  styleClass="itemInfo" escape="false"/> 
                                 <h:outputText value="Categoria: #{publicacionDesplegada.publicacion.categoriaF.nombre}" 
                                   styleClass="itemInfo" escape="false"/>  
                                 <h:outputText value="Finaliza el #{publicacionDesplegada.fecha_hasta}" 
