@@ -96,16 +96,21 @@ public class NuevaPublicacionMBean implements Serializable{
 
     }
     
-     public String crearPublicacion(){
-        
+     public String crearPublicacion(){        
         try {
-            
             if( precios.get(1).getPrecio() == 0 )
                 throw new AlquilaCosasException("El precio por dia es obligatorio!");
             
+            int categoria = 0;
+            if(selectedSubCategoria1 > 0)
+                categoria = selectedSubCategoria1;
+            else if(selectedSubCategoria > 0)
+                categoria = selectedSubCategoria;
+            else
+                categoria = selectedCategoria;
             publicacionBean.registrarPublicacion(titulo, descripcion, 
                     new Date(), new Date(), destacada, cantidad, 
-                    login.getUsuarioId(), selectedCategoria, precios, imagenes);
+                    login.getUsuarioId(), categoria, precios, imagenes);
             
             FacesContext.getCurrentInstance().addMessage(null, 
                     new FacesMessage("Publicacion Creada"));
@@ -149,6 +154,9 @@ public class NuevaPublicacionMBean implements Serializable{
     
     public void actualizarCategorias(){
         subCategorias.clear();
+        subCategorias1.clear();
+        selectedSubCategoria = 0;
+        selectedSubCategoria1 = 0;
         List<CategoriaFacade> categoriaList = categoriaBean.getSubCategorias(selectedCategoria);
         if(!categoriaList.isEmpty()) {
             subCategoriaRender = true;
@@ -158,12 +166,12 @@ public class NuevaPublicacionMBean implements Serializable{
         }else{
             subCategoriaRender = false;
             subCategoria1Render = false;
-        }
-            
+        }   
     }
     
     public void actualizarSubCategorias(){
         subCategorias1.clear();
+        selectedSubCategoria1 = 0;
         List<CategoriaFacade> categoriaList = categoriaBean.getSubCategorias(selectedSubCategoria);
         if(!categoriaList.isEmpty()) {
             subCategoria1Render = true;

@@ -302,8 +302,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
            } 
         }
         
-              
-            if( imagenesABorrar != null ){
+          if( imagenesABorrar != null ){
                 for( Integer i : imagenesABorrar ){
                     ImagenPublicacion ip = new ImagenPublicacion(i);
                     entityManager.remove(entityManager.merge(ip));
@@ -459,10 +458,10 @@ public class PublicacionBean implements PublicacionBeanLocal {
             MessageProducer producer = session.createProducer(destination);
             ObjectMessage message = session.createObjectMessage();
             
-            String asunto = "Has recibido una pregunta por tu articulo";
+            String asunto = "Has recibido una pregunta por tu articulo " + publicacion.getTitulo();
             String texto = "<html>Hola " + usuarioDueno.getNombre() + ", <br/><br/>" + 
                     "Has recibido una pregunta por tu articulo <b>" + publicacion.getTitulo() + "</b>: <br/><br/>" +
-                    "" + nuevaPregunta.getComentario() +  " <br/><br/>" +
+                    "'" + nuevaPregunta.getComentario() + "' <br/><br/>" +
                     "Para responder esta pregunta ingresa a tu panel de usuario. <br/><br/>" +
                     "Atentamente, <br/> <b>AlquilaCosas </b>";
             NotificacionEmail notificacion = new NotificacionEmail(usuarioDueno.getEmail(), asunto, texto);
@@ -519,10 +518,10 @@ public class PublicacionBean implements PublicacionBeanLocal {
             MessageProducer producer = session.createProducer(destination);
             ObjectMessage message = session.createObjectMessage();
             
-            String asunto = "Han respondido tu pregunta por el articulo" + publicacion.getTitulo();
+            String asunto = "Han respondido tu pregunta por el articulo " + publicacion.getTitulo();
             String texto = "<html>Hola " + usuarioPregunto.getNombre() + ", <br/><br/>" + 
-                    "Has recibido una pregunta por tu articulo <b>" + publicacion.getTitulo() + "</b>: <br/><br/>" +
-                    "" + respuesta.getComentario() +  " <br/><br/>" +
+                    "Han respondido tu pregunta por el articulo <b>" + publicacion.getTitulo() + "</b>: <br/><br/>" +
+                    "'" + respuesta.getComentario() + "' <br/>" +
                     "<br/><br/>" +
                     "Atentamente, <br/> <b>AlquilaCosas </b>";
             NotificacionEmail notificacion = new NotificacionEmail(usuarioPregunto.getEmail(), asunto, texto);

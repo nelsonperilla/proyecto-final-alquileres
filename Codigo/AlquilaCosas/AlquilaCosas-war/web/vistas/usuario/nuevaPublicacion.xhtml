@@ -26,7 +26,7 @@
                 <h:form id="formPublicacion">
 
                     <h1>Publicar</h1>
-                    <h:panelGrid columns="3" styleClass="formPanel">                       
+                    <h:panelGrid columns="3" columnClasses="labelColumn" >                       
 
                         <h:outputLabel value="Titulo: "/>
                         <p:inputText id="titulo" value="#{publicacion.titulo}" required="true"
@@ -42,47 +42,49 @@
                                      style="width: 50px" >
                         </p:inputText>
                         <p:message id="cantidadVal" for="cantidad"/>
-
-
-                        <h:outputLabel value="Categoria: " />
-                        <h:selectOneMenu id="categoria" value="#{publicacion.selectedCategoria}" required ="true"
-                                         requiredMessage="Valor requerido"> 
-                            <f:selectItem itemLabel="Categorias" itemValue="" />
-                            <f:selectItems value="#{publicacion.categorias}" />
-                            <p:ajax event="change" update="subcategoria labelSubCategoria growl" 
-                                    listener="#{publicacion.actualizarCategorias}" />
-                        </h:selectOneMenu>
-                        <p:message id="categoriaVal" for="categoria"/>
-
-
-                        <h:outputLabel id="labelSubCategoria" value="SubCategorias: "/>
-                        <h:selectOneMenu id="subcategoria" value="#{publicacion.selectedSubCategoria}" 
-                                         required="true" requiredMessage="Valor requerido" 
-                                         disabled="#{not publicacion.subCategoriaRender}">
-                            <f:selectItem itemLabel="Subcategorias de #{publicacion.selectedCategoria}" itemValue="" />
-                            <f:selectItems value="#{publicacion.subCategorias}" />
-                            <p:ajax event="change" update="subcategoria1 labelSubCategoria1 growl" 
-                                    listener="#{publicacion.actualizarSubCategorias}" />   
-                        </h:selectOneMenu>
-                        <p/>
-
-                        <h:outputLabel id="labelSubCategoria1" value="SubCategorias: "/>
-                        <h:selectOneMenu id="subcategoria1" value="#{publicacion.selectedSubCategoria1}" 
-                                         required="true" requiredMessage="Valor requerido" 
-                                         disabled="#{not publicacion.subCategoria1Render}">
-                            <f:selectItem itemLabel="Subcategorias de #{publicacion.selectedSubCategoria}" itemValue="" />
-                            <f:selectItems value="#{publicacion.subCategorias1}" />
-                        </h:selectOneMenu>
-                        <p/>
-
                     </h:panelGrid>
+                    <p:outputPanel id="datos" >
+                        <h:panelGrid columns="3" columnClasses="labelColumn" >
+                            <h:outputLabel value="Categoria: " />
+                            <h:selectOneMenu id="categoria" value="#{publicacion.selectedCategoria}" required ="true"
+                                             requiredMessage="Valor requerido"> 
+                                <f:selectItem itemLabel="Categorias" itemValue="" />
+                                <f:selectItems value="#{publicacion.categorias}" />
+                                <p:ajax event="change" update="datos growl" 
+                                        listener="#{publicacion.actualizarCategorias}" />
+                            </h:selectOneMenu>
+                            <p:message id="categoriaVal" for="categoria"/>
 
+
+                            <h:outputLabel id="labelSubCategoria" value="Subcategorias: "
+                                           rendered="#{publicacion.subCategoriaRender}" />
+                            <h:selectOneMenu id="subcategoria" value="#{publicacion.selectedSubCategoria}" 
+                                             rendered="#{publicacion.subCategoriaRender}" >
+                                <f:selectItem itemLabel="Seleccione una subcategoria" itemValue="" />
+                                <f:selectItems value="#{publicacion.subCategorias}" />
+                                <p:ajax event="change" update="datos growl" 
+                                        listener="#{publicacion.actualizarSubCategorias}" />   
+                            </h:selectOneMenu>
+                            <p/>
+
+                            <h:outputLabel id="labelSubCategoria1" value="Subcategorias: "
+                                           rendered="#{publicacion.subCategoria1Render}" />
+                            <h:selectOneMenu id="subcategoria1" value="#{publicacion.selectedSubCategoria1}" 
+                                             rendered="#{publicacion.subCategoria1Render}" >
+                                <f:selectItem itemLabel="Seleccione una subcategoria" itemValue="" />
+                                <f:selectItems value="#{publicacion.subCategorias1}" />
+                            </h:selectOneMenu>
+                            <p/>
+
+                        </h:panelGrid>
+                    </p:outputPanel>
 
                     <br/>
                     <br/>
 
-                    <p:editor value="#{publicacion.descripcion}" widgetVar="editor" 
+                    <p:editor id="desc" value="#{publicacion.descripcion}" widgetVar="editor" 
                               width="600" required="true"/>
+                    <p:message id="descVal" for="desc" />
 
                     <h2>Cargar imagenes</h2>
                     <p:panel header="Cargar Imagenes">
@@ -98,26 +100,25 @@
 
                         <h:outputLink value="#" title="Subir archivo" onclick="uploader.upload();" 
                                       style="font-weight:bold;color:#616D7E">
-                           Agregar Imagen
+                            Agregar Imagen
                         </h:outputLink>
-
                     </p:panel>
 
                     <h2>Determina el precio del alquiler del producto</h2>
 
-                    <p:panel id="panelPrecios" header="Precios" styleClass="formPanel">
+                    <p:panel id="panelPrecios" styleClass="formPanel">
 
                         <ui:repeat value="#{publicacion.precios}" var="precio">
 
                             <h:outputText value="#{precio.periodoNombre}" />
-                            <p:inputText value="#{precio.precio}" style="text-align: right; margin-left: 3px; width: 50px"/>
+                            <p:inputText value="#{precio.precio}" 
+                                         style="text-align: right; margin-left: 3px; width: 50px"/>
                             <p:spacer width="25" />
 
                         </ui:repeat>
 
                     </p:panel>
 
-                    <br/>
                     <br/>
 
                     <p:commandButton value="Crear" action="#{publicacion.crearPublicacion}" 

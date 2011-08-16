@@ -6,12 +6,14 @@ package com.alquilacosas.ejb.session;
 
 import com.alquilacosas.common.Busqueda;
 import com.alquilacosas.common.CategoriaFacade;
+import com.alquilacosas.common.PrecioFacade;
 import com.alquilacosas.common.PublicacionFacade;
 import com.alquilacosas.ejb.entity.Categoria;
 import com.alquilacosas.ejb.entity.Domicilio;
 import com.alquilacosas.ejb.entity.EstadoPublicacion.PublicacionEstado;
 import com.alquilacosas.ejb.entity.ImagenPublicacion;
 import com.alquilacosas.ejb.entity.Periodo;
+import com.alquilacosas.ejb.entity.Precio;
 import com.alquilacosas.ejb.entity.Publicacion;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +65,8 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
             Domicilio d = p.getUsuarioFk().getDomicilioList().get(0);
             facade.setPais(d.getProvinciaFk().getPaisFk().getNombre());
             facade.setCiudad(d.getProvinciaFk().getNombre());
+            
+            facade.setPrecios(getPrecios(p));
             
             pubFacadeList.add(facade);
             Categoria c = p.getCategoriaFk();
@@ -121,6 +125,8 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
             facade.setPais(d.getProvinciaFk().getPaisFk().getNombre());
             facade.setCiudad(d.getProvinciaFk().getNombre());
             
+            facade.setPrecios(getPrecios(p));
+            
             pubFacadeList.add(facade);
         }
         
@@ -174,6 +180,8 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
             Domicilio d = p.getUsuarioFk().getDomicilioList().get(0);
             facade.setPais(d.getProvinciaFk().getPaisFk().getNombre());
             facade.setCiudad(d.getProvinciaFk().getNombre());
+            
+            facade.setPrecios(getPrecios(p));
             
             pubFacadeList.add(facade);
         }
@@ -232,6 +240,8 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
             Domicilio d = p.getUsuarioFk().getDomicilioList().get(0);
             facade.setPais(d.getProvinciaFk().getPaisFk().getNombre());
             facade.setCiudad(d.getProvinciaFk().getNombre());
+            
+            facade.setPrecios(getPrecios(p));
             
             pubFacadeList.add(facade);
         }
@@ -292,6 +302,8 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
             facade.setPais(d.getProvinciaFk().getPaisFk().getNombre());
             facade.setCiudad(d.getProvinciaFk().getNombre());
             
+            facade.setPrecios(getPrecios(p));
+            
             pubFacadeList.add(facade);
         }
         
@@ -334,6 +346,8 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
             facade.setPais(d.getProvinciaFk().getPaisFk().getNombre());
             facade.setCiudad(d.getProvinciaFk().getNombre());
             
+            facade.setPrecios(getPrecios(p));
+            
             pubFacadeList.add(facade);
         }
         
@@ -363,6 +377,18 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
         return null;
     }
 
-    
+    private List<PrecioFacade> getPrecios(Publicacion filter){
+        List<PrecioFacade> resultado = new ArrayList<PrecioFacade>();
+        List<Precio> precios;
+        Query query = entityManager.createNamedQuery("Precio.findByPublicacion");
+        query.setParameter("publicacion", filter);
+        precios = query.getResultList();   
+        
+        for(Precio precio: precios)
+            resultado.add(new PrecioFacade(precio.getPrecio(), precio.getPeriodoFk().getNombre()));
+        
+        return resultado;
+
+    } 
     
 }

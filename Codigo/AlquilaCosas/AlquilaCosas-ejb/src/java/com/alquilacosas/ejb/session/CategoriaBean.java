@@ -41,6 +41,13 @@ public class CategoriaBean implements CategoriaBeanLocal {
         categorias = query.getResultList();
         return categorias;
     }
+    
+    @Override
+    public Categoria getCategoriaPadre(int categoriaId) {
+        Categoria cat = entityManager.find(Categoria.class, categoriaId);
+        Categoria padre = cat.getCategoriaFk();
+        return padre;
+    }
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")

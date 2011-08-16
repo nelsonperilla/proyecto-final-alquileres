@@ -131,7 +131,7 @@
                                      validatorMessage="maximo 45 caracteres" >
                             <f:validateLength maximum="45" />
                         </p:inputText>
-                        <p:message for="ciudad" display="icon" />
+                        <p:message for="ciudad" />
 
                         <h:outputLabel value="Barrio" />
                         <p:inputText id="barrio" value="#{regUsuario.barrio}" required="true"
@@ -139,7 +139,7 @@
                                      validatorMessage="maximo 45 caracteres" >
                             <f:validateLength maximum="45" />
                         </p:inputText>
-                        <p:message for="barrio" display="icon" />
+                        <p:message for="barrio" />
 
                         <h:outputLabel value="Calle" />
                         <p:inputText id="calle" value="#{regUsuario.calle}" required="true"
@@ -147,20 +147,23 @@
                                      validatorMessage="maximo 45 caracteres" >
                             <f:validateLength maximum="45" />
                         </p:inputText>
-                        <p:message for="calle" display="icon" />
+                        <p:message for="calle" />
 
                         <h:outputLabel value="Numero" />
                         <p:inputText id="numero" value="#{regUsuario.numero}" required="true"
-                                     requiredMessage="Valor requerido"/>
-                        <p:message for="numero" display="icon" />
+                                     requiredMessage="Valor requerido" 
+                                     converterMessage="El 'Numero' debe ser un numero entero"/>
+                        <p:message for="numero" />
 
                         <h:outputLabel value="Piso" />
-                        <p:inputText value="#{regUsuario.piso}" />
-                        <p/>
+                        <p:inputText id="piso" value="#{regUsuario.piso}" 
+                                     converterMessage="El 'Piso' debe ser un numero entero" />
+                        <p:message id="pisoVal" for="piso" />
 
                         <h:outputLabel value="Depto" />
-                        <p:inputText value="#{regUsuario.depto}" />
-                        <p/>
+                        <p:inputText id="depto" value="#{regUsuario.depto}" />
+                        <p:message id="deptoVal" for="depto" />
+                        
                         <h:selectBooleanCheckbox id="terminos" required="true" requiredMessage="Debe aceptar los terminos y condiciones" >
                             <f:validator validatorId="checkboxRequeridoValidator" />
                         </h:selectBooleanCheckbox>

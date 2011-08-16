@@ -118,7 +118,9 @@ public class CategoriaMBean implements Serializable{
      public void modificarCategoria(){
           boolean existe = false;
           for(Categoria c : categorias)
-               if (c.getNombre().equals(nombreM) && c.getCategoriaFk() == categoriaSeleccionadaModificar.getCategoriaFk() && c.getCategoriaId() != categoriaSeleccionadaModificar.getCategoriaId())
+               if (c.getNombre().equals(nombreM) && c.getCategoriaFk() == 
+                       categoriaSeleccionadaModificar.getCategoriaFk() && 
+                       c.getCategoriaId() != categoriaSeleccionadaModificar.getCategoriaId())
                     existe=true;
           if (!existe){
                categoriaSeleccionadaModificar.setNombre(nombreM);
@@ -135,6 +137,7 @@ public class CategoriaMBean implements Serializable{
      
      public void borrarCategoria(){
           categoriaBean.borrarCategoria(categoriaSeleccionadaModificar);
+          menuBean.cargarMenu();
      }
      
      public boolean existeCategoria(String nombre, Categoria padre){

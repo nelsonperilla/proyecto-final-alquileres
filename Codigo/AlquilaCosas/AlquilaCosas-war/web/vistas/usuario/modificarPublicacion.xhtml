@@ -64,9 +64,16 @@
             <ui:define name="principal">
 
                 <h:form id="formPublicacion" >
+                    <h1>Modificar Publicacion</h1>
+                    <h:panelGrid columns="3" columnClasses="labelColumn" >                       
 
-                    <h1>Publicar</h1>
-                    <h:panelGrid columns="3" styleClass="formPanel">                       
+                        <h:outputLabel value="Estado: " />
+                        <h:selectOneMenu id="estado" value="#{modPublicacion.selectedEstado}" required ="true"
+                                         requiredMessage="Valor requerido"> 
+                            <f:selectItem itemLabel="Estados" itemValue="" />
+                            <f:selectItems value="#{modPublicacion.estados}" />
+                        </h:selectOneMenu>
+                        <p/>
 
                         <h:outputLabel value="Titulo: "/>
                         <p:inputText id="titulo" value="#{modPublicacion.titulo}" required="true"
@@ -80,66 +87,76 @@
                                      requiredMessage="Valor requerido" converterMessage="Debe ingresr un numero" >
                         </p:inputText>
                         <p:message id="cantidadVal" for="cantidad"/>
-
-
-                        <h:outputLabel value="Categoria: " />
-                        <h:selectOneMenu id="categoria" value="#{modPublicacion.selectedCategoria}" required ="true"
-                                         requiredMessage="Valor requerido"> 
-                            <f:selectItem itemLabel="Categorias" itemValue=""/>
-                            <f:selectItems value="#{publicacion.categorias}" />
-                        </h:selectOneMenu>
-                        <p/>
-
-                        <h:outputLabel value="Estado: " />
-                        <h:selectOneMenu id="estado" value="#{modPublicacion.selectedEstado}" required ="true"
-                                         requiredMessage="Valor requerido"> 
-                            <f:selectItem itemLabel="Estados" itemValue="" />
-                            <f:selectItems value="#{modPublicacion.estados}" />
-                        </h:selectOneMenu>
-                        <p/>
                     </h:panelGrid>
 
-                    <br/>
+                    <p:outputPanel id="datos" >
+                        <h:panelGrid columns="3" columnClasses="labelColumn" >
+
+                            <h:outputLabel value="Categoria: " />
+                            <h:selectOneMenu id="categoria" value="#{modPublicacion.selectedCategoria}" required ="true"
+                                             requiredMessage="Valor requerido"> 
+                                <f:selectItem itemLabel="Categorias" itemValue=""/>
+                                <f:selectItems value="#{modPublicacion.categorias}" />
+                                <p:ajax event="change" update="datos growl" 
+                                        listener="#{modPublicacion.actualizarCategorias}" />
+                            </h:selectOneMenu>
+                            <p/>
+
+                            <h:outputLabel id="labelSubCategoria" value="Subcategorias: "
+                                           rendered="#{modPublicacion.subCategoriaRender}" />
+                            <h:selectOneMenu id="subcategoria" value="#{modPublicacion.selectedSubCategoria}" 
+                                             rendered="#{modPublicacion.subCategoriaRender}" >
+                                <f:selectItem itemLabel="Seleccione una subcategoria" itemValue="" />
+                                <f:selectItems value="#{modPublicacion.subCategorias}" />
+                                <p:ajax event="change" update="datos growl" 
+                                        listener="#{modPublicacion.actualizarSubCategorias}" />   
+                            </h:selectOneMenu>
+                            <p/>
+
+                            <h:outputLabel id="labelSubCategoria1" value="Subcategorias: "
+                                           rendered="#{modPublicacion.subCategoria1Render}" />
+                            <h:selectOneMenu id="subcategoria1" value="#{modPublicacion.selectedSubCategoria1}" 
+                                             rendered="#{modPublicacion.subCategoria1Render}" >
+                                <f:selectItem itemLabel="Seleccione una subcategoria" itemValue="" />
+                                <f:selectItems value="#{modPublicacion.subCategorias1}" />
+                            </h:selectOneMenu>
+                            <p/>
+
+                        </h:panelGrid>
+                    </p:outputPanel>
+
                     <br/>
 
                     <p:editor value="#{modPublicacion.descripcion}" widgetVar="editor" width="600" />
 
                     <br/>
-                    <br/>
 
                     <p:panel id="panelImagenes" header="Imagenes del producto" styleClass="formPanel" >
-                        
+
                         <p:dataGrid id="imagenes" var="img" value="#{modPublicacion.imagenIds}" columns="3">
                             <p:column>
                                 <div id="div1" >
-                                    <h:panelGrid columns="1" style="width:100%">
+                                    <h:panelGrid columns="1" style="width:100%;">
                                         <h:graphicImage value="/image?id=#{img}"
                                                         width="100" height="85" styleClass="img"
                                                         /> 
-                                        <p:commandLink title="Remove" update="imagenes" 
+                                        <p:commandLink title="Remove" update="panelImagenes" immediate="true"
                                                        actionListener="#{modPublicacion.removeImagen}" >
-                                                <p:graphicImage value="#{resource['images:icono_borrar.gif']}"/> 
+                                            <p:graphicImage value="#{resource['images:icono_borrar.gif']}"/> 
                                             <f:attribute name="idBorrar" value="#{img}" />
                                         </p:commandLink>
                                     </h:panelGrid>
                                 </div>
                             </p:column>
-
                         </p:dataGrid>
-                       
 
-                        <br/>
-
-                        <h:outputText value="Sube una imagen menor a 2Mb:"/>
-                        <br/>
-
+                        <h:outputText value="Elija una imagen de hasta 2 MB:" /><br/>
                         <p:fileUpload widgetVar="uploader" height="48" width="48"
                                       fileUploadListener="#{modPublicacion.handleFileUpload}"
                                       image="./../../resources/images/upload.png" 
                                       cancelImage="./../../resources/images/cancel.png"
                                       allowTypes="*.jpg;*.png;*.gif;" description="Images" 
-                                      customUI="true" label="Subir"/>
-
+                                      customUI="true" label="Subir"  />
                         <h:outputLink value="#" title="Subir archivo" onclick="uploader.upload();" 
                                       style="font-weight:bold;color:#616D7E">
                             Agregar Imagen
@@ -159,7 +176,6 @@
                         </ui:repeat>
                     </p:panel>
 
-                    <br/>
                     <br/>
 
                     <p:commandButton value="Guardar" action="#{modPublicacion.actualizarPublicacion}" 

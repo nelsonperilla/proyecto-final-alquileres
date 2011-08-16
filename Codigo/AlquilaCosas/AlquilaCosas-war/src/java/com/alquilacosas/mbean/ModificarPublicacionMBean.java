@@ -5,6 +5,7 @@
 package com.alquilacosas.mbean;
 
 import com.alquilacosas.common.AlquilaCosasException;
+import com.alquilacosas.common.CategoriaFacade;
 import com.alquilacosas.common.PrecioFacade;
 import com.alquilacosas.common.PublicacionFacade;
 import com.alquilacosas.ejb.entity.Categoria;
@@ -31,22 +32,19 @@ import org.primefaces.event.FileUploadEvent;
  *
  * @author ignaciogiagante
  */
-@ManagedBean( name = "modPublicacion" )
+@ManagedBean(name = "modPublicacion")
 @ViewScoped
 public class ModificarPublicacionMBean {
 
-    @EJB 
+    @EJB
     private PublicacionBeanLocal publicacionBean;
-    @EJB 
+    @EJB
     private CategoriaBeanLocal categoriaBean;
-    @EJB 
+    @EJB
     private MisPublicacionesBeanLocal misPublicacionesBean;
-    
-    @ManagedProperty (value = "#{login}")
+    @ManagedProperty(value = "#{login}")
     private ManejadorUsuarioMBean login;
-    
     private PublicacionFacade pf;
-    
     //Datos de la publicacion
     private String titulo;
     private String descripcion;
@@ -55,15 +53,21 @@ public class ModificarPublicacionMBean {
     private boolean destacada;
     private int cantidad;
     private Categoria categoria;
-    //Select Items
+    //Select Items categorias
     private List<SelectItem> categorias;
     private int selectedCategoria;
+    private List<SelectItem> subCategorias;
+    private int selectedSubCategoria;
+    private List<SelectItem> subCategorias1;
+    private int selectedSubCategoria1;
+    private boolean subCategoriaRender;
+    private boolean subCategoria1Render;
+    //estado
     private List<SelectItem> estados;
     private int selectedEstado;
     //Object Precio
     private List<PrecioFacade> precios;
     private PrecioFacade precioFacade;
-    
     private Date today;
     private List<ImagenPublicacion> imagenes;
     private List<byte[]> imagenesAgregar;
@@ -72,19 +76,17 @@ public class ModificarPublicacionMBean {
     private int publicacionId;
     private List<EstadoPublicacion> estadosPublicaciones;
     private int imagenABorrar;
-    
-    
+
     public ModificarPublicacionMBean() {
     }
-    
+
     @PostConstruct
     public void init() {
-        
-        publicacionId = Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext()
-                .getRequestParameterMap().get("id"));
-        
+
+        publicacionId = Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
+
         pf = publicacionBean.getDatosPublicacion(publicacionId);
-        
+
         titulo = pf.getTitulo();
         descripcion = pf.getDescripcion();
         fechaDesde = pf.getFecha_desde();
@@ -98,36 +100,81 @@ public class ModificarPublicacionMBean {
         imagenIds = new ArrayList<Integer>();
         imagenesAgregar = new ArrayList<byte[]>();
         imagenesABorrar = new ArrayList<Integer>();
-        for( ImagenPublicacion ip : imagenes ){
+        for (ImagenPublicacion ip : imagenes) {
             imagenIds.add(ip.getImagenPublicacionId());
         }
-        
+
         today = new Date();
         categorias = new ArrayList<SelectItem>();
+        subCategorias = new ArrayList<SelectItem>();
+        subCategorias1 = new ArrayList<SelectItem>();
         estados = new ArrayList<SelectItem>();
         
-        List<Categoria> listaCategoria = categoriaBean.getCategorias();
-        for(Categoria category : listaCategoria) {
-           categorias.add(new SelectItem(category.getCategoriaId(), category.getNombre()));
+        boolean encontrado = false;
+        List<Categoria> listaCategoria = categoriaBean.getCategoriasPrincipal();
+        for (Categoria category : listaCategoria) {
+            categorias.add(new SelectItem(category.getCategoriaId(), category.getNombre()));
+            if(category.getCategoriaId() == selectedCategoria) {
+                encontrado = true;
+            }
         }
-        
+        if(!encontrado) {
+        Categoria padreSeleccionada = categoriaBean.getCategoriaPadre(selectedCategoria);
+        if(padreSeleccionada != null) {
+            List<CategoriaFacade> subcategorias1lista = categoriaBean.getSubCategorias(padreSeleccionada.getCategoriaId());
+
+            Categoria padre2Seleccionada = categoriaBean.getCategoriaPadre(padreSeleccionada.getCategoriaId());
+            if(padre2Seleccionada == null) {
+                for(CategoriaFacade c: subcategorias1lista) {
+                    subCategorias.add(new SelectItem(c.getId(), c.getNombre()));
+                }
+                selectedSubCategoria = selectedCategoria;
+                selectedCategoria = padreSeleccionada.getCategoriaId();
+                subCategoriaRender = true;
+            }
+            else {
+                for(CategoriaFacade c: subcategorias1lista) {
+                    subCategorias1.add(new SelectItem(c.getId(), c.getNombre()));
+                }
+                List<CategoriaFacade> subcategorias2lista = categoriaBean.getSubCategorias(padre2Seleccionada.getCategoriaId());
+                for(CategoriaFacade c: subcategorias2lista) {
+                    subCategorias.add(new SelectItem(c.getId(), c.getNombre()));
+                }
+                selectedSubCategoria1 = selectedCategoria;
+                selectedSubCategoria = padreSeleccionada.getCategoriaId();
+                selectedCategoria = padre2Seleccionada.getCategoriaId();
+                subCategoria1Render = true;
+                subCategoriaRender = true;
+            }
+        }
+        }
+        //actualizarCategorias();
+
         estadosPublicaciones = misPublicacionesBean.getEstados();
-        for( EstadoPublicacion ep : estadosPublicaciones ){
-            estados.add( new SelectItem( ep.getEstadoPublicacionId(), 
-                    ep.getNombre().name() ));
+        for (EstadoPublicacion ep : estadosPublicaciones) {
+            estados.add(new SelectItem(ep.getEstadoPublicacionId(),
+                    ep.getNombre().name()));
         }
-        
+
         selectedEstado = pf.getEstado().getEstadoPublicacionId();
-        
+
+    }
+
+    public String actualizarPublicacion() {
+        int cat = 0;
+        if (selectedSubCategoria1 > 0) {
+            cat = selectedSubCategoria1;
+        } else if (selectedSubCategoria > 0) {
+            cat = selectedSubCategoria;
+        } else {
+            cat = selectedCategoria;
         }
-    
-    public String actualizarPublicacion(){
         try {
-            publicacionBean.actualizarPublicacion(publicacionId, titulo, 
-                    descripcion, fechaDesde, fechaHasta, destacada, cantidad, 
-                    login.getUsuarioId(), selectedCategoria, precios, imagenesAgregar, 
+            publicacionBean.actualizarPublicacion(publicacionId, titulo,
+                    descripcion, fechaDesde, fechaHasta, destacada, cantidad,
+                    login.getUsuarioId(), cat, precios, imagenesAgregar,
                     imagenesABorrar, selectedEstado);
-            FacesContext.getCurrentInstance().addMessage(null, 
+            FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage("Los datos fueron guardados correctamente"));
             return "misPublicaciones";
         } catch(AlquilaCosasException e) {
@@ -137,35 +184,60 @@ public class ModificarPublicacionMBean {
         }
           return null;
     }
-    
-    public void handleFileUpload(FileUploadEvent event){
+
+    public void actualizarCategorias() {
+        subCategorias.clear();
+        subCategorias1.clear();
+        selectedSubCategoria = 0;
+        selectedSubCategoria1 = 0;
+        List<CategoriaFacade> categoriaList = categoriaBean.getSubCategorias(selectedCategoria);
+        if (!categoriaList.isEmpty()) {
+            subCategoriaRender = true;
+            for (CategoriaFacade c : categoriaList) {
+                subCategorias.add(new SelectItem(c.getId(), c.getNombre()));
+            }
+        } else {
+            subCategoriaRender = false;
+            subCategoria1Render = false;
+        }
+    }
+
+    public void actualizarSubCategorias() {
+        subCategorias1.clear();
+        selectedSubCategoria1 = 0;
+        List<CategoriaFacade> categoriaList = categoriaBean.getSubCategorias(selectedSubCategoria);
+        if (!categoriaList.isEmpty()) {
+            subCategoria1Render = true;
+            for (CategoriaFacade c : categoriaList) {
+                subCategorias1.add(new SelectItem(c.getId(), c.getNombre()));
+            }
+        } else {
+            subCategoria1Render = false;
+        }
+    }
+
+    public void handleFileUpload(FileUploadEvent event) {
+
         
         try {
-
-            if( imagenes.size() + imagenesAgregar.size() <  6 ){
-                    imagenesAgregar.add(event.getFile().getContents()); 
-              }else{
-                   throw new AlquilaCosasException("No se puede cargar más de 5 fotos");
-            }
-      
-            FacesMessage msg = new FacesMessage("Excelente", 
-                    event.getFile().getFileName() + "fue cargado correctamente");      
+            imagenesAgregar.add(event.getFile().getContents());
+            FacesMessage msg = new FacesMessage("Excelente",
+                    event.getFile().getFileName() + "fue cargado correctamente");
             FacesContext.getCurrentInstance().addMessage(null, msg);
-            
+
         } catch (Exception e) {
-            
-            FacesMessage error = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+
+            FacesMessage error = new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "El archivo no pudo ser cargado!", " ");
             FacesContext.getCurrentInstance().addMessage(null, error);
-        }      
-       
+        }
+
     }
-    
-    public void removeImagen( ActionEvent e ){
+
+    public void removeImagen(ActionEvent e) {
         Integer id = (Integer) e.getComponent().getAttributes().get("idBorrar");
         imagenIds.remove(id);
         imagenesABorrar.add(id);
-
     }
 
     public List<Integer> getImagenesABorrar() {
@@ -183,7 +255,7 @@ public class ModificarPublicacionMBean {
     public void setImagenesAgregar(List<byte[]> imagenesAgregar) {
         this.imagenesAgregar = imagenesAgregar;
     }
- 
+
     public List<Integer> getImagenIds() {
         return imagenIds;
     }
@@ -199,7 +271,7 @@ public class ModificarPublicacionMBean {
     public void setPublicacionId(int publicacionId) {
         this.publicacionId = publicacionId;
     }
-  
+
     public int getCantidad() {
         return cantidad;
     }
@@ -214,14 +286,6 @@ public class ModificarPublicacionMBean {
 
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
-    }
-
-    public CategoriaBeanLocal getCategoriaBean() {
-        return categoriaBean;
-    }
-
-    public void setCategoriaBean(CategoriaBeanLocal categoriaBean) {
-        this.categoriaBean = categoriaBean;
     }
 
     public List<SelectItem> getCategorias() {
@@ -312,14 +376,6 @@ public class ModificarPublicacionMBean {
         this.precios = precios;
     }
 
-    public PublicacionBeanLocal getPublicacionBean() {
-        return publicacionBean;
-    }
-
-    public void setPublicacionBean(PublicacionBeanLocal publicacionBean) {
-        this.publicacionBean = publicacionBean;
-    }
-
     public int getSelectedCategoria() {
         return selectedCategoria;
     }
@@ -358,5 +414,61 @@ public class ModificarPublicacionMBean {
 
     public void setImagenABorrar(int imagenABorrar) {
         this.imagenABorrar = imagenABorrar;
-    }  
+    }
+
+    public List<EstadoPublicacion> getEstadosPublicaciones() {
+        return estadosPublicaciones;
+    }
+
+    public void setEstadosPublicaciones(List<EstadoPublicacion> estadosPublicaciones) {
+        this.estadosPublicaciones = estadosPublicaciones;
+    }
+
+    public int getSelectedSubCategoria() {
+        return selectedSubCategoria;
+    }
+
+    public void setSelectedSubCategoria(int selectedSubCategoria) {
+        this.selectedSubCategoria = selectedSubCategoria;
+    }
+
+    public int getSelectedSubCategoria1() {
+        return selectedSubCategoria1;
+    }
+
+    public void setSelectedSubCategoria1(int selectedSubCategoria1) {
+        this.selectedSubCategoria1 = selectedSubCategoria1;
+    }
+
+    public boolean isSubCategoria1Render() {
+        return subCategoria1Render;
+    }
+
+    public void setSubCategoria1Render(boolean subCategoria1Render) {
+        this.subCategoria1Render = subCategoria1Render;
+    }
+
+    public boolean isSubCategoriaRender() {
+        return subCategoriaRender;
+    }
+
+    public void setSubCategoriaRender(boolean subCategoriaRender) {
+        this.subCategoriaRender = subCategoriaRender;
+    }
+
+    public List<SelectItem> getSubCategorias() {
+        return subCategorias;
+    }
+
+    public void setSubCategorias(List<SelectItem> subCategorias) {
+        this.subCategorias = subCategorias;
+    }
+
+    public List<SelectItem> getSubCategorias1() {
+        return subCategorias1;
+    }
+
+    public void setSubCategorias1(List<SelectItem> subCategorias1) {
+        this.subCategorias1 = subCategorias1;
+    }
 }
