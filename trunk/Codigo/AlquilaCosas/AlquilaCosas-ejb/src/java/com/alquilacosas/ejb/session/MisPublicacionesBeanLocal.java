@@ -4,8 +4,8 @@
  */
 package com.alquilacosas.ejb.session;
 
+import com.alquilacosas.common.PublicacionFacade;
 import com.alquilacosas.ejb.entity.EstadoPublicacion;
-import com.alquilacosas.ejb.entity.Publicacion;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -15,7 +15,8 @@ import javax.ejb.Local;
  */
 @Local
 public interface MisPublicacionesBeanLocal {
-    public List<Publicacion> getPublicaciones( int usuarioId );
     
-        public List<EstadoPublicacion> getEstados();
+    List<PublicacionFacade> getPublicaciones( int usuarioId );
+    
+    List<EstadoPublicacion> getEstados();
 }

@@ -107,7 +107,6 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
         
         List<Publicacion> publicaciones = publicacionesQuery.getResultList();
         List<PublicacionFacade> pubFacadeList = new ArrayList<PublicacionFacade>();
-        List<Categoria> categorias = new ArrayList<Categoria>();
         for(Publicacion p: publicaciones) {
             PublicacionFacade facade = new PublicacionFacade(p.getPublicacionId(), p.getTitulo(),
                     p.getDescripcion(), p.getFechaDesde(), p.getFechaHasta(), p.getDestacada(),
@@ -117,14 +116,18 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
                 imagenes.add(ip.getImagenPublicacionId());
             }
             facade.setImagenIds(imagenes);
+            
+            Domicilio d = p.getUsuarioFk().getDomicilioList().get(0);
+            facade.setPais(d.getProvinciaFk().getPaisFk().getNombre());
+            facade.setCiudad(d.getProvinciaFk().getNombre());
+            
             pubFacadeList.add(facade);
         }
         
         List<CategoriaFacade> catFacade = new ArrayList<CategoriaFacade>();
-        for(Categoria c: categorias) {
-            CategoriaFacade cat = new CategoriaFacade(c.getCategoriaId(), c.getNombre());
-            catFacade.add(cat);
-        }
+        CategoriaFacade cat = new CategoriaFacade(categoria.getCategoriaId(), categoria.getNombre());
+        catFacade.add(cat);
+        
         Busqueda busqueda = new Busqueda(pubFacadeList, catFacade);
         
         if(desde == 0) {
@@ -167,6 +170,11 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
                 imagenes.add(ip.getImagenPublicacionId());
             }
             facade.setImagenIds(imagenes);
+            
+            Domicilio d = p.getUsuarioFk().getDomicilioList().get(0);
+            facade.setPais(d.getProvinciaFk().getPaisFk().getNombre());
+            facade.setCiudad(d.getProvinciaFk().getNombre());
+            
             pubFacadeList.add(facade);
         }
         
@@ -220,6 +228,11 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
                 imagenes.add(ip.getImagenPublicacionId());
             }
             facade.setImagenIds(imagenes);
+            
+            Domicilio d = p.getUsuarioFk().getDomicilioList().get(0);
+            facade.setPais(d.getProvinciaFk().getPaisFk().getNombre());
+            facade.setCiudad(d.getProvinciaFk().getNombre());
+            
             pubFacadeList.add(facade);
         }
         
@@ -274,6 +287,11 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
                 imagenes.add(ip.getImagenPublicacionId());
             }
             facade.setImagenIds(imagenes);
+            
+            Domicilio d = p.getUsuarioFk().getDomicilioList().get(0);
+            facade.setPais(d.getProvinciaFk().getPaisFk().getNombre());
+            facade.setCiudad(d.getProvinciaFk().getNombre());
+            
             pubFacadeList.add(facade);
         }
         
@@ -311,6 +329,11 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
                 imagenes.add(ip.getImagenPublicacionId());
             }
             facade.setImagenIds(imagenes);
+            
+            Domicilio d = p.getUsuarioFk().getDomicilioList().get(0);
+            facade.setPais(d.getProvinciaFk().getPaisFk().getNombre());
+            facade.setCiudad(d.getProvinciaFk().getNombre());
+            
             pubFacadeList.add(facade);
         }
         

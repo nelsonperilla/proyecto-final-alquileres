@@ -22,7 +22,9 @@
             </ui:define>
 
             <ui:define name="principal">
-                <h1>#{verCategoriaBean.nombreCategoria}</h1>
+                <div style="text-align: center" >
+                    <h1>#{verCategoriaBean.nombreCategoria}</h1>
+                </div>
 
                 <p:outputPanel rendered="#{not empty verCategoriaBean.subcategorias}" >
                     <p:panel style="width:600px">
@@ -46,6 +48,7 @@
 
                             <p:dataTable id="grid" value="#{verCategoriaBean.model}" var="pub" 
                                          rows="10" paginator="true" lazy="true"
+                                         emptyMessage="No hay ninguna publicacion dentro de la categoria seleccionada."
                                          paginatorPosition="bottom"
                                          styleClass="itemsTable" >
 

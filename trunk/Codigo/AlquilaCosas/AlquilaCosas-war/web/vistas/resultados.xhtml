@@ -60,7 +60,8 @@
 
                         <p:dataTable id="grid" value="#{resultadosBean.model}" var="pub" 
                                      rows="10" paginator="true" lazy="true" 
-                                     paginatorPosition="bottom"
+                                     paginatorPosition="bottom" 
+                                     emptyMessage="No se encontraron publicaciones para el criterio de busqueda seleccionado."
                                      styleClass="itemsTable" >
 
                             <p:column>

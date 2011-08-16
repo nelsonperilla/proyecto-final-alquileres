@@ -4,6 +4,7 @@
  */
 package com.alquilacosas.mbean;
 
+import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.common.ComentarioFacade;
 import com.alquilacosas.common.PublicacionFacade;
 import com.alquilacosas.ejb.session.PublicacionBeanLocal;
@@ -11,10 +12,11 @@ import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
 /**
  *
@@ -54,15 +56,20 @@ public class ResponderPreguntasMBean {
 
         }
 
-     public String guardarPregunta() {  
+     public void guardarPregunta() {  
          
         nuevaRespuesta.setUsuarioId(getUsuarioLogueado().getUsuarioId());
         nuevaRespuesta.setUsuario(getUsuarioLogueado().getUsername());
         nuevaRespuesta.setFecha(new Date());
         selectedPregunta.setRespuesta(nuevaRespuesta);
-        publicationBean.setRespuesta(selectedPregunta);
-        setNuevaRespuesta(new ComentarioFacade());  
-        return null;  
+         try {
+             publicationBean.setRespuesta(selectedPregunta);
+             setNuevaRespuesta(new ComentarioFacade());  
+         } catch (AlquilaCosasException e) {
+             FacesContext.getCurrentInstance().addMessage(null, 
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                    "Error al enviar respuesta", e.getMessage()));
+         }
     }  
     
     /**

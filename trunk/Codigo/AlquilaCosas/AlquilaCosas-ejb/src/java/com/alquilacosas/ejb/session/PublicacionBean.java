@@ -8,6 +8,7 @@ package com.alquilacosas.ejb.session;
 import com.alquilacosas.common.ComentarioFacade;
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.common.CategoriaFacade;
+import com.alquilacosas.common.NotificacionEmail;
 import com.alquilacosas.common.PrecioFacade;
 import com.alquilacosas.common.PublicacionFacade;
 import com.alquilacosas.ejb.entity.Categoria;
@@ -21,6 +22,7 @@ import com.alquilacosas.ejb.entity.Precio;
 import com.alquilacosas.ejb.entity.Publicacion;
 import com.alquilacosas.ejb.entity.PublicacionXEstado;
 import com.alquilacosas.ejb.entity.Usuario;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,6 +35,12 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
+import javax.jms.MessageProducer;
+import javax.jms.ObjectMessage;
+import javax.jms.Session;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -51,11 +59,17 @@ public class PublicacionBean implements PublicacionBeanLocal {
     @PersistenceContext(unitName="AlquilaCosas-ejbPU") 
     private EntityManager entityManager;
     
+    @Resource(name = "emailConnectionFactory")
+    private ConnectionFactory connectionFactory;
+    
+    @Resource(name = "jms/notificacionEmailQueue")
+    private Destination destination;
+    
     @Resource
     private SessionContext context;
     
-    private Publicacion publicacion;
-    private Usuario usuario;
+    //private Publicacion publicacion;
+    //private Usuario usuario;
     
     @Override
     public void registrarPublicacion( String titulo, String descripcion, 
@@ -63,13 +77,15 @@ public class PublicacionBean implements PublicacionBeanLocal {
             int usuarioId, int categoria, List<PrecioFacade> precios, 
             List<ImagenPublicacion> imagenes ) throws AlquilaCosasException {
         
-        publicacion = new Publicacion();
+        Publicacion publicacion = new Publicacion();
         publicacion.setTitulo(titulo);
         publicacion.setDescripcion(descripcion);
         publicacion.setFechaDesde(fecha_desde);
         publicacion.setFechaHasta(fecha_hasta);
         publicacion.setDestacada(destacada);
         publicacion.setCantidad(cantidad);
+        
+        Usuario usuario = null;
         
         try {
             usuario = entityManager.find(Usuario.class, usuarioId);
@@ -188,6 +204,8 @@ public class PublicacionBean implements PublicacionBeanLocal {
             int usuarioId, int categoria, List<PrecioFacade> precios, 
             List<byte[]> imagenesAgregar, List<Integer> imagenesABorrar, int estadoPublicacion ) throws AlquilaCosasException {
         
+        Publicacion publicacion = null;
+        
         try {
             publicacion = entityManager.find(Publicacion.class, publicacionId);
         } catch (NoResultException  e) {
@@ -203,6 +221,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
         publicacion.setDestacada(destacada);
         publicacion.setCantidad(cantidad);
         
+        Usuario usuario = null;
         try {
             usuario = entityManager.find(Usuario.class, usuarioId);
             publicacion.setUsuarioFk(usuario);
@@ -429,14 +448,44 @@ public class PublicacionBean implements PublicacionBeanLocal {
     }
 
     @Override
-    public void setPregunta(int publicacionId, ComentarioFacade nuevaPregunta) {
-        Comentario pregunta=new Comentario();
-        pregunta.setPublicacionFk(entityManager.find(Publicacion.class, publicacionId));
+    public void setPregunta(int publicacionId, ComentarioFacade nuevaPregunta)
+            throws AlquilaCosasException {
+        Comentario pregunta = new Comentario();
+        Publicacion publicacion = entityManager.find(Publicacion.class, publicacionId);
+        pregunta.setPublicacionFk(publicacion);
         pregunta.setComentario(nuevaPregunta.getComentario());
         pregunta.setFecha(nuevaPregunta.getFecha());
         pregunta.setPregunta(Boolean.TRUE);
-        pregunta.setUsuarioFk(entityManager.find(Usuario.class, nuevaPregunta.getUsuarioId()));
+        Usuario usuario = entityManager.find(Usuario.class, nuevaPregunta.getUsuarioId());
+        pregunta.setUsuarioFk(usuario);
+        
         entityManager.persist(pregunta);
+        
+        Usuario usuarioDueno = publicacion.getUsuarioFk();
+        
+        try {
+            Connection connection = connectionFactory.createConnection();
+            Session session = connection.createSession(true,
+                    Session.AUTO_ACKNOWLEDGE);
+            MessageProducer producer = session.createProducer(destination);
+            ObjectMessage message = session.createObjectMessage();
+            
+            String asunto = "Has recibido una pregunta por tu articulo";
+            String texto = "<html>Hola " + usuarioDueno.getNombre() + ", <br/><br/>" + 
+                    "Has recibido una pregunta por tu articulo <b>" + publicacion.getTitulo() + "</b>: <br/><br/>" +
+                    "" + nuevaPregunta.getComentario() +  " <br/><br/>" +
+                    "Para responder esta pregunta ingresa a tu panel de usuario. <br/><br/>" +
+                    "Atentamente, <br/> <b>AlquilaCosas </b>";
+            NotificacionEmail notificacion = new NotificacionEmail(usuarioDueno.getEmail(), asunto, texto);
+            message.setObject(notificacion);
+            producer.send(message);
+            session.close();
+            connection.close();
+            
+        } catch (Exception e) {
+            context.setRollbackOnly();
+            throw new AlquilaCosasException(e.getMessage());
+        }
     }
 
     @Override
@@ -449,7 +498,6 @@ public class PublicacionBean implements PublicacionBeanLocal {
         comentarios = query.getResultList();   
         Comentario respuesta;
         for(Comentario comentario : comentarios)
-            //if((respuesta = comentario.getRespuesta()) == null)
                 resultado.add(new ComentarioFacade(comentario.getComentarioId(),
                     comentario.getComentario(), comentario.getFecha(), 
                     comentario.getUsuarioFk().getUsuarioId(), 
@@ -459,16 +507,45 @@ public class PublicacionBean implements PublicacionBeanLocal {
     }    
 
     @Override 
-    public void setRespuesta(ComentarioFacade preguntaConRespuesta) {
+    public void setRespuesta(ComentarioFacade preguntaConRespuesta) 
+            throws AlquilaCosasException {
         Comentario respuesta = new Comentario();
         Comentario pregunta = entityManager.find(Comentario.class , preguntaConRespuesta.getId());
-        respuesta.setPublicacionFk(pregunta.getPublicacionFk());
+        Publicacion publicacion = pregunta.getPublicacionFk();
+        respuesta.setPublicacionFk(publicacion);
         respuesta.setComentario(preguntaConRespuesta.getRespuesta().getComentario());
         respuesta.setFecha(preguntaConRespuesta.getRespuesta().getFecha());
         respuesta.setPregunta(Boolean.FALSE);
-        respuesta.setUsuarioFk(entityManager.find(Usuario.class, preguntaConRespuesta.getRespuesta().getUsuarioId()));
+        Usuario usuarioResponde = entityManager.find(Usuario.class, preguntaConRespuesta.getRespuesta().getUsuarioId());
+        respuesta.setUsuarioFk(usuarioResponde);
         pregunta.setRespuesta(respuesta);
         entityManager.persist(respuesta);
+        
+        Usuario usuarioPregunto = pregunta.getUsuarioFk();
+        
+        try {
+            Connection connection = connectionFactory.createConnection();
+            Session session = connection.createSession(true,
+                    Session.AUTO_ACKNOWLEDGE);
+            MessageProducer producer = session.createProducer(destination);
+            ObjectMessage message = session.createObjectMessage();
+            
+            String asunto = "Han respondido tu pregunta por el articulo" + publicacion.getTitulo();
+            String texto = "<html>Hola " + usuarioPregunto.getNombre() + ", <br/><br/>" + 
+                    "Has recibido una pregunta por tu articulo <b>" + publicacion.getTitulo() + "</b>: <br/><br/>" +
+                    "" + respuesta.getComentario() +  " <br/><br/>" +
+                    "<br/><br/>" +
+                    "Atentamente, <br/> <b>AlquilaCosas </b>";
+            NotificacionEmail notificacion = new NotificacionEmail(usuarioPregunto.getEmail(), asunto, texto);
+            message.setObject(notificacion);
+            producer.send(message);
+            session.close();
+            connection.close();
+            
+        } catch (Exception e) {
+            context.setRollbackOnly();
+            throw new AlquilaCosasException(e.getMessage());
+        }
 
     }    
 

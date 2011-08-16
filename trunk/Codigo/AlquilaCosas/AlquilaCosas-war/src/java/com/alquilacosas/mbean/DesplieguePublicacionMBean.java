@@ -4,9 +4,8 @@
  */
 package com.alquilacosas.mbean;
 
-import com.alquilacosas.common.CategoriaFacade;
+import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.common.ComentarioFacade;
-import com.alquilacosas.common.PrecioFacade;
 import com.alquilacosas.common.PublicacionFacade;
 import com.alquilacosas.ejb.session.PublicacionBeanLocal;
 import java.text.DateFormat;
@@ -14,10 +13,12 @@ import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -57,15 +58,25 @@ public class DesplieguePublicacionMBean {
         }
     }
 
+    public void preguntar() {
+        RequestContext context = RequestContext.getCurrentInstance();
+        boolean logueado = usuarioLogueado.isLogueado();
+        context.addCallbackParam("logueado", logueado);
+    }
     
-     public String guardarPregunta() {  
+     public void guardarPregunta() {  
          
         nuevaPregunta.setUsuarioId(usuarioLogueado.getUsuarioId());
         nuevaPregunta.setUsuario(usuarioLogueado.getUsername());
         nuevaPregunta.setFecha(new Date());
-        publicationBean.setPregunta(publicacion.getId(), nuevaPregunta);
-        setNuevaPregunta(new ComentarioFacade());  
-        return null;  
+        try {
+            publicationBean.setPregunta(publicacion.getId(), nuevaPregunta);
+            setNuevaPregunta(new ComentarioFacade());  
+        } catch(AlquilaCosasException e) {
+            FacesContext.getCurrentInstance().addMessage(null, 
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                    "Error al enviar pregunta", e.getMessage()));
+        }
     }  
     
     /**

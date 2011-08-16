@@ -28,8 +28,6 @@ public class MisPublicacionesMBean {
     private MisPublicacionesBeanLocal misPublicacionesBean;
     @ManagedProperty(value="#{login}")
     private ManejadorUsuarioMBean usuarioMBean;
-
-    private List<Publicacion> publicaciones;
     private List<PublicacionFacade> publicacionesFacade;
     private int publicacionId;
     
@@ -40,30 +38,9 @@ public class MisPublicacionesMBean {
     @PostConstruct
     public void init() {
         if( usuarioMBean.getUsuarioId() != null ){
-            publicaciones = new ArrayList<Publicacion>();
-            publicaciones = misPublicacionesBean.getPublicaciones(usuarioMBean.getUsuarioId());
-            publicacionesFacade = getListPublicaciones(publicaciones);
+            publicacionesFacade = misPublicacionesBean.getPublicaciones(usuarioMBean.getUsuarioId());
         }
   
-    }
-    
-    public List<PublicacionFacade> getListPublicaciones( List<Publicacion> publicaciones ){
-        
-        List<PublicacionFacade> pubFacadeList = new ArrayList<PublicacionFacade>();
-        
-        for(Publicacion p: publicaciones) {
-            PublicacionFacade facade = new PublicacionFacade(p.getPublicacionId(), p.getTitulo(),
-                    p.getDescripcion(), p.getFechaDesde(), p.getFechaHasta(), p.getDestacada(),
-                    p.getCantidad());
-            List<Integer> imagenes = new ArrayList<Integer>();
-            for(ImagenPublicacion ip: p.getImagenPublicacionList()) {
-                imagenes.add(ip.getImagenPublicacionId());
-            }
-            facade.setImagenIds(imagenes);
-            pubFacadeList.add(facade);
-        }
-        
-        return pubFacadeList;
     }
 
     public List<PublicacionFacade> getPublicacionesFacade() {
@@ -81,14 +58,6 @@ public class MisPublicacionesMBean {
 
     public void setMisPublicacionesBean(MisPublicacionesBeanLocal misPublicacionesBean) {
         this.misPublicacionesBean = misPublicacionesBean;
-    }
-
-    public List<Publicacion> getPublicaciones() {
-        return publicaciones;
-    }
-
-    public void setPublicaciones(List<Publicacion> publicaciones) {
-        this.publicaciones = publicaciones;
     }
 
     public ManejadorUsuarioMBean getUsuarioMBean() {

@@ -7,114 +7,118 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:comps="http://java.sun.com/jsf/composite/comps" >
 
-     <body>
+    <body>
 
-          <ui:composition template="./../../resources/templates/masterPage.xhtml">
+        <ui:composition template="./../../resources/templates/masterPage.xhtml">
 
                <ui:define name="logInfo">
                     <h:form>
-                         <h:commandLink value="Inicio" action="inicio" />
+                         <h:commandLink value="inicio" action="inicio" />
                     </h:form>
                </ui:define>
                
                <ui:define name="left">
-                    <comps:categoriesMenu />
+                    <comps:categoriesMenu id="menu" />
                </ui:define>
 
-               <ui:define name="principal">
-                    <h:outputScript library="javascript" name="util.js" />
-                    <p:tabView>
-                         <p:tab title="Nuevo">
-                              <h:form id="formNuevo">
-                                   <p:growl id="messages" />
-                                   <h:panelGrid columns="2" cellpadding="10">  
-                                        <h:outputText value="Nombre:" />  
-                                        <p:inputText id="nombre" value="#{categoria.nombre}" required="true"
-                                                     requiredMessage="Ingrese Nombre" maxlength="45" />
-                                        <h:outputText  value="Descripción" />
-                                        <p:inputText id="descripcion" value="#{categoria.descripcion}" maxlength="45" />
-                                        <h:outputText  value="Pertenece a:" />
-                                   </h:panelGrid>  
-                                   <p:tree id="treeCategoria" value="#{categoria.rootNuevo}" var="node"
-                                             selectionMode="single" selection="#{categoria.selectedNode}">  
-                                        <p:treeNode>  
-                                             <h:outputText value="#{node}" />  
-                                        </p:treeNode>  
-                                  </p:tree>  
-                                  <p:commandButton value="Guardar" update="messages,treeCategoria"
-                                   actionListener="#{categoria.registrarNuevaCategoria}" /> 
-                             </h:form>
-                         </p:tab>
-                         <p:tab title="Modificar">  
-                              <h:form id="formModificar">
-                                   <p:growl id="messagesModificar" />
-                                   <p:treeTable id="treeCategoriaModificar" value="#{categoria.rootModificar}" var="cat" style="text-align: left" >
-                                        <p:column>
-                                             <f:facet name="header">
-                                                  <h:outputText value="Nombre"/>
-                                             </f:facet>
-                                             <h:outputText value="#{cat.nombre}" /> 
-                                        </p:column> 
-                                        <p:column>
-                                             <f:facet name="header">
-                                                  <h:outputText value="Descripcion"/>
-                                             </f:facet>
-                                             <h:outputText value="#{cat.descripcion}" /> 
-                                        </p:column> 
-                                        <p:column>  
-                                             <f:facet name="header">
-                                                  <h:outputText value="Opciones"/>
-                                             </f:facet>
-                                             <p:commandButton update="catDialog" oncomplete="dialogoModifCat.show()" 
-                                                                image="ui-icon ui-icon-pencil" title="Modificar" >
-                                                  <f:setPropertyActionListener value="#{cat}" target="#{categoria.categoriaSeleccionadaModificar}" />
-                                                  <f:setPropertyActionListener value="#{cat.nombre}" target="#{categoria.nombreM}" />
-                                                  <f:setPropertyActionListener value="#{cat.descripcion}" target="#{categoria.descripcionM}" />
-                                             </p:commandButton>
-                                             <p:commandButton update="treeCategoriaModificar" oncomplete="confirmacion.show()" 
-                                                                image="ui-icon ui-icon-trash" title="Quitar" >
-                                                  <f:setPropertyActionListener value="#{cat}" target="#{categoria.categoriaSeleccionadaModificar}" />
-                                             </p:commandButton>
-                                        </p:column>  
-                                   </p:treeTable>
-                                   <p:confirmDialog message="Esta seguro?" width="200" header="Confirmar"
-                                                        severity="alert" widgetVar="confirmacion" >
-                                        <p:commandButton value="Si" update="treeCategoriaModificar" actionListener="#{categoria.borrarCategoria}"
-                                                            oncomplete="confirmacion.hide()" />
-                                        <p:commandButton value="No" onclick="confirmacion.hide()" type="button" />
-                                   </p:confirmDialog>
-                              </h:form>
-                              
-                              <p:dialog id="dialogo" header="Modificar Categoria" widgetVar="dialogoModifCat" >
-                                   <h:form id="catDialog">
-                                       <h:panelGrid columns="3" >
-                                           <h:outputLabel value="Nombre" />
-                                           <p:inputText id="nombreModificar" value="#{categoria.nombreM}" required="true"
-                                                        requiredMessage="Valor requerido"/>
-                                           <p:message for="nombreModificar" />
-                                           <h:outputLabel value="Numero" />
-                                           <p:inputText id="descModificar" value="#{categoria.descripcionM}" />
-                                           <p:message for="descModificar" />
-                                           <f:facet name="footer" >
-                                               <p:commandButton value="Guardar" actionListener="#{categoria.modificarCategoria}"
-                                                                oncomplete="handleModificarCategoria(xhr, status, args)"
-                                                                update="@catDialog :formModificar:treeCategoriaModificar :formModificar:messagesModificar"/>
-                                               <p:commandButton value="Limpiar" type="reset" />
-                                           </f:facet>
-                                       </h:panelGrid>
-                                   </h:form>
-                               </p:dialog>                              
-                         </p:tab>
-                    </p:tabView>
-               </ui:define>
+            <ui:define name="left">
+                <comps:categoriesMenu />
+            </ui:define>
 
-               <ui:define name="right">
-                    <comps:loginBox />
-                    <comps:adminPanel />
-                    <comps:userPanel />
-               </ui:define>
+            <ui:define name="principal">
+                <h:outputScript library="javascript" name="util.js" />
+                <p:tabView>
+                    <p:tab title="Nuevo">
+                        <h:form id="formNuevo">
+                            <p:growl id="messages" />
+                            <h:panelGrid columns="2" cellpadding="10">  
+                                <h:outputText value="Nombre:" />  
+                                <p:inputText id="nombre" value="#{categoria.nombre}" required="true"
+                                             requiredMessage="Ingrese Nombre" maxlength="45" />
+                                <h:outputText  value="Descripción" />
+                                <p:inputText id="descripcion" value="#{categoria.descripcion}" maxlength="45" />
+                                <h:outputText  value="Pertenece a:" />
+                            </h:panelGrid>  
+                            <p:tree id="treeCategoria" value="#{categoria.rootNuevo}" var="node"
+                                    selectionMode="single" selection="#{categoria.selectedNode}">  
+                                <p:treeNode>  
+                                    <h:outputText value="#{node}" />  
+                                </p:treeNode>  
+                            </p:tree>  
+                            <p:commandButton value="Guardar" update="messages,treeCategoria,menu"
+                                             actionListener="#{categoria.registrarNuevaCategoria}" /> 
+                        </h:form>
+                    </p:tab>
+                    <p:tab title="Modificar">  
+                        <h:form id="formModificar">
+                            <p:growl id="messagesModificar" />
+                            <p:treeTable id="treeCategoriaModificar" value="#{categoria.rootModificar}" var="cat" style="text-align: left" >
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="Nombre"/>
+                                    </f:facet>
+                                    <h:outputText value="#{cat.nombre}" /> 
+                                </p:column> 
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="Descripcion"/>
+                                    </f:facet>
+                                    <h:outputText value="#{cat.descripcion}" /> 
+                                </p:column> 
+                                <p:column>  
+                                    <f:facet name="header">
+                                        <h:outputText value="Opciones"/>
+                                    </f:facet>
+                                    <p:commandButton update="catDialog" oncomplete="dialogoModifCat.show()" 
+                                                     image="ui-icon ui-icon-pencil" title="Modificar" >
+                                        <f:setPropertyActionListener value="#{cat}" target="#{categoria.categoriaSeleccionadaModificar}" />
+                                        <f:setPropertyActionListener value="#{cat.nombre}" target="#{categoria.nombreM}" />
+                                        <f:setPropertyActionListener value="#{cat.descripcion}" target="#{categoria.descripcionM}" />
+                                    </p:commandButton>
+                                    <p:commandButton update="treeCategoriaModificar" oncomplete="confirmacion.show()" 
+                                                     image="ui-icon ui-icon-trash" title="Quitar" >
+                                        <f:setPropertyActionListener value="#{cat}" target="#{categoria.categoriaSeleccionadaModificar}" />
+                                    </p:commandButton>
+                                </p:column>  
+                            </p:treeTable>
+                            <p:confirmDialog message="Esta seguro?" width="200" header="Confirmar"
+                                             severity="alert" widgetVar="confirmacion" >
+                                <p:commandButton value="Si" update="treeCategoriaModificar" actionListener="#{categoria.borrarCategoria}"
+                                                 oncomplete="confirmacion.hide()" />
+                                <p:commandButton value="No" onclick="confirmacion.hide()" type="button" />
+                            </p:confirmDialog>
+                        </h:form>
 
-          </ui:composition>
+                        <p:dialog id="dialogo" header="Modificar Categoria" widgetVar="dialogoModifCat" >
+                            <h:form id="catDialog">
+                                <h:panelGrid columns="3" >
+                                    <h:outputLabel value="Nombre" />
+                                    <p:inputText id="nombreModificar" value="#{categoria.nombreM}" required="true"
+                                                 requiredMessage="Valor requerido"/>
+                                    <p:message for="nombreModificar" />
+                                    <h:outputLabel value="Numero" />
+                                    <p:inputText id="descModificar" value="#{categoria.descripcionM}" />
+                                    <p:message for="descModificar" />
+                                    <f:facet name="footer" >
+                                        <p:commandButton value="Guardar" actionListener="#{categoria.modificarCategoria}"
+                                                         oncomplete="handleModificarCategoria(xhr, status, args)"
+                                                         update="@catDialog :formModificar:treeCategoriaModificar :formModificar:messagesModificar"/>
+                                        <p:commandButton value="Limpiar" type="reset" />
+                                    </f:facet>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>                              
+                    </p:tab>
+                </p:tabView>
+            </ui:define>
 
-     </body>
+            <ui:define name="right">
+                <comps:loginBox />
+                <comps:adminPanel />
+                <comps:userPanel />
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
 </html>
