@@ -357,9 +357,5 @@ public class ModificarPublicacionMBean {
 
     public void setImagenABorrar(int imagenABorrar) {
         this.imagenABorrar = imagenABorrar;
-    }
-    
-    
-    
-    
+    }  
 }

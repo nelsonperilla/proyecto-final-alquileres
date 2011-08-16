@@ -52,7 +52,8 @@
                             <p:ajax event="change" update="subcategoria labelSubCategoria growl" 
                                     listener="#{publicacion.actualizarCategorias}" />
                         </h:selectOneMenu>
-                        <p/>
+                        <p:message id="categoriaVal" for="categoria"/>
+
 
                         <h:outputLabel id="labelSubCategoria" value="SubCategorias: "/>
                         <h:selectOneMenu id="subcategoria" value="#{publicacion.selectedSubCategoria}" 
@@ -89,12 +90,17 @@
                         <h:outputText value="Select the files to upload (maxim 2MB):"/>
                         <br/>
 
-                        <p:fileUpload fileUploadListener="#{publicacion.handleFileUpload}"
-                                      update="messages" 
-                                      multiple="true"
-                                      sizeLimit="2097152"   
-                                      allowTypes="*.jpg;*.png;*.gif;"
-                                      description="images"/>          
+                        <p:fileUpload widgetVar="uploader" height="48" width="48"
+                                      fileUploadListener="#{publicacion.handleFileUpload}"
+                                      image="./../../resources/images/upload.png" 
+                                      cancelImage="./../../resources/images/cancel.png"
+                                      allowTypes="*.jpg;*.png;*.gif;" description="Images" 
+                                      customUI="true" label="Subir"/>
+
+                        <h:outputLink value="#" title="Subir archivo" onclick="uploader.upload();" 
+                                      style="font-weight:bold;color:#616D7E">
+                           Agregar Imagen
+                        </h:outputLink>
 
                     </p:panel>
 

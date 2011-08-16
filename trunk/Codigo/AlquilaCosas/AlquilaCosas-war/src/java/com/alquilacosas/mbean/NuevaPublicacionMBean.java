@@ -96,7 +96,7 @@ public class NuevaPublicacionMBean implements Serializable{
 
     }
     
-     public void crearPublicacion(){
+     public String crearPublicacion(){
         
         try {
             
@@ -109,11 +109,14 @@ public class NuevaPublicacionMBean implements Serializable{
             
             FacesContext.getCurrentInstance().addMessage(null, 
                     new FacesMessage("Publicacion Creada"));
+            return "misPublicaciones";
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null, 
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, 
                     "Publicacion Fallida", e.getMessage()));
+            return null;
         }
+        
     }
 
     
