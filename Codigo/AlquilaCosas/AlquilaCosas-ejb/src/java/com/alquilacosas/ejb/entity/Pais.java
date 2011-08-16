@@ -108,7 +108,7 @@ public class Pais implements Serializable {
 
     @Override
     public String toString() {
-        return "com.alquilacosas.ejb.entity.Pais[ paisId=" + paisId + " ]";
+        return nombre;
     }
     
 }
