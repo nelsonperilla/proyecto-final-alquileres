@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:comps="http://java.sun.com/jsf/composite/comps" >
+
+     <body>
+
+          <ui:composition template="./../../resources/templates/masterPage.xhtml">
+
+               <ui:define name="logInfo">
+                    <h:form>
+                         <h:commandLink value="Inicio" action="inicio" />
+                    </h:form>
+               </ui:define>
+
+               <ui:define name="left">
+                    <comps:categoriesMenu />
+               </ui:define>
+
+               <ui:define name="principal">
+                    
+                    <h:form id="formPais">  
+                         <p:growl id="messages" />
+                         <p:dataTable var="pas" value="#{pais.paises}" 
+                                      id="tablaPaises" rowEditListener="#{pais.modificarPais}">  
+                              <f:facet name="header">  
+                                   Pais
+                              </f:facet>  
+                              <p:column headerText="Nombre" >  
+                                   <p:cellEditor>  
+                                        <f:facet name="output">  
+                                             <h:outputText value="#{pas.nombre}" style="width:120px"/>  
+                                        </f:facet>  
+                                        <f:facet name="input">  
+                                             <p:inputText value="#{pas.nombre}" style="width:120px"/>  
+                                        </f:facet>  
+                                   </p:cellEditor>  
+                              </p:column>  
+
+                              <p:column headerText="Opciones" style="width:70px">  
+                                   <p:rowEditor />
+                                   <p:commandButton update="tablaPaises,messages" oncomplete="confirmacion.show()" 
+                                                    image="ui-icon ui-icon-trash" title="Quitar" >
+                                        <f:setPropertyActionListener value="#{pas}" target="#{pais.paisSeleccionado}" />
+                                   </p:commandButton>
+                              </p:column>  
+
+                         </p:dataTable>  
+
+                         <p:commandButton id="botonNuevo" value="Nuevo Pais" title="Nuevo" 
+                                          oncomplete="nuevoPais.show()" style="text-align:center"/>
+
+                         <p:confirmDialog message="Esta seguro?" width="200" header="Confirmar"
+                                          severity="alert" widgetVar="confirmacion" >
+                              <p:commandButton value="Si" actionListener="#{pais.borrarPais}"
+                                               oncomplete="confirmacion.hide()" action="paises"/>
+                              <p:commandButton value="No" onclick="confirmacion.hide()" type="button" />
+                         </p:confirmDialog>
+                    </h:form> 
+                    
+                    <p:dialog id="dialogo" header="Nuevo Pais" widgetVar="nuevoPais" >
+                         <h:form id="pasDialog">
+                              <h:panelGrid columns="3" >
+                                   <h:outputLabel value="Nombre" />
+                                   <p:inputText id="nombreNuevo" value="#{pais.nombre}" required="true"
+                                                requiredMessage="Valor requerido"/>
+                                   <p:message for="nombreNuevo" />
+                                   <f:facet name="footer" >
+                                        <p:commandButton value="Guardar" actionListener="#{pais.registrarPais}"
+                                                         oncomplete="nuevoPais.hide()"
+                                                         action="paises"/>
+                                        <p:commandButton value="Limpiar" type="reset" />
+                                   </f:facet>
+                              </h:panelGrid>
+                         </h:form>
+                    </p:dialog>  
+                    
+               </ui:define>
+
+               <ui:define name="right">
+                    <comps:loginBox />
+                    <comps:adminPanel />
+                    <comps:userPanel />
+               </ui:define>
+
+          </ui:composition>
+
+     </body>
+</html>

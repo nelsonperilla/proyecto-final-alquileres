@@ -78,6 +78,16 @@
             <redirect/>
         </navigation-case>
         <navigation-case>
+            <from-outcome>provincias</from-outcome>
+            <to-view-id>/vistas/admin/provincias.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>paises</from-outcome>
+            <to-view-id>/vistas/admin/paises.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
             <from-outcome>verCategoria</from-outcome>
             <to-view-id>/vistas/verCategoria.xhtml?id=#{menuCatBean.categoriaSeleccionada}</to-view-id>
             <redirect/>
