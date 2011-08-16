@@ -129,18 +129,25 @@ public class ModificarPublicacionMBean {
                     imagenesABorrar, selectedEstado);
             FacesContext.getCurrentInstance().addMessage(null, 
                     new FacesMessage("Los datos fueron guardados correctamente"));
+            return "misPublicaciones";
         } catch(AlquilaCosasException e) {
             FacesContext.getCurrentInstance().addMessage(null, 
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, 
                     "Error al actualizar usuario", e.getMessage()));
         }
-        return "misPublicaciones";
+          return null;
     }
     
     public void handleFileUpload(FileUploadEvent event){
-       
-     imagenesAgregar.add(event.getFile().getContents()); 
-      try {
+        
+        try {
+
+            if( imagenes.size() + imagenesAgregar.size() <  6 ){
+                    imagenesAgregar.add(event.getFile().getContents()); 
+              }else{
+                   throw new AlquilaCosasException("No se puede cargar más de 5 fotos");
+            }
+      
             FacesMessage msg = new FacesMessage("Excelente", 
                     event.getFile().getFileName() + "fue cargado correctamente");      
             FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -158,13 +165,7 @@ public class ModificarPublicacionMBean {
         Integer id = (Integer) e.getComponent().getAttributes().get("idBorrar");
         imagenIds.remove(id);
         imagenesABorrar.add(id);
-        System.out.println("jjj");
-//        for( int i = 0; i < imagenes.size(); i++ ){
-//            ImagenPublicacion ip = imagenes.get(i);
-//            if( ip.getImagenPublicacionId() == id ){
-//                imagenes.remove(ip);
-//            }
-//        }
+
     }
 
     public List<Integer> getImagenesABorrar() {

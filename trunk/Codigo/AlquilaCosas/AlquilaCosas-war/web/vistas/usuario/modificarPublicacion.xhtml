@@ -63,7 +63,7 @@
 
             <ui:define name="principal">
 
-                <h:form id="formPublicacion">
+                <h:form id="formPublicacion" >
 
                     <h1>Publicar</h1>
                     <h:panelGrid columns="3" styleClass="formPanel">                       
@@ -130,11 +130,11 @@
 
                         <br/>
 
-                        <h:outputText value="Select the files to upload (maxim 2MB):"/>
+                        <h:outputText value="Sube una imagen menor a 2Mb:"/>
                         <br/>
 
                         <p:fileUpload widgetVar="uploader" height="48" width="48"
-                                      fileUploadListener="#{publicacion.handleFileUpload}"
+                                      fileUploadListener="#{modPublicacion.handleFileUpload}"
                                       image="./../../resources/images/upload.png" 
                                       cancelImage="./../../resources/images/cancel.png"
                                       allowTypes="*.jpg;*.png;*.gif;" description="Images" 
