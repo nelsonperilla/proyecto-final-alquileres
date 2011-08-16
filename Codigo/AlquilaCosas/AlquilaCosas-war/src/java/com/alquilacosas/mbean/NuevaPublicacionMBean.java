@@ -79,10 +79,10 @@ public class NuevaPublicacionMBean implements Serializable{
      
         imagenes = new ArrayList<ImagenPublicacion>();
         precios  = new ArrayList<PrecioFacade>();
-        precios.add( new PrecioFacade( 0, 1, 0.0, "hora" ) );
-        precios.add( new PrecioFacade( 0, 2, 0.0, "dia" ) );
-        precios.add( new PrecioFacade( 0, 3, 0.0, "semana" ) );
-        precios.add( new PrecioFacade( 0, 4, 0.0, "mes") );
+        precios.add( new PrecioFacade( 0, 1, 0.0, "Hora" ) );
+        precios.add( new PrecioFacade( 0, 2, 0.0, "Dia" ) );
+        precios.add( new PrecioFacade( 0, 3, 0.0, "Semana" ) );
+        precios.add( new PrecioFacade( 0, 4, 0.0, "Mes") );
         today = new Date();
         categorias = new ArrayList<SelectItem>();
         subCategorias = new ArrayList<SelectItem>();
@@ -109,7 +109,9 @@ public class NuevaPublicacionMBean implements Serializable{
             
             FacesContext.getCurrentInstance().addMessage(null, 
                     new FacesMessage("Publicacion Creada"));
+            
             return "misPublicaciones";
+            
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null, 
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, 

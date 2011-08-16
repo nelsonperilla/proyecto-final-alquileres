@@ -150,12 +150,6 @@ public class PublicacionBean implements PublicacionBeanLocal {
             entityManager.persist(precio);
         }
 
- 
-         if( imagenes.size() < 1 ){
-                context.setRollbackOnly();
-                throw new AlquilaCosasException( "La publicacion debe contener "
-                        + "por lo menos una imagen" );     
-            }
             
          for( ImagenPublicacion ip : imagenes ){
                 ip.setPublicacionFk(publicacion);
@@ -303,20 +297,15 @@ public class PublicacionBean implements PublicacionBeanLocal {
                     precioNuevo.setPublicacionFk(publicacion);
 
                     entityManager.persist(precioNuevo);
-                    //publicacion.getPrecioList().set( precioFacade.getPeriodoId() - 1,                            
-                    //            precioNuevo);
-                    
+
                 }  
            } 
         }
         
-          if( imagenesABorrar != null && imagenesABorrar.size() >= publicacion.getImagenPublicacionList().size() ){
-                context.setRollbackOnly();
-                throw new AlquilaCosasException( "La publicacion debe contener "
-                        + "por lo menos una imagen" );     
-            }else if( imagenesABorrar != null ){
+              
+            if( imagenesABorrar != null ){
                 for( Integer i : imagenesABorrar ){
-                    ImagenPublicacion ip = new ImagenPublicacion(imagenesABorrar.get(i));
+                    ImagenPublicacion ip = new ImagenPublicacion(i);
                     entityManager.remove(entityManager.merge(ip));
                 }
                 
