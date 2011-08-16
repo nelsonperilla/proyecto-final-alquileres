@@ -13,6 +13,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import org.primefaces.model.DefaultTreeNode;
@@ -32,6 +33,10 @@ public class CategoriaMBean implements Serializable{
      
      @EJB
      private CategoriaBeanLocal categoriaBean;
+     
+     @ManagedProperty(value="#{menuCatBean}")
+     private MenuCategoriasMBean menuBean;
+     
      private String nombre;
      private String descripcion;
      // Nuevo
@@ -97,6 +102,7 @@ public class CategoriaMBean implements Serializable{
                          FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "La Categoria ya Existe", "");  
                          FacesContext.getCurrentInstance().addMessage(null, message); 
                     }
+                    menuBean.cargarMenu();
                }
                catch(AlquilaCosasException e){
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.toString());  
@@ -210,6 +216,14 @@ public class CategoriaMBean implements Serializable{
      public void setCategoriaSeleccionadaModificar(Categoria categoriaSeleccionadaModificar) {
           this.categoriaSeleccionadaModificar = categoriaSeleccionadaModificar;
      }
+
+    public MenuCategoriasMBean getMenuBean() {
+        return menuBean;
+    }
+
+    public void setMenuBean(MenuCategoriasMBean menuBean) {
+        this.menuBean = menuBean;
+    }
      
      
 }

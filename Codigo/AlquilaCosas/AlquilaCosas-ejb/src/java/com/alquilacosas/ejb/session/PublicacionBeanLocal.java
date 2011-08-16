@@ -38,11 +38,13 @@ public interface PublicacionBeanLocal {
 
     public List<ComentarioFacade> getPreguntas(int publicationId);
 
-    public void setPregunta(int publicacionId,ComentarioFacade nuevaPregunta);
+    public void setPregunta(int publicacionId,ComentarioFacade nuevaPregunta) 
+            throws AlquilaCosasException;
     
     public List<ComentarioFacade> getPreguntasSinResponder(int usuarioId);
     
-    public void setRespuesta(ComentarioFacade preguntaConRespuesta);
+    public void setRespuesta(ComentarioFacade preguntaConRespuesta)
+            throws AlquilaCosasException ;
 
     public PublicacionFacade getDatosPublicacion(int publicacionId);
 

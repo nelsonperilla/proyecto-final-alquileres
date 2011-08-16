@@ -11,13 +11,17 @@
 
         <ui:composition template="./../resources/templates/masterPage.xhtml">
             <ui:define name="logInfo">
-                
+                <h:form>
+                    <h:commandLink value="inicio" action="inicio" />
+                </h:form>
             </ui:define>
             <ui:define name="left" >
                 <comps:categoriesMenu />
             </ui:define>
-            
+
             <ui:define name="principal">
+                <h:outputScript library="javascript" name="util.js" />
+
                 <table id="simpleItem">
                     <tr>
                         <td>
@@ -43,30 +47,30 @@
                         </td>
                         <td   width="100%">
                             <h:form>
-                            <h:panelGrid  styleClass="dataPrincipal" columns="1"  >
-                                <h:dataTable value="#{publicacionDesplegada.publicacion.precios}"
-                                             var="precio" style="width: 100%" >
-                                    <h:column>
-                                        <h:outputText value="Precio por #{precio.periodoNombre}:" 
-                                              styleClass="itemInfo"/>  
-                                    </h:column>        
-                                    <h:column>
-                                        <h:outputText value=" $ #{precio.precio}" 
-                                              styleClass="itemPrice"/>  
-                                    </h:column>
-                                </h:dataTable>
-                                <h:outputText value="Origen: #{publicacionDesplegada.publicacion.ciudad}, 
-                                              #{publicacionDesplegada.publicacion.pais}" 
-                                  styleClass="itemInfo" escape="false"/> 
-                                <h:outputText value="Categoria: #{publicacionDesplegada.publicacion.categoriaF.nombre}" 
-                                  styleClass="itemInfo" escape="false"/>  
-                                <h:outputText value="Finaliza el #{publicacionDesplegada.fecha_hasta}" 
-                                  styleClass="itemInfo" escape="false"/>  
-                                <h:outputText value="Cantidad disponible: #{publicacionDesplegada.publicacion.cantidad}" 
-                                  styleClass="itemInfo"/>  
-                                <h:commandLink value="Alquilar" styleClass="buttom"/>
+                                <h:panelGrid  styleClass="dataPrincipal" columns="1"  >
+                                    <h:dataTable value="#{publicacionDesplegada.publicacion.precios}"
+                                                 var="precio" style="width: 100%" >
+                                        <h:column>
+                                            <h:outputText value="Precio por #{precio.periodoNombre}:" 
+                                                          styleClass="itemInfo"/>  
+                                        </h:column>        
+                                        <h:column>
+                                            <h:outputText value=" $ #{precio.precio}" 
+                                                          styleClass="itemPrice"/>  
+                                        </h:column>
+                                    </h:dataTable>
+                                    <h:outputText value="Origen: #{publicacionDesplegada.publicacion.ciudad}, 
+                                                  #{publicacionDesplegada.publicacion.pais}" 
+                                                  styleClass="itemInfo" escape="false"/> 
+                                    <h:outputText value="Categoria: #{publicacionDesplegada.publicacion.categoriaF.nombre}" 
+                                                  styleClass="itemInfo" escape="false"/>  
+                                    <h:outputText value="Finaliza el #{publicacionDesplegada.fecha_hasta}" 
+                                                  styleClass="itemInfo" escape="false"/>  
+                                    <h:outputText value="Cantidad disponible: #{publicacionDesplegada.publicacion.cantidad}" 
+                                                  styleClass="itemInfo"/>  
+                                    <h:commandLink value="Alquilar" styleClass="buttom"/>
 
-                            </h:panelGrid>                            
+                                </h:panelGrid>                            
                             </h:form>
                         </td>
                     </tr>
@@ -84,18 +88,18 @@
                                 <p:growl id="msgs"/>
                                 <p:dialog header="Ingrese su pregunta" widgetVar="nuevaPregunta" modal="true"
                                           showEffect="fade" width="280" >
-                                     <h:panelGrid columns="1" id="grid" style="text-align: center; width: 250px">  
+                                    <h:panelGrid columns="1" id="grid" style="text-align: center; width: 250px">  
                                         <h:outputLabel value="Pregunta: " for="txt_title"></h:outputLabel>  
                                         <p:inputTextarea id="txt_title" autoResize="false" rows="5"     
-                                                        value="#{publicacionDesplegada.nuevaPregunta.comentario}" 
-                                                        style="width: 200px;" />  
+                                                         value="#{publicacionDesplegada.nuevaPregunta.comentario}" 
+                                                         style="width: 200px;" />  
                                         <h:panelGrid columns="2">
                                             <p:commandButton value="Limpiar" type="reset"/>  
                                             <p:commandButton value="Enviar Pregunta" update="preguntas msgs @parent"  
-                                                            action="#{publicacionDesplegada.guardarPregunta}"
-                                                            onclick="nuevaPregunta.hide()">  
+                                                             actionListener="#{publicacionDesplegada.guardarPregunta}"
+                                                             onclick="nuevaPregunta.hide()">  
                                                 <p:collector value="#{publicacionDesplegada.nuevaPregunta}"   
-                                                            addTo="#{publicacionDesplegada.comentarios}" />  
+                                                             addTo="#{publicacionDesplegada.comentarios}" />  
                                             </p:commandButton>  
                                         </h:panelGrid>
                                     </h:panelGrid>  
@@ -109,17 +113,35 @@
                                     </f:facet>  
                                 </p:ajaxStatus>  
                                 <div class="preguntas">
-                                <p:outputPanel id="preguntas" >  
-                                    <p:commandButton style="margin: 10px 10px 0px 5px;" value="Hacer una pregunta" 
-                                                        onclick="nuevaPregunta.show()"/>  
-                                    <h:dataTable value="#{publicacionDesplegada.comentarios}" var="pregunta">  
-                                        <p:column>  
-                                            <comps:itemPreguntas/>
-                                        </p:column>  
-                                    </h:dataTable>  
-                                </p:outputPanel>  
+                                    <p:outputPanel id="preguntas" >  
+                                        <p:commandButton style="margin: 10px 10px 0px 5px;" value="Hacer una pregunta" 
+                                                         actionListener="#{publicacionDesplegada.preguntar}" 
+                                                         oncomplete="agregarPregunta(xhr, status, args)"/>  
+                                        <h:dataTable value="#{publicacionDesplegada.comentarios}" var="pregunta">  
+                                            <p:column>  
+                                                <comps:itemPreguntas />
+                                            </p:column>  
+                                        </h:dataTable>  
+                                    </p:outputPanel>  
                                 </div>
-                            </h:form>                                  
+                            </h:form>   
+
+                            <p:dialog id="loginDialog" header="Ingreso" widgetVar="loginDlg" >
+                                <h:form id="loginForm">
+                                    <h:panelGrid columns="2" cellpadding="2" >
+                                        <h:outputLabel  value="Usuario:" />
+                                        <p:inputText value="#{login.username}" required="true"
+                                                     style="width:175px" />
+                                        <h:outputLabel value="Contraseña:" />
+                                        <p:password feedback="false" minLength="1" 
+                                                    value="#{login.password}" required="true"
+                                                    style="width:175px; " />
+                                    </h:panelGrid>
+                                    <p:commandButton value="Entrar" actionListener="#{login.loginEnPagina}"
+                                                     oncomplete="revisarLogueo(xhr, status, args)" />
+                                </h:form>
+                            </p:dialog>
+
                         </td>
                     </tr>
                 </table>
@@ -130,6 +152,6 @@
                 <comps:userPanel />
             </ui:define>            
         </ui:composition>       
-                
+
     </body>
 </html>

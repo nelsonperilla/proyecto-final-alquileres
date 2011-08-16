@@ -32,3 +32,23 @@ function handleNuevoPeriodo(xhr, status, args) {
         dialogoNuevo.hide();
     }
 }
+
+function agregarPregunta(xhr, status, args) {
+    if(args.logueado) {
+        nuevaPregunta.show();
+    }
+    else {
+        loginDlg.show();
+    }
+}
+
+function revisarLogueo(xhr, status, args) {
+    if(args.validationFailed || !args.logueado) {
+        jQuery('#loginDialog').parent().effect("shake", {
+            times:2
+        }, 100);
+    } else {
+        loginDlg.hide();
+        nuevaPregunta.show();
+    }
+}

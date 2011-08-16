@@ -74,7 +74,7 @@ public class NotificadorMDB implements MessageListener {
             properties.put("mail.smtp.starttls.required", "true");
             
             Authenticator auth = new SMTPAuthenticator();
-            Session session = Session.getDefaultInstance(properties, auth);
+            Session session = Session.getInstance(properties, auth);
             transport = session.getTransport();
             
             MimeMessage mail = new MimeMessage(session);

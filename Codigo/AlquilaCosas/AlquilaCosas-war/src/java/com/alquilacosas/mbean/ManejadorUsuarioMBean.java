@@ -16,7 +16,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -48,9 +48,6 @@ public class ManejadorUsuarioMBean implements Serializable {
     public String login() {
         FacesContext context = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
-        System.out.println(request.getContextPath());
-        System.out.println(request.getPathInfo());
-        System.out.println(request.getRequestURL());
         try {
             request.login(this.username, this.password);
         } catch (Exception e) {
@@ -69,6 +66,31 @@ public class ManejadorUsuarioMBean implements Serializable {
         }
         logueado = true;
         return "inicio";
+    }
+    
+    public String loginEnPagina() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+        try {
+            request.login(this.username, this.password);
+        } catch (Exception e) {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Credenciales incorrectas", "Credenciales incorrectas"));
+            return null;
+        }
+        try {
+            usuarioId = usuarioBean.loginUsuario(username);
+            administrador = context.getExternalContext().isUserInRole("ADMIN");
+        } catch (AlquilaCosasException e) {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    e.getMessage(), e.getMessage()));
+            password = "";
+            return null;
+        }
+        logueado = true;
+        RequestContext reqContext = RequestContext.getCurrentInstance();
+        reqContext.addCallbackParam("logueado", logueado);
+        return "";
     }
 
     @Remove

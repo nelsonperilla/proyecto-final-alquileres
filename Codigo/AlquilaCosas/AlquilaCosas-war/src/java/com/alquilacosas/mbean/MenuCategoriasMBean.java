@@ -17,7 +17,7 @@ import javax.faces.bean.SessionScoped;
  *
  * @author damiancardozo
  */
-@ManagedBean(name="menuCatBean")
+@ManagedBean(name = "menuCatBean")
 @SessionScoped
 public class MenuCategoriasMBean implements Serializable {
 
@@ -25,26 +25,30 @@ public class MenuCategoriasMBean implements Serializable {
     private CategoriaBeanLocal catBean;
     private List<CategoriaFacade> categorias;
     private Integer categoriaSeleccionada;
-    
+
     /** Creates a new instance of MenuCategoriasMBean */
     public MenuCategoriasMBean() {
     }
-    
+
     @PostConstruct
     public void init() {
+        cargarMenu();
+    }
+
+    public void cargarMenu() {
         categorias = catBean.getCategoriaFacade();
-        for(int i= 0; i < categorias.size(); i++) {
+        for (int i = 0; i < categorias.size(); i++) {
             CategoriaFacade fc = categorias.get(i);
-            for(int j= 0; j < categorias.size(); j++) {
+            for (int j = 0; j < categorias.size(); j++) {
                 CategoriaFacade fc2 = categorias.get(j);
-                if(fc2.getPadreId() == fc.getId()) {
+                if (fc2.getPadreId() == fc.getId()) {
                     fc.getSubcategorias().add(fc2);
                 }
             }
         }
-        for(int i = 0; i < categorias.size(); i++) {
+        for (int i = 0; i < categorias.size(); i++) {
             CategoriaFacade fc = categorias.get(i);
-            if(fc.getPadreId() > 0) {
+            if (fc.getPadreId() > 0) {
                 categorias.remove(fc);
                 i--;
             }
@@ -66,6 +70,4 @@ public class MenuCategoriasMBean implements Serializable {
     public void setCategoriaSeleccionada(Integer categoriaSeleccionada) {
         this.categoriaSeleccionada = categoriaSeleccionada;
     }
-    
-    
 }

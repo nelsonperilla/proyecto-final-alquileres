@@ -35,7 +35,10 @@
                                        styleClass="itemTitle" >
                             <f:setPropertyActionListener value="#{cc.attrs.var.id}" target="#{cc.attrs.bean[cc.attrs.property]}" />
                         </h:commandLink>
-                        <h:commandLink value="(editar)" rendered="#{cc.attrs.editable}" />
+                        <h:commandLink value="(editar)" rendered="#{cc.attrs.editable}"
+                                       action="#{cc.attrs.bean[cc.attrs.editMethod]}" >
+                            <f:setPropertyActionListener value="#{cc.attrs.var.id}" target="#{cc.attrs.bean[cc.attrs.property]}" />
+                        </h:commandLink>
                         <h:outputText value="(#{cc.attrs.var.ciudad}, #{cc.attrs.var.pais})" />
                         <h:outputText value="Cantidad disponible: #{cc.attrs.var.cantidad}" styleClass="itemInfo"/>  
                     </h:panelGrid>
