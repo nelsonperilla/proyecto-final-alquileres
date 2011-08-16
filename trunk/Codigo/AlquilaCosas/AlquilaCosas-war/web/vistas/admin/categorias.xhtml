@@ -11,15 +11,17 @@
 
         <ui:composition template="./../../resources/templates/masterPage.xhtml">
 
-               <ui:define name="logInfo">
-                    <h:form>
-                         <h:commandLink value="inicio" action="inicio" />
-                    </h:form>
-               </ui:define>
-               
-               <ui:define name="left">
-                    <comps:categoriesMenu id="menu" />
-               </ui:define>
+            <ui:define name="logInfo">
+                <h:form>
+                    <h:commandLink value="inicio" action="inicio" />
+                </h:form>
+            </ui:define>
+
+            <ui:define name="left">
+                <p:outputPanel id="catMenu" >
+                    <comps:categoriesMenu />
+                </p:outputPanel> 
+            </ui:define>
 
             <ui:define name="left">
                 <comps:categoriesMenu />
@@ -31,8 +33,8 @@
                     <p:tab title="Nuevo">
                         <h:form id="formNuevo">
                             <p:growl id="messages" />
-                            <h:panelGrid columns="2" cellpadding="10">  
-                                <h:outputText value="Nombre:" />  
+                            <h:panelGrid columns="2" cellpadding="5">  
+                                <h:outputText value="Nombre" />  
                                 <p:inputText id="nombre" value="#{categoria.nombre}" required="true"
                                              requiredMessage="Ingrese Nombre" maxlength="45" />
                                 <h:outputText  value="Descripción" />
@@ -45,7 +47,7 @@
                                     <h:outputText value="#{node}" />  
                                 </p:treeNode>  
                             </p:tree>  
-                            <p:commandButton value="Guardar" update="messages,treeCategoria,menu"
+                            <p:commandButton value="Guardar" update="messages treeCategoria catMenu"
                                              actionListener="#{categoria.registrarNuevaCategoria}" /> 
                         </h:form>
                     </p:tab>
@@ -83,7 +85,8 @@
                             </p:treeTable>
                             <p:confirmDialog message="Esta seguro?" width="200" header="Confirmar"
                                              severity="alert" widgetVar="confirmacion" >
-                                <p:commandButton value="Si" update="treeCategoriaModificar" actionListener="#{categoria.borrarCategoria}"
+                                <p:commandButton value="Si" update="treeCategoriaModificar catMenu" 
+                                                 actionListener="#{categoria.borrarCategoria}"
                                                  oncomplete="confirmacion.hide()" />
                                 <p:commandButton value="No" onclick="confirmacion.hide()" type="button" />
                             </p:confirmDialog>

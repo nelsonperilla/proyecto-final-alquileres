@@ -19,6 +19,8 @@ public interface CategoriaBeanLocal {
 
      List<Categoria> getCategorias();
 
+     Categoria getCategoriaPadre(int categoriaId);
+     
      void registrarCategoria (String nombre, String descripcion, Categoria categoriaPadre) throws AlquilaCosasException;
 
      void borrarCategoria(Categoria categoria);

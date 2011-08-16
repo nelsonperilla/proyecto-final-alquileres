@@ -52,3 +52,7 @@ function revisarLogueo(xhr, status, args) {
         nuevaPregunta.show();
     }
 }
+
+function borrarImagen(img) {
+    document.getElementById(':formPublicacion:' + img).style.display='none';
+}

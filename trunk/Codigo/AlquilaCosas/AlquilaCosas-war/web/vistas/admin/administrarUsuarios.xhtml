@@ -23,6 +23,7 @@
 
             <ui:define name="principal">
                 <h:form>
+                    <div style="text-align: center" >
                     <h1>Lista de usuarios</h1>
                         <p:dataTable var="usuario" value="#{administrarUsuarios.usuarios}" paginatorPosition="bottom"
                                      paginator="true" rows="10" rowEditListener="#{administrarUsuarios.asignarRol}"
@@ -87,6 +88,7 @@
                                 <p:rowEditor />
                             </p:column>
                         </p:dataTable>
+                    </div>
                 </h:form>
             </ui:define>
 

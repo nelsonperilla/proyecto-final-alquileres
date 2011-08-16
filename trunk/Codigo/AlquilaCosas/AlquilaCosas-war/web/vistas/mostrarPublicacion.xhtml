@@ -138,7 +138,8 @@
                                                     style="width:175px; " />
                                     </h:panelGrid>
                                     <p:commandButton value="Entrar" actionListener="#{login.loginEnPagina}"
-                                                     oncomplete="revisarLogueo(xhr, status, args)" />
+                                                     oncomplete="revisarLogueo(xhr, status, args)"
+                                                     update="paneles" />
                                 </h:form>
                             </p:dialog>
 
@@ -147,9 +148,11 @@
                 </table>
             </ui:define>
             <ui:define name="right" >
-                <comps:loginBox />
-                <comps:adminPanel />
-                <comps:userPanel />
+                <p:outputPanel id="paneles" >
+                    <comps:loginBox />
+                    <comps:adminPanel />
+                    <comps:userPanel />
+                </p:outputPanel>
             </ui:define>            
         </ui:composition>       
 

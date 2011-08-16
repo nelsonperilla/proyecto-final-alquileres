@@ -46,41 +46,41 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Publicacion.findByPalabraClave", 
         query = "SELECT p FROM Publicacion p, PublicacionXEstado pxe WHERE pxe.estadoPublicacion.nombre = ?2 "
         + "AND pxe.fechaHasta IS NULL AND pxe.publicacion.publicacionId = p.publicacionId AND "
-        + "(p.titulo LIKE :?1 OR p.descripcion LIKE ?1)"),
+        + "(p.titulo LIKE ?1 OR p.descripcion LIKE ?1)"),
     @NamedQuery(name = "Publicacion.countByPalabraClave", 
         query = "SELECT COUNT(p.publicacionId) FROM Publicacion p, PublicacionXEstado pxe WHERE pxe.estadoPublicacion.nombre = ?2 "
         + "AND pxe.fechaHasta IS NULL AND pxe.publicacion.publicacionId = p.publicacionId AND "
-        + "(p.titulo LIKE :?1 OR p.descripcion LIKE ?1)"),
+        + "(p.titulo LIKE ?1 OR p.descripcion LIKE ?1)"),
     @NamedQuery(name = "Publicacion.findByCategoria", 
         query = "SELECT p FROM Publicacion p, PublicacionXEstado pxe WHERE pxe.estadoPublicacion.nombre = :estado"
-        + " AND pxe.fechaHasta IS NULL AND pxe.publicacion.publicacionId = p.publicacionId AND p.categoriaFk = :categoriaFk"),
+        + " AND pxe.fechaHasta IS NULL AND pxe.publicacion.publicacionId = p.publicacionId AND (p.categoriaFk = :categoriaFk OR p.categoriaFk.categoriaFk = :categoriaFk)"),
     @NamedQuery(name = "Publicacion.countByCategoria", 
         query = "SELECT COUNT(p.publicacionId) FROM Publicacion p, PublicacionXEstado pxe WHERE pxe.estadoPublicacion.nombre = :estado"
-        + " AND pxe.fechaHasta IS NULL AND pxe.publicacion.publicacionId = p.publicacionId AND p.categoriaFk = :categoriaFk"),
+        + " AND pxe.fechaHasta IS NULL AND pxe.publicacion.publicacionId = p.publicacionId AND (p.categoriaFk = :categoriaFk OR p.categoriaFk.categoriaFk = :categoriaFk)"),
     @NamedQuery(name = "Publicacion.findByPalabraClaveAndCat", 
-        query = "SELECT p FROM Publicacion p WHERE p.categoriaFk = :categoriaFk AND (p.titulo LIKE :?1 OR "
+        query = "SELECT p FROM Publicacion p WHERE p.categoriaFk = :categoriaFk AND (p.titulo LIKE ?1 OR "
         + "p.descripcion LIKE ?1)"),
     @NamedQuery(name = "Publicacion.countByPalabraClaveAndCat", 
-        query = "SELECT COUNT(p.publicacionId) FROM Publicacion p WHERE p.categoriaFk = :categoriaFk AND (p.titulo LIKE :?1 OR "
+        query = "SELECT COUNT(p.publicacionId) FROM Publicacion p WHERE p.categoriaFk = :categoriaFk AND (p.titulo LIKE ?1 OR "
         + "p.descripcion LIKE ?1)"),
     @NamedQuery(name = "Publicacion.findByPalabraAndUbicacion", 
-        query = "SELECT p FROM Publicacion p, Usuario u, Domicilio d WHERE p.usuarioFk.usuarioId = u.usuarioId AND d.usuarioFk.usuarioId = u.usuarioId AND (p.titulo LIKE :?1 OR "
+        query = "SELECT p FROM Publicacion p, Usuario u, Domicilio d WHERE p.usuarioFk.usuarioId = u.usuarioId AND d.usuarioFk.usuarioId = u.usuarioId AND (p.titulo LIKE ?1 OR "
         + "p.descripcion LIKE ?1) AND (d.barrio LIKE ?2 OR d.ciudad LIKE ?2)"),
     @NamedQuery(name = "Publicacion.countByPalabraAndUbicacion", 
-        query = "SELECT COUNT(p.publicacionId) FROM Publicacion p, Usuario u, Domicilio d WHERE p.usuarioFk.usuarioId = u.usuarioId AND d.usuarioFk.usuarioId = u.usuarioId AND (p.titulo LIKE :?1 OR "
+        query = "SELECT COUNT(p.publicacionId) FROM Publicacion p, Usuario u, Domicilio d WHERE p.usuarioFk.usuarioId = u.usuarioId AND d.usuarioFk.usuarioId = u.usuarioId AND (p.titulo LIKE ?1 OR "
         + "p.descripcion LIKE ?1) AND (d.barrio LIKE ?2 OR d.ciudad LIKE ?2)"),
     @NamedQuery(name = "Publicacion.findByPalabraCategoriaUbicacion", 
-        query = "SELECT p FROM Publicacion p, Usuario u, Domicilio d WHERE p.categoriaFk = :categoriaFk AND p.usuarioFk.usuarioId = u.usuarioId AND d.usuarioFk.usuarioId = u.usuarioId AND (p.titulo LIKE :?1 OR "
+        query = "SELECT p FROM Publicacion p, Usuario u, Domicilio d WHERE p.categoriaFk = :categoriaFk AND p.usuarioFk.usuarioId = u.usuarioId AND d.usuarioFk.usuarioId = u.usuarioId AND (p.titulo LIKE ?1 OR "
         + "p.descripcion LIKE ?1) AND (d.barrio LIKE ?2 OR d.ciudad LIKE ?2)"),
     @NamedQuery(name = "Publicacion.countByPalabraCategoriaUbicacion", 
-        query = "SELECT COUNT(p.publicacionId) FROM Publicacion p, Usuario u, Domicilio d WHERE p.categoriaFk = :categoriaFk AND p.usuarioFk.usuarioId = u.usuarioId AND d.usuarioFk.usuarioId = u.usuarioId AND (p.titulo LIKE :?1 OR "
+        query = "SELECT COUNT(p.publicacionId) FROM Publicacion p, Usuario u, Domicilio d WHERE p.categoriaFk = :categoriaFk AND p.usuarioFk.usuarioId = u.usuarioId AND d.usuarioFk.usuarioId = u.usuarioId AND (p.titulo LIKE ?1 OR "
         + "p.descripcion LIKE ?1) AND (d.barrio LIKE ?2 OR d.ciudad LIKE ?2)"),
     @NamedQuery(name = "Publicacion.findByPalabraCategoriaPrecio", 
-        query = "SELECT p FROM Publicacion p, Precio pre WHERE p.categoriaFk = :categoriaFk AND (p.titulo LIKE :?1 OR "
-        + "p.descripcion LIKE ?1) AND pre.publicacionFk = p AND pre.periodoFk = :periodoFk AND pre.precio BETWEEN :?2 AND :?3"),
+        query = "SELECT p FROM Publicacion p, Precio pre WHERE p.categoriaFk = :categoriaFk AND (p.titulo LIKE ?1 OR "
+        + "p.descripcion LIKE ?1) AND pre.publicacionFk = p AND pre.periodoFk = :periodoFk AND pre.precio BETWEEN ?2 AND ?3"),
     @NamedQuery(name = "Publicacion.countByPalabraCategoriaPrecio", 
-        query = "SELECT COUNT(p.publicacionId) FROM Publicacion p, Precio pre WHERE p.categoriaFk = :categoriaFk AND (p.titulo LIKE :?1 OR "
-        + "p.descripcion LIKE ?1) AND pre.publicacionFk = p AND pre.periodoFk = :periodoFk AND pre.precio BETWEEN :?2 AND :?3")})
+        query = "SELECT COUNT(p.publicacionId) FROM Publicacion p, Precio pre WHERE p.categoriaFk = :categoriaFk AND (p.titulo LIKE ?1 OR "
+        + "p.descripcion LIKE ?1) AND pre.publicacionFk = p AND pre.periodoFk = :periodoFk AND pre.precio BETWEEN ?2 AND ?3")})
 public class Publicacion implements Serializable {
     @Basic(optional =     false)
     @NotNull
