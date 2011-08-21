@@ -23,7 +23,7 @@ public interface CategoriaBeanLocal {
      
      void registrarCategoria (String nombre, String descripcion, Categoria categoriaPadre) throws AlquilaCosasException;
 
-     void borrarCategoria(Categoria categoria);
+     void borrarCategoria(int categoriaId);
 
      void modificarCategoria(Categoria categoria);
      
@@ -31,5 +31,7 @@ public interface CategoriaBeanLocal {
 
      List<CategoriaFacade> getSubCategorias(int categoria);
 
-    List<Categoria> getCategoriasPrincipal();
+    List<CategoriaFacade> getCategoriasPrincipal();
+    
+    List<Integer> getCategoriasPadre(int categoriaId);
 }

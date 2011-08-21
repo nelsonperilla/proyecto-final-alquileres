@@ -75,6 +75,11 @@ public class EstadoUsuario implements Serializable {
         this.nombre = nombre;
         this.descripcion = descripcion;
     }
+    
+    public void agregarUsuarioXEstado(UsuarioXEstado uxe) {
+        usuarioXEstadoList.add(uxe);
+        uxe.setEstadoUsuario(this);
+    }
 
     public Integer getEstadoUsuarioId() {
         return estadoUsuarioId;

@@ -60,7 +60,7 @@
                                            rendered="#{publicacion.subCategoriaRender}" />
                             <h:selectOneMenu id="subcategoria" value="#{publicacion.selectedSubCategoria}" 
                                              rendered="#{publicacion.subCategoriaRender}" >
-                                <f:selectItem itemLabel="Seleccione una subcategoria" itemValue="" />
+                                <f:selectItem itemLabel="Seleccione una subcategoria" itemValue="-1" />
                                 <f:selectItems value="#{publicacion.subCategorias}" />
                                 <p:ajax event="change" update="datos growl" 
                                         listener="#{publicacion.actualizarSubCategorias}" />   
@@ -71,7 +71,7 @@
                                            rendered="#{publicacion.subCategoria1Render}" />
                             <h:selectOneMenu id="subcategoria1" value="#{publicacion.selectedSubCategoria1}" 
                                              rendered="#{publicacion.subCategoria1Render}" >
-                                <f:selectItem itemLabel="Seleccione una subcategoria" itemValue="" />
+                                <f:selectItem itemLabel="Seleccione una subcategoria" itemValue="-1" />
                                 <f:selectItems value="#{publicacion.subCategorias1}" />
                             </h:selectOneMenu>
                             <p/>

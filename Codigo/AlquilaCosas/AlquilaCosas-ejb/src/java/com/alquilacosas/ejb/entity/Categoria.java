@@ -5,6 +5,7 @@
 package com.alquilacosas.ejb.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -45,32 +46,51 @@ public class Categoria implements Serializable {
     @NotNull
     @Column(name = "CATEGORIA_ID")
     private Integer categoriaId;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
     @Column(name = "NOMBRE")
     private String nombre;
+    
     @Size(max = 45)
     @Column(name = "DESCRIPCION")
     private String descripcion;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "categoriaFk")
     private List<Publicacion> publicacionList;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "categoriaFk")
     private List<Categoria> categoriaList;
+    
     @JoinColumn(name = "CATEGORIA_FK", referencedColumnName = "CATEGORIA_ID")
     @ManyToOne(optional = true)
     private Categoria categoriaFk;
 
     public Categoria() {
+        categoriaList = new ArrayList<Categoria>();
+        publicacionList = new ArrayList<Publicacion>();
     }
 
     public Categoria(Integer categoriaId) {
+        this();
         this.categoriaId = categoriaId;
     }
 
     public Categoria(Integer categoriaId, String nombre) {
+        this();
         this.categoriaId = categoriaId;
         this.nombre = nombre;
+    }
+    
+    public void agregarSubcategoria(Categoria subcategoria) {
+        categoriaList.add(subcategoria);
+        subcategoria.setCategoriaFk(this);
+    }
+    
+    public Categoria removerSubcategoria(Categoria subcategoria) {
+        categoriaList.remove(subcategoria);
+        return subcategoria;
     }
 
     public Integer getCategoriaId() {

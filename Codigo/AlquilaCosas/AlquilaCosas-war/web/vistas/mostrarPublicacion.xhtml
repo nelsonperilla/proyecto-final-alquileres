@@ -84,22 +84,20 @@
                     </tr>
                     <tr>
                         <td colspan="2">
-                            <h:form id="desplieguePreguntas" style="width: 100%">  
+                            <h:form id="nuevaPregunta">
                                 <p:growl id="msgs"/>
                                 <p:dialog header="Ingrese su pregunta" widgetVar="nuevaPregunta" modal="true"
                                           showEffect="fade" width="280" >
                                     <h:panelGrid columns="1" id="grid" style="text-align: center; width: 250px">  
-                                        <h:outputLabel value="Pregunta: " for="txt_title"></h:outputLabel>  
+                                        <h:outputLabel value="Pregunta: " for="txt_title" /> 
                                         <p:inputTextarea id="txt_title" autoResize="false" rows="5"     
-                                                         value="#{publicacionDesplegada.nuevaPregunta.comentario}" 
+                                                         value="#{publicacionDesplegada.comentario}" 
                                                          style="width: 200px;" />  
                                         <h:panelGrid columns="2">
                                             <p:commandButton value="Limpiar" type="reset"/>  
-                                            <p:commandButton value="Enviar Pregunta" update="preguntas msgs @parent"  
+                                            <p:commandButton value="Enviar Pregunta" update="@form :desplieguePreguntas"  
                                                              actionListener="#{publicacionDesplegada.guardarPregunta}"
                                                              onclick="nuevaPregunta.hide()">  
-                                                <p:collector value="#{publicacionDesplegada.nuevaPregunta}"   
-                                                             addTo="#{publicacionDesplegada.comentarios}" />  
                                             </p:commandButton>  
                                         </h:panelGrid>
                                     </h:panelGrid>  
@@ -112,6 +110,8 @@
                                         <h:outputText value="" />  
                                     </f:facet>  
                                 </p:ajaxStatus>  
+                            </h:form>
+                            <h:form id="desplieguePreguntas" style="width: 100%">  
                                 <div class="preguntas">
                                     <p:outputPanel id="preguntas" >  
                                         <p:commandButton style="margin: 10px 10px 0px 5px;" value="Hacer una pregunta" 

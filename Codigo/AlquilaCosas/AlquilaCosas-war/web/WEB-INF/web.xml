@@ -54,13 +54,13 @@
             <url-pattern>/faces/vistas/usuario/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
-            <role-name>USER</role-name>
+            <role-name>USUARIO</role-name>
         </auth-constraint>
     </security-constraint>
     <security-constraint>
         <display-name>AdminConstraint</display-name>
         <web-resource-collection>
-            <web-resource-name>admin pages</web-resource-name>
+            <web-resource-name>Paginas permitidas para el administrador</web-resource-name>
             <description/>
             <url-pattern>/faces/vistas/admin/*</url-pattern>
             <url-pattern>/faces/vistas/usuario/*</url-pattern>

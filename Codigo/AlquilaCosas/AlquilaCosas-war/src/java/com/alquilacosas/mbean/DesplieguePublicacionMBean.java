@@ -24,61 +24,67 @@ import org.primefaces.context.RequestContext;
  *
  * @author jorge
  */
-@ManagedBean (name = "publicacionDesplegada")
+@ManagedBean(name = "publicacionDesplegada")
 @ViewScoped
 public class DesplieguePublicacionMBean {
 
     @EJB
     private PublicacionBeanLocal publicationBean;
-    @ManagedProperty (value="#{login}")
+    @ManagedProperty(value = "#{login}")
     private ManejadorUsuarioMBean usuarioLogueado;
     private PublicacionFacade publicacion;
     private String effect;
     private List<ComentarioFacade> comentarios;
-    private ComentarioFacade nuevaPregunta; 
-    private String fecha_hasta;
-    
+    private String fecha_hasta, comentario;
+
     /** Creates a new instance of DesplieguePublicacionMBean */
-    public DesplieguePublicacionMBean() { }
-    
-    
+    public DesplieguePublicacionMBean() {
+    }
+
     @PostConstruct
-    public void init(){
-        effect="fade";
-        String id = FacesContext.getCurrentInstance().getExternalContext()
-                .getRequestParameterMap().get("id");
-        nuevaPregunta = new ComentarioFacade();
-        if(id != null){
+    public void init() {
+        effect = "fade";
+        String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
+        //nuevaPregunta = new ComentarioFacade();
+        if (id != null) {
             int publicationId = Integer.parseInt(id);
             setPublicacion(publicationBean.getPublicacion(publicationId));
             setComentarios(publicationBean.getPreguntas(publicationId));
-            if(publicacion != null && publicacion.getFecha_hasta() != null)
+            if (publicacion != null && publicacion.getFecha_hasta() != null) {
                 setFecha_hasta(DateFormat.getDateInstance(DateFormat.SHORT).format(publicacion.getFecha_hasta()));
+            }
 
         }
+    }
+
+    public void actualizarPreguntas() {
+        comentarios = publicationBean.getPreguntas(publicacion.getId());
     }
 
     public void preguntar() {
-        RequestContext context = RequestContext.getCurrentInstance();
         boolean logueado = usuarioLogueado.isLogueado();
+        RequestContext context = RequestContext.getCurrentInstance();
         context.addCallbackParam("logueado", logueado);
     }
-    
-     public void guardarPregunta() {  
-         
+
+    public void guardarPregunta() {
+        ComentarioFacade nuevaPregunta = new ComentarioFacade();
+        nuevaPregunta.setComentario(comentario);
         nuevaPregunta.setUsuarioId(usuarioLogueado.getUsuarioId());
-        nuevaPregunta.setUsuario(usuarioLogueado.getUsername());
+        //nuevaPregunta.setUsuario(usuarioLogueado.getUsername());
         nuevaPregunta.setFecha(new Date());
         try {
             publicationBean.setPregunta(publicacion.getId(), nuevaPregunta);
-            setNuevaPregunta(new ComentarioFacade());  
-        } catch(AlquilaCosasException e) {
-            FacesContext.getCurrentInstance().addMessage(null, 
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+            //setNuevaPregunta(new ComentarioFacade());
+            actualizarPreguntas();
+            comentario = "";
+        } catch (AlquilaCosasException e) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Error al enviar pregunta", e.getMessage()));
         }
-    }  
-    
+    }
+
     /**
      * @return the comentarios
      */
@@ -92,7 +98,7 @@ public class DesplieguePublicacionMBean {
     public void setComentarios(List<ComentarioFacade> comentarios) {
         this.comentarios = comentarios;
     }
-    
+
     /**
      * @return the publicacion
      */
@@ -119,20 +125,6 @@ public class DesplieguePublicacionMBean {
      */
     public void setEffect(String effect) {
         this.effect = effect;
-    }
-
-    /**
-     * @return the nuevaPregunta
-     */
-    public ComentarioFacade getNuevaPregunta() {
-        return nuevaPregunta;
-    }
-
-    /**
-     * @param nuevaPregunta the nuevaPregunta to set
-     */
-    public void setNuevaPregunta(ComentarioFacade nuevaPregunta) {
-        this.nuevaPregunta = nuevaPregunta;
     }
 
     /**
@@ -176,7 +168,6 @@ public class DesplieguePublicacionMBean {
 //    public void setPrecios(List<PrecioFacade> precios) {
 //        this.precios = precios;
 //    }
-
     /**
      * @return the fecha_hasta
      */
@@ -191,5 +182,11 @@ public class DesplieguePublicacionMBean {
         this.fecha_hasta = fecha_hasta;
     }
 
+    public String getComentario() {
+        return comentario;
+    }
 
+    public void setComentario(String comentario) {
+        this.comentario = comentario;
+    }
 }

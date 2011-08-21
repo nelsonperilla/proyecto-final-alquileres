@@ -4,7 +4,6 @@
  */
 package com.alquilacosas.ejb.session;
 
-
 import com.alquilacosas.common.ComentarioFacade;
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.common.CategoriaFacade;
@@ -22,13 +21,14 @@ import com.alquilacosas.ejb.entity.Precio;
 import com.alquilacosas.ejb.entity.Publicacion;
 import com.alquilacosas.ejb.entity.PublicacionXEstado;
 import com.alquilacosas.ejb.entity.Usuario;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.annotation.security.DeclareRoles;
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
+import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -53,30 +53,29 @@ import javax.persistence.Query;
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-@DeclareRoles ({"USER", "ADMIN"})
+@DeclareRoles({"USER", "ADMIN"})
 public class PublicacionBean implements PublicacionBeanLocal {
-    
-    @PersistenceContext(unitName="AlquilaCosas-ejbPU") 
+
+    @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
     private EntityManager entityManager;
-    
     @Resource(name = "emailConnectionFactory")
     private ConnectionFactory connectionFactory;
-    
     @Resource(name = "jms/notificacionEmailQueue")
     private Destination destination;
-    
     @Resource
     private SessionContext context;
-    
-    //private Publicacion publicacion;
-    //private Usuario usuario;
-    
+    @EJB
+    private PeriodoAlquilerBeanLocal periodoBean;
+    @EJB
+    private PrecioBeanLocal precioBean;
+
     @Override
-    public void registrarPublicacion( String titulo, String descripcion, 
+    @RolesAllowed({"USUARIO", "ADMIN"})
+    public void registrarPublicacion(String titulo, String descripcion,
             Date fecha_desde, Date fecha_hasta, boolean destacada, int cantidad,
-            int usuarioId, int categoria, List<PrecioFacade> precios, 
-            List<ImagenPublicacion> imagenes ) throws AlquilaCosasException {
-        
+            int usuarioId, int categoria, List<PrecioFacade> precios,
+            List<byte[]> imagenes) throws AlquilaCosasException {
+
         Publicacion publicacion = new Publicacion();
         publicacion.setTitulo(titulo);
         publicacion.setDescripcion(descripcion);
@@ -84,459 +83,395 @@ public class PublicacionBean implements PublicacionBeanLocal {
         publicacion.setFechaHasta(fecha_hasta);
         publicacion.setDestacada(destacada);
         publicacion.setCantidad(cantidad);
-        
+
         Usuario usuario = null;
-        
+
         try {
             usuario = entityManager.find(Usuario.class, usuarioId);
-            publicacion.setUsuarioFk(usuario);
-        } catch (NoResultException  e) {
-            context.setRollbackOnly();
+        } catch (NoResultException e) {
             throw new AlquilaCosasException("No se encontro el Usuario en la "
-                    + "base de datos." + e.getMessage());
-        }
-        
-        try {
-            Categoria c = entityManager.find(Categoria.class, categoria);
-            publicacion.setCategoriaFk(c); 
-        } catch (NoResultException  e) {
-            context.setRollbackOnly();
-            throw new AlquilaCosasException("No se encontro la Categoria en la "
-                    + "base de datos." + e.getMessage());
+                    + "base de datos.");
         }
 
-        entityManager.persist(publicacion);
+        try {
+            Categoria c = entityManager.find(Categoria.class, categoria);
+            publicacion.setCategoriaFk(c);
+        } catch (NoResultException e) {
+            throw new AlquilaCosasException("No se encontro la Categoria en la "
+                    + "base de datos.");
+        }
+
         EstadoPublicacion estadoPublicacion = null;
-        
         try {
             Query query = entityManager.createNamedQuery("EstadoPublicacion.findByNombre");
             query.setParameter("nombre", PublicacionEstado.ACTIVA);
             estadoPublicacion = (EstadoPublicacion) query.getSingleResult();
-        } catch (Exception e) {
+        } catch (NoResultException e) {
             context.setRollbackOnly();
             throw new AlquilaCosasException("No se encontro el estado de la publicacion"
-                    + " en la base de datos." + e.getMessage());
+                    + " en la base de datos.");
         }
-   
+
         PublicacionXEstado pxe = new PublicacionXEstado(publicacion, estadoPublicacion);
-        entityManager.persist(pxe);
+        publicacion.agregarPublicacionXEstado(pxe);
 
         Precio precio = null;
         Periodo periodo = null;
         double pre = precios.get(1).getPrecio();
-        
-        
-        for( PrecioFacade p : precios ){
-            
-            periodo = this.getPeriodo(p.getPeriodoNombre());
+
+        for (PrecioFacade p : precios) {
+
+            periodo = periodoBean.getPeriodo(p.getPeriodoNombre());
             precio = new Precio();
-            
-            if( p.getPrecio() == 0 ){
-                if( p.getPeriodoNombre().equalsIgnoreCase("hora") ){
+
+            if (p.getPrecio() == 0) {
+                if (p.getPeriodoNombre().equalsIgnoreCase("hora")) {
                     p.setPrecio(pre / 10.0);
-                }else if( p.getPeriodoNombre().equalsIgnoreCase("semana") ){
+                } else if (p.getPeriodoNombre().equalsIgnoreCase("semana")) {
                     p.setPrecio(pre * 7.0);
-                }else if( p.getPeriodoNombre().equalsIgnoreCase("mes") ){
+                } else if (p.getPeriodoNombre().equalsIgnoreCase("mes")) {
                     p.setPrecio(pre * 30.0);
-                } 
-            }else{
+                }
+            } else {
                 precio.setPrecio(p.getPrecio());
             }
-            
-            
+
+
             precio.setPeriodoFk(periodo);
-            precio.setPublicacionFk(publicacion);
-            
-            entityManager.persist(precio);
+            publicacion.agregarPrecio(precio);
         }
 
-            
-         for( ImagenPublicacion ip : imagenes ){
-                ip.setPublicacionFk(publicacion);
-                entityManager.persist(ip);
-         }   
-    
+
+        for (byte[] bytes : imagenes) {
+            ImagenPublicacion ip = new ImagenPublicacion();
+            ip.setImagen(bytes);
+            publicacion.agregarImagen(ip);
+        }
+
+        usuario.agregarPublicacion(publicacion);
+        entityManager.persist(publicacion);
     }
-        
+
     @Override
-    public PublicacionFacade getDatosPublicacion(int publicacionId) {
-        
+    @PermitAll
+    public PublicacionFacade getDatosPublicacion(int publicacionId) throws AlquilaCosasException {
+
         Publicacion p = entityManager.find(Publicacion.class, publicacionId);
         PublicacionXEstado pxe = this.getPublicacionEstado(p);
-        
-        PublicacionFacade pf = new PublicacionFacade( 
-                p.getPublicacionId(), p.getTitulo(), p.getDescripcion(), 
-                p.getFechaDesde(), p.getFechaHasta(), p.getDestacada(), 
+
+        if (pxe == null) {
+            throw new AlquilaCosasException("PublicacionXEstado no encontrado para la publicacion seleccionada.");
+        }
+
+        PublicacionFacade pf = new PublicacionFacade(
+                p.getPublicacionId(), p.getTitulo(), p.getDescripcion(),
+                p.getFechaDesde(), p.getFechaHasta(), p.getDestacada(),
                 p.getCantidad(), p.getCategoriaFk(), p.getImagenPublicacionList(),
                 pxe.getEstadoPublicacion());
-       
-        pf.getPrecios().add( new PrecioFacade( 0, 1, 0.0, "HORA" ) );
-        pf.getPrecios().add( new PrecioFacade( 0, 2, 0.0, "DIA" ) );
-        pf.getPrecios().add( new PrecioFacade( 0, 3, 0.0, "SEMANA" ) );
-        pf.getPrecios().add( new PrecioFacade( 0, 4, 0.0, "MES" ) );
+
+        pf.getPrecios().add(new PrecioFacade());
+        pf.getPrecios().add(new PrecioFacade());
+        pf.getPrecios().add(new PrecioFacade());
+        pf.getPrecios().add(new PrecioFacade());
 
 
-        for( Precio precio : p.getPrecioList() ){          
-                if( precio != null ){
-                    pf.getPrecios().set( 
-                            precio.getPeriodoFk().getPeriodoId() - 1, 
-                            new PrecioFacade( precio.getPrecioId(),
-                            precio.getPeriodoFk().getPeriodoId(),
-                            precio.getPrecio(),
-                            precio.getPeriodoFk().getNombre()) );
-                }
-          }
-            
-        return pf;    
+        for (Precio precio : p.getPrecioList()) {
+            if (precio != null) {
+                pf.getPrecios().set(
+                        precio.getPeriodoFk().getPeriodoId() - 1,
+                        new PrecioFacade(precio.getPrecioId(),
+                        precio.getPeriodoFk().getPeriodoId(),
+                        precio.getPrecio(),
+                        precio.getPeriodoFk().getNombre()));
+            }
+        }
+        return pf;
     }
-    
-    
+
     @Override
-    @RolesAllowed ({"USER", "ADMIN"})
-    public void actualizarPublicacion( int publicacionId, String titulo, String descripcion, 
+    @RolesAllowed({"USUARIO", "ADMIN"})
+    public void actualizarPublicacion(int publicacionId, String titulo, String descripcion,
             Date fecha_desde, Date fecha_hasta, boolean destacada, int cantidad,
-            int usuarioId, int categoria, List<PrecioFacade> precios, 
-            List<byte[]> imagenesAgregar, List<Integer> imagenesABorrar, int estadoPublicacion ) throws AlquilaCosasException {
-        
+            int usuarioId, int categoria, List<PrecioFacade> precios,
+            List<byte[]> imagenesAgregar, List<Integer> imagenesABorrar,
+            PublicacionEstado estadoPublicacion) throws AlquilaCosasException {
+
         Publicacion publicacion = null;
-        
         try {
             publicacion = entityManager.find(Publicacion.class, publicacionId);
-        } catch (NoResultException  e) {
-            context.setRollbackOnly();
+        } catch (NoResultException e) {
             throw new AlquilaCosasException("No se encontro la Publicacion en la "
-                    + "base de datos." + e.getMessage());
+                    + "base de datos.");
         }
-        
         publicacion.setTitulo(titulo);
         publicacion.setDescripcion(descripcion);
-        publicacion.setFechaDesde(fecha_desde);
-        publicacion.setFechaHasta(fecha_hasta);
         publicacion.setDestacada(destacada);
         publicacion.setCantidad(cantidad);
-        
-        Usuario usuario = null;
-        try {
-            usuario = entityManager.find(Usuario.class, usuarioId);
-            publicacion.setUsuarioFk(usuario);
-        } catch (NoResultException  e) {
-            context.setRollbackOnly();
-            throw new AlquilaCosasException("No se encontro el Usuario en la "
-                    + "base de datos." + e.getMessage());
-        }      
-        
+
         try {
             Categoria c = entityManager.find(Categoria.class, categoria);
-            publicacion.setCategoriaFk(c); 
-        } catch (NoResultException  e) {
-            context.setRollbackOnly();
+            publicacion.setCategoriaFk(c);
+        } catch (NoResultException e) {
             throw new AlquilaCosasException("No se encontro la Categoria en la "
                     + "base de datos." + e.getMessage());
         }
-        
-        EstadoPublicacion ep = entityManager.find(EstadoPublicacion.class, estadoPublicacion);
+
         PublicacionXEstado pxe = this.getPublicacionEstado(publicacion);
-        
-        if( !pxe.getEstadoPublicacion().getEstadoPublicacionId().equals(ep.getEstadoPublicacionId()) ){
+
+        if (pxe.getEstadoPublicacion().getNombre() != estadoPublicacion) {
 
             pxe.setFechaHasta(new Date());
-            entityManager.merge(pxe);
-            
-            PublicacionXEstado pxeNuevo = new PublicacionXEstado(publicacion, ep);
-            pxeNuevo.setFechaDesde(new Date());
-            entityManager.persist(pxeNuevo);
-        }
-        
-        entityManager.merge(publicacion);
-        
-        Periodo periodo = null;
-        double pre = precios.get(1).getPrecio();
-            
-        for( PrecioFacade precioFacade : precios ){
-           
-          if( precioFacade.getPrecioId() != 0 ){
-              
-              periodo = this.getPeriodo(precioFacade.getPeriodoNombre());
-                
-              Precio precioViejo = entityManager.find(Precio.class, precioFacade.getPrecioId());
+            Query estadoQuery = entityManager.createNamedQuery("EstadoPublicacion.findByNombre");
+            estadoQuery.setParameter("nombre", estadoPublicacion);
+            EstadoPublicacion ep = null;
+            try {
+                ep = (EstadoPublicacion) estadoQuery.getSingleResult();
+            } catch (NoResultException e) {
+                throw new AlquilaCosasException("No se encontro el Estado en la "
+                        + "base de datos." + e.getMessage());
+            }
 
-                if( precioFacade != null ){
-                    
-                  if( precioFacade.getPrecio() == 0 ){
-                    if( precioFacade.getPeriodoNombre().equalsIgnoreCase("hora") ){
-                        precioFacade.setPrecio(pre / 10.0);
-                    }else if( precioFacade.getPeriodoNombre().equalsIgnoreCase("semana") ){
-                        precioFacade.setPrecio(pre * 7.0);
-                    }else if( precioFacade.getPeriodoNombre().equalsIgnoreCase("mes") ){
-                        precioFacade.setPrecio(pre * 30.0);
-                    } 
-                  }else{
-                   precioViejo.setPrecio(precioFacade.getPrecio());
-                  }
-                  precioViejo.setPeriodoFk(this.getPeriodo(precioFacade.getPeriodoNombre()));
-                  precioViejo.setPublicacionFk(publicacion);
-                  entityManager.merge(precioViejo);
-                }  
-           }else{
-                Precio precioNuevo = new Precio();
+            PublicacionXEstado pxeNuevo = new PublicacionXEstado(publicacion, ep);
+            publicacion.agregarPublicacionXEstado(pxeNuevo);
+        }
+
+        double precioDiario = precios.get(1).getPrecio();
+
+        for (PrecioFacade precioFacade : precios) {
+
+            if (precioFacade.getPrecioId() != 0) {
+
+                if (precioFacade.getPrecio() == 0.0) {
+                    if (precioFacade.getPeriodoNombre().equalsIgnoreCase("dia")) {
+                        precioFacade.setPrecio(precioDiario / 10.0);
+                    } else if (precioFacade.getPeriodoNombre().equalsIgnoreCase("semana")) {
+                        precioFacade.setPrecio(precioDiario * 7.0);
+                    } else if (precioFacade.getPeriodoNombre().equalsIgnoreCase("mes")) {
+                        precioFacade.setPrecio(precioDiario * 30.0);
+                    }
+                }
+                publicacion.actualizarPrecio(precioFacade.getPrecioId(), precioFacade.getPrecio());
+
+            } else {
                 
-                if( precioFacade != null ){
-                    if( precioFacade.getPrecio() == 0 ){
-                        if( precioFacade.getPeriodoNombre().equalsIgnoreCase("hora") ){
-                            precioFacade.setPrecio(pre / 10.0);
-                        }else if( precioFacade.getPeriodoNombre().equalsIgnoreCase("semana") ){
-                            precioFacade.setPrecio(pre * 7.0);
-                        }else if( precioFacade.getPeriodoNombre().equalsIgnoreCase("mes") ){
-                            precioFacade.setPrecio(pre * 30.0);
-                        } 
-                    }else{
-                        precioNuevo.setPrecio(precioFacade.getPrecio());
+                Precio precioNuevo = new Precio();
+                if (precioFacade.getPrecio() == 0) {
+                    if (precioFacade.getPeriodoNombre().equalsIgnoreCase("dia")) {
+                        precioFacade.setPrecio(precioDiario / 10.0);
+                    } else if (precioFacade.getPeriodoNombre().equalsIgnoreCase("semana")) {
+                        precioFacade.setPrecio(precioDiario * 7.0);
+                    } else if (precioFacade.getPeriodoNombre().equalsIgnoreCase("mes")) {
+                        precioFacade.setPrecio(precioDiario * 30.0);
                     }
                     precioNuevo.setPrecio(precioFacade.getPrecio());
-                    precioNuevo.setPeriodoFk(this.getPeriodo(precioFacade.getPeriodoNombre()));
-                    precioNuevo.setPublicacionFk(publicacion);
-
-                    entityManager.persist(precioNuevo);
-
-                }  
-           } 
-        }
-        
-          if( imagenesABorrar != null ){
-                for( Integer i : imagenesABorrar ){
-                    ImagenPublicacion ip = new ImagenPublicacion(i);
-                    entityManager.remove(entityManager.merge(ip));
+                    Periodo period = periodoBean.getPeriodo(precioFacade.getPeriodoNombre());
+                    precioNuevo.setPeriodoFk(period);
+                    publicacion.agregarPrecio(precioNuevo);
                 }
-                
             }
-            
-          for( byte[] imagen : imagenesAgregar ){
-                ImagenPublicacion ip = new ImagenPublicacion();
-                ip.setImagen(imagen);        
-                ip.setPublicacionFk(publicacion);
-                entityManager.persist(ip);
-          }
-   }             
-    
+        }
 
-    
-    @Override
-    public List<Periodo> getPeriodos(){
-        Query query = entityManager.createNamedQuery("Periodo.findAll");
-        return query.getResultList();
-    }
-    
-    @Override
-    public Periodo getPeriodo( String nombrePeriodo ){
-        Query query = entityManager.createNamedQuery("Periodo.findByNombre");
-        query.setParameter("nombre", nombrePeriodo);
-        Periodo periodo = (Periodo)query.getSingleResult();
-        return periodo;
+        if (imagenesABorrar != null) {
+            for (Integer i : imagenesABorrar) {
+                ImagenPublicacion ip = entityManager.find(ImagenPublicacion.class, i);
+                publicacion.removerImagen(ip);
+            }
+        }
+
+        for (byte[] imagen : imagenesAgregar) {
+            ImagenPublicacion ip = new ImagenPublicacion();
+            ip.setImagen(imagen);
+            publicacion.agregarImagen(ip);
+        }
+        entityManager.merge(publicacion);
     }
 
-    @Override
-    public PublicacionXEstado getPublicacionEstado( Publicacion p ) {
-       
-//        Query query = entityManager.createNamedQuery("PublicacionXEstado.findByPublicacionFk");
-//        query.setParameter("publicacion", p);
-            
+    private PublicacionXEstado getPublicacionEstado(Publicacion p) {
+
         Query query = entityManager.createQuery(
                 "SELECT pxe FROM PublicacionXEstado pxe "
                 + "WHERE pxe.publicacion = :publicacion "
-                + "AND pxe.fechaHasta IS NULL"
-                );
+                + "AND pxe.fechaHasta IS NULL");
         query.setParameter("publicacion", p);
-//        
-//        Query query = entityManager.createQuery(
-//                "SELECT pxe FROM PublicacionXEstado pxe, "
-//                + "Publicacion p, EstadoPublicacion ep "
-//                + "WHERE pxe.publicacionXEstadoPK.publicacionFk = :p "
-//                + "AND pxe.publicacionXEstadoPK.publicacionFk = p.publicacionId "
-//                + "AND pxe.publicacionXEstadoPK.estadoFk = ep.estadoPublicacionId "
-//                + "AND pxe.fechaDesde = ( SELECT MAX(pxe1.fechaDesde) FROM  PublicacionXEstado pxe1 "
-//                + "WHERE pxe.publicacionXEstadoPK.publicacionFk = pxe1.publicacionXEstadoPK.publicacionFk )"
-//                 );
-      
-        PublicacionXEstado pxe = (PublicacionXEstado) query.getSingleResult();
+
+        PublicacionXEstado pxe = null;
+        try {
+            pxe = (PublicacionXEstado) query.getSingleResult();
+        } catch (NoResultException e) {
+            System.out.println("PublicacionXEstado no encontrada");
+        }
 
         return pxe;
     }
 
-    
     @Override
-    public PublicacionFacade getPublicacion(int id){
-        Publicacion publicacion=entityManager.find(Publicacion.class,id);
+    @PermitAll
+    public PublicacionFacade getPublicacion(int id) {
+        Publicacion publicacion = entityManager.find(Publicacion.class, id);
         PublicacionFacade resultado = null;
-        if(publicacion!=null){
+        if (publicacion != null) {
             resultado = new PublicacionFacade(publicacion.getPublicacionId(), publicacion.getTitulo(),
                     publicacion.getDescripcion(), publicacion.getFechaDesde(), publicacion.getFechaHasta(), publicacion.getDestacada(),
                     publicacion.getCantidad());
 
             Domicilio domicilio = publicacion.getUsuarioFk().getDomicilioList().get(0);
             resultado.setPais(domicilio.getProvinciaFk().getPaisFk().getNombre());
-            resultado.setCiudad(domicilio.getProvinciaFk().getNombre());            
-            
-            resultado.setImagenIds(getImagesIds(publicacion));            
-            resultado.setPrecios(getPrecios(publicacion));
+            resultado.setCiudad(domicilio.getProvinciaFk().getNombre());
+
+            resultado.setImagenIds(getIdImagenes(publicacion));
+
+            List<PrecioFacade> precios = precioBean.getPrecios(publicacion);
+            resultado.setPrecios(precios);
             resultado.setCategoriaF(new CategoriaFacade(publicacion.getCategoriaFk().getCategoriaId(),
                     publicacion.getCategoriaFk().getNombre()));
         }
         return resultado;
     }
 
-    private List<Integer> getImagesIds(Publicacion publicacion){
+    private List<Integer> getIdImagenes(Publicacion publicacion) {
         List<Integer> imagenes = new ArrayList<Integer>();
-        for(ImagenPublicacion imagen: publicacion.getImagenPublicacionList()) {
+        for (ImagenPublicacion imagen : publicacion.getImagenPublicacionList()) {
             imagenes.add(imagen.getImagenPublicacionId());
         }
-        if(imagenes.isEmpty())
+        if (imagenes.isEmpty()) {
             imagenes.add(new Integer(-1));
+        }
         return imagenes;
     }
 
-    private List<PrecioFacade> getPrecios(Publicacion filter){
-        List<PrecioFacade> resultado = new ArrayList<PrecioFacade>();
-        List<Precio> precios;
-        Query query = entityManager.createNamedQuery("Precio.findByPublicacion");
-        query.setParameter("publicacion", filter);
-        precios = query.getResultList();   
-        
-        for(Precio precio: precios)
-            resultado.add(new PrecioFacade(precio.getPrecio(), precio.getPeriodoFk().getNombre()));
-        
-        return resultado;
-
-    }
-    
     @Override
+    @PermitAll
     public List<ComentarioFacade> getPreguntas(int publicationId) {
         List<Comentario> comentarios;
         List<ComentarioFacade> resultado = new ArrayList<ComentarioFacade>();
-        Publicacion filter=entityManager.find(Publicacion.class,publicationId);
+        Publicacion filter = entityManager.find(Publicacion.class, publicationId);
         Query query = entityManager.createNamedQuery("Comentario.findPreguntasByPublicacion");
         query.setParameter("publicacion", filter);
-        comentarios = query.getResultList();   
+        comentarios = query.getResultList();
         Comentario respuestaTemp;
         ComentarioFacade respuesta;
-        for(Comentario comentario : comentarios){
+        for (Comentario comentario : comentarios) {
             respuesta = null;
             respuestaTemp = comentario.getRespuesta();
-            if(respuestaTemp != null)
+            if (respuestaTemp != null) {
                 respuesta = new ComentarioFacade(respuestaTemp.getComentarioId(),
-                    respuestaTemp.getComentario(), respuestaTemp.getFecha(), 
-                    respuestaTemp.getUsuarioFk().getUsuarioId(), 
-                    respuestaTemp.getUsuarioFk().getNombre(), null);
-            
+                        respuestaTemp.getComentario(), respuestaTemp.getFecha(),
+                        respuestaTemp.getUsuarioFk().getUsuarioId(),
+                        respuestaTemp.getUsuarioFk().getNombre(), null);
+            }
+
             resultado.add(new ComentarioFacade(comentario.getComentarioId(),
-                    comentario.getComentario(), comentario.getFecha(), 
-                    comentario.getUsuarioFk().getUsuarioId(), 
-                    comentario.getUsuarioFk().getNombre(), respuesta ));
+                    comentario.getComentario(), comentario.getFecha(),
+                    comentario.getUsuarioFk().getUsuarioId(),
+                    comentario.getUsuarioFk().getNombre(), respuesta));
         }
         return resultado;
     }
 
     @Override
+    @RolesAllowed({"USUARIO", "ADMIN"})
     public void setPregunta(int publicacionId, ComentarioFacade nuevaPregunta)
             throws AlquilaCosasException {
         Comentario pregunta = new Comentario();
         Publicacion publicacion = entityManager.find(Publicacion.class, publicacionId);
-        pregunta.setPublicacionFk(publicacion);
         pregunta.setComentario(nuevaPregunta.getComentario());
         pregunta.setFecha(nuevaPregunta.getFecha());
         pregunta.setPregunta(Boolean.TRUE);
         Usuario usuario = entityManager.find(Usuario.class, nuevaPregunta.getUsuarioId());
         pregunta.setUsuarioFk(usuario);
-        
+        pregunta.setPublicacionFk(publicacion);
         entityManager.persist(pregunta);
         
+        // Enviar email de notificacion
         Usuario usuarioDueno = publicacion.getUsuarioFk();
-        
         try {
             Connection connection = connectionFactory.createConnection();
             Session session = connection.createSession(true,
                     Session.AUTO_ACKNOWLEDGE);
             MessageProducer producer = session.createProducer(destination);
             ObjectMessage message = session.createObjectMessage();
-            
+
             String asunto = "Has recibido una pregunta por tu articulo " + publicacion.getTitulo();
-            String texto = "<html>Hola " + usuarioDueno.getNombre() + ", <br/><br/>" + 
-                    "Has recibido una pregunta por tu articulo <b>" + publicacion.getTitulo() + "</b>: <br/><br/>" +
-                    "'" + nuevaPregunta.getComentario() + "' <br/><br/>" +
-                    "Para responder esta pregunta ingresa a tu panel de usuario. <br/><br/>" +
-                    "Atentamente, <br/> <b>AlquilaCosas </b>";
+            String texto = "<html>Hola " + usuarioDueno.getNombre() + ", <br/><br/>"
+                    + "Has recibido una pregunta por tu articulo <b>" + publicacion.getTitulo() + "</b>: <br/><br/>"
+                    + "'" + nuevaPregunta.getComentario() + "' <br/><br/>"
+                    + "Para responder esta pregunta ingresa a tu panel de usuario. <br/><br/>"
+                    + "Atentamente, <br/> <b>AlquilaCosas </b>";
             NotificacionEmail notificacion = new NotificacionEmail(usuarioDueno.getEmail(), asunto, texto);
             message.setObject(notificacion);
             producer.send(message);
             session.close();
             connection.close();
-            
+
         } catch (Exception e) {
-            context.setRollbackOnly();
-            throw new AlquilaCosasException(e.getMessage());
+            throw new AlquilaCosasException("Excepcion al enviar la notificacion" + e.getMessage());
         }
     }
 
     @Override
+    @RolesAllowed({"USUARIO", "ADMIN"})
     public List<ComentarioFacade> getPreguntasSinResponder(int usuarioId) {
         List<Comentario> comentarios;
         List<ComentarioFacade> resultado = new ArrayList<ComentarioFacade>();
-        Usuario filter=entityManager.find(Usuario.class,usuarioId);
+        Usuario filter = entityManager.find(Usuario.class, usuarioId);
         Query query = entityManager.createNamedQuery("Comentario.findPreguntasSinResponderByUsuario");
         query.setParameter("usuario", filter);
-        comentarios = query.getResultList();   
+        comentarios = query.getResultList();
         Comentario respuesta;
-        for(Comentario comentario : comentarios)
-                resultado.add(new ComentarioFacade(comentario.getComentarioId(),
-                    comentario.getComentario(), comentario.getFecha(), 
-                    comentario.getUsuarioFk().getUsuarioId(), 
-                    comentario.getUsuarioFk().getNombre(),comentario.getPublicacionFk().getPublicacionId(), null ));
-        
-        return resultado;
-    }    
+        for (Comentario comentario : comentarios) {
+            resultado.add(new ComentarioFacade(comentario.getComentarioId(),
+                    comentario.getComentario(), comentario.getFecha(),
+                    comentario.getUsuarioFk().getUsuarioId(),
+                    comentario.getUsuarioFk().getNombre(), comentario.getPublicacionFk().getPublicacionId(), null));
+        }
 
-    @Override 
-    public void setRespuesta(ComentarioFacade preguntaConRespuesta) 
+        return resultado;
+    }
+
+    @Override
+    @RolesAllowed({"USUARIO", "ADMIN"})
+    public void setRespuesta(ComentarioFacade preguntaConRespuesta)
             throws AlquilaCosasException {
-        Comentario respuesta = new Comentario();
-        Comentario pregunta = entityManager.find(Comentario.class , preguntaConRespuesta.getId());
+        
+        Comentario pregunta = entityManager.find(Comentario.class, preguntaConRespuesta.getId());
         Publicacion publicacion = pregunta.getPublicacionFk();
-        respuesta.setPublicacionFk(publicacion);
+        
+        Comentario respuesta = new Comentario();
         respuesta.setComentario(preguntaConRespuesta.getRespuesta().getComentario());
         respuesta.setFecha(preguntaConRespuesta.getRespuesta().getFecha());
         respuesta.setPregunta(Boolean.FALSE);
+        
         Usuario usuarioResponde = entityManager.find(Usuario.class, preguntaConRespuesta.getRespuesta().getUsuarioId());
         respuesta.setUsuarioFk(usuarioResponde);
+        respuesta.setPublicacionFk(publicacion);
+        
         pregunta.setRespuesta(respuesta);
         entityManager.persist(respuesta);
-        
+
         Usuario usuarioPregunto = pregunta.getUsuarioFk();
-        
+
         try {
             Connection connection = connectionFactory.createConnection();
             Session session = connection.createSession(true,
                     Session.AUTO_ACKNOWLEDGE);
             MessageProducer producer = session.createProducer(destination);
             ObjectMessage message = session.createObjectMessage();
-            
+
             String asunto = "Han respondido tu pregunta por el articulo " + publicacion.getTitulo();
-            String texto = "<html>Hola " + usuarioPregunto.getNombre() + ", <br/><br/>" + 
-                    "Han respondido tu pregunta por el articulo <b>" + publicacion.getTitulo() + "</b>: <br/><br/>" +
-                    "'" + respuesta.getComentario() + "' <br/>" +
-                    "<br/><br/>" +
-                    "Atentamente, <br/> <b>AlquilaCosas </b>";
+            String texto = "<html>Hola " + usuarioPregunto.getNombre() + ", <br/><br/>"
+                    + "Han respondido tu pregunta por el articulo <b>" + publicacion.getTitulo() + "</b>: <br/><br/>"
+                    + "'" + respuesta.getComentario() + "' <br/>"
+                    + "<br/><br/>"
+                    + "Atentamente, <br/> <b>AlquilaCosas </b>";
             NotificacionEmail notificacion = new NotificacionEmail(usuarioPregunto.getEmail(), asunto, texto);
             message.setObject(notificacion);
             producer.send(message);
             session.close();
             connection.close();
-            
+
         } catch (Exception e) {
-            context.setRollbackOnly();
             throw new AlquilaCosasException(e.getMessage());
         }
 
-    }    
-
+    }
 }
-
-

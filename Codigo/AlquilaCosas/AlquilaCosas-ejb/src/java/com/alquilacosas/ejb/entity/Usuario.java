@@ -5,6 +5,7 @@
 package com.alquilacosas.ejb.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -42,71 +43,131 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Usuario.findByDni", query = "SELECT u FROM Usuario u WHERE u.dni = :dni"),
     @NamedQuery(name = "Usuario.findByFechaNac", query = "SELECT u FROM Usuario u WHERE u.fechaNac = :fechaNac")})
 public class Usuario implements Serializable {
-    @Basic(optional =     false)
-    @NotNull
-    @Column(name = "FECHA_NAC")
-    @Temporal(TemporalType.DATE)
-    private Date fechaNac;
+    
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @NotNull
     @Column(name = "USUARIO_ID")
     private Integer usuarioId;
+    
+    @Basic(optional =     false)
+    @NotNull
+    @Column(name = "FECHA_NAC")
+    @Temporal(TemporalType.DATE)
+    private Date fechaNac;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
     @Column(name = "NOMBRE")
     private String nombre;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
     @Column(name = "APELLIDO")
     private String apellido;
+    
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
     @Column(name = "EMAIL")
     private String email;
+    
     @Size(max = 45)
     @Column(name = "TELEFONO")
     private String telefono;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
     @Column(name = "DNI")
     private String dni;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
     private List<Advertencia> advertenciaList;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
     private List<Domicilio> domicilioList;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
     private List<Publicacion> publicacionList;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
     private List<Comentario> comentarioList;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
     private List<UsuarioXEstado> usuarioXEstadoList;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
     private List<Login> loginList;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
     private List<Suspension> suspensionList;
 
     public Usuario() {
+        domicilioList = new ArrayList<Domicilio>();
+        publicacionList = new ArrayList<Publicacion>();
+        comentarioList = new ArrayList<Comentario>();
+        loginList = new ArrayList<Login>();
+        suspensionList = new ArrayList<Suspension>();
+        advertenciaList = new ArrayList<Advertencia>();
+        usuarioXEstadoList = new ArrayList<UsuarioXEstado>();
     }
 
     public Usuario(Integer usuarioId) {
+        this();
         this.usuarioId = usuarioId;
     }
 
     public Usuario(Integer usuarioId, String nombre, String apellido, String email, String dni, Date fechaNac) {
+        this();
         this.usuarioId = usuarioId;
         this.nombre = nombre;
         this.apellido = apellido;
         this.email = email;
         this.dni = dni;
         this.fechaNac = fechaNac;
+    }
+    
+    public void agregarDomicilio(Domicilio dom) {
+        domicilioList.add(dom);
+        dom.setUsuarioFk(this);
+    }
+    
+    public Domicilio removerDomicilio(Domicilio dom) {
+        domicilioList.remove(dom);
+        return dom;
+    }
+    
+    public void agregarLogin(Login login) {
+        loginList.add(login);
+        login.setUsuarioFk(this);
+    }
+    
+    public Login removerLogin(Login login) {
+        loginList.remove(login);
+        return login;
+    }
+    
+    public void agregarUsuarioXEstado(UsuarioXEstado uxe) {
+        usuarioXEstadoList.add(uxe);
+        uxe.setUsuario(this);
+    }
+    
+    public void agregarPublicacion(Publicacion publicacion) {
+        publicacionList.add(publicacion);
+        publicacion.setUsuarioFk(this);
+    }
+    
+    public Publicacion removerPublicacion(Publicacion publicacion) {
+        publicacionList.remove(publicacion);
+        publicacion.setUsuarioFk(this);
+        return publicacion;
     }
 
     public Integer getUsuarioId() {

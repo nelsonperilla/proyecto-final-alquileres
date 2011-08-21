@@ -5,6 +5,7 @@
 package com.alquilacosas.ejb.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -35,25 +36,40 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Pais.findByNombre", query = "SELECT p FROM Pais p WHERE p.nombre = :nombre")})
 public class Pais implements Serializable {
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @NotNull
     @Column(name = "PAIS_ID")
     private Integer paisId;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
     @Column(name = "NOMBRE")
     private String nombre;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "paisFk")
     private List<Provincia> provinciaList;
 
     public Pais() {
+        provinciaList = new ArrayList<Provincia>();
     }
 
     public Pais(Integer paisId) {
+        this();
         this.paisId = paisId;
+    }
+    
+    public void agregarProvincia(Provincia provincia) {
+        provinciaList.add(provincia);
+        provincia.setPaisFk(this);
+    }
+    
+    public Provincia removerProvincia(Provincia provincia) {
+        provinciaList.remove(provincia);
+        return provincia;
     }
 
     public Pais(Integer paisId, String nombre) {

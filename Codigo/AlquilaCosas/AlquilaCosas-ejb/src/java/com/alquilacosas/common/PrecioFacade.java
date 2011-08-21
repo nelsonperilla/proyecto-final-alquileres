@@ -16,16 +16,20 @@ public class PrecioFacade {
     private int periodoId;
     private int precioId;
     private String periodoNombre;
-    private double precio;
+    private Double precio;
     
     public PrecioFacade(){
-        
     }
     
     public PrecioFacade( double precio, String periodoNombre){
-   
         this.precio = precio;
         this.periodoNombre = periodoNombre;     
+    }
+    
+    public PrecioFacade( int precioId, double precio, String periodoNombre ){
+        this.precioId = precioId;
+        this.precio = precio;
+        this.periodoNombre = periodoNombre;      
     }
     
     public PrecioFacade( int precioId, int periodoId, double precio, String periodoNombre ){

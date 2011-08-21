@@ -46,32 +46,54 @@ public class LoginBean implements LoginBeanLocal {
                 uxeQuery.setParameter("usuario", usuario);
                 ultimoUxe = (UsuarioXEstado) uxeQuery.getSingleResult();
             } catch(NoResultException e) {
-                 System.out.println("error!");
+                 throw new AlquilaCosasException("No se encontro el usuario.");
             }
             if(ultimoUxe == null || ultimoUxe.getEstadoUsuario().getNombre()
                     != NombreEstado.REGISTRADO) {
                 throw new AlquilaCosasException("El estado del usuario no requiere activación.");
             }
             
-            
-            Query estadoActivoQuery = entityManager.createNamedQuery("EstadoUsuario.findByNombre");
-            estadoActivoQuery.setParameter("nombre", NombreEstado.ACTIVO);
-            EstadoUsuario estado = (EstadoUsuario) estadoActivoQuery.getSingleResult();
+            EstadoUsuario estado = null;
+            try {
+                Query estadoActivoQuery = entityManager.createNamedQuery("EstadoUsuario.findByNombre");
+                estadoActivoQuery.setParameter("nombre", NombreEstado.ACTIVO);
+                estado = (EstadoUsuario) estadoActivoQuery.getSingleResult();
+            } catch(Exception e) {
+                throw new AlquilaCosasException("No se encontro el estado " + 
+                        NombreEstado.ACTIVO.toString() + " en la base de datos.");
+            }
 
-            
-            ultimoUxe.setFechaHasta(new Date());
-            entityManager.merge(ultimoUxe);           
+            ultimoUxe.setFechaHasta(new Date());          
             
             UsuarioXEstado nuevoUxE = new UsuarioXEstado(usuario, estado);
             nuevoUxE.setFechaDesde(new Date());
-            entityManager.persist(nuevoUxE);
+            usuario.agregarUsuarioXEstado(nuevoUxE);
+            entityManager.merge(usuario);
             return true;
             
         }
         else {
             return false;
         }
+    }
+    
+    @Override
+    public Integer loginUsuario(String username) throws AlquilaCosasException {
         
+        Login login = null;
+        Query buscarLogin = entityManager.createNamedQuery("Login.findByUsername");
+        buscarLogin.setParameter("username", username);
+        try {
+            login = (Login) buscarLogin.getSingleResult();
+        } catch (Exception e) {
+            throw new AlquilaCosasException("Username no valido");
+        }
+        
+        Usuario usuario = login.getUsuarioFk();
+        if(usuario == null)
+            throw new AlquilaCosasException("Usuario no asociado a la cuenta.");
+        
+        return usuario.getUsuarioId();
     }
 
     

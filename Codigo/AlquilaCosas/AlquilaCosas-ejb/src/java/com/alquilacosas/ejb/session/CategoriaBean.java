@@ -8,6 +8,7 @@ import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.common.CategoriaFacade;
 import com.alquilacosas.ejb.entity.Categoria;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.SessionContext;
@@ -36,12 +37,11 @@ public class CategoriaBean implements CategoriaBeanLocal {
 
     @Override
     public List<Categoria> getCategorias() {
-        List<Categoria> categorias;
         Query query = entityManager.createNamedQuery("Categoria.findAll");
-        categorias = query.getResultList();
+        List<Categoria> categorias = query.getResultList();
         return categorias;
     }
-    
+
     @Override
     public Categoria getCategoriaPadre(int categoriaId) {
         Categoria cat = entityManager.find(Categoria.class, categoriaId);
@@ -49,40 +49,47 @@ public class CategoriaBean implements CategoriaBeanLocal {
         return padre;
     }
 
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
     @Override
     public void registrarCategoria(String nombre, String descripcion, Categoria categoriaPadre) throws AlquilaCosasException {
         Categoria nuevaCategoria = new Categoria();
         nuevaCategoria.setNombre(nombre);
         nuevaCategoria.setDescripcion(descripcion);
         if (categoriaPadre != null) {
-            nuevaCategoria.setCategoriaFk(categoriaPadre);
+            categoriaPadre.agregarSubcategoria(nuevaCategoria);
+            try {
+                entityManager.merge(categoriaPadre);
+            } catch (Exception e) {
+                throw new AlquilaCosasException("Error al insertar la Categoria: " + e.getMessage());
+            }
         }
-        try {
+        else {
             entityManager.persist(nuevaCategoria);
-        } catch (Exception e) {
-            context.setRollbackOnly();
-            throw new AlquilaCosasException("Error al insertar la Categoria - " + e.getMessage());
         }
-        entityManager.flush();
-    }
-    
-    
-    @Override
-    public List<Categoria> getCategoriasPrincipal() {
-            
-        Query query = entityManager.createQuery(""
-                    + "select cat FROM Categoria cat "
-                    + "where cat.categoriaFk IS NULL");
-            List<Categoria> categorias = query.getResultList();
-            return categorias;
     }
 
     @Override
-    public void borrarCategoria(Categoria categoria) {
-        Categoria modifCategoria = entityManager.find(Categoria.class, categoria.getCategoriaId());
-        entityManager.remove(modifCategoria);
+    public List<CategoriaFacade> getCategoriasPrincipal() {
+
+        Query query = entityManager.createQuery(""
+                + "select cat FROM Categoria cat "
+                + "where cat.categoriaFk IS NULL");
+        List<Categoria> categorias = query.getResultList();
+        List<CategoriaFacade> categoriasFacade = new ArrayList<CategoriaFacade>();
+        for (Categoria c : categorias) {
+            categoriasFacade.add(new CategoriaFacade(c.getCategoriaId(), c.getNombre()));
+        }
+        return categoriasFacade;
+    }
+
+    @Override
+    public void borrarCategoria(int categoriaId) {
+        Categoria categoria = entityManager.find(Categoria.class, categoriaId);
+        Categoria categoriaPadre = categoria.getCategoriaFk();
+        if (categoriaPadre != null) {
+            categoriaPadre.removerSubcategoria(categoria);
+            entityManager.merge(categoriaPadre);
+        }
+        entityManager.remove(categoria);
     }
 
     @Override
@@ -124,5 +131,22 @@ public class CategoriaBean implements CategoriaBeanLocal {
             subcategorias.add(new CategoriaFacade(c.getCategoriaId(), c.getNombre()));
         }
         return subcategorias;
+    }
+
+    @Override
+    public List<Integer> getCategoriasPadre(int categoriaId) {
+
+        Categoria categoria = entityManager.find(Categoria.class, categoriaId);
+        List<Integer> ids = new ArrayList<Integer>();
+
+        while (categoria != null) {
+            categoria = categoria.getCategoriaFk();
+            if (categoria != null) {
+                ids.add(categoria.getCategoriaId());
+            }
+        }
+        Collections.reverse(ids);
+        return ids;
+
     }
 }

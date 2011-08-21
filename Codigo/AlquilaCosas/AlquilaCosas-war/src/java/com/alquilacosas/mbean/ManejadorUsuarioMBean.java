@@ -5,7 +5,7 @@
 package com.alquilacosas.mbean;
 
 import com.alquilacosas.common.AlquilaCosasException;
-import com.alquilacosas.ejb.session.UsuarioBeanLocal;
+import com.alquilacosas.ejb.session.LoginBeanLocal;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -27,7 +27,7 @@ import org.primefaces.context.RequestContext;
 public class ManejadorUsuarioMBean implements Serializable {
 
     @EJB
-    private UsuarioBeanLocal usuarioBean;
+    private LoginBeanLocal loginBean;
     private String username, password;
     private Integer usuarioId;
     private boolean logueado, administrador;
@@ -56,7 +56,7 @@ public class ManejadorUsuarioMBean implements Serializable {
             return null;
         }
         try {
-            usuarioId = usuarioBean.loginUsuario(username);
+            usuarioId = loginBean.loginUsuario(username);
             administrador = context.getExternalContext().isUserInRole("ADMIN");
         } catch (AlquilaCosasException e) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
@@ -79,7 +79,7 @@ public class ManejadorUsuarioMBean implements Serializable {
             return null;
         }
         try {
-            usuarioId = usuarioBean.loginUsuario(username);
+            usuarioId = loginBean.loginUsuario(username);
             administrador = context.getExternalContext().isUserInRole("ADMIN");
         } catch (AlquilaCosasException e) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,

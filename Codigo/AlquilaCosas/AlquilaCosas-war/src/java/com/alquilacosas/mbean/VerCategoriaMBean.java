@@ -87,7 +87,7 @@ public class VerCategoriaMBean {
     }
     
     public String verPublicacion() {
-        return "";
+        return "mostrarPublicacionDeCat";
     }
     
     public String verSubcategoria() {

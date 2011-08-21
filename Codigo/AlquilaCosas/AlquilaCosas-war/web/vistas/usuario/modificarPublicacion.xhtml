@@ -64,6 +64,7 @@
             <ui:define name="principal">
 
                 <h:form id="formPublicacion" >
+
                     <h1>Modificar Publicacion</h1>
                     <h:panelGrid columns="3" columnClasses="labelColumn" >                       
 
@@ -98,27 +99,38 @@
                                 <f:selectItem itemLabel="Categorias" itemValue=""/>
                                 <f:selectItems value="#{modPublicacion.categorias}" />
                                 <p:ajax event="change" update="datos growl" 
-                                        listener="#{modPublicacion.actualizarCategorias}" />
+                                        listener="#{modPublicacion.categoriaSeleccionadaCambio}" />
                             </h:selectOneMenu>
                             <p/>
 
-                            <h:outputLabel id="labelSubCategoria" value="Subcategorias: "
-                                           rendered="#{modPublicacion.subCategoriaRender}" />
-                            <h:selectOneMenu id="subcategoria" value="#{modPublicacion.selectedSubCategoria}" 
-                                             rendered="#{modPublicacion.subCategoriaRender}" >
-                                <f:selectItem itemLabel="Seleccione una subcategoria" itemValue="" />
-                                <f:selectItems value="#{modPublicacion.subCategorias}" />
+                            <h:outputLabel id="labelSubCategoria1" value="Subcategoria: "
+                                           rendered="#{modPublicacion.subcategoria1Render}" />
+                            <h:selectOneMenu id="subcategoria1" value="#{modPublicacion.selectedSubcategoria1}" 
+                                             rendered="#{modPublicacion.subcategoria1Render}" >
+                                <f:selectItem itemLabel="Seleccione una subcategoria" itemValue="0" />
+                                <f:selectItems value="#{modPublicacion.subcategorias1}" />
                                 <p:ajax event="change" update="datos growl" 
-                                        listener="#{modPublicacion.actualizarSubCategorias}" />   
+                                        listener="#{modPublicacion.subcategoria1SeleccionadaCambio}" />   
                             </h:selectOneMenu>
                             <p/>
 
-                            <h:outputLabel id="labelSubCategoria1" value="Subcategorias: "
-                                           rendered="#{modPublicacion.subCategoria1Render}" />
-                            <h:selectOneMenu id="subcategoria1" value="#{modPublicacion.selectedSubCategoria1}" 
-                                             rendered="#{modPublicacion.subCategoria1Render}" >
-                                <f:selectItem itemLabel="Seleccione una subcategoria" itemValue="" />
-                                <f:selectItems value="#{modPublicacion.subCategorias1}" />
+                            <h:outputLabel id="labelSubCategoria2" value="Subcategoria: "
+                                           rendered="#{modPublicacion.subcategoria2Render}" />
+                            <h:selectOneMenu id="subcategoria2" value="#{modPublicacion.selectedSubcategoria2}" 
+                                             rendered="#{modPublicacion.subcategoria2Render}" >
+                                <f:selectItem itemLabel="Seleccione una subcategoria" itemValue="0" />
+                                <f:selectItems value="#{modPublicacion.subcategorias2}" />
+                                <p:ajax event="change" update="datos growl" 
+                                        listener="#{modPublicacion.subcategoria2SeleccionadaCambio}" />   
+                            </h:selectOneMenu>
+                            <p/>
+                            
+                            <h:outputLabel id="labelSubCategoria3" value="Subcategoria: "
+                                           rendered="#{modPublicacion.subcategoria3Render}" />
+                            <h:selectOneMenu id="subcategoria3" value="#{modPublicacion.selectedSubcategoria3}" 
+                                             rendered="#{modPublicacion.subcategoria3Render}" >
+                                <f:selectItem itemLabel="Seleccione una subcategoria" itemValue="0" />
+                                <f:selectItems value="#{modPublicacion.subcategorias3}" />
                             </h:selectOneMenu>
                             <p/>
 
@@ -138,10 +150,9 @@
                                 <div id="div1" >
                                     <h:panelGrid columns="1" style="width:100%;">
                                         <h:graphicImage value="/image?id=#{img}"
-                                                        width="100" height="85" styleClass="img"
-                                                        /> 
-                                        <p:commandLink title="Remove" update="panelImagenes" immediate="true"
-                                                       actionListener="#{modPublicacion.removeImagen}" >
+                                                        width="100" height="85" styleClass="img" /> 
+                                        <p:commandLink title="Remove" update="@form"
+                                                       actionListener="#{modPublicacion.removerImagen}" >
                                             <p:graphicImage value="#{resource['images:icono_borrar.gif']}"/> 
                                             <f:attribute name="idBorrar" value="#{img}" />
                                         </p:commandLink>
@@ -182,6 +193,7 @@
                                      ajax="false" />
                     <p:commandButton  type="reset" value="Limpiar" />
                     <p:growl id="growl" showDetail="true" globalOnly="true" />
+
                 </h:form>
 
             </ui:define>

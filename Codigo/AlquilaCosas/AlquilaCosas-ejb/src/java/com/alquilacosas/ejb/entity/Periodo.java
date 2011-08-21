@@ -9,6 +9,8 @@ import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -35,23 +37,29 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Periodo.findByDescripcion", query = "SELECT p FROM Periodo p WHERE p.descripcion = :descripcion"),
     @NamedQuery(name = "Periodo.findByHoras", query = "SELECT p FROM Periodo p WHERE p.horas = :horas")})
 public class Periodo implements Serializable {
+    
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @NotNull
     @Column(name = "PERIODO_ID")
     private Integer periodoId;
+    
     @Size(max = 45)
     @Column(name = "NOMBRE")
     private String nombre;
+    
     @Size(max = 45)
     @Column(name = "DESCRIPCION")
     private String descripcion;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "HORAS")
     private int horas;
+    
     @OneToMany(mappedBy = "periodoFk")
     private List<Precio> precioList;
 

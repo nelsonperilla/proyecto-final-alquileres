@@ -16,12 +16,13 @@ import javax.ejb.Local;
 @Local
 public interface PeriodoAlquilerBeanLocal {
 
-     public List<Periodo> getPeriodosAlquiler();
+     List<Periodo> getPeriodos();
 
      void modificarPeriodo(Periodo periodoNuevo);
 
      void borrarPeriodo(Periodo periodoBorrar) throws AlquilaCosasException ;
 
-     void registrarPeriodo(Periodo nuevoPeriodo) throws AlquilaCosasException ;
+     void registrarPeriodo(String nombre, String descripcion, int horas) throws AlquilaCosasException ;
      
+     Periodo getPeriodo(String nombrePeriodo);
 }

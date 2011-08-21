@@ -14,6 +14,8 @@ import com.alquilacosas.ejb.entity.Publicacion;
 import com.alquilacosas.ejb.entity.Usuario;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.security.DeclareRoles;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -24,54 +26,57 @@ import javax.persistence.Query;
  * @author ignaciogiagante
  */
 @Stateless
+@DeclareRoles({"USER", "ADMIN"})
 public class MisPublicacionesBean implements MisPublicacionesBeanLocal {
-    
-    @PersistenceContext(unitName="AlquilaCosas-ejbPU") 
+
+    @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
     private EntityManager entityManager;
-    
+
     @Override
-    public List<PublicacionFacade> getPublicaciones( int usuarioId ){
-       
+    @RolesAllowed({"USUARIO", "ADMIN"})
+    public List<PublicacionFacade> getPublicaciones(int usuarioId) {
+
         Usuario usuario = entityManager.find(Usuario.class, usuarioId);
         List<Publicacion> listaPublicaciones = usuario.getPublicacionList();
         List<PublicacionFacade> listaFacade = new ArrayList<PublicacionFacade>();
-        for(Publicacion p: listaPublicaciones) {
+        for (Publicacion p : listaPublicaciones) {
             PublicacionFacade facade = new PublicacionFacade(p.getPublicacionId(), p.getTitulo(),
                     p.getDescripcion(), p.getFechaDesde(), p.getFechaHasta(), p.getDestacada(),
                     p.getCantidad());
             List<Integer> imagenes = new ArrayList<Integer>();
-            for(ImagenPublicacion ip: p.getImagenPublicacionList()) {
+            for (ImagenPublicacion ip : p.getImagenPublicacionList()) {
                 imagenes.add(ip.getImagenPublicacionId());
             }
             facade.setImagenIds(imagenes);
-            
+
             Domicilio d = p.getUsuarioFk().getDomicilioList().get(0);
             facade.setPais(d.getProvinciaFk().getPaisFk().getNombre());
             facade.setCiudad(d.getProvinciaFk().getNombre());
-            
+
             facade.setPrecios(getPrecios(p));
-            
+
             listaFacade.add(facade);
         }
         return listaFacade;
     }
-    
-    private List<PrecioFacade> getPrecios(Publicacion filter){
+
+    private List<PrecioFacade> getPrecios(Publicacion filter) {
         List<PrecioFacade> resultado = new ArrayList<PrecioFacade>();
         List<Precio> precios;
         Query query = entityManager.createNamedQuery("Precio.findByPublicacion");
         query.setParameter("publicacion", filter);
-        precios = query.getResultList();   
-        
-        for(Precio precio: precios)
+        precios = query.getResultList();
+
+        for (Precio precio : precios) {
             resultado.add(new PrecioFacade(precio.getPrecio(), precio.getPeriodoFk().getNombre()));
-        
+        }
+
         return resultado;
 
-    }    
-    
+    }
+
     @Override
     public List<EstadoPublicacion> getEstados() {
-       return entityManager.createNamedQuery("EstadoPublicacion.findAll").getResultList();
+        return entityManager.createNamedQuery("EstadoPublicacion.findAll").getResultList();
     }
 }

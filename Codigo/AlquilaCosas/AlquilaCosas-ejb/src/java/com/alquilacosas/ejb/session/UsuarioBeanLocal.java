@@ -33,8 +33,6 @@ public interface UsuarioBeanLocal {
 
     boolean usernameExistente(String username);
 
-    Integer loginUsuario(String username) throws AlquilaCosasException;
-
     UsuarioFacade actualizarUsuario(int idUsuario, String telefono, Date fechaNacimiento, 
             DomicilioFacade dom) throws AlquilaCosasException;
 
