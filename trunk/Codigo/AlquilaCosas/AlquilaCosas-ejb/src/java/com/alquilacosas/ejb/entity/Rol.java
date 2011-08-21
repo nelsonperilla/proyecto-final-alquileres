@@ -5,6 +5,7 @@
 package com.alquilacosas.ejb.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -63,15 +64,27 @@ public class Rol implements Serializable {
     private List<Login> loginList;
 
     public Rol() {
+        loginList = new ArrayList<Login>();
     }
 
     public Rol(Integer rolId) {
+        this();
         this.rolId = rolId;
     }
 
     public Rol(Integer rolId, NombreRol nombre) {
+        this();
         this.rolId = rolId;
         this.nombre = nombre;
+    }
+    
+    public void agregarLogin(Login login) {
+        loginList.add(login);
+    }
+    
+    public Login removerLogin(Login login) {
+        loginList.remove(login);
+        return login;
     }
 
     public Integer getRolId() {

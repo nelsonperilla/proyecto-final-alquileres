@@ -97,7 +97,7 @@ public class RegistrarUsuarioMBean implements Serializable {
                     "Error al crear usuario", e.getMessage()));
             return null;
         }
-    }    
+    }
     
     public void actualizarProvincias() {
         provincias.clear();

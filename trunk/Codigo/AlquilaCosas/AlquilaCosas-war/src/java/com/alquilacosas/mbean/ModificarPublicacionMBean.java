@@ -10,6 +10,7 @@ import com.alquilacosas.common.PrecioFacade;
 import com.alquilacosas.common.PublicacionFacade;
 import com.alquilacosas.ejb.entity.Categoria;
 import com.alquilacosas.ejb.entity.EstadoPublicacion;
+import com.alquilacosas.ejb.entity.EstadoPublicacion.PublicacionEstado;
 import com.alquilacosas.ejb.entity.ImagenPublicacion;
 import com.alquilacosas.ejb.session.CategoriaBeanLocal;
 import com.alquilacosas.ejb.session.MisPublicacionesBeanLocal;
@@ -40,10 +41,9 @@ public class ModificarPublicacionMBean {
     private PublicacionBeanLocal publicacionBean;
     @EJB
     private CategoriaBeanLocal categoriaBean;
-    @EJB
-    private MisPublicacionesBeanLocal misPublicacionesBean;
     @ManagedProperty(value = "#{login}")
     private ManejadorUsuarioMBean login;
+    
     private PublicacionFacade pf;
     //Datos de la publicacion
     private String titulo;
@@ -54,17 +54,12 @@ public class ModificarPublicacionMBean {
     private int cantidad;
     private Categoria categoria;
     //Select Items categorias
-    private List<SelectItem> categorias;
-    private int selectedCategoria;
-    private List<SelectItem> subCategorias;
-    private int selectedSubCategoria;
-    private List<SelectItem> subCategorias1;
-    private int selectedSubCategoria1;
-    private boolean subCategoriaRender;
-    private boolean subCategoria1Render;
+    private List<SelectItem> categorias, subcategorias1, subcategorias2, subcategorias3;
+    private int selectedCategoria, selectedSubcategoria1, selectedSubcategoria2, selectedSubcategoria3;
+    private boolean subcategoria1Render, subcategoria2Render, subcategoria3Render;
     //estado
     private List<SelectItem> estados;
-    private int selectedEstado;
+    private PublicacionEstado selectedEstado;
     //Object Precio
     private List<PrecioFacade> precios;
     private PrecioFacade precioFacade;
@@ -74,7 +69,7 @@ public class ModificarPublicacionMBean {
     private List<Integer> imagenesABorrar;
     private List<Integer> imagenIds;
     private int publicacionId;
-    private List<EstadoPublicacion> estadosPublicaciones;
+    private List<PublicacionEstado> estadosPublicaciones;
     private int imagenABorrar;
 
     public ModificarPublicacionMBean() {
@@ -82,10 +77,22 @@ public class ModificarPublicacionMBean {
 
     @PostConstruct
     public void init() {
-
-        publicacionId = Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
-
-        pf = publicacionBean.getDatosPublicacion(publicacionId);
+        String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
+        if(id == null) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                    "Error al cargar pagina", "No se brindo el id de publicacion");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
+        publicacionId = Integer.parseInt(id);
+        try {
+            pf = publicacionBean.getDatosPublicacion(publicacionId);
+        } catch(AlquilaCosasException e) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                    "Error al cargar pagina", e.getMessage());
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
 
         titulo = pf.getTitulo();
         descripcion = pf.getDescripcion();
@@ -94,7 +101,6 @@ public class ModificarPublicacionMBean {
         destacada = pf.getDestacada();
         cantidad = pf.getCantidad();
         categoria = pf.getCategoria();
-        selectedCategoria = categoria.getCategoriaId();
         precios = pf.getPrecios();
         imagenes = pf.getImagenes();
         imagenIds = new ArrayList<Integer>();
@@ -106,66 +112,86 @@ public class ModificarPublicacionMBean {
 
         today = new Date();
         categorias = new ArrayList<SelectItem>();
-        subCategorias = new ArrayList<SelectItem>();
-        subCategorias1 = new ArrayList<SelectItem>();
+        subcategorias1 = new ArrayList<SelectItem>();
+        subcategorias2 = new ArrayList<SelectItem>();
+        subcategorias3 = new ArrayList<SelectItem>();
         estados = new ArrayList<SelectItem>();
-        
-        boolean encontrado = false;
-        List<Categoria> listaCategoria = categoriaBean.getCategoriasPrincipal();
-        for (Categoria category : listaCategoria) {
-            categorias.add(new SelectItem(category.getCategoriaId(), category.getNombre()));
-            if(category.getCategoriaId() == selectedCategoria) {
-                encontrado = true;
+
+        List<CategoriaFacade> listaCategoria = categoriaBean.getCategoriasPrincipal();
+        for (CategoriaFacade category : listaCategoria) {
+            categorias.add(new SelectItem(category.getId(), category.getNombre()));
+        }
+        int categoriaId = categoria.getCategoriaId();
+        inicializarCategorias(categoriaId);
+
+        for(PublicacionEstado ep: PublicacionEstado.values()) {
+            estados.add(new SelectItem(ep,
+                    ep.toString()));
+        }
+
+        selectedEstado = pf.getEstado().getNombre();
+
+    }
+
+    public void inicializarCategorias(int categoriaId) {
+        List<Integer> padres = categoriaBean.getCategoriasPadre(categoriaId);
+        if (padres.isEmpty()) {
+            selectedCategoria = categoriaId;
+        } else if (padres.size() == 1) {
+            selectedCategoria = padres.get(0);;
+            List<CategoriaFacade> cats = categoriaBean.getSubCategorias(selectedCategoria);
+            for (CategoriaFacade c : cats) {
+                subcategorias1.add(new SelectItem(c.getId(), c.getNombre()));
             }
-        }
-        if(!encontrado) {
-        Categoria padreSeleccionada = categoriaBean.getCategoriaPadre(selectedCategoria);
-        if(padreSeleccionada != null) {
-            List<CategoriaFacade> subcategorias1lista = categoriaBean.getSubCategorias(padreSeleccionada.getCategoriaId());
+            selectedSubcategoria1 = categoriaId;
+            subcategoria1Render = true;
+        } else if (padres.size() == 2) {
+            selectedCategoria = padres.get(0);
 
-            Categoria padre2Seleccionada = categoriaBean.getCategoriaPadre(padreSeleccionada.getCategoriaId());
-            if(padre2Seleccionada == null) {
-                for(CategoriaFacade c: subcategorias1lista) {
-                    subCategorias.add(new SelectItem(c.getId(), c.getNombre()));
-                }
-                selectedSubCategoria = selectedCategoria;
-                selectedCategoria = padreSeleccionada.getCategoriaId();
-                subCategoriaRender = true;
+            List<CategoriaFacade> cats = categoriaBean.getSubCategorias(selectedCategoria);
+            for (CategoriaFacade c : cats) {
+                subcategorias1.add(new SelectItem(c.getId(), c.getNombre()));
             }
-            else {
-                for(CategoriaFacade c: subcategorias1lista) {
-                    subCategorias1.add(new SelectItem(c.getId(), c.getNombre()));
-                }
-                List<CategoriaFacade> subcategorias2lista = categoriaBean.getSubCategorias(padre2Seleccionada.getCategoriaId());
-                for(CategoriaFacade c: subcategorias2lista) {
-                    subCategorias.add(new SelectItem(c.getId(), c.getNombre()));
-                }
-                selectedSubCategoria1 = selectedCategoria;
-                selectedSubCategoria = padreSeleccionada.getCategoriaId();
-                selectedCategoria = padre2Seleccionada.getCategoriaId();
-                subCategoria1Render = true;
-                subCategoriaRender = true;
+            selectedSubcategoria1 = padres.get(1);
+            subcategoria1Render = true;
+            cats = categoriaBean.getSubCategorias(selectedSubcategoria1);
+            for (CategoriaFacade c : cats) {
+                subcategorias2.add(new SelectItem(c.getId(), c.getNombre()));
             }
-        }
-        }
-        //actualizarCategorias();
+            selectedSubcategoria2 = categoriaId;
+            subcategoria2Render = true;
+        } else if (padres.size() == 3) {
+            selectedCategoria = padres.get(0);
 
-        estadosPublicaciones = misPublicacionesBean.getEstados();
-        for (EstadoPublicacion ep : estadosPublicaciones) {
-            estados.add(new SelectItem(ep.getEstadoPublicacionId(),
-                    ep.getNombre().name()));
+            List<CategoriaFacade> cats = categoriaBean.getSubCategorias(selectedCategoria);
+            for (CategoriaFacade c : cats) {
+                subcategorias1.add(new SelectItem(c.getId(), c.getNombre()));
+            }
+            selectedSubcategoria1 = padres.get(1);
+            subcategoria1Render = true;
+            cats = categoriaBean.getSubCategorias(selectedSubcategoria1);
+            for (CategoriaFacade c : cats) {
+                subcategorias2.add(new SelectItem(c.getId(), c.getNombre()));
+            }
+            selectedSubcategoria2 = padres.get(2);
+            subcategoria2Render = true;
+            cats = categoriaBean.getSubCategorias(selectedSubcategoria2);
+            for (CategoriaFacade c : cats) {
+                subcategorias3.add(new SelectItem(c.getId(), c.getNombre()));
+            }
+            selectedSubcategoria3 = categoriaId;
+            subcategoria3Render = true;
+        } else {
+            System.out.println("demasiadas subcategorias!!");
         }
-
-        selectedEstado = pf.getEstado().getEstadoPublicacionId();
-
     }
 
     public String actualizarPublicacion() {
         int cat = 0;
-        if (selectedSubCategoria1 > 0) {
-            cat = selectedSubCategoria1;
-        } else if (selectedSubCategoria > 0) {
-            cat = selectedSubCategoria;
+        if (selectedSubcategoria2 > 0) {
+            cat = selectedSubcategoria2;
+        } else if (selectedSubcategoria1 > 0) {
+            cat = selectedSubcategoria1;
         } else {
             cat = selectedCategoria;
         }
@@ -177,48 +203,67 @@ public class ModificarPublicacionMBean {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage("Los datos fueron guardados correctamente"));
             return "misPublicaciones";
-        } catch(AlquilaCosasException e) {
-            FacesContext.getCurrentInstance().addMessage(null, 
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+        } catch (AlquilaCosasException e) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Error al actualizar usuario", e.getMessage()));
         }
-          return null;
+        return null;
     }
 
-    public void actualizarCategorias() {
-        subCategorias.clear();
-        subCategorias1.clear();
-        selectedSubCategoria = 0;
-        selectedSubCategoria1 = 0;
+    public void categoriaSeleccionadaCambio() {
+        subcategorias1.clear();
+        subcategorias2.clear();
+        subcategorias3.clear();
+        selectedSubcategoria1 = 0;
+        selectedSubcategoria2 = 0;
+        selectedSubcategoria3 = 0;
         List<CategoriaFacade> categoriaList = categoriaBean.getSubCategorias(selectedCategoria);
         if (!categoriaList.isEmpty()) {
-            subCategoriaRender = true;
+            subcategoria1Render = true;
             for (CategoriaFacade c : categoriaList) {
-                subCategorias.add(new SelectItem(c.getId(), c.getNombre()));
+                subcategorias1.add(new SelectItem(c.getId(), c.getNombre()));
             }
         } else {
-            subCategoriaRender = false;
-            subCategoria1Render = false;
+            subcategoria1Render = false;
         }
+        subcategoria2Render = false;
+        subcategoria3Render = false;
     }
 
-    public void actualizarSubCategorias() {
-        subCategorias1.clear();
-        selectedSubCategoria1 = 0;
-        List<CategoriaFacade> categoriaList = categoriaBean.getSubCategorias(selectedSubCategoria);
+    public void subcategoria1SeleccionadaCambio() {
+        subcategorias2.clear();
+        subcategorias3.clear();
+        selectedSubcategoria2 = 0;
+        selectedSubcategoria3 = 0;
+        List<CategoriaFacade> categoriaList = categoriaBean.getSubCategorias(selectedSubcategoria1);
         if (!categoriaList.isEmpty()) {
-            subCategoria1Render = true;
+            subcategoria2Render = true;
             for (CategoriaFacade c : categoriaList) {
-                subCategorias1.add(new SelectItem(c.getId(), c.getNombre()));
+                subcategorias2.add(new SelectItem(c.getId(), c.getNombre()));
             }
         } else {
-            subCategoria1Render = false;
+            subcategoria2Render = false;
+        }
+        subcategoria3Render = false;
+    }
+    
+    public void subcategoria2SeleccionadaCambio() {
+        subcategorias3.clear();
+        selectedSubcategoria3 = 0;
+        List<CategoriaFacade> categoriaList = categoriaBean.getSubCategorias(selectedSubcategoria2);
+        if (!categoriaList.isEmpty()) {
+            subcategoria3Render = true;
+            for (CategoriaFacade c : categoriaList) {
+                subcategorias3.add(new SelectItem(c.getId(), c.getNombre()));
+            }
+        } else {
+            subcategoria3Render = false;
         }
     }
 
     public void handleFileUpload(FileUploadEvent event) {
 
-        
         try {
             imagenesAgregar.add(event.getFile().getContents());
             FacesMessage msg = new FacesMessage("Excelente",
@@ -234,11 +279,15 @@ public class ModificarPublicacionMBean {
 
     }
 
-    public void removeImagen(ActionEvent e) {
+    public void removerImagen(ActionEvent e) {
         Integer id = (Integer) e.getComponent().getAttributes().get("idBorrar");
         imagenIds.remove(id);
         imagenesABorrar.add(id);
     }
+    
+    /*
+     * Getters & Setters
+     */
 
     public List<Integer> getImagenesABorrar() {
         return imagenesABorrar;
@@ -384,11 +433,11 @@ public class ModificarPublicacionMBean {
         this.selectedCategoria = selectedCategoria;
     }
 
-    public int getSelectedEstado() {
+    public PublicacionEstado getSelectedEstado() {
         return selectedEstado;
     }
 
-    public void setSelectedEstado(int selectedEstado) {
+    public void setSelectedEstado(PublicacionEstado selectedEstado) {
         this.selectedEstado = selectedEstado;
     }
 
@@ -416,59 +465,84 @@ public class ModificarPublicacionMBean {
         this.imagenABorrar = imagenABorrar;
     }
 
-    public List<EstadoPublicacion> getEstadosPublicaciones() {
-        return estadosPublicaciones;
+//    public List<EstadoPublicacion> getEstadosPublicaciones() {
+//        return estadosPublicaciones;
+//    }
+//
+//    public void setEstadosPublicaciones(List<EstadoPublicacion> estadosPublicaciones) {
+//        this.estadosPublicaciones = estadosPublicaciones;
+//    }
+
+    public int getSelectedSubcategoria1() {
+        return selectedSubcategoria1;
     }
 
-    public void setEstadosPublicaciones(List<EstadoPublicacion> estadosPublicaciones) {
-        this.estadosPublicaciones = estadosPublicaciones;
+    public void setSelectedSubcategoria1(int selectedSubcategoria1) {
+        this.selectedSubcategoria1 = selectedSubcategoria1;
     }
 
-    public int getSelectedSubCategoria() {
-        return selectedSubCategoria;
+    public int getSelectedSubcategoria2() {
+        return selectedSubcategoria2;
     }
 
-    public void setSelectedSubCategoria(int selectedSubCategoria) {
-        this.selectedSubCategoria = selectedSubCategoria;
+    public void setSelectedSubcategoria2(int selectedSubcategoria2) {
+        this.selectedSubcategoria2 = selectedSubcategoria2;
     }
 
-    public int getSelectedSubCategoria1() {
-        return selectedSubCategoria1;
+    public int getSelectedSubcategoria3() {
+        return selectedSubcategoria3;
     }
 
-    public void setSelectedSubCategoria1(int selectedSubCategoria1) {
-        this.selectedSubCategoria1 = selectedSubCategoria1;
+    public void setSelectedSubcategoria3(int selectedSubcategoria3) {
+        this.selectedSubcategoria3 = selectedSubcategoria3;
     }
 
-    public boolean isSubCategoria1Render() {
-        return subCategoria1Render;
+    public boolean isSubcategoria1Render() {
+        return subcategoria1Render;
     }
 
-    public void setSubCategoria1Render(boolean subCategoria1Render) {
-        this.subCategoria1Render = subCategoria1Render;
+    public void setSubcategoria1Render(boolean subcategoria1Render) {
+        this.subcategoria1Render = subcategoria1Render;
     }
 
-    public boolean isSubCategoriaRender() {
-        return subCategoriaRender;
+    public boolean isSubcategoria2Render() {
+        return subcategoria2Render;
     }
 
-    public void setSubCategoriaRender(boolean subCategoriaRender) {
-        this.subCategoriaRender = subCategoriaRender;
+    public void setSubcategoria2Render(boolean subcategoria2Render) {
+        this.subcategoria2Render = subcategoria2Render;
     }
 
-    public List<SelectItem> getSubCategorias() {
-        return subCategorias;
+    public boolean isSubcategoria3Render() {
+        return subcategoria3Render;
     }
 
-    public void setSubCategorias(List<SelectItem> subCategorias) {
-        this.subCategorias = subCategorias;
+    public void setSubcategoria3Render(boolean subcategoria3Render) {
+        this.subcategoria3Render = subcategoria3Render;
     }
 
-    public List<SelectItem> getSubCategorias1() {
-        return subCategorias1;
+    public List<SelectItem> getSubcategorias1() {
+        return subcategorias1;
     }
 
-    public void setSubCategorias1(List<SelectItem> subCategorias1) {
-        this.subCategorias1 = subCategorias1;
+    public void setSubcategorias1(List<SelectItem> subcategorias1) {
+        this.subcategorias1 = subcategorias1;
     }
+
+    public List<SelectItem> getSubcategorias2() {
+        return subcategorias2;
+    }
+
+    public void setSubcategorias2(List<SelectItem> subcategorias2) {
+        this.subcategorias2 = subcategorias2;
+    }
+
+    public List<SelectItem> getSubcategorias3() {
+        return subcategorias3;
+    }
+
+    public void setSubcategorias3(List<SelectItem> subcategorias3) {
+        this.subcategorias3 = subcategorias3;
+    }
+
 }

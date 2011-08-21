@@ -5,9 +5,11 @@
 package com.alquilacosas.ejb.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -48,22 +50,27 @@ public class Login implements Serializable {
     @Column(name = "FECHA_CREACION")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;
+    
     @Basic(optional = false)
     @Column(name = "FECHA_ULTIMO_INGRESO")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaUltimoIngreso;
+    
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @NotNull
     @Column(name = "LOGIN_ID")
     private Integer loginId;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
     @Column(name = "USERNAME")
     private String username;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
@@ -79,24 +86,38 @@ public class Login implements Serializable {
     @JoinTable(name = "LOGIN_X_ROL", joinColumns = {
         @JoinColumn(name = "LOGIN_FK", referencedColumnName = "LOGIN_ID")}, inverseJoinColumns = {
         @JoinColumn(name = "ROL_FK", referencedColumnName = "ROL_ID")})
-    @ManyToMany
+    @ManyToMany(cascade= CascadeType.PERSIST)
     private List<Rol> rolList;
+    
     @JoinColumn(name = "USUARIO_FK", referencedColumnName = "USUARIO_ID")
     @ManyToOne(optional = false)
     private Usuario usuarioFk;
 
     public Login() {
+        rolList = new ArrayList<Rol>();
     }
 
     public Login(Integer loginId) {
+        this();
         this.loginId = loginId;
     }
 
     public Login(Integer loginId, String username, String password, String codigoActivacion) {
+        this();
         this.loginId = loginId;
         this.username = username;
         this.password = password;
         this.codigoActivacion = codigoActivacion;
+    }
+    
+    public void agregarRol(Rol rol) {
+        rolList.add(rol);
+        //rol.agregarLogin(this);
+    }
+    
+    public void removerRol(Rol rol) {
+        rolList.remove(rol);
+        rol.removerLogin(this);
     }
 
     public Integer getLoginId() {

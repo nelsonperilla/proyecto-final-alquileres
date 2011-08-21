@@ -36,24 +36,29 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "PublicacionXEstado.findByFechaDesde", query = "SELECT p FROM PublicacionXEstado p WHERE p.fechaDesde = :fechaDesde"),
     @NamedQuery(name = "PublicacionXEstado.findByFechaHasta", query = "SELECT p FROM PublicacionXEstado p WHERE p.fechaHasta = :fechaHasta")})
 public class PublicacionXEstado implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
     @Id()
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @NotNull
     @Column(name = "PUBLICACION_X_ESTADO_ID")
     private Integer publicacionXEstadoId;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "FECHA_DESDE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaDesde;
+    
     @Column(name = "FECHA_HASTA")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaHasta;
-    private static final long serialVersionUID = 1L;
+    
     @JoinColumn(name = "ESTADO_FK", referencedColumnName = "ESTADO_PUBLICACION_ID")
     @ManyToOne(optional = false)
     private EstadoPublicacion estadoPublicacion;
+    
     @JoinColumn(name = "PUBLICACION_FK", referencedColumnName = "PUBLICACION_ID")
     @ManyToOne(optional = false)
     private Publicacion publicacion;

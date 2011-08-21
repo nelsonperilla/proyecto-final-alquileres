@@ -43,6 +43,11 @@
             <redirect/>
         </navigation-case>
         <navigation-case>
+            <from-outcome>usuarioCreado</from-outcome>
+            <to-view-id>/vistas/usuarioCreado.xhtml?email=#{regUsuario.email}</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
             <from-outcome>datosUsuario</from-outcome>
             <to-view-id>/vistas/usuario/datosUsuario.xhtml</to-view-id>
             <redirect/>
@@ -60,6 +65,11 @@
         <navigation-case>
             <from-outcome>mostrarPublicacion</from-outcome>
             <to-view-id>/vistas/mostrarPublicacion.xhtml?id=#{publicationsGroup.selectedPublicationId}</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>mostrarPublicacionDeCat</from-outcome>
+            <to-view-id>/vistas/mostrarPublicacion.xhtml?id=#{verCategoriaBean.publicacionSeleccionada}</to-view-id>
             <redirect/>
         </navigation-case>
         <navigation-case>

@@ -16,4 +16,6 @@ public interface LoginBeanLocal {
 
     boolean activarCuenta(String usuario, String codigo) throws AlquilaCosasException;
     
+    Integer loginUsuario(String username) throws AlquilaCosasException;
+    
 }

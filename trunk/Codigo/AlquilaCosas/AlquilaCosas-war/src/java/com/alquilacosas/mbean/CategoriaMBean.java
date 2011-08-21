@@ -85,7 +85,7 @@ public class CategoriaMBean implements Serializable{
           return nuevo;
      }
      
-     public void registrarNuevaCategoria(){
+     public String registrarNuevaCategoria(){
           if(selectedNode != null) {
                //Crear Nueva Categoria
                try{
@@ -95,14 +95,15 @@ public class CategoriaMBean implements Serializable{
                     if (!existeCategoria(nombre,categoriaPadre)){
                          categoriaBean.registrarCategoria(nombre, descripcion, categoriaPadre);
                          cargarTrees();
+                         menuBean.cargarMenu();
                          FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Categoria Creada", selectedNode.getData().toString());  
-                         FacesContext.getCurrentInstance().addMessage(null, message);                         
+                         FacesContext.getCurrentInstance().addMessage(null, message);
+                         return "categorias";
                     }
                     else{
                          FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "La Categoria ya Existe", "");  
                          FacesContext.getCurrentInstance().addMessage(null, message); 
                     }
-                    menuBean.cargarMenu();
                }
                catch(AlquilaCosasException e){
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.toString());  
@@ -113,6 +114,7 @@ public class CategoriaMBean implements Serializable{
                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Seleccione Categoria", "Seleccione Categoria");  
                FacesContext.getCurrentInstance().addMessage(null, message);  
           }
+          return null;
      }
 
      public void modificarCategoria(){
@@ -126,6 +128,7 @@ public class CategoriaMBean implements Serializable{
                categoriaSeleccionadaModificar.setNombre(nombreM);
                categoriaSeleccionadaModificar.setDescripcion(descripcionM);
                categoriaBean.modificarCategoria(categoriaSeleccionadaModificar);
+               menuBean.cargarMenu();
                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Categoria Modificada", "");  
                FacesContext.getCurrentInstance().addMessage(null, message); 
           }
@@ -136,8 +139,11 @@ public class CategoriaMBean implements Serializable{
      }
      
      public void borrarCategoria(){
-          categoriaBean.borrarCategoria(categoriaSeleccionadaModificar);
-          menuBean.cargarMenu();
+         if(categoriaSeleccionadaModificar != null)  {
+            categoriaBean.borrarCategoria(categoriaSeleccionadaModificar.getCategoriaId());
+            cargarTrees();
+            menuBean.cargarMenu();
+         }
      }
      
      public boolean existeCategoria(String nombre, Categoria padre){

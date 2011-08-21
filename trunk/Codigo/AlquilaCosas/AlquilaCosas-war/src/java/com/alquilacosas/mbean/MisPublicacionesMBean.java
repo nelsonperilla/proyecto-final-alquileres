@@ -5,10 +5,7 @@
 package com.alquilacosas.mbean;
 
 import com.alquilacosas.common.PublicacionFacade;
-import com.alquilacosas.ejb.entity.ImagenPublicacion;
-import com.alquilacosas.ejb.entity.Publicacion;
 import com.alquilacosas.ejb.session.MisPublicacionesBeanLocal;
-import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;

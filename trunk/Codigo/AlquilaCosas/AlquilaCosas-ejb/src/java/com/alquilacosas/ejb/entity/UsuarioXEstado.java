@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -74,6 +73,7 @@ public class UsuarioXEstado implements Serializable {
     public UsuarioXEstado(Usuario usuario, EstadoUsuario estadoUsuario) {
         this.usuario = usuario;
         this.estadoUsuario = estadoUsuario;
+        fechaDesde = new Date();
     }
 
     public Date getFechaDesde() {

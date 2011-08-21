@@ -31,6 +31,7 @@ public class MostrarPublicacionesBean implements MostrarPublicacionesBeanLocal {
     @Override
     public List<PublicacionFacade> getPublicacionesRandom(int pagina) {
         Query query = entityManager.createNamedQuery("Publicacion.findAll");
+        query.setMaxResults(10);
 
         List<Publicacion> publicaciones = query.getResultList();
         List<PublicacionFacade> resultado = new ArrayList<PublicacionFacade>();

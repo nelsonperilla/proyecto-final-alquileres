@@ -32,7 +32,7 @@
                 <p:tabView>
                     <p:tab title="Nuevo">
                         <h:form id="formNuevo">
-                            <p:growl id="messages" />
+                            <p:growl id="messages" globalOnly="true" />
                             <h:panelGrid columns="2" cellpadding="5">  
                                 <h:outputText value="Nombre" />  
                                 <p:inputText id="nombre" value="#{categoria.nombre}" required="true"
@@ -47,14 +47,15 @@
                                     <h:outputText value="#{node}" />  
                                 </p:treeNode>  
                             </p:tree>  
-                            <p:commandButton value="Guardar" update="messages treeCategoria catMenu"
-                                             actionListener="#{categoria.registrarNuevaCategoria}" /> 
+                            <p:commandButton value="Guardar" update="@form catMenu formModificar"
+                                             action="#{categoria.registrarNuevaCategoria}" /> 
                         </h:form>
                     </p:tab>
                     <p:tab title="Modificar">  
                         <h:form id="formModificar">
-                            <p:growl id="messagesModificar" />
-                            <p:treeTable id="treeCategoriaModificar" value="#{categoria.rootModificar}" var="cat" style="text-align: left" >
+                            <p:growl id="messagesModificar" globalOnly="true" />
+                            <p:treeTable id="treeCategoriaModificar" value="#{categoria.rootModificar}" 
+                                         var="cat" style="text-align: left" >
                                 <p:column>
                                     <f:facet name="header">
                                         <h:outputText value="Nombre"/>
@@ -77,20 +78,22 @@
                                         <f:setPropertyActionListener value="#{cat.nombre}" target="#{categoria.nombreM}" />
                                         <f:setPropertyActionListener value="#{cat.descripcion}" target="#{categoria.descripcionM}" />
                                     </p:commandButton>
-                                    <p:commandButton update="treeCategoriaModificar" oncomplete="confirmacion.show()" 
+                                    <p:commandButton oncomplete="confirmacion.show()" 
                                                      image="ui-icon ui-icon-trash" title="Quitar" >
                                         <f:setPropertyActionListener value="#{cat}" target="#{categoria.categoriaSeleccionadaModificar}" />
                                     </p:commandButton>
                                 </p:column>  
                             </p:treeTable>
-                            <p:confirmDialog message="Esta seguro?" width="200" header="Confirmar"
-                                             severity="alert" widgetVar="confirmacion" >
-                                <p:commandButton value="Si" update="treeCategoriaModificar catMenu" 
+                        </h:form>
+                        <p:confirmDialog message="Esta seguro?" width="200" header="Confirmar"
+                                         severity="alert" widgetVar="confirmacion" >
+                            <h:form>
+                                <p:commandButton value="Si" update=":formModificar :formNuevo catMenu" 
                                                  actionListener="#{categoria.borrarCategoria}"
                                                  oncomplete="confirmacion.hide()" />
                                 <p:commandButton value="No" onclick="confirmacion.hide()" type="button" />
-                            </p:confirmDialog>
-                        </h:form>
+                            </h:form>    
+                        </p:confirmDialog>
 
                         <p:dialog id="dialogo" header="Modificar Categoria" widgetVar="dialogoModifCat" >
                             <h:form id="catDialog">
@@ -99,13 +102,13 @@
                                     <p:inputText id="nombreModificar" value="#{categoria.nombreM}" required="true"
                                                  requiredMessage="Valor requerido"/>
                                     <p:message for="nombreModificar" />
-                                    <h:outputLabel value="Numero" />
+                                    <h:outputLabel value="Descripcion" />
                                     <p:inputText id="descModificar" value="#{categoria.descripcionM}" />
                                     <p:message for="descModificar" />
                                     <f:facet name="footer" >
                                         <p:commandButton value="Guardar" actionListener="#{categoria.modificarCategoria}"
                                                          oncomplete="handleModificarCategoria(xhr, status, args)"
-                                                         update="@catDialog :formModificar:treeCategoriaModificar :formModificar:messagesModificar"/>
+                                                         update="@form catMenu :formModificar :formNuevo"/>
                                         <p:commandButton value="Limpiar" type="reset" />
                                     </f:facet>
                                 </h:panelGrid>

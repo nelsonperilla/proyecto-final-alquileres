@@ -54,25 +54,31 @@ public class Comentario implements Serializable {
     @Column(name = "PREGUNTA")
     private Boolean pregunta;
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @NotNull
     @Column(name = "COMENTARIO_ID")
     private Integer comentarioId;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
     @Column(name = "COMENTARIO")
     private String comentario;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "respuesta")
     private List<Comentario> comentarioList;
+    
     @JoinColumn(name = "RESPUESTA", referencedColumnName = "COMENTARIO_ID")
     @ManyToOne(optional = false)
     private Comentario respuesta;
+    
     @JoinColumn(name = "PUBLICACION_FK", referencedColumnName = "PUBLICACION_ID")
     @ManyToOne(optional = false)
     private Publicacion publicacionFk;
+    
     @JoinColumn(name = "USUARIO_FK", referencedColumnName = "USUARIO_ID")
     @ManyToOne(optional = false)
     private Usuario usuarioFk;

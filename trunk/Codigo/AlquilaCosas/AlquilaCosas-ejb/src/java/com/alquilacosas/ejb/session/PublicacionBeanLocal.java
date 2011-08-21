@@ -9,10 +9,7 @@ import com.alquilacosas.common.ComentarioFacade;
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.common.PrecioFacade;
 import com.alquilacosas.common.PublicacionFacade;
-import com.alquilacosas.ejb.entity.ImagenPublicacion;
-import com.alquilacosas.ejb.entity.Periodo;
-import com.alquilacosas.ejb.entity.Publicacion;
-import com.alquilacosas.ejb.entity.PublicacionXEstado;
+import com.alquilacosas.ejb.entity.EstadoPublicacion.PublicacionEstado;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
@@ -24,36 +21,29 @@ import javax.ejb.Local;
 @Local
 public interface PublicacionBeanLocal {
     
-    public void registrarPublicacion( String titulo, String descripcion, 
+    void registrarPublicacion( String titulo, String descripcion, 
             Date fecha_desde, Date fecha_hasta, boolean destacada, int cantidad,
             int usuarioId, int categoria, List<PrecioFacade> precios, 
-            List<ImagenPublicacion> imagenes ) throws AlquilaCosasException;
-    
-    public List<Periodo> getPeriodos();
-    
-    public Periodo getPeriodo( String nombrePeriodo );
-    
+            List<byte[]> imagenes ) throws AlquilaCosasException;
 
-    public PublicacionFacade getPublicacion(int id);
+    PublicacionFacade getPublicacion(int id);
 
-    public List<ComentarioFacade> getPreguntas(int publicationId);
+    List<ComentarioFacade> getPreguntas(int publicationId);
 
-    public void setPregunta(int publicacionId,ComentarioFacade nuevaPregunta) 
+    void setPregunta(int publicacionId,ComentarioFacade nuevaPregunta) 
             throws AlquilaCosasException;
     
-    public List<ComentarioFacade> getPreguntasSinResponder(int usuarioId);
+    List<ComentarioFacade> getPreguntasSinResponder(int usuarioId);
     
-    public void setRespuesta(ComentarioFacade preguntaConRespuesta)
+    void setRespuesta(ComentarioFacade preguntaConRespuesta)
             throws AlquilaCosasException ;
 
-    public PublicacionFacade getDatosPublicacion(int publicacionId);
+    PublicacionFacade getDatosPublicacion(int publicacionId) throws AlquilaCosasException;
 
-    public void actualizarPublicacion( int publicacionId, String titulo, String descripcion, 
+    void actualizarPublicacion( int publicacionId, String titulo, String descripcion, 
             Date fecha_desde, Date fecha_hasta, boolean destacada, int cantidad,
             int usuarioId, int categoria, List<PrecioFacade> precios, 
             List<byte[]> imagenesAgregar, List<Integer> imagenesABorrar, 
-            int estadoPublicacion  ) throws AlquilaCosasException;
-
-    public PublicacionXEstado getPublicacionEstado( Publicacion p );
+            PublicacionEstado estadoPublicacion  ) throws AlquilaCosasException;
 
 }

@@ -36,42 +36,52 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Domicilio.findByDepto", query = "SELECT d FROM Domicilio d WHERE d.depto = :depto"),
     @NamedQuery(name = "Domicilio.findByBarrio", query = "SELECT d FROM Domicilio d WHERE d.barrio = :barrio")})
 public class Domicilio implements Serializable {
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
     @Column(name = "CIUDAD")
     private String ciudad;
+    
     @JoinColumn(name = "PROVINCIA_FK", referencedColumnName = "PROVINCIA_ID")
     @ManyToOne(optional = false)
     private Provincia provinciaFk;
+    
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @NotNull
     @Column(name = "DOMICILIO_ID")
     private Integer domicilioId;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
     @Column(name = "CALLE")
     private String calle;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "NUMERO")
     private int numero;
+    
     @Basic(optional = false)
     @Column(name = "PISO")
     private int piso;
+    
     @Basic(optional = false)
     @Size(max = 45)
     @Column(name = "DEPTO")
     private String depto;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
     @Column(name = "BARRIO")
     private String barrio;
+    
     @JoinColumn(name = "USUARIO_FK", referencedColumnName = "USUARIO_ID")
     @ManyToOne(optional = false)
     private Usuario usuarioFk;

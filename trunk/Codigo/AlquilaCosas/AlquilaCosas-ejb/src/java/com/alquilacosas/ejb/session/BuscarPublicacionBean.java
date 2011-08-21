@@ -13,12 +13,10 @@ import com.alquilacosas.ejb.entity.Domicilio;
 import com.alquilacosas.ejb.entity.EstadoPublicacion.PublicacionEstado;
 import com.alquilacosas.ejb.entity.ImagenPublicacion;
 import com.alquilacosas.ejb.entity.Periodo;
-import com.alquilacosas.ejb.entity.Precio;
 import com.alquilacosas.ejb.entity.Publicacion;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Resource;
-import javax.ejb.SessionContext;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -33,11 +31,9 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
 
     @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
     private EntityManager entityManager;
-    
-    @Resource
-    private SessionContext context;
-    
-    
+    @EJB
+    private PrecioBeanLocal precioBean;
+
     /*
      * Busca publicacion por palabra clave.
      */
@@ -49,113 +45,93 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
         publicacionesQuery.setParameter(2, PublicacionEstado.ACTIVA);
         publicacionesQuery.setMaxResults(registros);
         publicacionesQuery.setFirstResult(desde);
-        
+
         List<Publicacion> publicaciones = publicacionesQuery.getResultList();
         List<PublicacionFacade> pubFacadeList = new ArrayList<PublicacionFacade>();
         List<Categoria> categorias = new ArrayList<Categoria>();
-        for(Publicacion p: publicaciones) {
-            PublicacionFacade facade = new PublicacionFacade(p.getPublicacionId(), p.getTitulo(),
-                    p.getDescripcion(), p.getFechaDesde(), p.getFechaHasta(), p.getDestacada(),
-                    p.getCantidad());
-            List<Integer> imagenes = new ArrayList<Integer>();
-            for(ImagenPublicacion ip: p.getImagenPublicacionList()) {
-                imagenes.add(ip.getImagenPublicacionId());
-            }
-            facade.setImagenIds(imagenes);
-            Domicilio d = p.getUsuarioFk().getDomicilioList().get(0);
-            facade.setPais(d.getProvinciaFk().getPaisFk().getNombre());
-            facade.setCiudad(d.getProvinciaFk().getNombre());
+        for (Publicacion p : publicaciones) {
             
-            facade.setPrecios(getPrecios(p));
-            
+            PublicacionFacade facade = crearPublicacionFacade(p);
             pubFacadeList.add(facade);
+            
             Categoria c = p.getCategoriaFk();
-            if(!categorias.contains(c))
+            if (!categorias.contains(c)) {
                 categorias.add(c);
+            }
         }
-        
+
         List<CategoriaFacade> catFacade = new ArrayList<CategoriaFacade>();
-        for(Categoria c: categorias) {
+        for (Categoria c : categorias) {
             CategoriaFacade categoria = new CategoriaFacade(c.getCategoriaId(), c.getNombre());
             catFacade.add(categoria);
         }
-        
+
         Busqueda busqueda = new Busqueda(pubFacadeList, catFacade);
-        
-        if(desde == 0) {
+
+        if (desde == 0) {
             Query totalRegQuery = entityManager.createNamedQuery("Publicacion.countByPalabraClave");
             totalRegQuery.setParameter(1, palabra);
             totalRegQuery.setParameter(2, PublicacionEstado.ACTIVA);
-            Long totalRegistros = (Long) totalRegQuery.getSingleResult(); 
-            if(totalRegistros != null)
+            Long totalRegistros = (Long) totalRegQuery.getSingleResult();
+            if (totalRegistros != null) {
                 busqueda.setTotalRegistros(totalRegistros.intValue());
+            }
         }
-        
+
         return busqueda;
     }
-    
+
     /*
      * Busca publicacion por palabra clave y categoria
      */
     @Override
-    public Busqueda buscarPublicaciones(String palabra, int categoriaId, 
+    public Busqueda buscarPublicaciones(String palabra, int categoriaId,
             int registros, int desde) {
         Categoria categoria = entityManager.find(Categoria.class, categoriaId);
-        
+
         Query publicacionesQuery = entityManager.createNamedQuery("Publicacion.findByPalabraClaveAndCat");
         palabra = "%" + palabra + "%";
         publicacionesQuery.setParameter(1, palabra);
         publicacionesQuery.setParameter("categoriaFk", categoria);
         publicacionesQuery.setMaxResults(registros);
         publicacionesQuery.setFirstResult(desde);
-        
+
         List<Publicacion> publicaciones = publicacionesQuery.getResultList();
         List<PublicacionFacade> pubFacadeList = new ArrayList<PublicacionFacade>();
-        for(Publicacion p: publicaciones) {
-            PublicacionFacade facade = new PublicacionFacade(p.getPublicacionId(), p.getTitulo(),
-                    p.getDescripcion(), p.getFechaDesde(), p.getFechaHasta(), p.getDestacada(),
-                    p.getCantidad());
-            List<Integer> imagenes = new ArrayList<Integer>();
-            for(ImagenPublicacion ip: p.getImagenPublicacionList()) {
-                imagenes.add(ip.getImagenPublicacionId());
-            }
-            facade.setImagenIds(imagenes);
+        for (Publicacion p : publicaciones) {
             
-            Domicilio d = p.getUsuarioFk().getDomicilioList().get(0);
-            facade.setPais(d.getProvinciaFk().getPaisFk().getNombre());
-            facade.setCiudad(d.getProvinciaFk().getNombre());
-            
-            facade.setPrecios(getPrecios(p));
-            
+            PublicacionFacade facade = crearPublicacionFacade(p);
             pubFacadeList.add(facade);
+            
         }
-        
+
         List<CategoriaFacade> catFacade = new ArrayList<CategoriaFacade>();
         CategoriaFacade cat = new CategoriaFacade(categoria.getCategoriaId(), categoria.getNombre());
         catFacade.add(cat);
-        
+
         Busqueda busqueda = new Busqueda(pubFacadeList, catFacade);
-        
-        if(desde == 0) {
+
+        if (desde == 0) {
             Query totalRegQuery = entityManager.createNamedQuery("Publicacion.countByPalabraClaveAndCat");
             totalRegQuery.setParameter(1, palabra);
             totalRegQuery.setParameter("categoriaFk", categoria);
             //totalRegQuery.setParameter(2, PublicacionEstado.ACTIVA);
-            Long totalRegistros = (Long) totalRegQuery.getSingleResult(); 
-            if(totalRegistros != null)
+            Long totalRegistros = (Long) totalRegQuery.getSingleResult();
+            if (totalRegistros != null) {
                 busqueda.setTotalRegistros(totalRegistros.intValue());
+            }
         }
-        
+
         return busqueda;
     }
-    
+
     /*
      * Busca publicacion por palabra clave y ubicacion
      */
     @Override
-    public Busqueda buscarPublicaciones(String palabra, String ubicacion, 
+    public Busqueda buscarPublicaciones(String palabra, String ubicacion,
             int registros, int desde) {
-        
+
         Query publicacionesQuery = entityManager.createNamedQuery("Publicacion.findByPalabraAndUbicacion");
         palabra = "%" + palabra + "%";
         ubicacion = "%" + ubicacion + "%";
@@ -163,58 +139,46 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
         publicacionesQuery.setParameter(2, ubicacion);
         publicacionesQuery.setMaxResults(registros);
         publicacionesQuery.setFirstResult(desde);
-        
+
         List<Publicacion> publicaciones = publicacionesQuery.getResultList();
         List<PublicacionFacade> pubFacadeList = new ArrayList<PublicacionFacade>();
         List<Categoria> categorias = new ArrayList<Categoria>();
-        for(Publicacion p: publicaciones) {
-            PublicacionFacade facade = new PublicacionFacade(p.getPublicacionId(), p.getTitulo(),
-                    p.getDescripcion(), p.getFechaDesde(), p.getFechaHasta(), p.getDestacada(),
-                    p.getCantidad());
-            List<Integer> imagenes = new ArrayList<Integer>();
-            for(ImagenPublicacion ip: p.getImagenPublicacionList()) {
-                imagenes.add(ip.getImagenPublicacionId());
-            }
-            facade.setImagenIds(imagenes);
+        for (Publicacion p : publicaciones) {
             
-            Domicilio d = p.getUsuarioFk().getDomicilioList().get(0);
-            facade.setPais(d.getProvinciaFk().getPaisFk().getNombre());
-            facade.setCiudad(d.getProvinciaFk().getNombre());
-            
-            facade.setPrecios(getPrecios(p));
-            
+            PublicacionFacade facade = crearPublicacionFacade(p);
             pubFacadeList.add(facade);
         }
-        
+
         List<CategoriaFacade> catFacade = new ArrayList<CategoriaFacade>();
-        for(Categoria c: categorias) {
+        for (Categoria c : categorias) {
             CategoriaFacade cat = new CategoriaFacade(c.getCategoriaId(), c.getNombre());
             catFacade.add(cat);
         }
         Busqueda busqueda = new Busqueda(pubFacadeList, catFacade);
-        
-        if(desde == 0) {
+
+        if (desde == 0) {
             Query totalRegQuery = entityManager.createNamedQuery("Publicacion.countByPalabraAndUbicacion");
             totalRegQuery.setParameter(1, palabra);
             totalRegQuery.setParameter(2, ubicacion);
             //totalRegQuery.setParameter(2, PublicacionEstado.ACTIVA);
-            Long totalRegistros = (Long) totalRegQuery.getSingleResult(); 
-            if(totalRegistros != null)
+            Long totalRegistros = (Long) totalRegQuery.getSingleResult();
+            if (totalRegistros != null) {
                 busqueda.setTotalRegistros(totalRegistros.intValue());
+            }
         }
-        
+
         return busqueda;
     }
-    
+
     /*
      * Busca publicacion por palabra clave, categoria y ubicacion
      */
     @Override
     public Busqueda buscarPublicaciones(String palabra, String ubicacion, int categoriaId,
             int registros, int desde) {
-        
+
         Categoria categoria = entityManager.find(Categoria.class, categoriaId);
-        
+
         Query publicacionesQuery = entityManager.createNamedQuery("Publicacion.findByPalabraCategoriaUbicacion");
         palabra = "%" + palabra + "%";
         ubicacion = "%" + ubicacion + "%";
@@ -223,57 +187,45 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
         publicacionesQuery.setParameter("categoriaFk", categoria);
         publicacionesQuery.setMaxResults(registros);
         publicacionesQuery.setFirstResult(desde);
-        
+
         List<Publicacion> publicaciones = publicacionesQuery.getResultList();
         List<PublicacionFacade> pubFacadeList = new ArrayList<PublicacionFacade>();
         List<Categoria> categorias = new ArrayList<Categoria>();
-        for(Publicacion p: publicaciones) {
-            PublicacionFacade facade = new PublicacionFacade(p.getPublicacionId(), p.getTitulo(),
-                    p.getDescripcion(), p.getFechaDesde(), p.getFechaHasta(), p.getDestacada(),
-                    p.getCantidad());
-            List<Integer> imagenes = new ArrayList<Integer>();
-            for(ImagenPublicacion ip: p.getImagenPublicacionList()) {
-                imagenes.add(ip.getImagenPublicacionId());
-            }
-            facade.setImagenIds(imagenes);
+        for (Publicacion p : publicaciones) {
             
-            Domicilio d = p.getUsuarioFk().getDomicilioList().get(0);
-            facade.setPais(d.getProvinciaFk().getPaisFk().getNombre());
-            facade.setCiudad(d.getProvinciaFk().getNombre());
-            
-            facade.setPrecios(getPrecios(p));
-            
+            PublicacionFacade facade = crearPublicacionFacade(p);
             pubFacadeList.add(facade);
         }
-        
+
         List<CategoriaFacade> catFacade = new ArrayList<CategoriaFacade>();
-        for(Categoria c: categorias) {
+        for (Categoria c : categorias) {
             CategoriaFacade cat = new CategoriaFacade(c.getCategoriaId(), c.getNombre());
             catFacade.add(cat);
         }
         Busqueda busqueda = new Busqueda(pubFacadeList, catFacade);
-        
-        if(desde == 0) {
+
+        if (desde == 0) {
             Query totalRegQuery = entityManager.createNamedQuery("Publicacion.countByPalabraCategoriaUbicacion");
             totalRegQuery.setParameter(1, palabra);
             totalRegQuery.setParameter(2, ubicacion);
             totalRegQuery.setParameter("categoriaFk", categoria);
             //totalRegQuery.setParameter(2, PublicacionEstado.ACTIVA);
-            Long totalRegistros = (Long) totalRegQuery.getSingleResult(); 
-            if(totalRegistros != null)
+            Long totalRegistros = (Long) totalRegQuery.getSingleResult();
+            if (totalRegistros != null) {
                 busqueda.setTotalRegistros(totalRegistros.intValue());
+            }
         }
-        
+
         return busqueda;
     }
-    
+
     /*
      * Busca publicacion por palabra clave, categoria y precio.
      */
     @Override
     public Busqueda buscarPublicaciones(String palabra, int categoriaId, double precioMinimo,
             double precioMaximo, int periodoId, int registros, int desde) {
-        
+
         Categoria categoria = entityManager.find(Categoria.class, categoriaId);
         Periodo periodo = entityManager.find(Periodo.class, periodoId);
         Query publicacionesQuery = entityManager.createNamedQuery("Publicacion.findByPalabraCategoriaPrecio");
@@ -284,111 +236,91 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
         publicacionesQuery.setParameter(3, precioMaximo);
         publicacionesQuery.setMaxResults(registros);
         publicacionesQuery.setFirstResult(desde);
-        
+
         List<Publicacion> publicaciones = publicacionesQuery.getResultList();
         List<PublicacionFacade> pubFacadeList = new ArrayList<PublicacionFacade>();
         List<Categoria> categorias = new ArrayList<Categoria>();
-        for(Publicacion p: publicaciones) {
-            PublicacionFacade facade = new PublicacionFacade(p.getPublicacionId(), p.getTitulo(),
-                    p.getDescripcion(), p.getFechaDesde(), p.getFechaHasta(), p.getDestacada(),
-                    p.getCantidad());
-            List<Integer> imagenes = new ArrayList<Integer>();
-            for(ImagenPublicacion ip: p.getImagenPublicacionList()) {
-                imagenes.add(ip.getImagenPublicacionId());
-            }
-            facade.setImagenIds(imagenes);
+        for (Publicacion p : publicaciones) {
             
-            Domicilio d = p.getUsuarioFk().getDomicilioList().get(0);
-            facade.setPais(d.getProvinciaFk().getPaisFk().getNombre());
-            facade.setCiudad(d.getProvinciaFk().getNombre());
-            
-            facade.setPrecios(getPrecios(p));
-            
+            PublicacionFacade facade = crearPublicacionFacade(p);
             pubFacadeList.add(facade);
         }
-        
+
         List<CategoriaFacade> catFacade = new ArrayList<CategoriaFacade>();
-        for(Categoria c: categorias) {
+        for (Categoria c : categorias) {
             CategoriaFacade cat = new CategoriaFacade(c.getCategoriaId(), c.getNombre());
             catFacade.add(cat);
         }
         Busqueda busqueda = new Busqueda(pubFacadeList, catFacade);
         return busqueda;
-        
+
     }
-    
+
     /*
      * Busca publicaciones por categoria
      */
     @Override
     public Busqueda buscarPublicacionesPorCategoria(int categoriaId, int registros, int desde) {
         Categoria categoria = entityManager.find(Categoria.class, categoriaId);
-        
+
         Query publicacionesQuery = entityManager.createNamedQuery("Publicacion.findByCategoria");
         publicacionesQuery.setParameter("categoriaFk", categoria);
         publicacionesQuery.setParameter("estado", PublicacionEstado.ACTIVA);
         publicacionesQuery.setMaxResults(registros);
         publicacionesQuery.setFirstResult(desde);
-        
+
         List<Publicacion> publicaciones = publicacionesQuery.getResultList();
         List<PublicacionFacade> pubFacadeList = new ArrayList<PublicacionFacade>();
-        for(Publicacion p: publicaciones) {
-            PublicacionFacade facade = new PublicacionFacade(p.getPublicacionId(), p.getTitulo(),
-                    p.getDescripcion(), p.getFechaDesde(), p.getFechaHasta(), p.getDestacada(),
-                    p.getCantidad());
-            List<Integer> imagenes = new ArrayList<Integer>();
-            for(ImagenPublicacion ip: p.getImagenPublicacionList()) {
-                imagenes.add(ip.getImagenPublicacionId());
-            }
-            facade.setImagenIds(imagenes);
+        for (Publicacion p : publicaciones) {
             
-            Domicilio d = p.getUsuarioFk().getDomicilioList().get(0);
-            facade.setPais(d.getProvinciaFk().getPaisFk().getNombre());
-            facade.setCiudad(d.getProvinciaFk().getNombre());
-            
-            facade.setPrecios(getPrecios(p));
-            
+            PublicacionFacade facade = crearPublicacionFacade(p);
             pubFacadeList.add(facade);
         }
-        
+
         List<CategoriaFacade> categorias = new ArrayList<CategoriaFacade>();
         categorias.add(new CategoriaFacade(categoria.getCategoriaId(), categoria.getNombre()));
-        
+
         Busqueda busqueda = new Busqueda(pubFacadeList, categorias);
-        
-        if(desde == 0) {
+
+        if (desde == 0) {
             Query totalRegQuery = entityManager.createNamedQuery("Publicacion.countByCategoria");
             totalRegQuery.setParameter("categoriaFk", categoria);
             totalRegQuery.setParameter("estado", PublicacionEstado.ACTIVA);
             //totalRegQuery.setParameter(2, PublicacionEstado.ACTIVA);
-            Long totalRegistros = (Long) totalRegQuery.getSingleResult(); 
-            if(totalRegistros != null)
+            Long totalRegistros = (Long) totalRegQuery.getSingleResult();
+            if (totalRegistros != null) {
                 busqueda.setTotalRegistros(totalRegistros.intValue());
+            }
         }
-        
+
         return busqueda;
     }
 
     @Override
     public byte[] leerImagen(int id) {
         ImagenPublicacion im = entityManager.find(ImagenPublicacion.class, id);
-        if(im != null)
+        if (im != null) {
             return im.getImagen();
+        }
         return null;
     }
 
-    private List<PrecioFacade> getPrecios(Publicacion filter){
-        List<PrecioFacade> resultado = new ArrayList<PrecioFacade>();
-        List<Precio> precios;
-        Query query = entityManager.createNamedQuery("Precio.findByPublicacion");
-        query.setParameter("publicacion", filter);
-        precios = query.getResultList();   
+    private PublicacionFacade crearPublicacionFacade(Publicacion publicacion) {
+        PublicacionFacade facade = new PublicacionFacade(publicacion.getPublicacionId(), 
+                publicacion.getTitulo(), publicacion.getDescripcion(), publicacion.getFechaDesde(), 
+                publicacion.getFechaHasta(), publicacion.getDestacada(),
+                publicacion.getCantidad());
+        List<Integer> imagenes = new ArrayList<Integer>();
+        for (ImagenPublicacion ip : publicacion.getImagenPublicacionList()) {
+            imagenes.add(ip.getImagenPublicacionId());
+        }
+        facade.setImagenIds(imagenes);
+        Domicilio d = publicacion.getUsuarioFk().getDomicilioList().get(0);
+        facade.setPais(d.getProvinciaFk().getPaisFk().getNombre());
+        facade.setCiudad(d.getProvinciaFk().getNombre());
+        List<PrecioFacade> precios = precioBean.getPrecios(publicacion);
+        facade.setPrecios(precios);
         
-        for(Precio precio: precios)
-            resultado.add(new PrecioFacade(precio.getPrecio(), precio.getPeriodoFk().getNombre()));
-        
-        return resultado;
-
-    } 
-    
+        return facade;
+    }
 }

@@ -37,7 +37,7 @@ public class PeriodoAlquilerMBean{
      
      @PostConstruct
      public void init() {
-          periodosAlquiler = periodoAlquilerBean.getPeriodosAlquiler();
+          periodosAlquiler = periodoAlquilerBean.getPeriodos();
      }
      
      public void borrarPeriodo() {
@@ -56,15 +56,12 @@ public class PeriodoAlquilerMBean{
      }
      
      public void registrarPeriodo() {
-          Periodo nuevo = new Periodo();
-          nuevo.setNombre(nombre);
-          nuevo.setDescripcion(descripcion);
-          nuevo.setHoras(horas);
           try{
-               periodoAlquilerBean.registrarPeriodo(nuevo);
+               periodoAlquilerBean.registrarPeriodo(nombre, descripcion, horas);
           }
           catch(AlquilaCosasException e){
-               FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getMessage());
+               FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                       e.getMessage(), e.getMessage());
                FacesContext.getCurrentInstance().addMessage(null, message); 
           }  
      }

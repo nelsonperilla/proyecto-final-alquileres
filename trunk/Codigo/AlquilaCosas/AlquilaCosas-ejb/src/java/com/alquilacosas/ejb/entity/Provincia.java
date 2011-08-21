@@ -37,21 +37,26 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Provincia.findByNombre", query = "SELECT p FROM Provincia p WHERE p.nombre = :nombre"),
     @NamedQuery(name = "Provincia.findByPais", query = "SELECT p FROM Provincia p WHERE p.paisFk = :pais")})
 public class Provincia implements Serializable {
+    
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @NotNull
     @Column(name = "PROVINCIA_ID")
     private Integer provinciaId;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
     @Column(name = "NOMBRE")
     private String nombre;
+    
     @JoinColumn(name = "PAIS_FK", referencedColumnName = "PAIS_ID")
     @ManyToOne(optional = false)
     private Pais paisFk;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "provinciaFk")
     private List<Domicilio> domicilioList;
 

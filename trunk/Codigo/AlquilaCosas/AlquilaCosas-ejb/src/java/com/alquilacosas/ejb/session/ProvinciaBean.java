@@ -31,9 +31,6 @@ public class ProvinciaBean implements ProvinciaBeanLocal {
           return provincias;
      }
      
-     // Add business logic below. (Right-click in editor and choose
-     // "Insert Code > Add Business Method")
-     
      @Override
      public void modificarProvincia(Provincia provinciaNuevo) {
           Provincia modifProvincia = entityManager.find(Provincia.class, provinciaNuevo.getProvinciaId());

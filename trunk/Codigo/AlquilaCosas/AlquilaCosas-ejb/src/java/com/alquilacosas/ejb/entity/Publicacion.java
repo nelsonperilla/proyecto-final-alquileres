@@ -5,6 +5,7 @@
 package com.alquilacosas.ejb.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -82,68 +83,126 @@ import javax.xml.bind.annotation.XmlTransient;
         query = "SELECT COUNT(p.publicacionId) FROM Publicacion p, Precio pre WHERE p.categoriaFk = :categoriaFk AND (p.titulo LIKE ?1 OR "
         + "p.descripcion LIKE ?1) AND pre.publicacionFk = p AND pre.periodoFk = :periodoFk AND pre.precio BETWEEN ?2 AND ?3")})
 public class Publicacion implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
+    
     @Basic(optional =     false)
     @NotNull
     @Column(name = "FECHA_DESDE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaDesde;
+    
     @Basic(optional =     false)
     @NotNull
     @Column(name = "FECHA_HASTA")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaHasta;
-    private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @NotNull
     @Column(name = "PUBLICACION_ID")
     private Integer publicacionId;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
     @Column(name = "TITULO")
     private String titulo;
+    
     @Size(max = 2000)
     @Column(name = "DESCRIPCION")
     private String descripcion;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "DESTACADA")
     private boolean destacada;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "CANTIDAD")
     private int cantidad;
+    
     @JoinColumn(name = "USUARIO_FK", referencedColumnName = "USUARIO_ID")
     @ManyToOne(optional = false)
     private Usuario usuarioFk;
+    
     @JoinColumn(name = "CATEGORIA_FK", referencedColumnName = "CATEGORIA_ID")
     @ManyToOne(optional = false)
     private Categoria categoriaFk;
-    @OneToMany(mappedBy = "publicacionFk")
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "publicacionFk")
     private List<ImagenPublicacion> imagenPublicacionList;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "publicacion")
     private List<PublicacionXEstado> publicacionXEstadoList;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "publicacionFk")
     private List<Comentario> comentarioList;
-    @OneToMany(mappedBy = "publicacionFk")
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "publicacionFk")
     private List<Precio> precioList;
 
     public Publicacion() {
+        imagenPublicacionList = new ArrayList<ImagenPublicacion>();
+        comentarioList = new ArrayList<Comentario>();
+        precioList = new ArrayList<Precio>();
+        publicacionXEstadoList = new ArrayList<PublicacionXEstado>();
     }
 
     public Publicacion(Integer publicacionId) {
+        this();
         this.publicacionId = publicacionId;
     }
 
     public Publicacion(Integer publicacionId, String titulo, Date fechaDesde, Date fechaHasta, boolean destacada, int cantidad) {
+        this();
         this.publicacionId = publicacionId;
         this.titulo = titulo;
         this.fechaDesde = fechaDesde;
         this.fechaHasta = fechaHasta;
         this.destacada = destacada;
         this.cantidad = cantidad;
+    }
+    
+    public void agregarImagen(ImagenPublicacion imagen) {
+        imagenPublicacionList.add(imagen);
+        imagen.setPublicacionFk(this);
+    }
+    
+    public ImagenPublicacion removerImagen(ImagenPublicacion imagen) {
+        imagenPublicacionList.remove(imagen);
+        //imagen.setPublicacionFk(null);
+        return imagen;
+    }
+    
+    public void agregarPrecio(Precio precio) {
+        precioList.add(precio);
+        precio.setPublicacionFk(this);
+    }
+    
+    public void actualizarPrecio(Integer precioId, double valor) {
+        for(Precio p: precioList) {
+            if(p.getPrecioId().equals(precioId)) {
+                p.setPrecio(valor);
+                return;
+            }
+        }
+    }
+    
+    public Precio removerPrecio(Precio precio) {
+        precioList.remove(precio);
+        return precio;
+    }
+    
+    public void agregarPublicacionXEstado(PublicacionXEstado pxe) {
+//        if(!publicacionXEstadoList.isEmpty()) {
+//            publicacionXEstadoList.get(publicacionXEstadoList.size() - 1).setFechaHasta(new Date());
+//        }
+        publicacionXEstadoList.add(pxe);
+        pxe.setPublicacion(this);
     }
 
     public Integer getPublicacionId() {

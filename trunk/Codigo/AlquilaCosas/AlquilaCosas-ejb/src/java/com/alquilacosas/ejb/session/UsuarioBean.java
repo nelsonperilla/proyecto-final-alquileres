@@ -33,7 +33,6 @@ import javax.ejb.TransactionManagementType;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
-import javax.jms.JMSException;
 import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
@@ -110,8 +109,6 @@ public class UsuarioBean implements UsuarioBeanLocal {
         usuario.setTelefono(telefono);
         usuario.setEmail(email);
 
-        entityManager.persist(usuario);
-
         Provincia provincia = entityManager.find(Provincia.class, prov);
         Domicilio domicilio = new Domicilio();
         domicilio.setCalle(dom.getCalle());
@@ -123,32 +120,32 @@ public class UsuarioBean implements UsuarioBeanLocal {
         domicilio.setBarrio(dom.getBarrio());
         domicilio.setCiudad(dom.getCiudad());
         domicilio.setProvinciaFk(provincia);
-        domicilio.setUsuarioFk(usuario);
-        entityManager.persist(domicilio);
+        
+        usuario.agregarDomicilio(domicilio);
 
         Login login = new Login();
         login.setFechaCreacion(new Date());
         login.setUsername(username);
         login.setPassword(password);
-        login.setUsuarioFk(usuario);
         SecureRandom random = new SecureRandom();
         String activacion = new BigInteger(130, random).toString(32);
         login.setCodigoActivacion(activacion);
-
+        
         Rol rol = null;
         try {
             Query getRolQuery = entityManager.createNamedQuery("Rol.findByNombre");
             getRolQuery.setParameter("nombre", NombreRol.USUARIO);
             rol = (Rol) getRolQuery.getSingleResult();
         } catch(NoResultException e) {
-            context.setRollbackOnly();
+            //context.setRollbackOnly();
             throw new AlquilaCosasException("No se encontro el Rol 'Usuario' en la base de datos.");
         }
-        List<Rol> roles = new ArrayList<Rol>();
-        roles.add(rol);
-
-        login.setRolList(roles);
-        entityManager.persist(login);
+//        List<Rol> roles = new ArrayList<Rol>();
+//        roles.add(rol);
+//        login.setRolList(roles);
+        
+        login.agregarRol(rol);
+        usuario.agregarLogin(login);
 
         EstadoUsuario estado = null;
         try {
@@ -156,13 +153,15 @@ public class UsuarioBean implements UsuarioBeanLocal {
             getEstadoQuery.setParameter("nombre", NombreEstado.REGISTRADO);
             estado = (EstadoUsuario) getEstadoQuery.getSingleResult();
         } catch(NoResultException e) {
-            context.setRollbackOnly();
+            //context.setRollbackOnly();
             throw new AlquilaCosasException("No se encontro el estado de usuario 'Registrado' en la base de datos'");
         }
 
         UsuarioXEstado uxe = new UsuarioXEstado(usuario, estado);
-        uxe.setFechaDesde(new Date());
-        entityManager.persist(uxe);
+        //entityManager.persist(uxe);
+        usuario.agregarUsuarioXEstado(uxe);
+        
+        entityManager.persist(usuario);
 
         try {
             Connection connection = connectionFactory.createConnection();
@@ -213,7 +212,6 @@ public class UsuarioBean implements UsuarioBeanLocal {
         domicilio.setPiso(dom.getPiso());
         domicilio.setDepto(dom.getDepto());
         
-        entityManager.merge(domicilio);
         entityManager.merge(usuario);
         
         UsuarioFacade uFacade = new UsuarioFacade(usuario.getUsuarioId(), usuario.getNombre(),
@@ -237,25 +235,6 @@ public class UsuarioBean implements UsuarioBeanLocal {
             return false;
         else
             return true;
-    }
-
-    @Override
-    public Integer loginUsuario(String username) throws AlquilaCosasException {
-        
-        Login login = null;
-        Query buscarLogin = entityManager.createNamedQuery("Login.findByUsername");
-        buscarLogin.setParameter("username", username);
-        try {
-            login = (Login) buscarLogin.getSingleResult();
-        } catch (Exception e) {
-            throw new AlquilaCosasException("Username no valido");
-        }
-        
-        Usuario usuario = login.getUsuarioFk();
-        if(usuario == null)
-            throw new AlquilaCosasException("Usuario no asociado a la cuenta.");
-        
-        return usuario.getUsuarioId();
     }
     
     @Override
