@@ -5,10 +5,10 @@
 package com.alquilacosas.ejb.session;
 
 
-import com.alquilacosas.common.ComentarioFacade;
+import com.alquilacosas.dto.ComentarioDTO;
 import com.alquilacosas.common.AlquilaCosasException;
-import com.alquilacosas.common.PrecioFacade;
-import com.alquilacosas.common.PublicacionFacade;
+import com.alquilacosas.dto.PrecioDTO;
+import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.entity.EstadoPublicacion.PublicacionEstado;
 import java.util.Date;
 import java.util.List;
@@ -23,26 +23,26 @@ public interface PublicacionBeanLocal {
     
     void registrarPublicacion( String titulo, String descripcion, 
             Date fecha_desde, Date fecha_hasta, boolean destacada, int cantidad,
-            int usuarioId, int categoria, List<PrecioFacade> precios, 
+            int usuarioId, int categoria, List<PrecioDTO> precios, 
             List<byte[]> imagenes ) throws AlquilaCosasException;
 
-    PublicacionFacade getPublicacion(int id);
+    PublicacionDTO getPublicacion(int id);
 
-    List<ComentarioFacade> getPreguntas(int publicationId);
+    List<ComentarioDTO> getPreguntas(int publicationId);
 
-    void setPregunta(int publicacionId,ComentarioFacade nuevaPregunta) 
+    void setPregunta(int publicacionId,ComentarioDTO nuevaPregunta) 
             throws AlquilaCosasException;
     
-    List<ComentarioFacade> getPreguntasSinResponder(int usuarioId);
+    List<ComentarioDTO> getPreguntasSinResponder(int usuarioId);
     
-    void setRespuesta(ComentarioFacade preguntaConRespuesta)
+    void setRespuesta(ComentarioDTO preguntaConRespuesta)
             throws AlquilaCosasException ;
 
-    PublicacionFacade getDatosPublicacion(int publicacionId) throws AlquilaCosasException;
+    PublicacionDTO getDatosPublicacion(int publicacionId) throws AlquilaCosasException;
 
     void actualizarPublicacion( int publicacionId, String titulo, String descripcion, 
             Date fecha_desde, Date fecha_hasta, boolean destacada, int cantidad,
-            int usuarioId, int categoria, List<PrecioFacade> precios, 
+            int usuarioId, int categoria, List<PrecioDTO> precios, 
             List<byte[]> imagenesAgregar, List<Integer> imagenesABorrar, 
             PublicacionEstado estadoPublicacion  ) throws AlquilaCosasException;
 

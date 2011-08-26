@@ -5,8 +5,8 @@
 package com.alquilacosas.mbean;
 
 import com.alquilacosas.common.Busqueda;
-import com.alquilacosas.common.CategoriaFacade;
-import com.alquilacosas.common.PublicacionFacade;
+import com.alquilacosas.dto.CategoriaDTO;
+import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.session.BuscarPublicacionBeanLocal;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -31,9 +31,9 @@ public class ResultadosMBean implements Serializable {
     @EJB
     private BuscarPublicacionBeanLocal buscarBean;
     private LazyDataModel model;
-    private List<PublicacionFacade> publicaciones;
-    private List<CategoriaFacade> categorias;
-    private PublicacionFacade publicacionActual;
+    private List<PublicacionDTO> publicaciones;
+    private List<CategoriaDTO> categorias;
+    private PublicacionDTO publicacionActual;
     private String busqueda, ubicacion;
     private Integer categoria;
     private int publicacionSeleccionada;
@@ -47,7 +47,7 @@ public class ResultadosMBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        publicaciones = new ArrayList<PublicacionFacade>();
+        publicaciones = new ArrayList<PublicacionDTO>();
         busqueda = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("art");
 //        String cat = FacesContext.getCurrentInstance().getExternalContext()
 //                .getRequestParameterMap().get("cat");
@@ -55,10 +55,10 @@ public class ResultadosMBean implements Serializable {
 //            categoria = Integer.valueOf(cat);
         
         buscar(0, 10);
-        model = new LazyDataModel<PublicacionFacade>() {
+        model = new LazyDataModel<PublicacionDTO>() {
 
             @Override
-            public List<PublicacionFacade> load(int first, int pageSize, String sortFielf,
+            public List<PublicacionDTO> load(int first, int pageSize, String sortFielf,
                     boolean sort, Map<String, String> filters) {
                 if(noBuscarEnModel) {
                     noBuscarEnModel = false;
@@ -104,7 +104,7 @@ public class ResultadosMBean implements Serializable {
     
     public String getNombreCategoria() {
         if(categoria != null)
-        for(CategoriaFacade c: categorias) {
+        for(CategoriaDTO c: categorias) {
             if(c.getId() == categoria)
                 return c.getNombre();
         }
@@ -112,26 +112,9 @@ public class ResultadosMBean implements Serializable {
     }
 
     public void buscar(int first, int pageSize) {
-        if(busqueda == null || busqueda.equals(""))
-            return;
-        Busqueda b = null;
-        if (categoria == null && !filtrarUbicacion) {
-            b = buscarBean.buscarPublicaciones(busqueda, pageSize, first);
-            publicaciones = b.getPublicaciones();
-            categorias = b.getCategorias();
-        } else if (categoria != null && !filtrarUbicacion) {
-            b = buscarBean.buscarPublicaciones(busqueda, categoria, pageSize, first);
-            publicaciones = b.getPublicaciones();
-            categorias = b.getCategorias();
-        } else if(categoria == null && filtrarUbicacion) {
-            b = buscarBean.buscarPublicaciones(busqueda, ubicacion, pageSize, first);
-            publicaciones = b.getPublicaciones();
-            categorias = b.getCategorias();
-        } else if(categoria != null && filtrarUbicacion) {
-            b = buscarBean.buscarPublicaciones(busqueda, ubicacion, categoria, pageSize, first);
-            publicaciones = b.getPublicaciones();
-            categorias = b.getCategorias();
-        }
+        Busqueda b = buscarBean.buscar(busqueda, categoria, ubicacion, null, null, null, pageSize, first);
+        publicaciones = b.getPublicaciones();
+        categorias = b.getCategorias();
         if(first == 0) {
             totalRegistros = b.getTotalRegistros();
             if(model != null)
@@ -151,19 +134,19 @@ public class ResultadosMBean implements Serializable {
         this.busqueda = busqueda;
     }
 
-    public List<PublicacionFacade> getPublicaciones() {
+    public List<PublicacionDTO> getPublicaciones() {
         return publicaciones;
     }
 
-    public void setPublicaciones(List<PublicacionFacade> publicaciones) {
+    public void setPublicaciones(List<PublicacionDTO> publicaciones) {
         this.publicaciones = publicaciones;
     }
 
-    public PublicacionFacade getPublicacionActual() {
+    public PublicacionDTO getPublicacionActual() {
         return publicacionActual;
     }
 
-    public void setPublicacionActual(PublicacionFacade publicacionActual) {
+    public void setPublicacionActual(PublicacionDTO publicacionActual) {
         this.publicacionActual = publicacionActual;
     }
 
@@ -183,11 +166,11 @@ public class ResultadosMBean implements Serializable {
         this.publicacionSeleccionada = publicacionSeleccionada;
     }
 
-    public List<CategoriaFacade> getCategorias() {
+    public List<CategoriaDTO> getCategorias() {
         return categorias;
     }
 
-    public void setCategorias(List<CategoriaFacade> categorias) {
+    public void setCategorias(List<CategoriaDTO> categorias) {
         this.categorias = categorias;
     }
 

@@ -5,10 +5,10 @@
 package com.alquilacosas.mbean;
 
 import com.alquilacosas.common.AlquilaCosasException;
-import com.alquilacosas.common.DomicilioFacade;
+import com.alquilacosas.dto.DomicilioDTO;
 import com.alquilacosas.ejb.entity.Pais;
 import com.alquilacosas.ejb.entity.Provincia;
-import com.alquilacosas.ejb.session.UsuarioBeanLocal;
+import com.alquilacosas.ejb.session.RegistrarUsuarioBeanLocal;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,7 +36,7 @@ public class RegistrarUsuarioMBean implements Serializable {
     }
     
     @EJB
-    private UsuarioBeanLocal usuarioBean;
+    private RegistrarUsuarioBeanLocal usuarioBean;
     private String username;
     private String password;
     private String password2;
@@ -57,7 +57,7 @@ public class RegistrarUsuarioMBean implements Serializable {
     private int provinciaSeleccionada;
     private List<SelectItem> paises;
     private int paisSeleccionado;
-    private DomicilioFacade domicilio;
+    private DomicilioDTO domicilio;
     private boolean creado;
     
     @PostConstruct
@@ -74,7 +74,7 @@ public class RegistrarUsuarioMBean implements Serializable {
     }
     
     public void crearDomicilio() {
-        domicilio = new DomicilioFacade();
+        domicilio = new DomicilioDTO();
         domicilio.setCalle(calle);
         domicilio.setNumero(numero);
         if(piso != null)

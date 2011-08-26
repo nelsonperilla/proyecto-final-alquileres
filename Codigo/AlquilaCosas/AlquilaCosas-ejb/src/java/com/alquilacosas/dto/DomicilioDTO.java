@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.alquilacosas.common;
+package com.alquilacosas.dto;
 
 import java.io.Serializable;
 
@@ -10,18 +10,18 @@ import java.io.Serializable;
  *
  * @author damiancardozo
  */
-public class DomicilioFacade implements Serializable {
+public class DomicilioDTO implements Serializable {
     
     private String calle, depto, barrio, ciudad, provincia, pais;
     private int numero;
     private Integer piso;
     private int provinciaId, paisId;
     
-    public DomicilioFacade() {
+    public DomicilioDTO() {
         
     }
     
-    public DomicilioFacade(String calle, int numero, int piso,
+    public DomicilioDTO(String calle, int numero, int piso,
             String depto, String barrio, String ciudad) {
         this.calle = calle;
         this.numero = numero;
@@ -31,7 +31,7 @@ public class DomicilioFacade implements Serializable {
         this.ciudad = ciudad;
     }
     
-    public DomicilioFacade(String calle, int numero, String barrio, 
+    public DomicilioDTO(String calle, int numero, String barrio, 
             String ciudad) {
         this.calle = calle;
         this.numero = numero;

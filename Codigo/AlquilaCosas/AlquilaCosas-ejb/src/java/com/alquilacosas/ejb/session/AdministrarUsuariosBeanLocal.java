@@ -4,8 +4,7 @@
  */
 package com.alquilacosas.ejb.session;
 
-import com.alquilacosas.dto.PrecioDTO;
-import com.alquilacosas.ejb.entity.Publicacion;
+import com.alquilacosas.dto.UsuarioDTO;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -14,8 +13,10 @@ import javax.ejb.Local;
  * @author damiancardozo
  */
 @Local
-public interface PrecioBeanLocal {
-    
-    List<PrecioDTO> getPrecios(Publicacion publicacion);
+public interface AdministrarUsuariosBeanLocal {
+
+    List<UsuarioDTO> getUsuariosList();
+
+    void setRoles(UsuarioDTO usuarioFacade, List<Integer> roles);
     
 }

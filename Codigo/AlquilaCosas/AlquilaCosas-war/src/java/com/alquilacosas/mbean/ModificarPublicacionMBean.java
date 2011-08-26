@@ -5,9 +5,9 @@
 package com.alquilacosas.mbean;
 
 import com.alquilacosas.common.AlquilaCosasException;
-import com.alquilacosas.common.CategoriaFacade;
-import com.alquilacosas.common.PrecioFacade;
-import com.alquilacosas.common.PublicacionFacade;
+import com.alquilacosas.dto.CategoriaDTO;
+import com.alquilacosas.dto.PrecioDTO;
+import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.entity.Categoria;
 import com.alquilacosas.ejb.entity.EstadoPublicacion;
 import com.alquilacosas.ejb.entity.EstadoPublicacion.PublicacionEstado;
@@ -44,7 +44,7 @@ public class ModificarPublicacionMBean {
     @ManagedProperty(value = "#{login}")
     private ManejadorUsuarioMBean login;
     
-    private PublicacionFacade pf;
+    private PublicacionDTO pf;
     //Datos de la publicacion
     private String titulo;
     private String descripcion;
@@ -61,8 +61,8 @@ public class ModificarPublicacionMBean {
     private List<SelectItem> estados;
     private PublicacionEstado selectedEstado;
     //Object Precio
-    private List<PrecioFacade> precios;
-    private PrecioFacade precioFacade;
+    private List<PrecioDTO> precios;
+    private PrecioDTO precioFacade;
     private Date today;
     private List<ImagenPublicacion> imagenes;
     private List<byte[]> imagenesAgregar;
@@ -117,8 +117,8 @@ public class ModificarPublicacionMBean {
         subcategorias3 = new ArrayList<SelectItem>();
         estados = new ArrayList<SelectItem>();
 
-        List<CategoriaFacade> listaCategoria = categoriaBean.getCategoriasPrincipal();
-        for (CategoriaFacade category : listaCategoria) {
+        List<CategoriaDTO> listaCategoria = categoriaBean.getCategoriasPrincipal();
+        for (CategoriaDTO category : listaCategoria) {
             categorias.add(new SelectItem(category.getId(), category.getNombre()));
         }
         int categoriaId = categoria.getCategoriaId();
@@ -139,8 +139,8 @@ public class ModificarPublicacionMBean {
             selectedCategoria = categoriaId;
         } else if (padres.size() == 1) {
             selectedCategoria = padres.get(0);;
-            List<CategoriaFacade> cats = categoriaBean.getSubCategorias(selectedCategoria);
-            for (CategoriaFacade c : cats) {
+            List<CategoriaDTO> cats = categoriaBean.getSubCategorias(selectedCategoria);
+            for (CategoriaDTO c : cats) {
                 subcategorias1.add(new SelectItem(c.getId(), c.getNombre()));
             }
             selectedSubcategoria1 = categoriaId;
@@ -148,14 +148,14 @@ public class ModificarPublicacionMBean {
         } else if (padres.size() == 2) {
             selectedCategoria = padres.get(0);
 
-            List<CategoriaFacade> cats = categoriaBean.getSubCategorias(selectedCategoria);
-            for (CategoriaFacade c : cats) {
+            List<CategoriaDTO> cats = categoriaBean.getSubCategorias(selectedCategoria);
+            for (CategoriaDTO c : cats) {
                 subcategorias1.add(new SelectItem(c.getId(), c.getNombre()));
             }
             selectedSubcategoria1 = padres.get(1);
             subcategoria1Render = true;
             cats = categoriaBean.getSubCategorias(selectedSubcategoria1);
-            for (CategoriaFacade c : cats) {
+            for (CategoriaDTO c : cats) {
                 subcategorias2.add(new SelectItem(c.getId(), c.getNombre()));
             }
             selectedSubcategoria2 = categoriaId;
@@ -163,20 +163,20 @@ public class ModificarPublicacionMBean {
         } else if (padres.size() == 3) {
             selectedCategoria = padres.get(0);
 
-            List<CategoriaFacade> cats = categoriaBean.getSubCategorias(selectedCategoria);
-            for (CategoriaFacade c : cats) {
+            List<CategoriaDTO> cats = categoriaBean.getSubCategorias(selectedCategoria);
+            for (CategoriaDTO c : cats) {
                 subcategorias1.add(new SelectItem(c.getId(), c.getNombre()));
             }
             selectedSubcategoria1 = padres.get(1);
             subcategoria1Render = true;
             cats = categoriaBean.getSubCategorias(selectedSubcategoria1);
-            for (CategoriaFacade c : cats) {
+            for (CategoriaDTO c : cats) {
                 subcategorias2.add(new SelectItem(c.getId(), c.getNombre()));
             }
             selectedSubcategoria2 = padres.get(2);
             subcategoria2Render = true;
             cats = categoriaBean.getSubCategorias(selectedSubcategoria2);
-            for (CategoriaFacade c : cats) {
+            for (CategoriaDTO c : cats) {
                 subcategorias3.add(new SelectItem(c.getId(), c.getNombre()));
             }
             selectedSubcategoria3 = categoriaId;
@@ -218,10 +218,10 @@ public class ModificarPublicacionMBean {
         selectedSubcategoria1 = 0;
         selectedSubcategoria2 = 0;
         selectedSubcategoria3 = 0;
-        List<CategoriaFacade> categoriaList = categoriaBean.getSubCategorias(selectedCategoria);
+        List<CategoriaDTO> categoriaList = categoriaBean.getSubCategorias(selectedCategoria);
         if (!categoriaList.isEmpty()) {
             subcategoria1Render = true;
-            for (CategoriaFacade c : categoriaList) {
+            for (CategoriaDTO c : categoriaList) {
                 subcategorias1.add(new SelectItem(c.getId(), c.getNombre()));
             }
         } else {
@@ -236,10 +236,10 @@ public class ModificarPublicacionMBean {
         subcategorias3.clear();
         selectedSubcategoria2 = 0;
         selectedSubcategoria3 = 0;
-        List<CategoriaFacade> categoriaList = categoriaBean.getSubCategorias(selectedSubcategoria1);
+        List<CategoriaDTO> categoriaList = categoriaBean.getSubCategorias(selectedSubcategoria1);
         if (!categoriaList.isEmpty()) {
             subcategoria2Render = true;
-            for (CategoriaFacade c : categoriaList) {
+            for (CategoriaDTO c : categoriaList) {
                 subcategorias2.add(new SelectItem(c.getId(), c.getNombre()));
             }
         } else {
@@ -251,10 +251,10 @@ public class ModificarPublicacionMBean {
     public void subcategoria2SeleccionadaCambio() {
         subcategorias3.clear();
         selectedSubcategoria3 = 0;
-        List<CategoriaFacade> categoriaList = categoriaBean.getSubCategorias(selectedSubcategoria2);
+        List<CategoriaDTO> categoriaList = categoriaBean.getSubCategorias(selectedSubcategoria2);
         if (!categoriaList.isEmpty()) {
             subcategoria3Render = true;
-            for (CategoriaFacade c : categoriaList) {
+            for (CategoriaDTO c : categoriaList) {
                 subcategorias3.add(new SelectItem(c.getId(), c.getNombre()));
             }
         } else {
@@ -401,27 +401,27 @@ public class ModificarPublicacionMBean {
         this.login = login;
     }
 
-    public PublicacionFacade getPf() {
+    public PublicacionDTO getPf() {
         return pf;
     }
 
-    public void setPf(PublicacionFacade pf) {
+    public void setPf(PublicacionDTO pf) {
         this.pf = pf;
     }
 
-    public PrecioFacade getPrecioFacade() {
+    public PrecioDTO getPrecioFacade() {
         return precioFacade;
     }
 
-    public void setPrecioFacade(PrecioFacade precioFacade) {
+    public void setPrecioFacade(PrecioDTO precioFacade) {
         this.precioFacade = precioFacade;
     }
 
-    public List<PrecioFacade> getPrecios() {
+    public List<PrecioDTO> getPrecios() {
         return precios;
     }
 
-    public void setPrecios(List<PrecioFacade> precios) {
+    public void setPrecios(List<PrecioDTO> precios) {
         this.precios = precios;
     }
 

@@ -5,8 +5,8 @@
 package com.alquilacosas.mbean;
 
 import com.alquilacosas.common.AlquilaCosasException;
-import com.alquilacosas.common.ComentarioFacade;
-import com.alquilacosas.common.PublicacionFacade;
+import com.alquilacosas.dto.ComentarioDTO;
+import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.session.PublicacionBeanLocal;
 import java.util.Date;
 import java.util.List;
@@ -32,11 +32,11 @@ public class ResponderPreguntasMBean {
     private ManejadorUsuarioMBean usuarioLogueado;
     //private CategoriaFacade categoria;
     //private List<PrecioFacade> precios;
-    private PublicacionFacade publicacion;
+    private PublicacionDTO publicacion;
     private String effect;
-    private List<ComentarioFacade> comentarios;
-    private ComentarioFacade nuevaRespuesta;
-    private ComentarioFacade selectedPregunta;
+    private List<ComentarioDTO> comentarios;
+    private ComentarioDTO nuevaRespuesta;
+    private ComentarioDTO selectedPregunta;
     private int cantidad;
     
     
@@ -49,7 +49,7 @@ public class ResponderPreguntasMBean {
         setEffect("fade"); 
 //        String id = FacesContext.getCurrentInstance().getExternalContext()
 //                .getRequestParameterMap().get("id");
-            setNuevaRespuesta(new ComentarioFacade());
+            setNuevaRespuesta(new ComentarioDTO());
             setComentarios(publicationBean.getPreguntasSinResponder(getUsuarioLogueado().getUsuarioId()));
             setCantidad(comentarios.size());
 
@@ -64,7 +64,7 @@ public class ResponderPreguntasMBean {
         selectedPregunta.setRespuesta(nuevaRespuesta);
          try {
              publicationBean.setRespuesta(selectedPregunta);
-             setNuevaRespuesta(new ComentarioFacade());  
+             setNuevaRespuesta(new ComentarioDTO());  
          } catch (AlquilaCosasException e) {
              FacesContext.getCurrentInstance().addMessage(null, 
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, 
@@ -89,42 +89,42 @@ public class ResponderPreguntasMBean {
     /**
      * @return the comentarios
      */
-    public List<ComentarioFacade> getComentarios() {
+    public List<ComentarioDTO> getComentarios() {
         return comentarios;
     }
 
     /**
      * @param comentarios the comentarios to set
      */
-    public void setComentarios(List<ComentarioFacade> comentarios) {
+    public void setComentarios(List<ComentarioDTO> comentarios) {
         this.comentarios = comentarios;
     }
 
     /**
      * @return the nuevaRespuesta
      */
-    public ComentarioFacade getNuevaRespuesta() {
+    public ComentarioDTO getNuevaRespuesta() {
         return nuevaRespuesta;
     }
 
     /**
      * @param nuevaRespuesta the nuevaRespuesta to set
      */
-    public void setNuevaRespuesta(ComentarioFacade nuevaRespuesta) {
+    public void setNuevaRespuesta(ComentarioDTO nuevaRespuesta) {
         this.nuevaRespuesta = nuevaRespuesta;
     }
 
     /**
      * @return the selectedPregunta
      */
-    public ComentarioFacade getSelectedPregunta() {
+    public ComentarioDTO getSelectedPregunta() {
         return selectedPregunta;
     }
 
     /**
      * @param selectedPregunta the selectedPregunta to set
      */
-    public void setSelectedPregunta(ComentarioFacade selectedPregunta) {
+    public void setSelectedPregunta(ComentarioDTO selectedPregunta) {
         this.selectedPregunta = selectedPregunta;
     }
 

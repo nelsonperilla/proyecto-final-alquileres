@@ -4,7 +4,7 @@
  */
 package com.alquilacosas.mbean;
 
-import com.alquilacosas.common.PublicacionFacade;
+import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.session.MisPublicacionesBeanLocal;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -25,7 +25,7 @@ public class MisPublicacionesMBean {
     private MisPublicacionesBeanLocal misPublicacionesBean;
     @ManagedProperty(value="#{login}")
     private ManejadorUsuarioMBean usuarioMBean;
-    private List<PublicacionFacade> publicacionesFacade;
+    private List<PublicacionDTO> publicacionesFacade;
     private int publicacionId;
     
     public MisPublicacionesMBean() {
@@ -40,11 +40,11 @@ public class MisPublicacionesMBean {
   
     }
 
-    public List<PublicacionFacade> getPublicacionesFacade() {
+    public List<PublicacionDTO> getPublicacionesFacade() {
         return publicacionesFacade;
     }
 
-    public void setPublicacionesFacade(List<PublicacionFacade> publicacionesFacade) {
+    public void setPublicacionesFacade(List<PublicacionDTO> publicacionesFacade) {
         this.publicacionesFacade = publicacionesFacade;
     }
     

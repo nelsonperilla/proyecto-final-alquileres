@@ -4,7 +4,7 @@
  */
 package com.alquilacosas.mbean;
 
-import com.alquilacosas.common.CategoriaFacade;
+import com.alquilacosas.dto.CategoriaDTO;
 import com.alquilacosas.ejb.session.CategoriaBeanLocal;
 import java.io.Serializable;
 import java.util.List;
@@ -23,7 +23,7 @@ public class MenuCategoriasMBean implements Serializable {
 
     @EJB
     private CategoriaBeanLocal catBean;
-    private List<CategoriaFacade> categorias;
+    private List<CategoriaDTO> categorias;
     private Integer categoriaSeleccionada;
 
     /** Creates a new instance of MenuCategoriasMBean */
@@ -38,16 +38,16 @@ public class MenuCategoriasMBean implements Serializable {
     public void cargarMenu() {
         categorias = catBean.getCategoriaFacade();
         for (int i = 0; i < categorias.size(); i++) {
-            CategoriaFacade fc = categorias.get(i);
+            CategoriaDTO fc = categorias.get(i);
             for (int j = 0; j < categorias.size(); j++) {
-                CategoriaFacade fc2 = categorias.get(j);
+                CategoriaDTO fc2 = categorias.get(j);
                 if (fc2.getPadreId() == fc.getId()) {
                     fc.getSubcategorias().add(fc2);
                 }
             }
         }
         for (int i = 0; i < categorias.size(); i++) {
-            CategoriaFacade fc = categorias.get(i);
+            CategoriaDTO fc = categorias.get(i);
             if (fc.getPadreId() > 0) {
                 categorias.remove(fc);
                 i--;
@@ -55,11 +55,11 @@ public class MenuCategoriasMBean implements Serializable {
         }
     }
 
-    public List<CategoriaFacade> getCategorias() {
+    public List<CategoriaDTO> getCategorias() {
         return categorias;
     }
 
-    public void setCategorias(List<CategoriaFacade> categorias) {
+    public void setCategorias(List<CategoriaDTO> categorias) {
         this.categorias = categorias;
     }
 

@@ -4,7 +4,7 @@
  */
 package com.alquilacosas.mbean;
 
-import com.alquilacosas.common.PublicacionFacade;
+import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.session.MostrarPublicacionesBeanLocal;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
@@ -23,7 +23,7 @@ public class PublicationsGroup implements Serializable
 {
     @EJB
     private MostrarPublicacionesBeanLocal publicationBean;
-    private List<PublicacionFacade> publicacionesRandom;
+    private List<PublicacionDTO> publicacionesRandom;
     private int selectedPublicationId;
 
     public PublicationsGroup() 
@@ -55,7 +55,7 @@ public class PublicationsGroup implements Serializable
         selectedPublicationId = id;
     }
     
-    public List<PublicacionFacade> getPublicacionesRandom()
+    public List<PublicacionDTO> getPublicacionesRandom()
     {
         return publicacionesRandom;
     }

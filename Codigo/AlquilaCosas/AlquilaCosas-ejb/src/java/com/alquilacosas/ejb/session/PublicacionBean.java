@@ -4,12 +4,12 @@
  */
 package com.alquilacosas.ejb.session;
 
-import com.alquilacosas.common.ComentarioFacade;
+import com.alquilacosas.dto.ComentarioDTO;
 import com.alquilacosas.common.AlquilaCosasException;
-import com.alquilacosas.common.CategoriaFacade;
+import com.alquilacosas.dto.CategoriaDTO;
 import com.alquilacosas.common.NotificacionEmail;
-import com.alquilacosas.common.PrecioFacade;
-import com.alquilacosas.common.PublicacionFacade;
+import com.alquilacosas.dto.PrecioDTO;
+import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.entity.Categoria;
 import com.alquilacosas.ejb.entity.Comentario;
 import com.alquilacosas.ejb.entity.Domicilio;
@@ -73,7 +73,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
     @RolesAllowed({"USUARIO", "ADMIN"})
     public void registrarPublicacion(String titulo, String descripcion,
             Date fecha_desde, Date fecha_hasta, boolean destacada, int cantidad,
-            int usuarioId, int categoria, List<PrecioFacade> precios,
+            int usuarioId, int categoria, List<PrecioDTO> precios,
             List<byte[]> imagenes) throws AlquilaCosasException {
 
         Publicacion publicacion = new Publicacion();
@@ -119,7 +119,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
         Periodo periodo = null;
         double pre = precios.get(1).getPrecio();
 
-        for (PrecioFacade p : precios) {
+        for (PrecioDTO p : precios) {
 
             periodo = periodoBean.getPeriodo(p.getPeriodoNombre());
             precio = new Precio();
@@ -154,7 +154,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
 
     @Override
     @PermitAll
-    public PublicacionFacade getDatosPublicacion(int publicacionId) throws AlquilaCosasException {
+    public PublicacionDTO getDatosPublicacion(int publicacionId) throws AlquilaCosasException {
 
         Publicacion p = entityManager.find(Publicacion.class, publicacionId);
         PublicacionXEstado pxe = this.getPublicacionEstado(p);
@@ -163,23 +163,23 @@ public class PublicacionBean implements PublicacionBeanLocal {
             throw new AlquilaCosasException("PublicacionXEstado no encontrado para la publicacion seleccionada.");
         }
 
-        PublicacionFacade pf = new PublicacionFacade(
+        PublicacionDTO pf = new PublicacionDTO(
                 p.getPublicacionId(), p.getTitulo(), p.getDescripcion(),
                 p.getFechaDesde(), p.getFechaHasta(), p.getDestacada(),
                 p.getCantidad(), p.getCategoriaFk(), p.getImagenPublicacionList(),
                 pxe.getEstadoPublicacion());
 
-        pf.getPrecios().add(new PrecioFacade());
-        pf.getPrecios().add(new PrecioFacade());
-        pf.getPrecios().add(new PrecioFacade());
-        pf.getPrecios().add(new PrecioFacade());
+        pf.getPrecios().add(new PrecioDTO());
+        pf.getPrecios().add(new PrecioDTO());
+        pf.getPrecios().add(new PrecioDTO());
+        pf.getPrecios().add(new PrecioDTO());
 
 
         for (Precio precio : p.getPrecioList()) {
             if (precio != null) {
                 pf.getPrecios().set(
                         precio.getPeriodoFk().getPeriodoId() - 1,
-                        new PrecioFacade(precio.getPrecioId(),
+                        new PrecioDTO(precio.getPrecioId(),
                         precio.getPeriodoFk().getPeriodoId(),
                         precio.getPrecio(),
                         precio.getPeriodoFk().getNombre()));
@@ -192,7 +192,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
     @RolesAllowed({"USUARIO", "ADMIN"})
     public void actualizarPublicacion(int publicacionId, String titulo, String descripcion,
             Date fecha_desde, Date fecha_hasta, boolean destacada, int cantidad,
-            int usuarioId, int categoria, List<PrecioFacade> precios,
+            int usuarioId, int categoria, List<PrecioDTO> precios,
             List<byte[]> imagenesAgregar, List<Integer> imagenesABorrar,
             PublicacionEstado estadoPublicacion) throws AlquilaCosasException {
 
@@ -237,7 +237,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
 
         double precioDiario = precios.get(1).getPrecio();
 
-        for (PrecioFacade precioFacade : precios) {
+        for (PrecioDTO precioFacade : precios) {
 
             if (precioFacade.getPrecioId() != 0) {
 
@@ -306,11 +306,11 @@ public class PublicacionBean implements PublicacionBeanLocal {
 
     @Override
     @PermitAll
-    public PublicacionFacade getPublicacion(int id) {
+    public PublicacionDTO getPublicacion(int id) {
         Publicacion publicacion = entityManager.find(Publicacion.class, id);
-        PublicacionFacade resultado = null;
+        PublicacionDTO resultado = null;
         if (publicacion != null) {
-            resultado = new PublicacionFacade(publicacion.getPublicacionId(), publicacion.getTitulo(),
+            resultado = new PublicacionDTO(publicacion.getPublicacionId(), publicacion.getTitulo(),
                     publicacion.getDescripcion(), publicacion.getFechaDesde(), publicacion.getFechaHasta(), publicacion.getDestacada(),
                     publicacion.getCantidad());
 
@@ -320,9 +320,9 @@ public class PublicacionBean implements PublicacionBeanLocal {
 
             resultado.setImagenIds(getIdImagenes(publicacion));
 
-            List<PrecioFacade> precios = precioBean.getPrecios(publicacion);
+            List<PrecioDTO> precios = precioBean.getPrecios(publicacion);
             resultado.setPrecios(precios);
-            resultado.setCategoriaF(new CategoriaFacade(publicacion.getCategoriaFk().getCategoriaId(),
+            resultado.setCategoriaF(new CategoriaDTO(publicacion.getCategoriaFk().getCategoriaId(),
                     publicacion.getCategoriaFk().getNombre()));
         }
         return resultado;
@@ -341,26 +341,26 @@ public class PublicacionBean implements PublicacionBeanLocal {
 
     @Override
     @PermitAll
-    public List<ComentarioFacade> getPreguntas(int publicationId) {
+    public List<ComentarioDTO> getPreguntas(int publicationId) {
         List<Comentario> comentarios;
-        List<ComentarioFacade> resultado = new ArrayList<ComentarioFacade>();
+        List<ComentarioDTO> resultado = new ArrayList<ComentarioDTO>();
         Publicacion filter = entityManager.find(Publicacion.class, publicationId);
         Query query = entityManager.createNamedQuery("Comentario.findPreguntasByPublicacion");
         query.setParameter("publicacion", filter);
         comentarios = query.getResultList();
         Comentario respuestaTemp;
-        ComentarioFacade respuesta;
+        ComentarioDTO respuesta;
         for (Comentario comentario : comentarios) {
             respuesta = null;
             respuestaTemp = comentario.getRespuesta();
             if (respuestaTemp != null) {
-                respuesta = new ComentarioFacade(respuestaTemp.getComentarioId(),
+                respuesta = new ComentarioDTO(respuestaTemp.getComentarioId(),
                         respuestaTemp.getComentario(), respuestaTemp.getFecha(),
                         respuestaTemp.getUsuarioFk().getUsuarioId(),
                         respuestaTemp.getUsuarioFk().getNombre(), null);
             }
 
-            resultado.add(new ComentarioFacade(comentario.getComentarioId(),
+            resultado.add(new ComentarioDTO(comentario.getComentarioId(),
                     comentario.getComentario(), comentario.getFecha(),
                     comentario.getUsuarioFk().getUsuarioId(),
                     comentario.getUsuarioFk().getNombre(), respuesta));
@@ -370,7 +370,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
 
     @Override
     @RolesAllowed({"USUARIO", "ADMIN"})
-    public void setPregunta(int publicacionId, ComentarioFacade nuevaPregunta)
+    public void setPregunta(int publicacionId, ComentarioDTO nuevaPregunta)
             throws AlquilaCosasException {
         Comentario pregunta = new Comentario();
         Publicacion publicacion = entityManager.find(Publicacion.class, publicacionId);
@@ -410,16 +410,16 @@ public class PublicacionBean implements PublicacionBeanLocal {
 
     @Override
     @RolesAllowed({"USUARIO", "ADMIN"})
-    public List<ComentarioFacade> getPreguntasSinResponder(int usuarioId) {
+    public List<ComentarioDTO> getPreguntasSinResponder(int usuarioId) {
         List<Comentario> comentarios;
-        List<ComentarioFacade> resultado = new ArrayList<ComentarioFacade>();
+        List<ComentarioDTO> resultado = new ArrayList<ComentarioDTO>();
         Usuario filter = entityManager.find(Usuario.class, usuarioId);
         Query query = entityManager.createNamedQuery("Comentario.findPreguntasSinResponderByUsuario");
         query.setParameter("usuario", filter);
         comentarios = query.getResultList();
         Comentario respuesta;
         for (Comentario comentario : comentarios) {
-            resultado.add(new ComentarioFacade(comentario.getComentarioId(),
+            resultado.add(new ComentarioDTO(comentario.getComentarioId(),
                     comentario.getComentario(), comentario.getFecha(),
                     comentario.getUsuarioFk().getUsuarioId(),
                     comentario.getUsuarioFk().getNombre(), comentario.getPublicacionFk().getPublicacionId(), null));
@@ -430,7 +430,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
 
     @Override
     @RolesAllowed({"USUARIO", "ADMIN"})
-    public void setRespuesta(ComentarioFacade preguntaConRespuesta)
+    public void setRespuesta(ComentarioDTO preguntaConRespuesta)
             throws AlquilaCosasException {
         
         Comentario pregunta = entityManager.find(Comentario.class, preguntaConRespuesta.getId());

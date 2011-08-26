@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.alquilacosas.common;
+package com.alquilacosas.dto;
 
 import com.alquilacosas.ejb.entity.Rol;
 import java.util.ArrayList;
@@ -13,12 +13,12 @@ import java.util.List;
  *
  * @author damiancardozo
  */
-public class UsuarioFacade {
+public class UsuarioDTO {
     
     private Integer id;
     private String nombre, apellido, email, telefono, dni;
     private Date fechaNacimiento;
-    private DomicilioFacade domicilio;
+    private DomicilioDTO domicilio;
     private String username;
     private Date fechaDeRegistro;
     private Long numRoles;
@@ -26,7 +26,7 @@ public class UsuarioFacade {
     private boolean usuarioRol;
     private boolean adminRol;
 
-    public UsuarioFacade(Integer id, String nombre, String apellido, String email, 
+    public UsuarioDTO(Integer id, String nombre, String apellido, String email, 
             String telefono, String dni, Date fechaNacimiento) {
         this.id = id;
         this.nombre = nombre;
@@ -37,7 +37,7 @@ public class UsuarioFacade {
         this.fechaNacimiento = fechaNacimiento;
     }
     
-    public UsuarioFacade( Integer id, String username, String email, String nombre, String apellido,
+    public UsuarioDTO( Integer id, String username, String email, String nombre, String apellido,
             Date fechaDeRegistro, Long numRoles, String tipoUsuario){
         this.id = id;
         this.username = username;
@@ -59,7 +59,7 @@ public class UsuarioFacade {
         }
     }
 
-    public UsuarioFacade(){}
+    public UsuarioDTO(){}
     
     public String getDni() {
         return dni;
@@ -69,11 +69,11 @@ public class UsuarioFacade {
         this.dni = dni;
     }
 
-    public DomicilioFacade getDomicilio() {
+    public DomicilioDTO getDomicilio() {
         return domicilio;
     }
 
-    public void setDomicilio(DomicilioFacade domicilio) {
+    public void setDomicilio(DomicilioDTO domicilio) {
         this.domicilio = domicilio;
     }
 

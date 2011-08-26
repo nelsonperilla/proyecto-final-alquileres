@@ -5,11 +5,11 @@
 package com.alquilacosas.mbean;
 
 import com.alquilacosas.common.AlquilaCosasException;
-import com.alquilacosas.common.DomicilioFacade;
-import com.alquilacosas.common.UsuarioFacade;
+import com.alquilacosas.dto.DomicilioDTO;
+import com.alquilacosas.dto.UsuarioDTO;
 import com.alquilacosas.ejb.entity.Pais;
 import com.alquilacosas.ejb.entity.Provincia;
-import com.alquilacosas.ejb.session.UsuarioBeanLocal;
+import com.alquilacosas.ejb.session.ModificarUsuarioBeanLocal;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,10 +32,10 @@ import javax.faces.model.SelectItem;
 public class ModificarUsuarioMBean implements Serializable {
 
     @EJB
-    private UsuarioBeanLocal usuarioBean;
+    private ModificarUsuarioBeanLocal usuarioBean;
     @ManagedProperty(value = "#{login}")
     private ManejadorUsuarioMBean usuarioMBean;
-    private UsuarioFacade usuario;
+    private UsuarioDTO usuario;
     private String telefono;
     private Date fechaNacimiento;
     private String calle, depto, barrio, ciudad;
@@ -45,7 +45,7 @@ public class ModificarUsuarioMBean implements Serializable {
     private int provinciaSeleccionada;
     private List<SelectItem> paises;
     private int paisSeleccionado;
-    private DomicilioFacade domicilio;
+    private DomicilioDTO domicilio;
     private boolean editando;
 
     /** Creates a new instance of ModificarUsuarioMBean */
@@ -82,7 +82,7 @@ public class ModificarUsuarioMBean implements Serializable {
     }
 
     public void crearDomicilio() {
-        domicilio = new DomicilioFacade();
+        domicilio = new DomicilioDTO();
         domicilio.setCalle(calle);
         domicilio.setNumero(numero);
         if (piso != null) {
@@ -172,11 +172,11 @@ public class ModificarUsuarioMBean implements Serializable {
         this.depto = depto;
     }
 
-    public DomicilioFacade getDomicilio() {
+    public DomicilioDTO getDomicilio() {
         return domicilio;
     }
 
-    public void setDomicilio(DomicilioFacade domicilio) {
+    public void setDomicilio(DomicilioDTO domicilio) {
         this.domicilio = domicilio;
     }
 
@@ -260,11 +260,11 @@ public class ModificarUsuarioMBean implements Serializable {
         this.usuarioMBean = usuarioMBean;
     }
 
-    public UsuarioFacade getUsuario() {
+    public UsuarioDTO getUsuario() {
         return usuario;
     }
 
-    public void setUsuario(UsuarioFacade usuario) {
+    public void setUsuario(UsuarioDTO usuario) {
         this.usuario = usuario;
     }
 

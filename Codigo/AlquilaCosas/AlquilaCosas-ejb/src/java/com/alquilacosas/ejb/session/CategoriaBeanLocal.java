@@ -5,7 +5,7 @@
 package com.alquilacosas.ejb.session;
 
 import com.alquilacosas.common.AlquilaCosasException;
-import com.alquilacosas.common.CategoriaFacade;
+import com.alquilacosas.dto.CategoriaDTO;
 import com.alquilacosas.ejb.entity.Categoria;
 import java.util.List;
 import javax.ejb.Local;
@@ -27,11 +27,11 @@ public interface CategoriaBeanLocal {
 
      void modificarCategoria(Categoria categoria);
      
-     List<CategoriaFacade> getCategoriaFacade();
+     List<CategoriaDTO> getCategoriaFacade();
 
-     List<CategoriaFacade> getSubCategorias(int categoria);
+     List<CategoriaDTO> getSubCategorias(int categoria);
 
-    List<CategoriaFacade> getCategoriasPrincipal();
+    List<CategoriaDTO> getCategoriasPrincipal();
     
     List<Integer> getCategoriasPadre(int categoriaId);
 }

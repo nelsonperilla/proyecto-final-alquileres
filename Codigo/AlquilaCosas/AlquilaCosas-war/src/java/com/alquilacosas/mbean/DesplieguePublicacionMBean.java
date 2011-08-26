@@ -5,8 +5,8 @@
 package com.alquilacosas.mbean;
 
 import com.alquilacosas.common.AlquilaCosasException;
-import com.alquilacosas.common.ComentarioFacade;
-import com.alquilacosas.common.PublicacionFacade;
+import com.alquilacosas.dto.ComentarioDTO;
+import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.session.PublicacionBeanLocal;
 import java.text.DateFormat;
 import java.util.Date;
@@ -32,9 +32,9 @@ public class DesplieguePublicacionMBean {
     private PublicacionBeanLocal publicationBean;
     @ManagedProperty(value = "#{login}")
     private ManejadorUsuarioMBean usuarioLogueado;
-    private PublicacionFacade publicacion;
+    private PublicacionDTO publicacion;
     private String effect;
-    private List<ComentarioFacade> comentarios;
+    private List<ComentarioDTO> comentarios;
     private String fecha_hasta, comentario;
 
     /** Creates a new instance of DesplieguePublicacionMBean */
@@ -68,7 +68,7 @@ public class DesplieguePublicacionMBean {
     }
 
     public void guardarPregunta() {
-        ComentarioFacade nuevaPregunta = new ComentarioFacade();
+        ComentarioDTO nuevaPregunta = new ComentarioDTO();
         nuevaPregunta.setComentario(comentario);
         nuevaPregunta.setUsuarioId(usuarioLogueado.getUsuarioId());
         //nuevaPregunta.setUsuario(usuarioLogueado.getUsername());
@@ -88,28 +88,28 @@ public class DesplieguePublicacionMBean {
     /**
      * @return the comentarios
      */
-    public List<ComentarioFacade> getComentarios() {
+    public List<ComentarioDTO> getComentarios() {
         return comentarios;
     }
 
     /**
      * @param comentarios the comentarios to set
      */
-    public void setComentarios(List<ComentarioFacade> comentarios) {
+    public void setComentarios(List<ComentarioDTO> comentarios) {
         this.comentarios = comentarios;
     }
 
     /**
      * @return the publicacion
      */
-    public PublicacionFacade getPublicacion() {
+    public PublicacionDTO getPublicacion() {
         return publicacion;
     }
 
     /**
      * @param publicacion the publicacion to set
      */
-    public void setPublicacion(PublicacionFacade publicacion) {
+    public void setPublicacion(PublicacionDTO publicacion) {
         this.publicacion = publicacion;
     }
 

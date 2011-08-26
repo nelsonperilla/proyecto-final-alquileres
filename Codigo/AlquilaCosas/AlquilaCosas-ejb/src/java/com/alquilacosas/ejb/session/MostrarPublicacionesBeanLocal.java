@@ -4,7 +4,7 @@
  */
 package com.alquilacosas.ejb.session;
 
-import com.alquilacosas.common.PublicacionFacade;
+import com.alquilacosas.dto.PublicacionDTO;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -17,8 +17,8 @@ import javax.ejb.Local;
 @Local
 public interface MostrarPublicacionesBeanLocal {
     
-    List<PublicacionFacade> getPublicacionesRandom(int pagina);
-    List<PublicacionFacade> getPublicacionesPoCategoria(int pagina,int categoria);
+    List<PublicacionDTO> getPublicacionesRandom(int pagina);
+    List<PublicacionDTO> getPublicacionesPoCategoria(int pagina,int categoria);
     List<byte[]> getImage(int id);
 //    void setSelectedPublication(int id);
 //    Publicacion getSelectedPublication();

@@ -5,8 +5,8 @@ package com.alquilacosas.mbean;
  * @author jorge
  */
 import com.alquilacosas.common.AlquilaCosasException;
-import com.alquilacosas.common.CategoriaFacade;
-import com.alquilacosas.common.PrecioFacade;
+import com.alquilacosas.dto.CategoriaDTO;
+import com.alquilacosas.dto.PrecioDTO;
 import com.alquilacosas.ejb.entity.Domicilio;
 import com.alquilacosas.ejb.entity.Periodo;
 import com.alquilacosas.ejb.entity.Usuario;
@@ -58,8 +58,8 @@ public class NuevaPublicacionMBean implements Serializable {
     private boolean subCategoriaRender;
     private boolean subCategoria1Render;
     //Object Precio
-    private List<PrecioFacade> precios;
-    private PrecioFacade precioFacade;
+    private List<PrecioDTO> precios;
+    private PrecioDTO precioFacade;
     private Date today;
     private List<byte[]> imagenes;
     private Usuario usuario;
@@ -69,9 +69,9 @@ public class NuevaPublicacionMBean implements Serializable {
     public void init() {
 
         imagenes = new ArrayList<byte[]>();
-        precios = new ArrayList<PrecioFacade>();
+        precios = new ArrayList<PrecioDTO>();
         for(Periodo p: periodosBean.getPeriodos()) {
-            precios.add(new PrecioFacade(0, 0.0, p.getNombre()));
+            precios.add(new PrecioDTO(0, 0.0, p.getNombre()));
         }
         today = new Date();
         categorias = new ArrayList<SelectItem>();
@@ -79,8 +79,8 @@ public class NuevaPublicacionMBean implements Serializable {
         subCategorias1 = new ArrayList<SelectItem>();
         subCategoriaRender = false;
         subCategoria1Render = false;
-        List<CategoriaFacade> listaCategoria = categoriaBean.getCategoriasPrincipal();
-        for (CategoriaFacade categoria : listaCategoria) {
+        List<CategoriaDTO> listaCategoria = categoriaBean.getCategoriasPrincipal();
+        for (CategoriaDTO categoria : listaCategoria) {
             categorias.add(new SelectItem(categoria.getId(), categoria.getNombre()));
         }
 
@@ -154,10 +154,10 @@ public class NuevaPublicacionMBean implements Serializable {
         subCategorias1.clear();
         selectedSubCategoria = 0;
         selectedSubCategoria1 = 0;
-        List<CategoriaFacade> categoriaList = categoriaBean.getSubCategorias(selectedCategoria);
+        List<CategoriaDTO> categoriaList = categoriaBean.getSubCategorias(selectedCategoria);
         if (!categoriaList.isEmpty()) {
             subCategoriaRender = true;
-            for (CategoriaFacade c : categoriaList) {
+            for (CategoriaDTO c : categoriaList) {
                 subCategorias.add(new SelectItem(c.getId(), c.getNombre()));
             }
         } else {
@@ -169,10 +169,10 @@ public class NuevaPublicacionMBean implements Serializable {
     public void actualizarSubCategorias() {
         subCategorias1.clear();
         selectedSubCategoria1 = 0;
-        List<CategoriaFacade> categoriaList = categoriaBean.getSubCategorias(selectedSubCategoria);
+        List<CategoriaDTO> categoriaList = categoriaBean.getSubCategorias(selectedSubCategoria);
         if (!categoriaList.isEmpty()) {
             subCategoria1Render = true;
-            for (CategoriaFacade c : categoriaList) {
+            for (CategoriaDTO c : categoriaList) {
                 subCategorias1.add(new SelectItem(c.getId(), c.getNombre()));
             }
         } else {
@@ -236,19 +236,19 @@ public class NuevaPublicacionMBean implements Serializable {
         this.imagenes = imagenes;
     }
 
-    public PrecioFacade getPrecioFacade() {
+    public PrecioDTO getPrecioFacade() {
         return precioFacade;
     }
 
-    public void setPrecioFacade(PrecioFacade precioFacade) {
+    public void setPrecioFacade(PrecioDTO precioFacade) {
         this.precioFacade = precioFacade;
     }
 
-    public List<PrecioFacade> getPrecios() {
+    public List<PrecioDTO> getPrecios() {
         return precios;
     }
 
-    public void setPrecios(List<PrecioFacade> precios) {
+    public void setPrecios(List<PrecioDTO> precios) {
         this.precios = precios;
     }
 

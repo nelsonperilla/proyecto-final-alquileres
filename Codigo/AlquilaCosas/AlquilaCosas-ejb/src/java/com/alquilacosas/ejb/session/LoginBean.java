@@ -10,12 +10,13 @@ import com.alquilacosas.ejb.entity.EstadoUsuario.NombreEstado;
 import com.alquilacosas.ejb.entity.Login;
 import com.alquilacosas.ejb.entity.Usuario;
 import com.alquilacosas.ejb.entity.UsuarioXEstado;
+import com.alquilacosas.facade.EstadoUsuarioFacade;
+import com.alquilacosas.facade.LoginFacade;
+import com.alquilacosas.facade.UsuarioFacade;
+import com.alquilacosas.facade.UsuarioXEstadoFacade;
 import java.util.Date;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 /**
  *
@@ -23,16 +24,24 @@ import javax.persistence.Query;
  */
 @Stateless
 public class LoginBean implements LoginBeanLocal {
-
-    @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
-    private EntityManager entityManager;
+    
+    @EJB
+    private LoginFacade loginFacade;
+    @EJB
+    private UsuarioFacade usuarioFacade;
+    @EJB
+    private UsuarioXEstadoFacade uxeFacade;
+    @EJB
+    private EstadoUsuarioFacade estadoUsuarioFacade;
     
     @Override
     public boolean activarCuenta(String username, String codigo) throws AlquilaCosasException {
-
-        Query loginQuery = entityManager.createNamedQuery("Login.findByUsername");
-        loginQuery.setParameter("username", username);
-        Login login = (Login) loginQuery.getSingleResult();
+        
+        Login login = loginFacade.findByUsername(username);
+        
+        if(login == null) {
+            throw new AlquilaCosasException("Nombre de usuario inexistente.");
+        }
         
         String codigoDB = login.getCodigoActivacion();
         
@@ -40,35 +49,39 @@ public class LoginBean implements LoginBeanLocal {
             
             Usuario usuario = login.getUsuarioFk();
             
-            UsuarioXEstado ultimoUxe = null;
-            try {
-                Query uxeQuery = entityManager.createNamedQuery("UsuarioXEstado.findCurrentByUsuarioFk");
-                uxeQuery.setParameter("usuario", usuario);
-                ultimoUxe = (UsuarioXEstado) uxeQuery.getSingleResult();
-            } catch(NoResultException e) {
-                 throw new AlquilaCosasException("No se encontro el usuario.");
-            }
+            UsuarioXEstado ultimoUxe = uxeFacade.findCurrent(usuario.getUsuarioId());
+//            try {
+//                Query uxeQuery = entityManager.createNamedQuery("UsuarioXEstado.findCurrentByUsuarioFk");
+//                uxeQuery.setParameter("usuario", usuario);
+//                ultimoUxe = (UsuarioXEstado) uxeQuery.getSingleResult();
+//            } catch(NoResultException e) {
+//                 throw new AlquilaCosasException("No se encontro el usuario.");
+//            }
             if(ultimoUxe == null || ultimoUxe.getEstadoUsuario().getNombre()
                     != NombreEstado.REGISTRADO) {
                 throw new AlquilaCosasException("El estado del usuario no requiere activación.");
             }
             
-            EstadoUsuario estado = null;
-            try {
-                Query estadoActivoQuery = entityManager.createNamedQuery("EstadoUsuario.findByNombre");
-                estadoActivoQuery.setParameter("nombre", NombreEstado.ACTIVO);
-                estado = (EstadoUsuario) estadoActivoQuery.getSingleResult();
-            } catch(Exception e) {
+            EstadoUsuario estado = estadoUsuarioFacade.findByNombre(NombreEstado.ACTIVO);
+            if(estado == null) {
                 throw new AlquilaCosasException("No se encontro el estado " + 
                         NombreEstado.ACTIVO.toString() + " en la base de datos.");
             }
+//            try {
+//                Query estadoActivoQuery = entityManager.createNamedQuery("EstadoUsuario.findByNombre");
+//                estadoActivoQuery.setParameter("nombre", NombreEstado.ACTIVO);
+//                estado = (EstadoUsuario) estadoActivoQuery.getSingleResult();
+//            } catch(Exception e) {
+//                throw new AlquilaCosasException("No se encontro el estado " + 
+//                        NombreEstado.ACTIVO.toString() + " en la base de datos.");
+//            }
 
             ultimoUxe.setFechaHasta(new Date());          
             
             UsuarioXEstado nuevoUxE = new UsuarioXEstado(usuario, estado);
             nuevoUxE.setFechaDesde(new Date());
             usuario.agregarUsuarioXEstado(nuevoUxE);
-            entityManager.merge(usuario);
+            usuarioFacade.edit(usuario);
             return true;
             
         }
@@ -80,14 +93,17 @@ public class LoginBean implements LoginBeanLocal {
     @Override
     public Integer loginUsuario(String username) throws AlquilaCosasException {
         
-        Login login = null;
-        Query buscarLogin = entityManager.createNamedQuery("Login.findByUsername");
-        buscarLogin.setParameter("username", username);
-        try {
-            login = (Login) buscarLogin.getSingleResult();
-        } catch (Exception e) {
+        Login login = loginFacade.findByUsername(username);
+        if(login == null) {
             throw new AlquilaCosasException("Username no valido");
         }
+//        Query buscarLogin = entityManager.createNamedQuery("Login.findByUsername");
+//        buscarLogin.setParameter("username", username);
+//        try {
+//            login = (Login) buscarLogin.getSingleResult();
+//        } catch (Exception e) {
+//            throw new AlquilaCosasException("Username no valido");
+//        }
         
         Usuario usuario = login.getUsuarioFk();
         if(usuario == null)
