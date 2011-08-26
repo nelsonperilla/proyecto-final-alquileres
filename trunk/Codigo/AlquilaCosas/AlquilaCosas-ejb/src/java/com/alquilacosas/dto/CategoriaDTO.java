@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.alquilacosas.common;
+package com.alquilacosas.dto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,24 +11,24 @@ import java.util.List;
  *
  * @author damiancardozo
  */
-public class CategoriaFacade {
+public class CategoriaDTO {
     
     private int id, padreId;
     private String nombre, descripcion;
-    private List<CategoriaFacade> subcategorias;
+    private List<CategoriaDTO> subcategorias;
 
-    public CategoriaFacade(int id, int padreId, String nombre, String descripcion) {
+    public CategoriaDTO(int id, int padreId, String nombre, String descripcion) {
         this.id = id;
         this.padreId = padreId;
         this.nombre = nombre;
         this.descripcion = descripcion;
-        subcategorias = new ArrayList<CategoriaFacade>();
+        subcategorias = new ArrayList<CategoriaDTO>();
     }
     
-    public CategoriaFacade(int id, String nombre) {
+    public CategoriaDTO(int id, String nombre) {
         this.id = id;
         this.nombre = nombre;
-        subcategorias = new ArrayList<CategoriaFacade>();
+        subcategorias = new ArrayList<CategoriaDTO>();
     }
 
     public String getDescripcion() {
@@ -63,11 +63,11 @@ public class CategoriaFacade {
         this.padreId = padreId;
     }
 
-    public List<CategoriaFacade> getSubcategorias() {
+    public List<CategoriaDTO> getSubcategorias() {
         return subcategorias;
     }
 
-    public void setSubcategorias(List<CategoriaFacade> subcategorias) {
+    public void setSubcategorias(List<CategoriaDTO> subcategorias) {
         this.subcategorias = subcategorias;
     }
     

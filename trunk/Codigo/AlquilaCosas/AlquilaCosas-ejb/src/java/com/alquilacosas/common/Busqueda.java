@@ -4,6 +4,8 @@
  */
 package com.alquilacosas.common;
 
+import com.alquilacosas.dto.CategoriaDTO;
+import com.alquilacosas.dto.PublicacionDTO;
 import java.util.List;
 
 /**
@@ -12,28 +14,28 @@ import java.util.List;
  */
 public class Busqueda {
     
-    private List<PublicacionFacade> publicaciones;
-    private List<CategoriaFacade> categorias;
+    private List<PublicacionDTO> publicaciones;
+    private List<CategoriaDTO> categorias;
     private int totalRegistros;
 
-    public Busqueda(List<PublicacionFacade> publicaciones, List<CategoriaFacade> categorias) {
+    public Busqueda(List<PublicacionDTO> publicaciones, List<CategoriaDTO> categorias) {
         this.publicaciones = publicaciones;
         this.categorias = categorias;
     }
 
-    public List<CategoriaFacade> getCategorias() {
+    public List<CategoriaDTO> getCategorias() {
         return categorias;
     }
 
-    public void setCategorias(List<CategoriaFacade> categorias) {
+    public void setCategorias(List<CategoriaDTO> categorias) {
         this.categorias = categorias;
     }
 
-    public List<PublicacionFacade> getPublicaciones() {
+    public List<PublicacionDTO> getPublicaciones() {
         return publicaciones;
     }
 
-    public void setPublicaciones(List<PublicacionFacade> publicaciones) {
+    public void setPublicaciones(List<PublicacionDTO> publicaciones) {
         this.publicaciones = publicaciones;
     }
 

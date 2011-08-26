@@ -7,11 +7,11 @@ package com.alquilacosas.ejb.session;
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.ejb.entity.Pais;
 import com.alquilacosas.ejb.entity.Provincia;
+import com.alquilacosas.facade.PaisFacade;
+import com.alquilacosas.facade.ProvinciaFacade;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 /**
  *
@@ -19,31 +19,31 @@ import javax.persistence.Query;
  */
 @Stateless
 public class ProvinciaBean implements ProvinciaBeanLocal {
-
-     @PersistenceContext(unitName="AlquilaCosas-ejbPU") 
-     private EntityManager entityManager;
+     
+     @EJB
+     private ProvinciaFacade provinciaFacade;
+     
+     @EJB
+     private PaisFacade paisFacade;
 
      @Override
      public List<Provincia> getProvincias() {
-          List<Provincia> provincias;
-          Query query = entityManager.createNamedQuery("Provincia.findAll");
-          provincias = query.getResultList();
-          return provincias;
+          return provinciaFacade.findAll();
      }
      
      @Override
      public void modificarProvincia(Provincia provinciaNuevo) {
-          Provincia modifProvincia = entityManager.find(Provincia.class, provinciaNuevo.getProvinciaId());
+          Provincia modifProvincia = provinciaFacade.find(provinciaNuevo.getProvinciaId());
           modifProvincia.setNombre(provinciaNuevo.getNombre());
           modifProvincia.setPaisFk(provinciaNuevo.getPaisFk());
-          entityManager.merge(modifProvincia);
+          provinciaFacade.edit(modifProvincia);
      }
 
      @Override
      public void borrarProvincia(Provincia provincia) throws AlquilaCosasException {
-          Provincia borrarProvincia = entityManager.find(Provincia.class, provincia.getProvinciaId());
+          Provincia borrarProvincia = provinciaFacade.find(provincia.getProvinciaId());
           if (borrarProvincia.getDomicilioList().isEmpty())
-               entityManager.remove(borrarProvincia);               
+               provinciaFacade.remove(borrarProvincia);               
           else
                throw new AlquilaCosasException("El Provincia tiene Domicilios Asociados");
      }
@@ -51,7 +51,7 @@ public class ProvinciaBean implements ProvinciaBeanLocal {
      @Override
      public void registrarProvincia(Provincia nuevoProvincia) throws AlquilaCosasException {
           try{
-               entityManager.persist(nuevoProvincia);
+              provinciaFacade.create(nuevoProvincia); 
           }
           catch(Exception e){
                throw new AlquilaCosasException("Error al insertar la Provincia - " + e.getMessage());
@@ -60,10 +60,7 @@ public class ProvinciaBean implements ProvinciaBeanLocal {
 
      @Override
      public List<Pais> getPaises() {
-          List<Pais> paises;
-          Query query = entityManager.createNamedQuery("Pais.findAll");
-          paises = query.getResultList();
-          return paises;
+          return paisFacade.findAll();
      }
      
 }

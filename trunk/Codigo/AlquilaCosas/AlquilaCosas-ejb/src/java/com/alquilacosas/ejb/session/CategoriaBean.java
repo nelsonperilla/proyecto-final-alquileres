@@ -5,7 +5,7 @@
 package com.alquilacosas.ejb.session;
 
 import com.alquilacosas.common.AlquilaCosasException;
-import com.alquilacosas.common.CategoriaFacade;
+import com.alquilacosas.dto.CategoriaDTO;
 import com.alquilacosas.ejb.entity.Categoria;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,15 +68,15 @@ public class CategoriaBean implements CategoriaBeanLocal {
     }
 
     @Override
-    public List<CategoriaFacade> getCategoriasPrincipal() {
+    public List<CategoriaDTO> getCategoriasPrincipal() {
 
         Query query = entityManager.createQuery(""
                 + "select cat FROM Categoria cat "
                 + "where cat.categoriaFk IS NULL");
         List<Categoria> categorias = query.getResultList();
-        List<CategoriaFacade> categoriasFacade = new ArrayList<CategoriaFacade>();
+        List<CategoriaDTO> categoriasFacade = new ArrayList<CategoriaDTO>();
         for (Categoria c : categorias) {
-            categoriasFacade.add(new CategoriaFacade(c.getCategoriaId(), c.getNombre()));
+            categoriasFacade.add(new CategoriaDTO(c.getCategoriaId(), c.getNombre()));
         }
         return categoriasFacade;
     }
@@ -101,18 +101,18 @@ public class CategoriaBean implements CategoriaBeanLocal {
     }
 
     @Override
-    public List<CategoriaFacade> getCategoriaFacade() {
+    public List<CategoriaDTO> getCategoriaFacade() {
         List<Categoria> categorias;
         Query query = entityManager.createNamedQuery("Categoria.findAll");
         categorias = query.getResultList();
-        List<CategoriaFacade> catFacade = new ArrayList<CategoriaFacade>();
+        List<CategoriaDTO> catFacade = new ArrayList<CategoriaDTO>();
         for (Categoria c : categorias) {
             Categoria padre = c.getCategoriaFk();
             int padreId = 0;
             if (padre != null) {
                 padreId = padre.getCategoriaId();
             }
-            CategoriaFacade cat = new CategoriaFacade(c.getCategoriaId(),
+            CategoriaDTO cat = new CategoriaDTO(c.getCategoriaId(),
                     padreId, c.getNombre(), c.getDescripcion());
             catFacade.add(cat);
         }
@@ -120,15 +120,15 @@ public class CategoriaBean implements CategoriaBeanLocal {
     }
 
     @Override
-    public List<CategoriaFacade> getSubCategorias(int categoria) {
+    public List<CategoriaDTO> getSubCategorias(int categoria) {
 
         Categoria cat = entityManager.find(Categoria.class, categoria);
         Query subcatQuery = entityManager.createNamedQuery("Categoria.findByCategoriaFk");
         subcatQuery.setParameter("categoria", cat);
         List<Categoria> categorias = subcatQuery.getResultList();
-        List<CategoriaFacade> subcategorias = new ArrayList<CategoriaFacade>();
+        List<CategoriaDTO> subcategorias = new ArrayList<CategoriaDTO>();
         for (Categoria c : categorias) {
-            subcategorias.add(new CategoriaFacade(c.getCategoriaId(), c.getNombre()));
+            subcategorias.add(new CategoriaDTO(c.getCategoriaId(), c.getNombre()));
         }
         return subcategorias;
     }

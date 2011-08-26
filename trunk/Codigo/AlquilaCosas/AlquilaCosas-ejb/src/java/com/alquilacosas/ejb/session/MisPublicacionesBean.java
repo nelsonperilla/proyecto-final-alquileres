@@ -4,8 +4,8 @@
  */
 package com.alquilacosas.ejb.session;
 
-import com.alquilacosas.common.PrecioFacade;
-import com.alquilacosas.common.PublicacionFacade;
+import com.alquilacosas.dto.PrecioDTO;
+import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.entity.Domicilio;
 import com.alquilacosas.ejb.entity.EstadoPublicacion;
 import com.alquilacosas.ejb.entity.ImagenPublicacion;
@@ -34,13 +34,13 @@ public class MisPublicacionesBean implements MisPublicacionesBeanLocal {
 
     @Override
     @RolesAllowed({"USUARIO", "ADMIN"})
-    public List<PublicacionFacade> getPublicaciones(int usuarioId) {
+    public List<PublicacionDTO> getPublicaciones(int usuarioId) {
 
         Usuario usuario = entityManager.find(Usuario.class, usuarioId);
         List<Publicacion> listaPublicaciones = usuario.getPublicacionList();
-        List<PublicacionFacade> listaFacade = new ArrayList<PublicacionFacade>();
+        List<PublicacionDTO> listaFacade = new ArrayList<PublicacionDTO>();
         for (Publicacion p : listaPublicaciones) {
-            PublicacionFacade facade = new PublicacionFacade(p.getPublicacionId(), p.getTitulo(),
+            PublicacionDTO facade = new PublicacionDTO(p.getPublicacionId(), p.getTitulo(),
                     p.getDescripcion(), p.getFechaDesde(), p.getFechaHasta(), p.getDestacada(),
                     p.getCantidad());
             List<Integer> imagenes = new ArrayList<Integer>();
@@ -60,15 +60,15 @@ public class MisPublicacionesBean implements MisPublicacionesBeanLocal {
         return listaFacade;
     }
 
-    private List<PrecioFacade> getPrecios(Publicacion filter) {
-        List<PrecioFacade> resultado = new ArrayList<PrecioFacade>();
+    private List<PrecioDTO> getPrecios(Publicacion filter) {
+        List<PrecioDTO> resultado = new ArrayList<PrecioDTO>();
         List<Precio> precios;
         Query query = entityManager.createNamedQuery("Precio.findByPublicacion");
         query.setParameter("publicacion", filter);
         precios = query.getResultList();
 
         for (Precio precio : precios) {
-            resultado.add(new PrecioFacade(precio.getPrecio(), precio.getPeriodoFk().getNombre()));
+            resultado.add(new PrecioDTO(precio.getPrecio(), precio.getPeriodoFk().getNombre()));
         }
 
         return resultado;

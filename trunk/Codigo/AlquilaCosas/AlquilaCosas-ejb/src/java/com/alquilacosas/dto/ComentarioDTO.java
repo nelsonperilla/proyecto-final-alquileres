@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.alquilacosas.common;
+package com.alquilacosas.dto;
 
 import java.util.Date;
 
@@ -10,20 +10,20 @@ import java.util.Date;
  *
  * @author jorge
  */
-public class ComentarioFacade {
+public class ComentarioDTO {
     
     private int id;
     private String comentario;
     private Date fecha;
     private int usuarioId;
     private String usuario;
-    private ComentarioFacade respuesta;
+    private ComentarioDTO respuesta;
     private int publicacionId;
 
-    public ComentarioFacade(){ }
+    public ComentarioDTO(){ }
     
-    public ComentarioFacade(int id, String comentario, Date fecha, int usuarioId,
-            String usuario,ComentarioFacade respuesta){
+    public ComentarioDTO(int id, String comentario, Date fecha, int usuarioId,
+            String usuario,ComentarioDTO respuesta){
         this.id=id;
         this.comentario=comentario;
         this.fecha=fecha;
@@ -32,11 +32,11 @@ public class ComentarioFacade {
         if(respuesta!=null)
             this.respuesta=respuesta;
         else
-            respuesta=new ComentarioFacade();
+            respuesta=new ComentarioDTO();
     }
     
-    public ComentarioFacade(int id, String comentario, Date fecha, int usuarioId,
-            String usuario,int publicacionId, ComentarioFacade respuesta){
+    public ComentarioDTO(int id, String comentario, Date fecha, int usuarioId,
+            String usuario,int publicacionId, ComentarioDTO respuesta){
         this.id=id;
         this.comentario=comentario;
         this.fecha=fecha;
@@ -45,12 +45,12 @@ public class ComentarioFacade {
         if(respuesta!=null)
             this.respuesta=respuesta;
         else{
-            respuesta=new ComentarioFacade();
+            respuesta=new ComentarioDTO();
             respuesta.setId(-1);
         }
     }    
     
-    public boolean equals(ComentarioFacade other){
+    public boolean equals(ComentarioDTO other){
         return this.id == other.id;
     }
     
@@ -113,14 +113,14 @@ public class ComentarioFacade {
     /**
      * @return the respuestaId
      */
-    public ComentarioFacade getRespuesta() {
+    public ComentarioDTO getRespuesta() {
         return respuesta;
     }
 
     /**
      * @param respuestaId the respuestaId to set
      */
-    public void setRespuesta(ComentarioFacade respuesta) {
+    public void setRespuesta(ComentarioDTO respuesta) {
         this.respuesta = respuesta;
     }
 

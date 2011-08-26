@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.alquilacosas.common;
+package com.alquilacosas.dto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,28 +11,28 @@ import java.util.List;
  *
  * @author ignaciogiagante
  */
-public class PrecioFacade {
+public class PrecioDTO {
     
     private int periodoId;
     private int precioId;
     private String periodoNombre;
     private Double precio;
     
-    public PrecioFacade(){
+    public PrecioDTO(){
     }
     
-    public PrecioFacade( double precio, String periodoNombre){
+    public PrecioDTO( double precio, String periodoNombre){
         this.precio = precio;
         this.periodoNombre = periodoNombre;     
     }
     
-    public PrecioFacade( int precioId, double precio, String periodoNombre ){
+    public PrecioDTO( int precioId, double precio, String periodoNombre ){
         this.precioId = precioId;
         this.precio = precio;
         this.periodoNombre = periodoNombre;      
     }
     
-    public PrecioFacade( int precioId, int periodoId, double precio, String periodoNombre ){
+    public PrecioDTO( int precioId, int periodoId, double precio, String periodoNombre ){
         this.precioId = precioId;
         this.periodoId = periodoId;
         this.precio = precio;
@@ -73,11 +73,11 @@ public class PrecioFacade {
         this.periodoNombre = periodoNombre;
     }
 
-    public List<PrecioFacade> ordenar( List<PrecioFacade> precios ){
+    public List<PrecioDTO> ordenar( List<PrecioDTO> precios ){
         
-        List<PrecioFacade> temp = new ArrayList<PrecioFacade>();
+        List<PrecioDTO> temp = new ArrayList<PrecioDTO>();
         
-        for( PrecioFacade precio : precios ){
+        for( PrecioDTO precio : precios ){
             
         }
         

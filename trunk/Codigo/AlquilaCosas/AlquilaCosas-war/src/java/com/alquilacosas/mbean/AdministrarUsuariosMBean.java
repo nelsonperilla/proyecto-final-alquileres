@@ -4,8 +4,8 @@
  */
 package com.alquilacosas.mbean;
 
-import com.alquilacosas.common.UsuarioFacade;
-import com.alquilacosas.ejb.session.UsuarioBeanLocal;
+import com.alquilacosas.dto.UsuarioDTO;
+import com.alquilacosas.ejb.session.AdministrarUsuariosBeanLocal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -25,9 +25,9 @@ import org.primefaces.event.RowEditEvent;
 public class AdministrarUsuariosMBean {
     
     @EJB
-    private UsuarioBeanLocal usuarioBean;
+    private AdministrarUsuariosBeanLocal usuarioBean;
     
-    private List<UsuarioFacade> usuarios;
+    private List<UsuarioDTO> usuarios;
     private List<Integer> tipos;
     
     public AdministrarUsuariosMBean() {    
@@ -43,7 +43,7 @@ public class AdministrarUsuariosMBean {
         
         try {
             
-            UsuarioFacade uf = (UsuarioFacade)ev.getObject();
+            UsuarioDTO uf = (UsuarioDTO)ev.getObject();
             if( uf.isUsuarioRol() && uf.isAdminRol() ){
                 tipos.add(1);
                 tipos.add(2);
@@ -60,11 +60,11 @@ public class AdministrarUsuariosMBean {
         }
     }
 
-    public List<UsuarioFacade> getUsuarios() {
+    public List<UsuarioDTO> getUsuarios() {
         return usuarios;
     }
 
-    public void setUsuarios(List<UsuarioFacade> usuarios) {
+    public void setUsuarios(List<UsuarioDTO> usuarios) {
         this.usuarios = usuarios;
     }
 

@@ -6,11 +6,12 @@ package com.alquilacosas.ejb.session;
 
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.ejb.entity.Pais;
+import com.alquilacosas.facade.PaisFacade;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 /**
  *
@@ -21,30 +22,27 @@ public class PaisBean implements PaisBeanLocal {
      
      @PersistenceContext(unitName="AlquilaCosas-ejbPU") 
      private EntityManager entityManager;
+     
+     @EJB
+     private PaisFacade paisFacade;
 
      @Override
      public List<Pais> getPaises() {
-          List<Pais> paises;
-          Query query = entityManager.createNamedQuery("Pais.findAll");
-          paises = query.getResultList();
-          return paises;
+          return paisFacade.findAll();
      }
-
-     // Add business logic below. (Right-click in editor and choose
-     // "Insert Code > Add Business Method")
      
      @Override
-     public void modificarPais(Pais PaisNuevo) {
-          Pais modifPais = entityManager.find(Pais.class, PaisNuevo.getPaisId());
-          modifPais.setNombre(PaisNuevo.getNombre());
-          entityManager.merge(modifPais);
+     public void modificarPais(Pais paisNuevo) {
+          Pais modifPais = paisFacade.find(paisNuevo.getPaisId());
+          modifPais.setNombre(paisNuevo.getNombre());
+          paisFacade.edit(modifPais);
      }
 
      @Override
      public void borrarPais(Pais Pais) throws AlquilaCosasException {
           Pais borrarPais = entityManager.find(Pais.class, Pais.getPaisId());
           if (borrarPais.getProvinciaList().isEmpty())
-               entityManager.remove(borrarPais);               
+              paisFacade.remove(borrarPais); 
           else
                throw new AlquilaCosasException("El Pais tiene Precios Asociados");
      }
@@ -52,7 +50,7 @@ public class PaisBean implements PaisBeanLocal {
      @Override
      public void registrarPais(Pais nuevoPais) throws AlquilaCosasException {
           try{
-               entityManager.persist(nuevoPais);
+              paisFacade.create(nuevoPais); 
           }
           catch(Exception e){
                throw new AlquilaCosasException("Error al insertar el Pais - " + e.getMessage());

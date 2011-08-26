@@ -4,8 +4,8 @@
  */
 package com.alquilacosas.ejb.session;
 
-import com.alquilacosas.common.PrecioFacade;
-import com.alquilacosas.common.PublicacionFacade;
+import com.alquilacosas.dto.PrecioDTO;
+import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.entity.Categoria;
 import com.alquilacosas.ejb.entity.Domicilio;
 import com.alquilacosas.ejb.entity.ImagenPublicacion;
@@ -29,14 +29,14 @@ public class MostrarPublicacionesBean implements MostrarPublicacionesBeanLocal {
     private EntityManager entityManager;
     
     @Override
-    public List<PublicacionFacade> getPublicacionesRandom(int pagina) {
+    public List<PublicacionDTO> getPublicacionesRandom(int pagina) {
         Query query = entityManager.createNamedQuery("Publicacion.findAll");
         query.setMaxResults(10);
 
         List<Publicacion> publicaciones = query.getResultList();
-        List<PublicacionFacade> resultado = new ArrayList<PublicacionFacade>();
+        List<PublicacionDTO> resultado = new ArrayList<PublicacionDTO>();
         for(Publicacion publicacion: publicaciones) {
-            PublicacionFacade tempPublication = new PublicacionFacade(publicacion.getPublicacionId(), publicacion.getTitulo(),
+            PublicacionDTO tempPublication = new PublicacionDTO(publicacion.getPublicacionId(), publicacion.getTitulo(),
                     publicacion.getDescripcion(), publicacion.getFechaDesde(), publicacion.getFechaHasta(), publicacion.getDestacada(),
                     publicacion.getCantidad());
             List<Integer> imagenes = new ArrayList<Integer>();
@@ -55,11 +55,11 @@ public class MostrarPublicacionesBean implements MostrarPublicacionesBeanLocal {
     }
 
     @Override
-    public List<PublicacionFacade> getPublicacionesPoCategoria(int pagina, int categoria) {
+    public List<PublicacionDTO> getPublicacionesPoCategoria(int pagina, int categoria) {
         Categoria filter = entityManager.find(Categoria.class, categoria);
         Query query = entityManager.createNamedQuery("Publicacion.findByCategoria");
         query.setParameter("categoria", filter);
-        List<PublicacionFacade> publicaciones = query.getResultList();
+        List<PublicacionDTO> publicaciones = query.getResultList();
         return publicaciones;//reescribir metodo!
     }
     
@@ -77,15 +77,15 @@ public class MostrarPublicacionesBean implements MostrarPublicacionesBeanLocal {
         return result;
     }
 
-    private List<PrecioFacade> getPrecios(Publicacion filter){
-        List<PrecioFacade> resultado = new ArrayList<PrecioFacade>();
+    private List<PrecioDTO> getPrecios(Publicacion filter){
+        List<PrecioDTO> resultado = new ArrayList<PrecioDTO>();
         List<Precio> precios;
         Query query = entityManager.createNamedQuery("Precio.findByPublicacion");
         query.setParameter("publicacion", filter);
         precios = query.getResultList();   
         
         for(Precio precio: precios)
-            resultado.add(new PrecioFacade(precio.getPrecio(), precio.getPeriodoFk().getNombre()));
+            resultado.add(new PrecioDTO(precio.getPrecio(), precio.getPeriodoFk().getNombre()));
         
         return resultado;
 

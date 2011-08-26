@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.alquilacosas.common;
+package com.alquilacosas.dto;
 
 import com.alquilacosas.ejb.entity.Categoria;
 import com.alquilacosas.ejb.entity.EstadoPublicacion;
@@ -17,7 +17,7 @@ import java.util.List;
  *
  * @author jorge
  */
-public class PublicacionFacade {
+public class PublicacionDTO {
     
     private int id;
     private String titulo;
@@ -29,8 +29,8 @@ public class PublicacionFacade {
     private int imagenId = -1;
     private List<Integer> imagenIds;
     private Categoria categoria;
-    private CategoriaFacade categoriaF; 
-    private List<PrecioFacade> precios;
+    private CategoriaDTO categoriaF; 
+    private List<PrecioDTO> precios;
     private EstadoPublicacion estado;
     private List<ImagenPublicacion> imagenes;
     private String ciudad;
@@ -53,15 +53,15 @@ public class PublicacionFacade {
         this.estado = estado;
     }
 
-    public List<PrecioFacade> getPrecios() {
+    public List<PrecioDTO> getPrecios() {
         return precios;
     }
 
-    public void setPrecios(List<PrecioFacade> precios) {
+    public void setPrecios(List<PrecioDTO> precios) {
         this.precios = precios;
     }
     
-    public PublicacionFacade(int id,String titulo,String descripcion, 
+    public PublicacionDTO(int id,String titulo,String descripcion, 
             Date fecha_desde, Date fecha_hasta, boolean destacada,
             int cantidad, Categoria categoria,
             List<ImagenPublicacion> imagenes, EstadoPublicacion estado)
@@ -75,11 +75,11 @@ public class PublicacionFacade {
         this.cantidad = cantidad;
         this.categoria = categoria;
         this.imagenes = imagenes;
-        precios = new ArrayList<PrecioFacade>();
+        precios = new ArrayList<PrecioDTO>();
         this.estado = estado;
     }
     
-    public PublicacionFacade(int id,String titulo,String descripcion, 
+    public PublicacionDTO(int id,String titulo,String descripcion, 
             Date fecha_desde, Date fecha_hasta, boolean destacada,
             int cantidad)//, Categoria categoria,Usuario usuario) 
     {
@@ -239,14 +239,14 @@ public class PublicacionFacade {
         /**
      * @return the categoriaF
      */
-    public CategoriaFacade getCategoriaF() {
+    public CategoriaDTO getCategoriaF() {
         return categoriaF;
     }
 
     /**
      * @param categoriaF the categoriaF to set
      */
-    public void setCategoriaF(CategoriaFacade categoriaF) {
+    public void setCategoriaF(CategoriaDTO categoriaF) {
         this.categoriaF = categoriaF;
     }
 

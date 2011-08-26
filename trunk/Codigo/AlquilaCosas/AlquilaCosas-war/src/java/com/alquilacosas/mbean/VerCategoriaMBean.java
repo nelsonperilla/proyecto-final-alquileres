@@ -5,8 +5,8 @@
 package com.alquilacosas.mbean;
 
 import com.alquilacosas.common.Busqueda;
-import com.alquilacosas.common.CategoriaFacade;
-import com.alquilacosas.common.PublicacionFacade;
+import com.alquilacosas.dto.CategoriaDTO;
+import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.session.BuscarPublicacionBeanLocal;
 import com.alquilacosas.ejb.session.CategoriaBeanLocal;
 import java.util.List;
@@ -33,8 +33,8 @@ public class VerCategoriaMBean {
     private Integer id, publicacionSeleccionada;
     private String nombreCategoria;
     private LazyDataModel model;
-    private List<PublicacionFacade> publicaciones;
-    private List<CategoriaFacade> subcategorias;
+    private List<PublicacionDTO> publicaciones;
+    private List<CategoriaDTO> subcategorias;
     private Integer subcategoriaSeleccionada;
     private int totalRegistros;
     private boolean noBuscarEnModel = true;
@@ -55,10 +55,10 @@ public class VerCategoriaMBean {
         }
         buscar(0, 10);
         
-        model = new LazyDataModel<PublicacionFacade>() {
+        model = new LazyDataModel<PublicacionDTO>() {
 
             @Override
-            public List<PublicacionFacade> load(int first, int pageSize, String sortFielf,
+            public List<PublicacionDTO> load(int first, int pageSize, String sortFielf,
                     boolean sort, Map<String, String> filters) {
                 if(noBuscarEnModel) {
                     noBuscarEnModel = false;
@@ -110,19 +110,19 @@ public class VerCategoriaMBean {
         this.model = model;
     }
 
-    public List<PublicacionFacade> getPublicaciones() {
+    public List<PublicacionDTO> getPublicaciones() {
         return publicaciones;
     }
 
-    public void setPublicaciones(List<PublicacionFacade> publicaciones) {
+    public void setPublicaciones(List<PublicacionDTO> publicaciones) {
         this.publicaciones = publicaciones;
     }
 
-    public List<CategoriaFacade> getSubcategorias() {
+    public List<CategoriaDTO> getSubcategorias() {
         return subcategorias;
     }
 
-    public void setSubcategorias(List<CategoriaFacade> subcategorias) {
+    public void setSubcategorias(List<CategoriaDTO> subcategorias) {
         this.subcategorias = subcategorias;
     }
 
