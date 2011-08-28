@@ -14,9 +14,10 @@ import com.alquilacosas.ejb.entity.Categoria;
 import com.alquilacosas.ejb.entity.Comentario;
 import com.alquilacosas.ejb.entity.Domicilio;
 import com.alquilacosas.ejb.entity.EstadoPublicacion;
-import com.alquilacosas.ejb.entity.EstadoPublicacion.PublicacionEstado;
+import com.alquilacosas.ejb.entity.EstadoPublicacion.NombreEstadoPublicacion;
 import com.alquilacosas.ejb.entity.ImagenPublicacion;
 import com.alquilacosas.ejb.entity.Periodo;
+import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
 import com.alquilacosas.ejb.entity.Precio;
 import com.alquilacosas.ejb.entity.Publicacion;
 import com.alquilacosas.ejb.entity.PublicacionXEstado;
@@ -104,7 +105,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
         EstadoPublicacion estadoPublicacion = null;
         try {
             Query query = entityManager.createNamedQuery("EstadoPublicacion.findByNombre");
-            query.setParameter("nombre", PublicacionEstado.ACTIVA);
+            query.setParameter("nombre", NombreEstadoPublicacion.ACTIVA);
             estadoPublicacion = (EstadoPublicacion) query.getSingleResult();
         } catch (NoResultException e) {
             context.setRollbackOnly();
@@ -125,11 +126,11 @@ public class PublicacionBean implements PublicacionBeanLocal {
             precio = new Precio();
 
             if (p.getPrecio() == 0) {
-                if (p.getPeriodoNombre().equalsIgnoreCase("hora")) {
+                if (p.getPeriodoNombre() == NombrePeriodo.HORA) {
                     p.setPrecio(pre / 10.0);
-                } else if (p.getPeriodoNombre().equalsIgnoreCase("semana")) {
+                } else if (p.getPeriodoNombre() == NombrePeriodo.SEMANA) {
                     p.setPrecio(pre * 7.0);
-                } else if (p.getPeriodoNombre().equalsIgnoreCase("mes")) {
+                } else if (p.getPeriodoNombre()  == NombrePeriodo.MES) {
                     p.setPrecio(pre * 30.0);
                 }
             } else {
@@ -194,7 +195,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
             Date fecha_desde, Date fecha_hasta, boolean destacada, int cantidad,
             int usuarioId, int categoria, List<PrecioDTO> precios,
             List<byte[]> imagenesAgregar, List<Integer> imagenesABorrar,
-            PublicacionEstado estadoPublicacion) throws AlquilaCosasException {
+            NombreEstadoPublicacion estadoPublicacion) throws AlquilaCosasException {
 
         Publicacion publicacion = null;
         try {
@@ -242,11 +243,11 @@ public class PublicacionBean implements PublicacionBeanLocal {
             if (precioFacade.getPrecioId() != 0) {
 
                 if (precioFacade.getPrecio() == 0.0) {
-                    if (precioFacade.getPeriodoNombre().equalsIgnoreCase("dia")) {
+                    if (precioFacade.getPeriodoNombre() == NombrePeriodo.DIA) {
                         precioFacade.setPrecio(precioDiario / 10.0);
-                    } else if (precioFacade.getPeriodoNombre().equalsIgnoreCase("semana")) {
+                    } else if (precioFacade.getPeriodoNombre() == NombrePeriodo.SEMANA) {
                         precioFacade.setPrecio(precioDiario * 7.0);
-                    } else if (precioFacade.getPeriodoNombre().equalsIgnoreCase("mes")) {
+                    } else if (precioFacade.getPeriodoNombre() == NombrePeriodo.MES) {
                         precioFacade.setPrecio(precioDiario * 30.0);
                     }
                 }
@@ -256,11 +257,11 @@ public class PublicacionBean implements PublicacionBeanLocal {
                 
                 Precio precioNuevo = new Precio();
                 if (precioFacade.getPrecio() == 0) {
-                    if (precioFacade.getPeriodoNombre().equalsIgnoreCase("dia")) {
+                    if (precioFacade.getPeriodoNombre() == NombrePeriodo.DIA) {
                         precioFacade.setPrecio(precioDiario / 10.0);
-                    } else if (precioFacade.getPeriodoNombre().equalsIgnoreCase("semana")) {
+                    } else if (precioFacade.getPeriodoNombre() == NombrePeriodo.SEMANA) {
                         precioFacade.setPrecio(precioDiario * 7.0);
-                    } else if (precioFacade.getPeriodoNombre().equalsIgnoreCase("mes")) {
+                    } else if (precioFacade.getPeriodoNombre() == NombrePeriodo.MES) {
                         precioFacade.setPrecio(precioDiario * 30.0);
                     }
                     precioNuevo.setPrecio(precioFacade.getPrecio());

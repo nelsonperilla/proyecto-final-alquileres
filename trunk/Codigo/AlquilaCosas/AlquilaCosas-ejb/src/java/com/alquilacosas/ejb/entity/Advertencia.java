@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Advertencia.findByFecha", query = "SELECT a FROM Advertencia a WHERE a.fecha = :fecha"),
     @NamedQuery(name = "Advertencia.findByMotivo", query = "SELECT a FROM Advertencia a WHERE a.motivo = :motivo")})
 public class Advertencia implements Serializable {
-    @Basic(optional = false)
+    @Basic(optional =     false)
     @NotNull
     @Column(name = "FECHA")
     @Temporal(TemporalType.TIMESTAMP)

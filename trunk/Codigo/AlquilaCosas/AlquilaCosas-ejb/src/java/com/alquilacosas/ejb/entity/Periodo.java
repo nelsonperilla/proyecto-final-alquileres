@@ -38,6 +38,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Periodo.findByHoras", query = "SELECT p FROM Periodo p WHERE p.horas = :horas")})
 public class Periodo implements Serializable {
     
+    public enum NombrePeriodo{HORA, DIA, SEMANA, MES};
+    
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -49,7 +51,8 @@ public class Periodo implements Serializable {
     
     @Size(max = 45)
     @Column(name = "NOMBRE")
-    private String nombre;
+    @Enumerated(EnumType.STRING)
+    private NombrePeriodo nombre;
     
     @Size(max = 45)
     @Column(name = "DESCRIPCION")
@@ -62,6 +65,12 @@ public class Periodo implements Serializable {
     
     @OneToMany(mappedBy = "periodoFk")
     private List<Precio> precioList;
+    
+    @OneToMany(mappedBy = "maxPeriodoAlquilerFk")
+    private List<Publicacion> publicacionList;
+    
+    @OneToMany(mappedBy = "minPeriodoAlquilerFk")
+    private List<Publicacion> publicacionList1;
 
     public Periodo() {
     }
@@ -83,11 +92,11 @@ public class Periodo implements Serializable {
         this.periodoId = periodoId;
     }
 
-    public String getNombre() {
+    public NombrePeriodo getNombre() {
         return nombre;
     }
 
-    public void setNombre(String nombre) {
+    public void setNombre(NombrePeriodo nombre) {
         this.nombre = nombre;
     }
 
@@ -139,6 +148,24 @@ public class Periodo implements Serializable {
     @Override
     public String toString() {
         return "com.alquilacosas.ejb.entity.Periodo[ periodoId=" + periodoId + " ]";
+    }
+
+    @XmlTransient
+    public List<Publicacion> getPublicacionList() {
+        return publicacionList;
+    }
+
+    public void setPublicacionList(List<Publicacion> publicacionList) {
+        this.publicacionList = publicacionList;
+    }
+
+    @XmlTransient
+    public List<Publicacion> getPublicacionList1() {
+        return publicacionList1;
+    }
+
+    public void setPublicacionList1(List<Publicacion> publicacionList1) {
+        this.publicacionList1 = publicacionList1;
     }
     
 }

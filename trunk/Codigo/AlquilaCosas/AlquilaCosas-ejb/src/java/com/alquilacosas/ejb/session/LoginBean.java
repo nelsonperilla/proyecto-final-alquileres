@@ -6,7 +6,7 @@ package com.alquilacosas.ejb.session;
 
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.ejb.entity.EstadoUsuario;
-import com.alquilacosas.ejb.entity.EstadoUsuario.NombreEstado;
+import com.alquilacosas.ejb.entity.EstadoUsuario.NombreEstadoUsuario;
 import com.alquilacosas.ejb.entity.Login;
 import com.alquilacosas.ejb.entity.Usuario;
 import com.alquilacosas.ejb.entity.UsuarioXEstado;
@@ -58,14 +58,14 @@ public class LoginBean implements LoginBeanLocal {
 //                 throw new AlquilaCosasException("No se encontro el usuario.");
 //            }
             if(ultimoUxe == null || ultimoUxe.getEstadoUsuario().getNombre()
-                    != NombreEstado.REGISTRADO) {
+                    != NombreEstadoUsuario.REGISTRADO) {
                 throw new AlquilaCosasException("El estado del usuario no requiere activación.");
             }
             
-            EstadoUsuario estado = estadoUsuarioFacade.findByNombre(NombreEstado.ACTIVO);
+            EstadoUsuario estado = estadoUsuarioFacade.findByNombre(NombreEstadoUsuario.ACTIVO);
             if(estado == null) {
                 throw new AlquilaCosasException("No se encontro el estado " + 
-                        NombreEstado.ACTIVO.toString() + " en la base de datos.");
+                        NombreEstadoUsuario.ACTIVO.toString() + " en la base de datos.");
             }
 //            try {
 //                Query estadoActivoQuery = entityManager.createNamedQuery("EstadoUsuario.findByNombre");

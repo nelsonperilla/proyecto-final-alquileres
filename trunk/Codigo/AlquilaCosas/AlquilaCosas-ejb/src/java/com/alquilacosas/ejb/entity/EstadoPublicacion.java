@@ -38,9 +38,10 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "EstadoPublicacion.findByDescripcion", query = "SELECT e FROM EstadoPublicacion e WHERE e.descripcion = :descripcion")})
 public class EstadoPublicacion implements Serializable {
     
-    public enum PublicacionEstado {ACTIVA, INACTIVA, SUSPENDIDA};
+    public enum NombreEstadoPublicacion {ACTIVA, INACTIVA, SUSPENDIDA};
     
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -51,9 +52,9 @@ public class EstadoPublicacion implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
-    @Enumerated(EnumType.STRING)
     @Column(name = "NOMBRE")
-    private PublicacionEstado nombre;
+    @Enumerated(EnumType.STRING)
+    private NombreEstadoPublicacion nombre;
     
     @Size(max = 45)
     @Column(name = "DESCRIPCION")
@@ -68,7 +69,7 @@ public class EstadoPublicacion implements Serializable {
         this.estadoPublicacionId = estadoPublicacionId;
     }
 
-    public EstadoPublicacion(Integer estadoPublicacionId, PublicacionEstado nombre) {
+    public EstadoPublicacion(Integer estadoPublicacionId, NombreEstadoPublicacion nombre) {
         this.estadoPublicacionId = estadoPublicacionId;
         this.nombre = nombre;
     }
@@ -81,13 +82,14 @@ public class EstadoPublicacion implements Serializable {
         this.estadoPublicacionId = estadoPublicacionId;
     }
 
-    public PublicacionEstado getNombre() {
+    public NombreEstadoPublicacion getNombre() {
         return nombre;
     }
 
-    public void setNombre(PublicacionEstado nombre) {
+    public void setNombre(NombreEstadoPublicacion nombre) {
         this.nombre = nombre;
     }
+    
     
     public String getDescripcion() {
         return descripcion;

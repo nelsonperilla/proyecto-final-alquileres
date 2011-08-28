@@ -4,7 +4,7 @@
  */
 package com.alquilacosas.facade;
 
-import com.alquilacosas.ejb.entity.EstadoPublicacion;
+import com.alquilacosas.ejb.entity.Puntuacion;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -14,7 +14,7 @@ import javax.persistence.PersistenceContext;
  * @author damiancardozo
  */
 @Stateless
-public class EstadoPublicacionFacade extends AbstractFacade<EstadoPublicacion> {
+public class PuntuacionFacade extends AbstractFacade<Puntuacion> {
     @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
     private EntityManager em;
 
@@ -23,8 +23,8 @@ public class EstadoPublicacionFacade extends AbstractFacade<EstadoPublicacion> {
         return em;
     }
 
-    public EstadoPublicacionFacade() {
-        super(EstadoPublicacion.class);
+    public PuntuacionFacade() {
+        super(Puntuacion.class);
     }
     
 }

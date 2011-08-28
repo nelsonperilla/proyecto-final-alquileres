@@ -34,6 +34,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "ImagenPublicacion.findByPublicacionId", query = "SELECT i FROM ImagenPublicacion i WHERE i.publicacionFk = :publicacion"),
     @NamedQuery(name = "ImagenPublicacion.findByImagenPublicacionId", query = "SELECT i FROM ImagenPublicacion i WHERE i.imagenPublicacionId = :imagenPublicacionId")})
 public class ImagenPublicacion implements Serializable {
+    @Lob
+    @Column(name = "IMAGEN")
+    private byte[] imagen;
     
     private static final long serialVersionUID = 1L;
     
@@ -43,11 +46,6 @@ public class ImagenPublicacion implements Serializable {
     @NotNull
     @Column(name = "IMAGEN_PUBLICACION_ID")
     private Integer imagenPublicacionId;
-    
-    @Lob
-    @Column(name = "IMAGEN")
-    @Basic(fetch= FetchType.EAGER)
-    private byte[] imagen;
     
     @JoinColumn(name = "PUBLICACION_FK", referencedColumnName = "PUBLICACION_ID")
     @ManyToOne()

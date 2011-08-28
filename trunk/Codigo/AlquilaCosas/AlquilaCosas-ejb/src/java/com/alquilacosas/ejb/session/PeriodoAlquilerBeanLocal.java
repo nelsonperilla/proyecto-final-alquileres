@@ -6,6 +6,7 @@ package com.alquilacosas.ejb.session;
 
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.ejb.entity.Periodo;
+import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -24,5 +25,5 @@ public interface PeriodoAlquilerBeanLocal {
 
      void registrarPeriodo(String nombre, String descripcion, int horas) throws AlquilaCosasException ;
      
-     Periodo getPeriodo(String nombrePeriodo);
+     Periodo getPeriodo(NombrePeriodo nombrePeriodo);
 }

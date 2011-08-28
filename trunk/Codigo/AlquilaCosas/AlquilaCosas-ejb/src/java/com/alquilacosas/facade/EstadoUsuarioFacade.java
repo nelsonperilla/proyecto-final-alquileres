@@ -5,7 +5,7 @@
 package com.alquilacosas.facade;
 
 import com.alquilacosas.ejb.entity.EstadoUsuario;
-import com.alquilacosas.ejb.entity.EstadoUsuario.NombreEstado;
+import com.alquilacosas.ejb.entity.EstadoUsuario.NombreEstadoUsuario;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -30,10 +30,10 @@ public class EstadoUsuarioFacade extends AbstractFacade<EstadoUsuario> {
         super(EstadoUsuario.class);
     }
     
-    public EstadoUsuario findByNombre(NombreEstado nombre) {
+    public EstadoUsuario findByNombre(NombreEstadoUsuario nombre) {
         EstadoUsuario estado = null;
         Query getEstadoQuery = em.createNamedQuery("EstadoUsuario.findByNombre");
-        getEstadoQuery.setParameter("nombre", NombreEstado.REGISTRADO);
+        getEstadoQuery.setParameter("nombre", NombreEstadoUsuario.REGISTRADO);
         try {
         estado = (EstadoUsuario) getEstadoQuery.getSingleResult();
         } catch(NoResultException e) {

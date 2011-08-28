@@ -4,6 +4,7 @@
  */
 package com.alquilacosas.dto;
 
+import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,24 +16,24 @@ public class PrecioDTO {
     
     private int periodoId;
     private int precioId;
-    private String periodoNombre;
+    private NombrePeriodo periodoNombre;
     private Double precio;
     
     public PrecioDTO(){
     }
     
-    public PrecioDTO( double precio, String periodoNombre){
+    public PrecioDTO( double precio, NombrePeriodo periodoNombre){
         this.precio = precio;
         this.periodoNombre = periodoNombre;     
     }
     
-    public PrecioDTO( int precioId, double precio, String periodoNombre ){
+    public PrecioDTO( int precioId, double precio, NombrePeriodo periodoNombre ){
         this.precioId = precioId;
         this.precio = precio;
         this.periodoNombre = periodoNombre;      
     }
     
-    public PrecioDTO( int precioId, int periodoId, double precio, String periodoNombre ){
+    public PrecioDTO( int precioId, int periodoId, double precio, NombrePeriodo periodoNombre ){
         this.precioId = precioId;
         this.periodoId = periodoId;
         this.precio = precio;
@@ -46,8 +47,6 @@ public class PrecioDTO {
     public void setPrecioId(int precioId) {
         this.precioId = precioId;
     }
-    
-    
 
     public int getPeriodoId() {
         return periodoId;
@@ -65,11 +64,11 @@ public class PrecioDTO {
         this.precio = precio;
     }
 
-    public String getPeriodoNombre() {
+    public NombrePeriodo getPeriodoNombre() {
         return periodoNombre;
     }
 
-    public void setPeriodoNombre(String periodoNombre) {
+    public void setPeriodoNombre(NombrePeriodo periodoNombre) {
         this.periodoNombre = periodoNombre;
     }
 
