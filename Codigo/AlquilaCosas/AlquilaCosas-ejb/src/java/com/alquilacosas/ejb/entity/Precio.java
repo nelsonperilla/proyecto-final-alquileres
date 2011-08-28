@@ -5,6 +5,7 @@
 package com.alquilacosas.ejb.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +17,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -28,23 +31,39 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Precio.findAll", query = "SELECT p FROM Precio p"),
-    @NamedQuery(name = "Precio.findByPublicacion", query = "SELECT p FROM Precio p WHERE p.publicacionFk = :publicacion ORDER BY p.precio ASC"),
+    @NamedQuery(name = "Precio.findByPublicacion", query = "SELECT p FROM Precio p WHERE "
+        + "p.publicacionFk = :publicacion AND p.fechaHasta IS NULL ORDER BY p.precio ASC"),
     @NamedQuery(name = "Precio.findByPrecioId", query = "SELECT p FROM Precio p WHERE p.precioId = :precioId")})
 public class Precio implements Serializable {
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "PRECIO")
-    private double precio;
+    
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @NotNull
     @Column(name = "PRECIO_ID")
     private Integer precioId;
+    
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "PRECIO")
+    private double precio;
+    
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "FECHA_DESDE")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaDesde;
+    
+    @Column(name = "FECHA_HASTA")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaHasta;
+    
     @JoinColumn(name = "PUBLICACION_FK", referencedColumnName = "PUBLICACION_ID")
     @ManyToOne
     private Publicacion publicacionFk;
+    
     @JoinColumn(name = "PERIODO_FK", referencedColumnName = "PERIODO_ID")
     @ManyToOne
     private Periodo periodoFk;
@@ -111,6 +130,22 @@ public class Precio implements Serializable {
 
     public void setPrecio(double precio) {
         this.precio = precio;
+    }
+
+    public Date getFechaDesde() {
+        return fechaDesde;
+    }
+
+    public void setFechaDesde(Date fechaDesde) {
+        this.fechaDesde = fechaDesde;
+    }
+
+    public Date getFechaHasta() {
+        return fechaHasta;
+    }
+
+    public void setFechaHasta(Date fechaHasta) {
+        this.fechaHasta = fechaHasta;
     }
     
 }

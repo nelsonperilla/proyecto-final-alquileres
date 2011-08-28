@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Suspension.findByDuracion", query = "SELECT s FROM Suspension s WHERE s.duracion = :duracion"),
     @NamedQuery(name = "Suspension.findByFecha", query = "SELECT s FROM Suspension s WHERE s.fecha = :fecha")})
 public class Suspension implements Serializable {
-    @Basic(optional = false)
+    @Basic(optional =     false)
     @NotNull
     @Column(name = "FECHA")
     @Temporal(TemporalType.TIMESTAMP)

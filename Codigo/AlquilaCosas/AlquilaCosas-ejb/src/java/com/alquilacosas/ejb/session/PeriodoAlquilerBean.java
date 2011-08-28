@@ -6,6 +6,7 @@ package com.alquilacosas.ejb.session;
 
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.ejb.entity.Periodo;
+import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -55,7 +56,7 @@ public class PeriodoAlquilerBean implements PeriodoAlquilerBeanLocal {
     public void registrarPeriodo(String nombre, String descripcion, int horas) throws AlquilaCosasException {
         try {
             Periodo periodo = new Periodo();
-            periodo.setNombre(nombre);
+            periodo.setNombre(NombrePeriodo.valueOf(nombre));
             periodo.setDescripcion(descripcion);
             periodo.setHoras(horas);
             entityManager.persist(periodo);
@@ -65,7 +66,7 @@ public class PeriodoAlquilerBean implements PeriodoAlquilerBeanLocal {
     }
 
     @Override
-    public Periodo getPeriodo(String nombrePeriodo) {
+    public Periodo getPeriodo(NombrePeriodo nombrePeriodo) {
         Query query = entityManager.createNamedQuery("Periodo.findByNombre");
         query.setParameter("nombre", nombrePeriodo);
         Periodo periodo = (Periodo) query.getSingleResult();

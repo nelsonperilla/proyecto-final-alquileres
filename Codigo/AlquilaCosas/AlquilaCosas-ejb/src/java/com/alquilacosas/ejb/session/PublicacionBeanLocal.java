@@ -9,7 +9,7 @@ import com.alquilacosas.dto.ComentarioDTO;
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.PrecioDTO;
 import com.alquilacosas.dto.PublicacionDTO;
-import com.alquilacosas.ejb.entity.EstadoPublicacion.PublicacionEstado;
+import com.alquilacosas.ejb.entity.EstadoPublicacion.NombreEstadoPublicacion;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
@@ -44,6 +44,6 @@ public interface PublicacionBeanLocal {
             Date fecha_desde, Date fecha_hasta, boolean destacada, int cantidad,
             int usuarioId, int categoria, List<PrecioDTO> precios, 
             List<byte[]> imagenesAgregar, List<Integer> imagenesABorrar, 
-            PublicacionEstado estadoPublicacion  ) throws AlquilaCosasException;
+            NombreEstadoPublicacion estadoPublicacion  ) throws AlquilaCosasException;
 
 }

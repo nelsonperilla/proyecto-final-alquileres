@@ -51,8 +51,12 @@ public class Comentario implements Serializable {
     @Column(name = "FECHA")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fecha;
+    
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "PREGUNTA")
     private Boolean pregunta;
+    
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -170,20 +174,20 @@ public class Comentario implements Serializable {
         return "com.alquilacosas.ejb.entity.Comentario[ comentarioId=" + comentarioId + " ]";
     }
 
-    public Boolean getPregunta() {
-        return pregunta;
-    }
-
-    public void setPregunta(Boolean pregunta) {
-        this.pregunta = pregunta;
-    }
-
     public Date getFecha() {
         return fecha;
     }
 
     public void setFecha(Date fecha) {
         this.fecha = fecha;
+    }
+
+    public Boolean getPregunta() {
+        return pregunta;
+    }
+
+    public void setPregunta(Boolean pregunta) {
+        this.pregunta = pregunta;
     }
     
 }

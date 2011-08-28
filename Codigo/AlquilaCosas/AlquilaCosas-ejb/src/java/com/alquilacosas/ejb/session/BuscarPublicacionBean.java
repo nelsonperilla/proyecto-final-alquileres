@@ -6,14 +6,17 @@ package com.alquilacosas.ejb.session;
 
 import com.alquilacosas.common.Busqueda;
 import com.alquilacosas.dto.CategoriaDTO;
+import com.alquilacosas.dto.PeriodoDTO;
 import com.alquilacosas.dto.PrecioDTO;
 import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.entity.Categoria;
 import com.alquilacosas.ejb.entity.Domicilio;
 import com.alquilacosas.ejb.entity.ImagenPublicacion;
+import com.alquilacosas.ejb.entity.Periodo;
 import com.alquilacosas.ejb.entity.Publicacion;
 import com.alquilacosas.facade.CategoriaFacade;
 import com.alquilacosas.facade.ImagenPublicacionFacade;
+import com.alquilacosas.facade.PeriodoFacade;
 import com.alquilacosas.facade.PublicacionFacade;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +37,8 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
     private CategoriaFacade categoriaFacade;
     @EJB
     private ImagenPublicacionFacade imagenFacade;
+    @EJB
+    private PeriodoFacade periodoFacade;
 
     @Override
     public Busqueda buscar(String palabra, Integer categoriaId,
@@ -129,5 +134,15 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
         facade.setPrecios(precios);
         
         return facade;
+    }
+    
+    @Override
+    public List<PeriodoDTO> getPeriodos() {
+        List<Periodo> periodos = periodoFacade.findAll();
+        List<PeriodoDTO> periodosDto = new ArrayList<PeriodoDTO>();
+        for(Periodo p: periodos) {
+            periodosDto.add(new PeriodoDTO(p.getPeriodoId(), p.getNombre()));
+        }
+        return periodosDto;
     }
 }

@@ -20,7 +20,7 @@
             <ui:define name="left" >
 
                 <p:panel header="Categoria" styleClass="panelFiltro" >
-                    <h:form>
+                    <h:form id="categoriaForm">
                         <p:commandLink value="Cualquiera" update="@form grid"
                                        actionListener="#{resultadosBean.noFiltrarCategoria}"
                                        styleClass="#{resultadosBean.categoria == null ? 'filtroActual': null}" /> 
@@ -36,18 +36,38 @@
                         </ui:repeat>
                     </h:form>
                 </p:panel>
+                
                 <p:panel header="Ubicacion" styleClass="panelFiltro" >
                     <h:form>
                         <p:commandLink value="Cualquiera" action="#{resultadosBean.noFiltrarUbicacion}"
-                                       update="@form grid"
-                                       styleClass="#{resultadosBean.filtrarUbicacion ? null: 'filtroActual'}" /> 
+                                       update="@form grid categoriaForm"
+                                       styleClass="#{resultadosBean.ubicacion == null ? 'filtroActual': null}" /> 
                         <br/><br/>
                         <h:panelGrid columns="2" >
                             <p:inputText value="#{resultadosBean.ubicacion}" style="width:130px;" />
-                            <p:commandLink actionListener="#{resultadosBean.filtrarUbicacion}"
-                                           update="@form grid" >
-                                <h:graphicImage value="#{resource['images:buscar.gif']}" width="20" height="20" />
-                            </p:commandLink>
+                            <p:commandButton actionListener="#{resultadosBean.filtrarUbicacion}"
+                                           update="@form grid categoriaForm" image="ui-icon ui-icon-search" />
+                        </h:panelGrid>
+                    </h:form>
+                </p:panel>
+                
+                <p:panel header="Precio" styleClass="panelFiltro" >
+                    <h:form>
+                        <p:commandLink value="Cualquiera" actionListener="#{resultadosBean.noFiltrarPrecio}"
+                                       update="@form grid categoriaForm"/>
+                        <br/><br/>
+                        <h:panelGrid columns="2" >
+                            <h:outputLabel value="Periodo:" />
+                            <h:selectOneMenu value="#{resultadosBean.periodoSeleccionado}" >
+                                <f:selectItem itemLabel="Seleccione..." />
+                                <f:selectItems value="#{resultadosBean.periodos}" />
+                            </h:selectOneMenu>
+                            <h:outputLabel value="Desde:" />
+                            <p:inputText value="#{resultadosBean.precioDesde}" style="width:90px" />
+                            <h:outputLabel value="Hasta:" />
+                            <p:inputText value="#{resultadosBean.precioHasta}" style="width:90px" />
+                            <p:commandButton actionListener="#{resultadosBean.filtrarPrecio}"
+                                           update="@form grid categoriaForm" image="ui-icon ui-icon-search" />
                         </h:panelGrid>
                     </h:form>
                 </p:panel>

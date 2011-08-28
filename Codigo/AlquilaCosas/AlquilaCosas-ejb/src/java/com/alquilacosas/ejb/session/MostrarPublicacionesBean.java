@@ -84,8 +84,10 @@ public class MostrarPublicacionesBean implements MostrarPublicacionesBeanLocal {
         query.setParameter("publicacion", filter);
         precios = query.getResultList();   
         
-        for(Precio precio: precios)
-            resultado.add(new PrecioDTO(precio.getPrecio(), precio.getPeriodoFk().getNombre()));
+        for(Precio precio: precios) {
+            PrecioDTO dto = new PrecioDTO(precio.getPrecio(), precio.getPeriodoFk().getNombre());
+            resultado.add(dto);
+        }
         
         return resultado;
 

@@ -38,9 +38,10 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "EstadoUsuario.findByDescripcion", query = "SELECT e FROM EstadoUsuario e WHERE e.descripcion = :descripcion")})
 public class EstadoUsuario implements Serializable {
     
-    public enum NombreEstado {REGISTRADO, ACTIVO, SUSPENDIDO}; 
+    public enum NombreEstadoUsuario {REGISTRADO, ACTIVO, SUSPENDIDO}; 
     
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -53,7 +54,7 @@ public class EstadoUsuario implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "NOMBRE")
     @Enumerated(EnumType.STRING)
-    private NombreEstado nombre;
+    private NombreEstadoUsuario nombre;
     
     @Basic(optional = false)
     @NotNull
@@ -70,15 +71,18 @@ public class EstadoUsuario implements Serializable {
         this.estadoUsuarioId = estadoUsuarioId;
     }
 
-    public EstadoUsuario(Integer estadoUsuarioId, NombreEstado nombre, String descripcion) {
+    public EstadoUsuario(Integer estadoUsuarioId, NombreEstadoUsuario nombre, String descripcion) {
         this.estadoUsuarioId = estadoUsuarioId;
         this.nombre = nombre;
         this.descripcion = descripcion;
     }
-    
-    public void agregarUsuarioXEstado(UsuarioXEstado uxe) {
-        usuarioXEstadoList.add(uxe);
-        uxe.setEstadoUsuario(this);
+
+    public NombreEstadoUsuario getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(NombreEstadoUsuario nombre) {
+        this.nombre = nombre;
     }
 
     public Integer getEstadoUsuarioId() {
@@ -87,14 +91,6 @@ public class EstadoUsuario implements Serializable {
 
     public void setEstadoUsuarioId(Integer estadoUsuarioId) {
         this.estadoUsuarioId = estadoUsuarioId;
-    }
-
-    public void setNombre(NombreEstado nombre) {
-        this.nombre = nombre;
-    }
-    
-    public NombreEstado getNombre() {
-        return nombre;
     }
 
     public String getDescripcion() {

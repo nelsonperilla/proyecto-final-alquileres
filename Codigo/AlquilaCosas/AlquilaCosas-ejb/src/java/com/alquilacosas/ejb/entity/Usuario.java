@@ -43,6 +43,21 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Usuario.findByDni", query = "SELECT u FROM Usuario u WHERE u.dni = :dni"),
     @NamedQuery(name = "Usuario.findByFechaNac", query = "SELECT u FROM Usuario u WHERE u.fechaNac = :fechaNac")})
 public class Usuario implements Serializable {
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "FECHA_NAC")
+    @Temporal(TemporalType.DATE)
+    private Date fechaNac;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
+    private List<Reputacion> reputacionList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
+    private List<Alquiler> alquilerList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
+    private List<Pago> pagoList;
+    @OneToMany(mappedBy = "usuarioReplicadorFk")
+    private List<Calificacion> calificacionList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioCalificadorFk")
+    private List<Calificacion> calificacionList1;
     
     private static final long serialVersionUID = 1L;
     
@@ -52,12 +67,6 @@ public class Usuario implements Serializable {
     @NotNull
     @Column(name = "USUARIO_ID")
     private Integer usuarioId;
-    
-    @Basic(optional =     false)
-    @NotNull
-    @Column(name = "FECHA_NAC")
-    @Temporal(TemporalType.DATE)
-    private Date fechaNac;
     
     @Basic(optional = false)
     @NotNull
@@ -287,6 +296,51 @@ public class Usuario implements Serializable {
 
     public void setSuspensionList(List<Suspension> suspensionList) {
         this.suspensionList = suspensionList;
+    }
+    
+    @XmlTransient
+    public List<Reputacion> getReputacionList() {
+        return reputacionList;
+    }
+
+    public void setReputacionList(List<Reputacion> reputacionList) {
+        this.reputacionList = reputacionList;
+    }
+
+    @XmlTransient
+    public List<Alquiler> getAlquilerList() {
+        return alquilerList;
+    }
+
+    public void setAlquilerList(List<Alquiler> alquilerList) {
+        this.alquilerList = alquilerList;
+    }
+
+    @XmlTransient
+    public List<Pago> getPagoList() {
+        return pagoList;
+    }
+
+    public void setPagoList(List<Pago> pagoList) {
+        this.pagoList = pagoList;
+    }
+
+    @XmlTransient
+    public List<Calificacion> getCalificacionList() {
+        return calificacionList;
+    }
+
+    public void setCalificacionList(List<Calificacion> calificacionList) {
+        this.calificacionList = calificacionList;
+    }
+
+    @XmlTransient
+    public List<Calificacion> getCalificacionList1() {
+        return calificacionList1;
+    }
+
+    public void setCalificacionList1(List<Calificacion> calificacionList1) {
+        this.calificacionList1 = calificacionList1;
     }
 
     @Override

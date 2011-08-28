@@ -10,7 +10,7 @@ import com.alquilacosas.dto.PrecioDTO;
 import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.entity.Categoria;
 import com.alquilacosas.ejb.entity.EstadoPublicacion;
-import com.alquilacosas.ejb.entity.EstadoPublicacion.PublicacionEstado;
+import com.alquilacosas.ejb.entity.EstadoPublicacion.NombreEstadoPublicacion;
 import com.alquilacosas.ejb.entity.ImagenPublicacion;
 import com.alquilacosas.ejb.session.CategoriaBeanLocal;
 import com.alquilacosas.ejb.session.MisPublicacionesBeanLocal;
@@ -59,7 +59,7 @@ public class ModificarPublicacionMBean {
     private boolean subcategoria1Render, subcategoria2Render, subcategoria3Render;
     //estado
     private List<SelectItem> estados;
-    private PublicacionEstado selectedEstado;
+    private NombreEstadoPublicacion selectedEstado;
     //Object Precio
     private List<PrecioDTO> precios;
     private PrecioDTO precioFacade;
@@ -69,7 +69,7 @@ public class ModificarPublicacionMBean {
     private List<Integer> imagenesABorrar;
     private List<Integer> imagenIds;
     private int publicacionId;
-    private List<PublicacionEstado> estadosPublicaciones;
+    private List<NombreEstadoPublicacion> estadosPublicaciones;
     private int imagenABorrar;
 
     public ModificarPublicacionMBean() {
@@ -124,7 +124,7 @@ public class ModificarPublicacionMBean {
         int categoriaId = categoria.getCategoriaId();
         inicializarCategorias(categoriaId);
 
-        for(PublicacionEstado ep: PublicacionEstado.values()) {
+        for(NombreEstadoPublicacion ep: NombreEstadoPublicacion.values()) {
             estados.add(new SelectItem(ep,
                     ep.toString()));
         }
@@ -433,11 +433,11 @@ public class ModificarPublicacionMBean {
         this.selectedCategoria = selectedCategoria;
     }
 
-    public PublicacionEstado getSelectedEstado() {
+    public NombreEstadoPublicacion getSelectedEstado() {
         return selectedEstado;
     }
 
-    public void setSelectedEstado(PublicacionEstado selectedEstado) {
+    public void setSelectedEstado(NombreEstadoPublicacion selectedEstado) {
         this.selectedEstado = selectedEstado;
     }
 

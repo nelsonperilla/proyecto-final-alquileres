@@ -9,7 +9,7 @@ import com.alquilacosas.common.NotificacionEmail;
 import com.alquilacosas.dto.DomicilioDTO;
 import com.alquilacosas.ejb.entity.Domicilio;
 import com.alquilacosas.ejb.entity.EstadoUsuario;
-import com.alquilacosas.ejb.entity.EstadoUsuario.NombreEstado;
+import com.alquilacosas.ejb.entity.EstadoUsuario.NombreEstadoUsuario;
 import com.alquilacosas.ejb.entity.Login;
 import com.alquilacosas.ejb.entity.Pais;
 import com.alquilacosas.ejb.entity.Provincia;
@@ -116,7 +116,7 @@ public class RegistrarUsuarioBean implements RegistrarUsuarioBeanLocal {
         login.agregarRol(rol);
         usuario.agregarLogin(login);
 
-        EstadoUsuario estado = estadoUsuarioFacade.findByNombre(NombreEstado.REGISTRADO);
+        EstadoUsuario estado = estadoUsuarioFacade.findByNombre(NombreEstadoUsuario.REGISTRADO);
         if(estado == null) {
             throw new AlquilaCosasException("No se encontro el estado de usuario 'Registrado' en la base de datos'");
         }
@@ -141,7 +141,7 @@ public class RegistrarUsuarioBean implements RegistrarUsuarioBeanLocal {
                     "Atentamente, <br/> <b>AlquilaCosas </b>";
             NotificacionEmail notificacion = new NotificacionEmail(usuario.getEmail(), asunto, texto);
             message.setObject(notificacion);
-            //producer.send(message);
+            producer.send(message);
             session.close();
             connection.close();
             

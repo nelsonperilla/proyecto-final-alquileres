@@ -5,6 +5,8 @@
 package com.alquilacosas.ejb.session;
 
 import com.alquilacosas.common.Busqueda;
+import com.alquilacosas.dto.PeriodoDTO;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -21,5 +23,7 @@ public interface BuscarPublicacionBeanLocal {
     Busqueda buscarPublicacionesPorCategoria(int categoriaId, int registros, int desde);
     
     byte[] leerImagen(int id);
+    
+    List<PeriodoDTO> getPeriodos();
 
 }

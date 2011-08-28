@@ -36,6 +36,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Domicilio.findByDepto", query = "SELECT d FROM Domicilio d WHERE d.depto = :depto"),
     @NamedQuery(name = "Domicilio.findByBarrio", query = "SELECT d FROM Domicilio d WHERE d.barrio = :barrio")})
 public class Domicilio implements Serializable {
+    @Column(name = "PISO")
+    private Integer piso;
     
     @Basic(optional = false)
     @NotNull
@@ -66,10 +68,6 @@ public class Domicilio implements Serializable {
     @NotNull
     @Column(name = "NUMERO")
     private int numero;
-    
-    @Basic(optional = false)
-    @Column(name = "PISO")
-    private int piso;
     
     @Basic(optional = false)
     @Size(max = 45)
@@ -125,14 +123,6 @@ public class Domicilio implements Serializable {
 
     public void setNumero(int numero) {
         this.numero = numero;
-    }
-
-    public int getPiso() {
-        return piso;
-    }
-
-    public void setPiso(int piso) {
-        this.piso = piso;
     }
 
     public String getDepto() {
@@ -198,6 +188,14 @@ public class Domicilio implements Serializable {
 
     public void setProvinciaFk(Provincia provinciaFk) {
         this.provinciaFk = provinciaFk;
+    }
+
+    public Integer getPiso() {
+        return piso;
+    }
+
+    public void setPiso(Integer piso) {
+        this.piso = piso;
     }
     
 }

@@ -45,16 +45,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Login.findByCodigoActivacion", query = "SELECT l FROM Login l WHERE l.codigoActivacion = :codigoActivacion"),
     @NamedQuery(name = "Login.findByUsuarioFk", query = "SELECT l FROM Login l WHERE l.usuarioFk = :usuarioFk")})
 public class Login implements Serializable {
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "FECHA_CREACION")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaCreacion;
-    
-    @Basic(optional = false)
-    @Column(name = "FECHA_ULTIMO_INGRESO")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaUltimoIngreso;
     
     private static final long serialVersionUID = 1L;
     
@@ -82,6 +72,16 @@ public class Login implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "CODIGO_ACTIVACION")
     private String codigoActivacion;
+    
+    @Basic(optional =     false)
+    @NotNull
+    @Column(name = "FECHA_CREACION")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaCreacion;
+    
+    @Column(name =     "FECHA_ULTIMO_INGRESO")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaUltimoIngreso;
     
     @JoinTable(name = "LOGIN_X_ROL", joinColumns = {
         @JoinColumn(name = "LOGIN_FK", referencedColumnName = "LOGIN_ID")}, inverseJoinColumns = {
@@ -112,7 +112,6 @@ public class Login implements Serializable {
     
     public void agregarRol(Rol rol) {
         rolList.add(rol);
-        //rol.agregarLogin(this);
     }
     
     public void removerRol(Rol rol) {
@@ -168,6 +167,22 @@ public class Login implements Serializable {
     public void setUsuarioFk(Usuario usuarioFk) {
         this.usuarioFk = usuarioFk;
     }
+    
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public Date getFechaUltimoIngreso() {
+        return fechaUltimoIngreso;
+    }
+
+    public void setFechaUltimoIngreso(Date fechaUltimoIngreso) {
+        this.fechaUltimoIngreso = fechaUltimoIngreso;
+    }
 
     @Override
     public int hashCode() {
@@ -192,22 +207,6 @@ public class Login implements Serializable {
     @Override
     public String toString() {
         return "com.alquilacosas.ejb.entity.Login[ loginId=" + loginId + " ]";
-    }
-
-    public Date getFechaCreacion() {
-        return fechaCreacion;
-    }
-
-    public void setFechaCreacion(Date fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
-    }
-
-    public Date getFechaUltimoIngreso() {
-        return fechaUltimoIngreso;
-    }
-
-    public void setFechaUltimoIngreso(Date fechaUltimoIngreso) {
-        this.fechaUltimoIngreso = fechaUltimoIngreso;
     }
     
 }

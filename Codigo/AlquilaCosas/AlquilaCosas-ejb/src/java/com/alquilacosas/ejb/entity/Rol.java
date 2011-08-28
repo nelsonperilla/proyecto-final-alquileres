@@ -38,8 +38,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Rol.findByDescripcion", query = "SELECT r FROM Rol r WHERE r.descripcion = :descripcion")})
 public class Rol implements Serializable {
     
-    
-    
     public enum NombreRol {USUARIO, ADMIN};
     
     private static final long serialVersionUID = 1L;
@@ -94,6 +92,14 @@ public class Rol implements Serializable {
     public void setRolId(Integer rolId) {
         this.rolId = rolId;
     }
+    
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 
     public NombreRol getNombre() {
         return nombre;
@@ -101,16 +107,6 @@ public class Rol implements Serializable {
 
     public void setNombre(NombreRol nombre) {
         this.nombre = nombre;
-    }
-    
-    
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
     }
 
     @XmlTransient
