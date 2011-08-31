@@ -7,10 +7,14 @@ package com.alquilacosas.mbean;
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.ComentarioDTO;
 import com.alquilacosas.dto.PublicacionDTO;
+import com.alquilacosas.ejb.entity.Periodo;
 import com.alquilacosas.ejb.session.PublicacionBeanLocal;
 import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -18,7 +22,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.DateSelectEvent;
+import org.primefaces.json.JSONObject;
 
 /**
  *
@@ -35,7 +42,14 @@ public class DesplieguePublicacionMBean {
     private PublicacionDTO publicacion;
     private String effect;
     private List<ComentarioDTO> comentarios;
-    private String fecha_hasta, comentario;
+    private String  comentario;
+    private String fecha_hasta;
+    private List<Date> fechas;
+    private String myJson;
+    private Date fechaInicio;
+    private int periodoAlquiler;
+    private List<SelectItem> periodos;
+    private int periodoSeleccionado;    
 
     /** Creates a new instance of DesplieguePublicacionMBean */
     public DesplieguePublicacionMBean() {
@@ -44,6 +58,19 @@ public class DesplieguePublicacionMBean {
     @PostConstruct
     public void init() {
         effect = "fade";
+        fechas = new ArrayList<Date>();
+        Calendar test =Calendar.getInstance();
+        test.set(2011,7,29);
+        fechas.add(test.getTime());
+        createDictionary();
+        fechaInicio = new Date();
+        
+        
+        periodos = new ArrayList<SelectItem>();
+        List<Periodo> listaPeriodos = publicationBean.getPeriodos();
+        for(Periodo periodo: listaPeriodos)
+            periodos.add(new SelectItem(periodo.getPeriodoId(),periodo.getNombre().name()));
+        periodoSeleccionado = 1; //alto hardCode, para que por defecto este seleccionado dia y no hora (Jorge)
         String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
         //nuevaPregunta = new ComentarioFacade();
         if (id != null) {
@@ -83,6 +110,56 @@ public class DesplieguePublicacionMBean {
                     new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Error al enviar pregunta", e.getMessage()));
         }
+    }
+    
+    private void createDictionary() {
+        try {      
+            int month = -1;
+            JSONObject yearJson = new JSONObject();
+            JSONObject monthJson = new JSONObject();
+            JSONObject dayJson = null;
+            Calendar cal = Calendar.getInstance();
+            for(Date d: fechas) {
+                cal.setTime(d);
+                if(cal.get(Calendar.MONTH) + 1 != month) {
+                    if(dayJson != null) {
+                        monthJson.putOpt(Integer.toString(month), dayJson);
+                    }
+                    dayJson = new JSONObject();
+                    month = cal.get(Calendar.MONTH) + 1;
+                    int day = cal.get(Calendar.DAY_OF_MONTH);
+                    dayJson.putOpt(Integer.toString(day), true);
+                }
+                else {
+                    int day = cal.get(Calendar.DAY_OF_MONTH);
+                    dayJson.putOpt(Integer.toString(day), true);
+                }
+            }
+            if(dayJson != null) {
+                monthJson.putOpt(Integer.toString(month), dayJson);
+            }
+            int y = cal.get(Calendar.YEAR);
+            yearJson.putOpt(Integer.toString(y), monthJson);
+            myJson = yearJson.toString();
+        } catch (Exception e) {
+            //Logger.getLogger(this).error("Exception creating JSON dictionary: " + e);
+        }
+    }
+
+    public String getFechas() {
+       return myJson;
+    }   
+    
+    public String seleccionarFecha(DateSelectEvent e)
+    {
+              fechaInicio = e.getDate();
+              return "";
+//        try {
+//            absenceDetails = repEJB.readDayAbsenceDetail(sessionId, date); //se cargan los datos que queres mostrar en el dialogo
+//        } catch (EraServiceException ex) {
+//            Logger.getLogger(ReportsBean.class).error("Exception in dateSelected: " + ex);
+//            absenceDetails = new ArrayList<AbsenceDetail>();
+//        }  
     }
 
     /**
@@ -141,33 +218,6 @@ public class DesplieguePublicacionMBean {
         this.usuarioLogueado = usuarioLogueado;
     }
 
-//    /**
-//     * @return the categoria
-//     */
-//    public CategoriaFacade getCategoria() {
-//        return categoria;
-//    }
-//
-//    /**
-//     * @param categoria the categoria to set
-//     */
-//    public void setCategoria(CategoriaFacade categoria) {
-//        this.categoria = categoria;
-//    }
-//
-//    /**
-//     * @return the precios
-//     */
-//    public List<PrecioFacade> getPrecios() {
-//        return precios;
-//    }
-//
-//    /**
-//     * @param precios the precios to set
-//     */
-//    public void setPrecios(List<PrecioFacade> precios) {
-//        this.precios = precios;
-//    }
     /**
      * @return the fecha_hasta
      */
@@ -188,5 +238,61 @@ public class DesplieguePublicacionMBean {
 
     public void setComentario(String comentario) {
         this.comentario = comentario;
+    }
+
+    /**
+     * @return the fechaInicio
+     */
+    public Date getFechaInicio() {
+        return fechaInicio;
+    }
+
+    /**
+     * @param fechaInicio the fechaInicio to set
+     */
+    public void setFechaInicio(Date fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    /**
+     * @return the periodoAlquiler
+     */
+    public int getPeriodoAlquiler() {
+        return periodoAlquiler;
+    }
+
+    /**
+     * @param periodoAlquiler the periodoAlquiler to set
+     */
+    public void setPeriodoAlquiler(int periodoAlquiler) {
+        this.periodoAlquiler = periodoAlquiler;
+    }
+
+    /**
+     * @return the periodos
+     */
+    public List<SelectItem> getPeriodos() {
+        return periodos;
+    }
+
+    /**
+     * @param periodos the periodos to set
+     */
+    public void setPeriodos(List<SelectItem> periodos) {
+        this.periodos = periodos;
+    }
+
+    /**
+     * @return the periodoSeleccionado
+     */
+    public int getPeriodoSeleccionado() {
+        return periodoSeleccionado;
+    }
+
+    /**
+     * @param periodoSeleccionado the periodoSeleccionado to set
+     */
+    public void setPeriodoSeleccionado(int periodoSeleccionado) {
+        this.periodoSeleccionado = periodoSeleccionado;
     }
 }

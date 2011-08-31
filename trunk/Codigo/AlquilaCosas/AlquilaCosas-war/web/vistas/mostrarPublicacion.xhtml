@@ -9,6 +9,8 @@
 
     <body>
 
+        <title>Alquila Cosas</title>
+
         <ui:composition template="./../resources/templates/masterPage.xhtml">
             <ui:define name="logInfo">
                 <h:form>
@@ -59,8 +61,8 @@
                                                           styleClass="itemPrice"/>  
                                         </h:column>
                                     </h:dataTable>
-                                    <h:outputText value="Origen: #{publicacionDesplegada.publicacion.ciudad}, 
-                                                  #{publicacionDesplegada.publicacion.pais}" 
+                                    <h:outputText value="Origen: #{publicacionDesplegada.publicacion.barrio}, 
+                                                  #{publicacionDesplegada.publicacion.ciudad}" 
                                                   styleClass="itemInfo" escape="false"/> 
                                     <h:outputText value="Categoria: #{publicacionDesplegada.publicacion.categoriaF.nombre}" 
                                                   styleClass="itemInfo" escape="false"/>  
@@ -68,9 +70,44 @@
                                                   styleClass="itemInfo" escape="false"/>  
                                     <h:outputText value="Cantidad disponible: #{publicacionDesplegada.publicacion.cantidad}" 
                                                   styleClass="itemInfo"/>  
-                                    <h:commandLink value="Alquilar" styleClass="buttom"/>
+                                    <p:commandButton value="Alquilar" onclick="confirmRent.show()" styleClass="buttom"/>
 
                                 </h:panelGrid>                            
+                            </h:form>
+                            <h:form id="rent">
+                                 <script type="text/javascript" >
+                                     jQuery(function () {
+                                             window.setTimeout('bindEventsHighlights()',500);
+                                     });
+
+                                     function bindEventsHighlights() {
+                                             var specialDays = <h:outputText value="#{publicacionDesplegada.fechas}" /> ;
+                                             jQuery(".hasDatepicker").datepicker("option", "beforeShowDay", function (date) {
+                                                       return highlightCalendar(specialDays, date, 'highlight-calendar');
+                                             });
+                                    }
+                                </script>
+                                <p:dialog header="Confirmacion de alquiler" widgetVar="confirmRent" modal="true"
+                                      showEffect="fade" width="450" >
+                                
+                                    <h:panelGrid columns="3" cellpadding="2" >
+                                        <h:outputLabel  value="Tiempo solicitado:" />
+                                        <p:inputText value="#{publicacionDesplegada.periodoAlquiler}" required="true"
+                                                     style="width:100px" />
+                                        <h:selectOneMenu value="#{publicacionDesplegada.periodoSeleccionado}">
+                                            <f:selectItems value="#{publicacionDesplegada.periodos}" />
+                                        </h:selectOneMenu>
+                                        <h:outputLabel value="Fecha de inicio: "/>
+                                        <p:calendar id="rentCalendar" mode="inline" navigator="false" value="#{publicacionDesplegada.fechaInicio}" 
+                                            pattern="dd/MM/yyyy" >
+                                            <p:ajax event="dateSelect" listener="#{publicacionDesplegada.seleccionarFecha}"
+                                                update="panel" oncomplete="absDialog.show()" />
+                                        </p:calendar>
+                                    </h:panelGrid>
+                                    <p:commandButton value="Confirmar" onclick="confirmRent.hide()"
+                                                     />
+                                
+                            </p:dialog>
                             </h:form>
                         </td>
                     </tr>
@@ -96,7 +133,7 @@
                                         <h:panelGrid columns="2">
                                             <p:commandButton value="Limpiar" type="reset"/>  
                                             <p:commandButton value="Enviar Pregunta" update="@form :desplieguePreguntas"  
-                                                             actionListener="#{publicacionDesplegada.guardarPregunta}"
+                                                             action="#{publicacionDesplegada.guardarPregunta}"
                                                              onclick="nuevaPregunta.hide()">  
                                             </p:commandButton>  
                                         </h:panelGrid>

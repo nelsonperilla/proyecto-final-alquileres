@@ -306,8 +306,6 @@ h1, h2, h3 {
     padding-top: 2px;
     margin-left: 100px;
     text-decoration: none;
-    width: 30px;
-    height: 15px;
     color: #ffffff;
 }
 
@@ -483,7 +481,9 @@ h1, h2, h3 {
 .controlPanel {
     background-image: -moz-linear-gradient(top, #0620E2, #384CE2 40px, #6F7DE8 12px, #E0E3F8);
     background-image: -webkit-gradient(linear, left top, left bottom, from(#0620E2), 
-		    color-stop(0.3, #384CE2), color-stop(0.3, #6F7DE8), to(#E0E3F8));    
+		    color-stop(0.3, #384CE2), color-stop(0.3, #6F7DE8), to(#E0E3F8));   
+    width: 100%; 
+    text-align: center;
    
 }
 
@@ -591,3 +591,12 @@ h1, h2, h3 {
 .carusel h1 {
     color: white;
 }
+
+.ui-widget-content .highlight-calendar a {
+    font-weight: 900;
+    color: #fdeab6;
+    background-image: -moz-linear-gradient(top, #0101DF, #2E2EFE 14px, #5858FA 12px, #A9BCF5) !important;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#0101DF), 
+		    color-stop(0.3, #2E2EFE), color-stop(0.3, #5858FA), to(#A9BCF5)) !important;
+}
+

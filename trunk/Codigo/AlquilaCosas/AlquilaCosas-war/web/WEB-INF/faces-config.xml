@@ -121,6 +121,11 @@
             <from-outcome>responderPreguntas</from-outcome>
             <to-view-id>/vistas/usuario/responderPreguntas.xhtml</to-view-id>
             <redirect/>
-        </navigation-case>        
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>usuarioCreado</from-outcome>
+            <to-view-id>/vistas/usuarioCreado.xhtml?email=#{regUsuario.email}</to-view-id>
+            <redirect/>
+        </navigation-case>
     </navigation-rule>
 </faces-config>

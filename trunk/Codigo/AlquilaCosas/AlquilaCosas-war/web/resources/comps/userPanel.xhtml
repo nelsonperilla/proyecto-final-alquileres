@@ -15,7 +15,7 @@
         <p:outputPanel rendered="#{login.logueado}" >
             <h:form>
                 <p:panel header="Usuario" styleClass="controlPanel">
-                    <h:panelGrid columns="1" cellpadding="2" >
+                    <h:panelGrid columns="1" cellpadding="2" style="width: 100%; text-align: center">
                         <h:outputLabel value="Hola #{login.username}" styleClass="labelBienvenida" />
                         <h:commandLink value="Publicar" action="nuevaPublicacion" />
                         <h:commandLink value="Responder preguntas" action="responderPreguntas" />
