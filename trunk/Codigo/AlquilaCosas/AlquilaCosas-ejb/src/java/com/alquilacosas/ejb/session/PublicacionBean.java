@@ -8,7 +8,9 @@ import com.alquilacosas.dto.ComentarioDTO;
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.CategoriaDTO;
 import com.alquilacosas.common.NotificacionEmail;
+import com.alquilacosas.dto.PeriodoDTO;
 import com.alquilacosas.dto.PrecioDTO;
+import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.entity.Categoria;
 import com.alquilacosas.ejb.entity.Comentario;
@@ -22,8 +24,16 @@ import com.alquilacosas.ejb.entity.Precio;
 import com.alquilacosas.ejb.entity.Publicacion;
 import com.alquilacosas.ejb.entity.PublicacionXEstado;
 import com.alquilacosas.ejb.entity.Usuario;
+import com.alquilacosas.facade.CategoriaFacade;
+import com.alquilacosas.facade.EstadoPublicacionFacade;
+import com.alquilacosas.facade.ImagenPublicacionFacade;
 import com.alquilacosas.facade.PeriodoFacade;
+import com.alquilacosas.facade.PrecioFacade;
+import com.alquilacosas.facade.PublicacionFacade;
+import com.alquilacosas.facade.PublicacionXEstadoFacade;
+import com.alquilacosas.facade.UsuarioFacade;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
@@ -72,14 +82,30 @@ public class PublicacionBean implements PublicacionBeanLocal {
     private PrecioBeanLocal precioBean;
     
     @EJB
+    private UsuarioFacade usuarioFacade;
+    @EJB 
+    private CategoriaFacade categoriaFacade;
+    @EJB
+    private PublicacionXEstadoFacade publicacionXEstadoFacade;
+    @EJB
+    private EstadoPublicacionFacade estadoPublicacionFacade;
+    @EJB
+    private PublicacionFacade publicacionFacade;
+    @EJB
+    private ImagenPublicacionFacade imagenPublicacionFacade;
+    @EJB
+    private PrecioFacade precioFacade;
+    @EJB
     private PeriodoFacade periodoFacade;
+    
 
     @Override
     @RolesAllowed({"USUARIO", "ADMIN"})
     public void registrarPublicacion(String titulo, String descripcion,
             Date fecha_desde, Date fecha_hasta, boolean destacada, int cantidad,
             int usuarioId, int categoria, List<PrecioDTO> precios,
-            List<byte[]> imagenes) throws AlquilaCosasException {
+            List<byte[]> imagenes, int periodoMinimo, int periodoMinimoFk, 
+            int periodoMaximo, int periodoMaximoFk) throws AlquilaCosasException {
 
         Publicacion publicacion = new Publicacion();
         publicacion.setTitulo(titulo);
@@ -92,14 +118,14 @@ public class PublicacionBean implements PublicacionBeanLocal {
         Usuario usuario = null;
 
         try {
-            usuario = entityManager.find(Usuario.class, usuarioId);
+            usuario = usuarioFacade.find(usuarioId);
         } catch (NoResultException e) {
             throw new AlquilaCosasException("No se encontro el Usuario en la "
                     + "base de datos.");
         }
 
         try {
-            Categoria c = entityManager.find(Categoria.class, categoria);
+            Categoria c = categoriaFacade.find(categoria);
             publicacion.setCategoriaFk(c);
         } catch (NoResultException e) {
             throw new AlquilaCosasException("No se encontro la Categoria en la "
@@ -108,9 +134,23 @@ public class PublicacionBean implements PublicacionBeanLocal {
 
         EstadoPublicacion estadoPublicacion = null;
         try {
-            Query query = entityManager.createNamedQuery("EstadoPublicacion.findByNombre");
-            query.setParameter("nombre", NombreEstadoPublicacion.ACTIVA);
-            estadoPublicacion = (EstadoPublicacion) query.getSingleResult();
+            estadoPublicacion = estadoPublicacionFacade.findByNombre(NombreEstadoPublicacion.ACTIVA.name());
+        } catch (NoResultException e) {
+            context.setRollbackOnly();
+            throw new AlquilaCosasException("No se encontro el estado de la publicacion"
+                    + " en la base de datos.");
+        }
+        
+        Periodo periodo1 = null;
+        Periodo periodo2 = null;
+        try {
+            periodo1 = periodoFacade.find(periodoMinimoFk);
+            publicacion.setMinPeriodoAlquilerFk(periodo1);
+            publicacion.setMinValor(periodoMinimo);
+            
+            periodo2 = periodoFacade.find(periodoMaximoFk);
+            publicacion.setMaxPeriodoAlquilerFk(periodo2);
+            publicacion.setMaxValor(periodoMaximo);
         } catch (NoResultException e) {
             context.setRollbackOnly();
             throw new AlquilaCosasException("No se encontro el estado de la publicacion"
@@ -122,7 +162,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
 
         Precio precio = null;
         Periodo periodo = null;
-        double pre = precios.get(1).getPrecio();
+        double precioDiario = precios.get(1).getPrecio();
 
         for (PrecioDTO p : precios) {
 
@@ -131,17 +171,18 @@ public class PublicacionBean implements PublicacionBeanLocal {
 
             if (p.getPrecio() == 0) {
                 if (p.getPeriodoNombre() == NombrePeriodo.HORA) {
-                    p.setPrecio(pre / 10.0);
+                    precio.setPrecio(precioDiario / 24.0);
                 } else if (p.getPeriodoNombre() == NombrePeriodo.SEMANA) {
-                    p.setPrecio(pre * 7.0);
+                    precio.setPrecio(precioDiario * 7.0);
+                    System.out.println("pasaaaa");
                 } else if (p.getPeriodoNombre()  == NombrePeriodo.MES) {
-                    p.setPrecio(pre * 30.0);
+                    precio.setPrecio(precioDiario * 30.0);
                 }
             } else {
                 precio.setPrecio(p.getPrecio());
             }
 
-
+            precio.setFechaDesde(new Date());
             precio.setPeriodoFk(periodo);
             publicacion.agregarPrecio(precio);
         }
@@ -154,35 +195,39 @@ public class PublicacionBean implements PublicacionBeanLocal {
         }
 
         usuario.agregarPublicacion(publicacion);
-        entityManager.persist(publicacion);
+        publicacionFacade.create(publicacion);
     }
 
     @Override
     @PermitAll
     public PublicacionDTO getDatosPublicacion(int publicacionId) throws AlquilaCosasException {
 
-        Publicacion p = entityManager.find(Publicacion.class, publicacionId);
-        PublicacionXEstado pxe = this.getPublicacionEstado(p);
+        Publicacion p = publicacionFacade.find(publicacionId);
+        PublicacionXEstado pxe = publicacionXEstadoFacade.getPublicacionEstado(p);
 
         if (pxe == null) {
             throw new AlquilaCosasException("PublicacionXEstado no encontrado para la publicacion seleccionada.");
         }
-
-        PublicacionDTO pf = new PublicacionDTO(
+        
+        PeriodoDTO periodo1 = periodoFacade.getPeriodo(p.getMinPeriodoAlquilerFk().getPeriodoId());
+        PeriodoDTO periodo2 = periodoFacade.getPeriodo(p.getMaxPeriodoAlquilerFk().getPeriodoId());
+        
+        PublicacionDTO publicacionDto = new PublicacionDTO(
                 p.getPublicacionId(), p.getTitulo(), p.getDescripcion(),
                 p.getFechaDesde(), p.getFechaHasta(), p.getDestacada(),
                 p.getCantidad(), p.getCategoriaFk(), p.getImagenPublicacionList(),
-                pxe.getEstadoPublicacion());
+                pxe.getEstadoPublicacion(), p.getMinValor(), periodo1,
+                p.getMaxValor(), periodo2);
 
-        pf.getPrecios().add(new PrecioDTO());
-        pf.getPrecios().add(new PrecioDTO());
-        pf.getPrecios().add(new PrecioDTO());
-        pf.getPrecios().add(new PrecioDTO());
+        publicacionDto.getPrecios().add(new PrecioDTO());
+        publicacionDto.getPrecios().add(new PrecioDTO());
+        publicacionDto.getPrecios().add(new PrecioDTO());
+        publicacionDto.getPrecios().add(new PrecioDTO());
 
 
-        for (Precio precio : p.getPrecioList()) {
+        for (Precio precio : precioFacade.getUltimoPrecios(p)) {
             if (precio != null) {
-                pf.getPrecios().set(
+                publicacionDto.getPrecios().set(
                         precio.getPeriodoFk().getPeriodoId() - 1,
                         new PrecioDTO(precio.getPrecioId(),
                         precio.getPeriodoFk().getPeriodoId(),
@@ -190,7 +235,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
                         precio.getPeriodoFk().getNombre()));
             }
         }
-        return pf;
+        return publicacionDto;
     }
 
     @Override
@@ -203,7 +248,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
 
         Publicacion publicacion = null;
         try {
-            publicacion = entityManager.find(Publicacion.class, publicacionId);
+            publicacion = publicacionFacade.find(publicacionId);
         } catch (NoResultException e) {
             throw new AlquilaCosasException("No se encontro la Publicacion en la "
                     + "base de datos.");
@@ -214,23 +259,26 @@ public class PublicacionBean implements PublicacionBeanLocal {
         publicacion.setCantidad(cantidad);
 
         try {
-            Categoria c = entityManager.find(Categoria.class, categoria);
+            Categoria c = categoriaFacade.find(categoria);
             publicacion.setCategoriaFk(c);
         } catch (NoResultException e) {
             throw new AlquilaCosasException("No se encontro la Categoria en la "
                     + "base de datos." + e.getMessage());
         }
 
-        PublicacionXEstado pxe = this.getPublicacionEstado(publicacion);
+        PublicacionXEstado pxe = publicacionXEstadoFacade.getPublicacionEstado(publicacion);
 
         if (pxe.getEstadoPublicacion().getNombre() != estadoPublicacion) {
-
-            pxe.setFechaHasta(new Date());
-            Query estadoQuery = entityManager.createNamedQuery("EstadoPublicacion.findByNombre");
-            estadoQuery.setParameter("nombre", estadoPublicacion);
+     
+            Calendar hoy = Calendar.getInstance();
+            hoy.add(Calendar.DATE, 60);
+            pxe.setFechaHasta(hoy.getTime());
             EstadoPublicacion ep = null;
+            
             try {
-                ep = (EstadoPublicacion) estadoQuery.getSingleResult();
+                
+                ep = estadoPublicacionFacade.findByNombre(estadoPublicacion.name());
+                    
             } catch (NoResultException e) {
                 throw new AlquilaCosasException("No se encontro el Estado en la "
                         + "base de datos." + e.getMessage());
@@ -242,43 +290,27 @@ public class PublicacionBean implements PublicacionBeanLocal {
 
         double precioDiario = precios.get(1).getPrecio();
 
-        for (PrecioDTO precioFacade : precios) {
+        for (PrecioDTO precioDto : precios) {
 
-            if (precioFacade.getPrecioId() != 0) {
-
-                if (precioFacade.getPrecio() == 0.0) {
-                    if (precioFacade.getPeriodoNombre() == NombrePeriodo.DIA) {
-                        precioFacade.setPrecio(precioDiario / 10.0);
-                    } else if (precioFacade.getPeriodoNombre() == NombrePeriodo.SEMANA) {
-                        precioFacade.setPrecio(precioDiario * 7.0);
-                    } else if (precioFacade.getPeriodoNombre() == NombrePeriodo.MES) {
-                        precioFacade.setPrecio(precioDiario * 30.0);
-                    }
-                }
-                publicacion.actualizarPrecio(precioFacade.getPrecioId(), precioFacade.getPrecio());
-
-            } else {
+            if (precioDto.getPrecio() == 0.0) {
                 
-                Precio precioNuevo = new Precio();
-                if (precioFacade.getPrecio() == 0) {
-                    if (precioFacade.getPeriodoNombre() == NombrePeriodo.DIA) {
-                        precioFacade.setPrecio(precioDiario / 10.0);
-                    } else if (precioFacade.getPeriodoNombre() == NombrePeriodo.SEMANA) {
-                        precioFacade.setPrecio(precioDiario * 7.0);
-                    } else if (precioFacade.getPeriodoNombre() == NombrePeriodo.MES) {
-                        precioFacade.setPrecio(precioDiario * 30.0);
-                    }
-                    precioNuevo.setPrecio(precioFacade.getPrecio());
-                    Periodo period = periodoBean.getPeriodo(precioFacade.getPeriodoNombre());
-                    precioNuevo.setPeriodoFk(period);
-                    publicacion.agregarPrecio(precioNuevo);
+                if (precioDto.getPeriodoNombre() == NombrePeriodo.HORA) {
+                    precioDto.setPrecio(precioDiario / 24.0);
+                } else if (precioDto.getPeriodoNombre() == NombrePeriodo.SEMANA) {
+                    precioDto.setPrecio(precioDiario * 7.0);
+                } else if (precioDto.getPeriodoNombre() == NombrePeriodo.MES) {
+                    precioDto.setPrecio(precioDiario * 30.0);
                 }
+                
             }
+            Periodo periodo = periodoBean.getPeriodo(precioDto.getPeriodoNombre());
+            publicacion.actualizarPrecio(precioDto.getPrecioId(), precioDto.getPrecio(), periodo);
         }
+
 
         if (imagenesABorrar != null) {
             for (Integer i : imagenesABorrar) {
-                ImagenPublicacion ip = entityManager.find(ImagenPublicacion.class, i);
+                ImagenPublicacion ip = imagenPublicacionFacade.find(i);
                 publicacion.removerImagen(ip);
             }
         }
@@ -288,25 +320,9 @@ public class PublicacionBean implements PublicacionBeanLocal {
             ip.setImagen(imagen);
             publicacion.agregarImagen(ip);
         }
-        entityManager.merge(publicacion);
-    }
+        publicacionFacade.edit(publicacion); 
+        publicacionFacade.refresh(publicacion);
 
-    private PublicacionXEstado getPublicacionEstado(Publicacion p) {
-
-        Query query = entityManager.createQuery(
-                "SELECT pxe FROM PublicacionXEstado pxe "
-                + "WHERE pxe.publicacion = :publicacion "
-                + "AND pxe.fechaHasta IS NULL");
-        query.setParameter("publicacion", p);
-
-        PublicacionXEstado pxe = null;
-        try {
-            pxe = (PublicacionXEstado) query.getSingleResult();
-        } catch (NoResultException e) {
-            System.out.println("PublicacionXEstado no encontrada");
-        }
-
-        return pxe;
     }
 
     @Override
@@ -316,7 +332,8 @@ public class PublicacionBean implements PublicacionBeanLocal {
         PublicacionDTO resultado = null;
         if (publicacion != null) {
             resultado = new PublicacionDTO(publicacion.getPublicacionId(), publicacion.getTitulo(),
-                    publicacion.getDescripcion(), publicacion.getFechaDesde(), publicacion.getFechaHasta(), publicacion.getDestacada(),
+                    publicacion.getDescripcion(), publicacion.getFechaDesde(), publicacion.getFechaHasta(), 
+                    publicacion.getDestacada(),
                     publicacion.getCantidad());
 
             Domicilio domicilio = publicacion.getUsuarioFk().getDomicilioList().get(0);
@@ -343,6 +360,12 @@ public class PublicacionBean implements PublicacionBeanLocal {
             imagenes.add(new Integer(-1));
         }
         return imagenes;
+    }
+    
+    @Override
+    public void borrarPublicacion( Integer publicacionId ) throws AlquilaCosasException{
+        Publicacion p = publicacionFacade.find(publicacionId);
+        publicacionFacade.remove(p);
     }
 
     @Override

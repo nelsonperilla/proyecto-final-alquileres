@@ -5,6 +5,7 @@
 package com.alquilacosas.mbean;
 
 import com.alquilacosas.common.AlquilaCosasException;
+import com.alquilacosas.dto.PeriodoDTO;
 import com.alquilacosas.ejb.entity.Periodo;
 import com.alquilacosas.ejb.session.PeriodoAlquilerBeanLocal;
 import java.util.List;
@@ -29,7 +30,7 @@ public class PeriodoAlquilerMBean{
      }
      @EJB
      private PeriodoAlquilerBeanLocal periodoAlquilerBean;
-     private List<Periodo> periodosAlquiler;
+     private List<PeriodoDTO> periodosAlquiler;
      private Periodo periodoSeleccionado;
      private String nombre;
      private String descripcion;
@@ -66,11 +67,11 @@ public class PeriodoAlquilerMBean{
           }  
      }
      
-     public List<Periodo> getPeriodosAlquiler() {
+     public List<PeriodoDTO> getPeriodosAlquiler() {
           return periodosAlquiler;
      }
      
-     public void setPeriodosAlquiler(List<Periodo> periodosAlquiler) {
+     public void setPeriodosAlquiler(List<PeriodoDTO> periodosAlquiler) {
           this.periodosAlquiler = periodosAlquiler;
      }
      

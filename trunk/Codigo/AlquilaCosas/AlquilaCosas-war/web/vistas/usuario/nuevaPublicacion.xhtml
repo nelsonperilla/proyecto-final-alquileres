@@ -103,6 +103,29 @@
                             Agregar Imagen
                         </h:outputLink>
                     </p:panel>
+                    
+                    <h2>Elije un periodo minimo y maximo de alquiler</h2>
+                    
+                    <h:panelGrid columns="4">
+                        
+                        <h:outputLabel value="Minimo: " /> 
+                        <p:inputText id="MinimoId" value="#{publicacion.periodoMinimo}" required="true"
+                                     requiredMessage="Valor requerido"/>
+                        <h:selectOneMenu id="minimo" value="#{publicacion.selectedPeriodoMinimo}" >
+                                <f:selectItem itemLabel="Seleccione un periodo" itemValue="" />
+                                <f:selectItems value="#{publicacion.periodoMinimos}" />
+                        </h:selectOneMenu>
+                        <p:message id="MinimoVal" for="MinimoId"/>
+                        
+                        <h:outputLabel value="Maximo: " /> 
+                        <p:inputText id="MaximoId" value="#{publicacion.periodoMaximo}" />
+                        <h:selectOneMenu id="manimo" value="#{publicacion.selectedPeriodoMaximo}" >
+                                <f:selectItem itemLabel="Seleccione un periodo" itemValue="" />
+                                <f:selectItems value="#{publicacion.periodoMaximos}" />
+                        </h:selectOneMenu>
+                        <p/>
+                        
+                    </h:panelGrid>
 
                     <h2>Determina el precio del alquiler del producto</h2>
 
@@ -110,7 +133,7 @@
 
                         <ui:repeat value="#{publicacion.precios}" var="precio">
 
-                            <h:outputText value="#{precio.periodoNombre}" />
+                            <h:outputText value="#{precio.periodoNombre}"/>
                             <p:inputText value="#{precio.precio}" 
                                          style="text-align: right; margin-left: 3px; width: 50px"/>
                             <p:spacer width="25" />

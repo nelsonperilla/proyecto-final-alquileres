@@ -5,9 +5,11 @@
 package com.alquilacosas.facade;
 
 import com.alquilacosas.ejb.entity.EstadoPublicacion;
+import com.alquilacosas.ejb.entity.EstadoPublicacion.NombreEstadoPublicacion;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -25,6 +27,14 @@ public class EstadoPublicacionFacade extends AbstractFacade<EstadoPublicacion> {
 
     public EstadoPublicacionFacade() {
         super(EstadoPublicacion.class);
+    }
+    
+    public EstadoPublicacion findByNombre( String nombre ){
+        EstadoPublicacion estadoPublicacion = null;
+        Query query = em.createNamedQuery("EstadoPublicacion.findByNombre");
+        query.setParameter("nombre", NombreEstadoPublicacion.ACTIVA);
+        estadoPublicacion = (EstadoPublicacion) query.getSingleResult();
+        return estadoPublicacion;
     }
     
 }
