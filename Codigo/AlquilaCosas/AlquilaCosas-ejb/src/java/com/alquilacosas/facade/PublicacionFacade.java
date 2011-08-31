@@ -226,6 +226,9 @@ public class PublicacionFacade extends AbstractFacade<Publicacion> {
         Path exp2 = ((Path) join2.as(EstadoPublicacion.class)).get("nombre");
         Predicate predicate2 = criteriaBuilder.equal(exp2, NombreEstadoPublicacion.ACTIVA);
         
+//        Predicate predicate2 = criteriaBuilder.equal(((Path)join.as(EstadoPublicacion.class)).
+//                get("estadoPublicacion").get("nombre"), NombreEstadoPublicacion.ACTIVA);
+        
         Predicate predicate3 = criteriaBuilder.equal(root.get("categoriaFk").get("categoriaId"), categoriaId);
         
         cq.where(predicate1, predicate2, predicate3);
@@ -248,6 +251,8 @@ public class PublicacionFacade extends AbstractFacade<Publicacion> {
         Path exp2 = ((Path) join2.as(EstadoPublicacion.class)).get("nombre");
         Predicate predicate2 = criteriaBuilder.equal(exp2, NombreEstadoPublicacion.ACTIVA);
         
+//        Predicate predicate2 = criteriaBuilder.equal(((Path)join.as(EstadoPublicacion.class)).
+//                get("estadoPublicacion").get("nombre"), NombreEstadoPublicacion.ACTIVA);        
         Predicate predicate3 = criteriaBuilder.equal(root.get("categoriaFk").get("categoriaId"), categoriaId);
         
         cq.select(criteriaBuilder.count(root));

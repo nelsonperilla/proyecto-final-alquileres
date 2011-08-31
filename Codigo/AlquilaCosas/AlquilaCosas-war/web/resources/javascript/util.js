@@ -56,3 +56,17 @@ function revisarLogueo(xhr, status, args) {
 function borrarImagen(img) {
     document.getElementById(':formPublicacion:' + img).style.display='none';
 }
+
+function highlightCalendar(specialDays, date, cssClass) {
+    var d = date.getDate();
+    var m = date.getMonth() + 1;
+    var y = date.getFullYear();
+    var result = [ true, null, '' ]; 
+
+    if (specialDays[y] && specialDays[y][m]
+        && specialDays[y][m][d]) {
+        var s = specialDays[y][m][d];
+        result = [ true, cssClass, '' ];
+    }
+    return result; // no change
+}

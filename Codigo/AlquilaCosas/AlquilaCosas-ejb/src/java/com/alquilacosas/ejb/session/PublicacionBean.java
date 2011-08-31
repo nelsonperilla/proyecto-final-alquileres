@@ -22,6 +22,7 @@ import com.alquilacosas.ejb.entity.Precio;
 import com.alquilacosas.ejb.entity.Publicacion;
 import com.alquilacosas.ejb.entity.PublicacionXEstado;
 import com.alquilacosas.ejb.entity.Usuario;
+import com.alquilacosas.facade.PeriodoFacade;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -69,6 +70,9 @@ public class PublicacionBean implements PublicacionBeanLocal {
     private PeriodoAlquilerBeanLocal periodoBean;
     @EJB
     private PrecioBeanLocal precioBean;
+    
+    @EJB
+    private PeriodoFacade periodoFacade;
 
     @Override
     @RolesAllowed({"USUARIO", "ADMIN"})
@@ -318,6 +322,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
             Domicilio domicilio = publicacion.getUsuarioFk().getDomicilioList().get(0);
             resultado.setPais(domicilio.getProvinciaFk().getPaisFk().getNombre());
             resultado.setCiudad(domicilio.getProvinciaFk().getNombre());
+            resultado.setBarrio(domicilio.getBarrio());
 
             resultado.setImagenIds(getIdImagenes(publicacion));
 
@@ -475,4 +480,12 @@ public class PublicacionBean implements PublicacionBeanLocal {
         }
 
     }
+    
+    @Override
+    @PermitAll
+    public List<Periodo> getPeriodos()
+    {
+        return periodoFacade.getPeriodosOrderByHoras();
+    }            
+            
 }

@@ -11,14 +11,14 @@
 
     <!-- IMPLEMENTATION -->
     <cc:implementation>
-        <p:outputPanel rendered="#{login.administrador}" >
-            <h:form>
+        <p:outputPanel rendered="#{login.administrador}">
+            <h:form >
                 <p:panel header="Administracion" styleClass="controlPanel" >
-                    <h:panelGrid columns="1" cellpadding="2" >
+                    <h:panelGrid columns="1" cellpadding="2" style="width: 100%; text-align: center">
                         <h:commandLink value="Categorias" action="categorias" />
                         <h:commandLink value="Usuarios" action="administrarUsuarios" />
-                        <h:commandLink value="Provincias" action="provincias" />
-                        <h:commandLink value="Paises" action="paises" />
+ <!--                       <h:commandLink value="Provincias" action="provincias" />
+                        <h:commandLink value="Paises" action="paises" />-->
                     </h:panelGrid>
                 </p:panel>
             </h:form>
