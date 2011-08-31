@@ -191,7 +191,6 @@ public class Publicacion implements Serializable {
     
     public ImagenPublicacion removerImagen(ImagenPublicacion imagen) {
         imagenPublicacionList.remove(imagen);
-        //imagen.setPublicacionFk(null);
         return imagen;
     }
     
@@ -200,11 +199,16 @@ public class Publicacion implements Serializable {
         precio.setPublicacionFk(this);
     }
     
-    public void actualizarPrecio(Integer precioId, double valor) {
+    public void actualizarPrecio(Integer precioId, double valor, Periodo periodo) {
         for(Precio p: precioList) {
-            if(p.getPrecioId().equals(precioId)) {
-                p.setPrecio(valor);
-                return;
+            if(p.getPrecioId().equals(precioId) && p.getPrecio() != valor) {
+                p.setFechaHasta(new Date());
+                Precio precio = new Precio();
+                precio.setPrecio(valor);
+                precio.setFechaDesde(new Date());
+                precio.setPeriodoFk(periodo);
+                this.agregarPrecio(precio);
+                return; 
             }
         }
     }
@@ -215,9 +219,6 @@ public class Publicacion implements Serializable {
     }
     
     public void agregarPublicacionXEstado(PublicacionXEstado pxe) {
-//        if(!publicacionXEstadoList.isEmpty()) {
-//            publicacionXEstadoList.get(publicacionXEstadoList.size() - 1).setFechaHasta(new Date());
-//        }
         publicacionXEstadoList.add(pxe);
         pxe.setPublicacion(this);
     }

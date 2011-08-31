@@ -1,4 +1,4 @@
-/*
+    /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -7,7 +7,6 @@ package com.alquilacosas.dto;
 import com.alquilacosas.ejb.entity.Categoria;
 import com.alquilacosas.ejb.entity.EstadoPublicacion;
 import com.alquilacosas.ejb.entity.ImagenPublicacion;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,6 +32,10 @@ public class PublicacionDTO {
     private List<PrecioDTO> precios;
     private EstadoPublicacion estado;
     private List<ImagenPublicacion> imagenes;
+    private int periodoMinimo;
+    private int periodoMaximo;
+    private PeriodoDTO periodo1;
+    private PeriodoDTO periodo2;
     private String ciudad;
     private String barrio;
     private String pais;
@@ -64,7 +67,9 @@ public class PublicacionDTO {
     public PublicacionDTO(int id,String titulo,String descripcion, 
             Date fecha_desde, Date fecha_hasta, boolean destacada,
             int cantidad, Categoria categoria,
-            List<ImagenPublicacion> imagenes, EstadoPublicacion estado)
+            List<ImagenPublicacion> imagenes, EstadoPublicacion estado, 
+            int periodoMinimo, PeriodoDTO periodo1, 
+            int periodoMaximo, PeriodoDTO periodo2)
     {
         this.id = id;
         this.titulo = titulo;
@@ -77,11 +82,15 @@ public class PublicacionDTO {
         this.imagenes = imagenes;
         precios = new ArrayList<PrecioDTO>();
         this.estado = estado;
+        this.periodoMinimo = periodoMinimo;
+        this.periodo1 = periodo1;
+        this.periodoMaximo = periodoMaximo;
+        this.periodo2 = periodo2;
     }
     
     public PublicacionDTO(int id,String titulo,String descripcion, 
             Date fecha_desde, Date fecha_hasta, boolean destacada,
-            int cantidad)//, Categoria categoria,Usuario usuario) 
+            int cantidad)
     {
         this.id = id;
         this.titulo = titulo;
@@ -263,5 +272,41 @@ public class PublicacionDTO {
     public void setPais(String pais) {
         this.pais = pais;
     }
+
+    public int getPeriodoMaximo() {
+        return periodoMaximo;
+    }
+
+    public void setPeriodoMaximo(int periodoMaximo) {
+        this.periodoMaximo = periodoMaximo;
+    }
+
+
+
+    public int getPeriodoMinimo() {
+        return periodoMinimo;
+    }
+
+    public void setPeriodoMinimo(int periodoMinimo) {
+        this.periodoMinimo = periodoMinimo;
+    }
+
+    public PeriodoDTO getPeriodo1() {
+        return periodo1;
+    }
+
+    public void setPeriodo1(PeriodoDTO periodo1) {
+        this.periodo1 = periodo1;
+    }
+
+    public PeriodoDTO getPeriodo2() {
+        return periodo2;
+    }
+
+    public void setPeriodo2(PeriodoDTO periodo2) {
+        this.periodo2 = periodo2;
+    }
+    
+    
     
 }

@@ -6,15 +6,15 @@ package com.alquilacosas.mbean;
  */
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.CategoriaDTO;
+import com.alquilacosas.dto.PeriodoDTO;
 import com.alquilacosas.dto.PrecioDTO;
-import com.alquilacosas.ejb.entity.Domicilio;
 import com.alquilacosas.ejb.entity.Periodo;
-import com.alquilacosas.ejb.entity.Usuario;
 import com.alquilacosas.ejb.session.CategoriaBeanLocal;
 import com.alquilacosas.ejb.session.PeriodoAlquilerBeanLocal;
 import com.alquilacosas.ejb.session.PublicacionBeanLocal;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -57,20 +57,26 @@ public class NuevaPublicacionMBean implements Serializable {
     private int selectedSubCategoria1;
     private boolean subCategoriaRender;
     private boolean subCategoria1Render;
-    //Object Precio
+    //Precios y Periodos
     private List<PrecioDTO> precios;
     private PrecioDTO precioFacade;
+    private int periodoMinimo;
+    private int periodoMaximo;
+    private List<SelectItem> periodoMinimos;
+    private int selectedPeriodoMinimo;
+    private List<SelectItem> periodoMaximos;
+    private int selectedPeriodoMaximo;
+    
     private Date today;
     private List<byte[]> imagenes;
-    private Usuario usuario;
-    private Domicilio domicilio;
+
 
     @PostConstruct
     public void init() {
 
         imagenes = new ArrayList<byte[]>();
         precios = new ArrayList<PrecioDTO>();
-        for(Periodo p: periodosBean.getPeriodos()) {
+        for(PeriodoDTO p: periodosBean.getPeriodos()) {
             precios.add(new PrecioDTO(0, 0.0, p.getNombre()));
         }
         today = new Date();
@@ -79,9 +85,19 @@ public class NuevaPublicacionMBean implements Serializable {
         subCategorias1 = new ArrayList<SelectItem>();
         subCategoriaRender = false;
         subCategoria1Render = false;
+        
+        periodoMinimos = new ArrayList<SelectItem>();
+        periodoMaximos = new ArrayList<SelectItem>();
+        
         List<CategoriaDTO> listaCategoria = categoriaBean.getCategoriasPrincipal();
         for (CategoriaDTO categoria : listaCategoria) {
             categorias.add(new SelectItem(categoria.getId(), categoria.getNombre()));
+        }
+        
+        List<PeriodoDTO> periodos = periodosBean.getPeriodos();
+        for ( PeriodoDTO p : periodos ){
+            periodoMinimos.add( new SelectItem( p.getId(), p.getNombre().name() ));
+            periodoMaximos.add( new SelectItem( p.getId(), p.getNombre().name() ));
         }
 
     }
@@ -93,6 +109,7 @@ public class NuevaPublicacionMBean implements Serializable {
         if (precios.get(1).getPrecio() == 0) {
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Error al crear publicacion", "El precio por día es obligatorio");
+            context.addMessage(null, msg);
             return null;
         }
 
@@ -104,10 +121,15 @@ public class NuevaPublicacionMBean implements Serializable {
         } else {
             categoria = selectedCategoria;
         }
+        
         try {
-            publicacionBean.registrarPublicacion(titulo, descripcion,
-                    new Date(), new Date(), destacada, cantidad,
-                    login.getUsuarioId(), categoria, precios, imagenes);
+            Calendar hoy = Calendar.getInstance();
+            hoy.add(Calendar.DATE, 60);
+            publicacionBean.registrarPublicacion( titulo, descripcion,
+                    new Date(), hoy.getTime(), destacada, cantidad,
+                    login.getUsuarioId(), categoria, precios, imagenes,
+                    periodoMinimo, selectedPeriodoMinimo, periodoMaximo,
+                    selectedPeriodoMaximo);
 
             context.addMessage(null,
                     new FacesMessage("Publicacion Creada"));
@@ -339,4 +361,54 @@ public class NuevaPublicacionMBean implements Serializable {
     public void setSubCategoriaRender(boolean subCategoriaRender) {
         this.subCategoriaRender = subCategoriaRender;
     }
+
+    public int getPeriodoMaximo() {
+        return periodoMaximo;
+    }
+
+    public void setPeriodoMaximo(int periodoMaximo) {
+        this.periodoMaximo = periodoMaximo;
+    }
+
+    public int getPeriodoMinimo() {
+        return periodoMinimo;
+    }
+
+    public void setPeriodoMinimo(int periodoMinimo) {
+        this.periodoMinimo = periodoMinimo;
+    }
+
+    public List<SelectItem> getPeriodoMaximos() {
+        return periodoMaximos;
+    }
+
+    public void setPeriodoMaximos(List<SelectItem> periodoMaximos) {
+        this.periodoMaximos = periodoMaximos;
+    }
+
+    public List<SelectItem> getPeriodoMinimos() {
+        return periodoMinimos;
+    }
+
+    public void setPeriodoMinimos(List<SelectItem> periodoMinimos) {
+        this.periodoMinimos = periodoMinimos;
+    }
+
+    public int getSelectedPeriodoMaximo() {
+        return selectedPeriodoMaximo;
+    }
+
+    public void setSelectedPeriodoMaximo(int selectedPeriodoMaximo) {
+        this.selectedPeriodoMaximo = selectedPeriodoMaximo;
+    }
+
+    public int getSelectedPeriodoMinimo() {
+        return selectedPeriodoMinimo;
+    }
+
+    public void setSelectedPeriodoMinimo(int selectedPeriodoMinimo) {
+        this.selectedPeriodoMinimo = selectedPeriodoMinimo;
+    }
+    
+     
 }

@@ -25,7 +25,8 @@ public interface PublicacionBeanLocal {
     void registrarPublicacion( String titulo, String descripcion, 
             Date fecha_desde, Date fecha_hasta, boolean destacada, int cantidad,
             int usuarioId, int categoria, List<PrecioDTO> precios, 
-            List<byte[]> imagenes ) throws AlquilaCosasException;
+            List<byte[]> imagenes, int periodoMinimo, int periodoMinimoFK, 
+            int periodoMaximo, int periodoMaximoFk ) throws AlquilaCosasException;
 
     PublicacionDTO getPublicacion(int id);
 
@@ -49,4 +50,5 @@ public interface PublicacionBeanLocal {
     
     List<Periodo> getPeriodos();
 
+    public void borrarPublicacion( Integer publicacionId ) throws AlquilaCosasException;
 }

@@ -5,9 +5,12 @@
 package com.alquilacosas.ejb.session;
 
 import com.alquilacosas.common.AlquilaCosasException;
+import com.alquilacosas.dto.PeriodoDTO;
 import com.alquilacosas.ejb.entity.Periodo;
 import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
+import com.alquilacosas.facade.PeriodoFacade;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -22,13 +25,16 @@ public class PeriodoAlquilerBean implements PeriodoAlquilerBeanLocal {
 
     @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
     private EntityManager entityManager;
+    
+    @EJB
+    private PeriodoFacade periodoFacade;
 
     @Override
-    public List<Periodo> getPeriodos() {
-        List<Periodo> periodos;
-        Query query = entityManager.createNamedQuery("Periodo.findAll");
-        periodos = query.getResultList();
-        return periodos;
+    public List<PeriodoDTO> getPeriodos() {
+        
+        List<PeriodoDTO> periodosDto = periodoFacade.getPeriodos();
+        
+        return periodosDto;
     }
 
     // Add business logic below. (Right-click in editor and choose

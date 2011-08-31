@@ -6,14 +6,14 @@ package com.alquilacosas.mbean;
 
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.CategoriaDTO;
+import com.alquilacosas.dto.PeriodoDTO;
 import com.alquilacosas.dto.PrecioDTO;
 import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.entity.Categoria;
-import com.alquilacosas.ejb.entity.EstadoPublicacion;
 import com.alquilacosas.ejb.entity.EstadoPublicacion.NombreEstadoPublicacion;
 import com.alquilacosas.ejb.entity.ImagenPublicacion;
 import com.alquilacosas.ejb.session.CategoriaBeanLocal;
-import com.alquilacosas.ejb.session.MisPublicacionesBeanLocal;
+import com.alquilacosas.ejb.session.PeriodoAlquilerBeanLocal;
 import com.alquilacosas.ejb.session.PublicacionBeanLocal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,6 +43,8 @@ public class ModificarPublicacionMBean {
     private CategoriaBeanLocal categoriaBean;
     @ManagedProperty(value = "#{login}")
     private ManejadorUsuarioMBean login;
+    @EJB
+    private PeriodoAlquilerBeanLocal periodosBean;
     
     private PublicacionDTO pf;
     //Datos de la publicacion
@@ -63,6 +65,13 @@ public class ModificarPublicacionMBean {
     //Object Precio
     private List<PrecioDTO> precios;
     private PrecioDTO precioFacade;
+    private int periodoMinimo;
+    private int periodoMaximo;
+    private List<SelectItem> periodoMinimos;
+    private int selectedPeriodoMinimo;
+    private List<SelectItem> periodoMaximos;
+    private Integer selectedPeriodoMaximo;
+    
     private Date today;
     private List<ImagenPublicacion> imagenes;
     private List<byte[]> imagenesAgregar;
@@ -116,17 +125,30 @@ public class ModificarPublicacionMBean {
         subcategorias2 = new ArrayList<SelectItem>();
         subcategorias3 = new ArrayList<SelectItem>();
         estados = new ArrayList<SelectItem>();
-
+        
+        periodoMinimos = new ArrayList<SelectItem>();
+        periodoMaximos = new ArrayList<SelectItem>();
+        this.periodoMinimo = pf.getPeriodoMinimo();
+        this.periodoMaximo = pf.getPeriodoMaximo();
+        this.selectedPeriodoMinimo = pf.getPeriodo1().getId();
+        this.selectedPeriodoMaximo = pf.getPeriodo2().getId();
+        
+        List<PeriodoDTO> periodos = periodosBean.getPeriodos();
+        for ( PeriodoDTO p : periodos ){
+            periodoMinimos.add( new SelectItem( p.getId(), p.getNombre().name() ));
+            periodoMaximos.add( new SelectItem( p.getId(), p.getNombre().name() ));
+        }
+        
         List<CategoriaDTO> listaCategoria = categoriaBean.getCategoriasPrincipal();
         for (CategoriaDTO category : listaCategoria) {
             categorias.add(new SelectItem(category.getId(), category.getNombre()));
         }
+        
         int categoriaId = categoria.getCategoriaId();
         inicializarCategorias(categoriaId);
 
         for(NombreEstadoPublicacion ep: NombreEstadoPublicacion.values()) {
-            estados.add(new SelectItem(ep,
-                    ep.toString()));
+            estados.add( new SelectItem( ep, ep.toString() ));
         }
 
         selectedEstado = pf.getEstado().getNombre();
@@ -204,6 +226,21 @@ public class ModificarPublicacionMBean {
                     new FacesMessage("Los datos fueron guardados correctamente"));
             return "misPublicaciones";
         } catch (AlquilaCosasException e) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Error al actualizar usuario", e.getMessage()));
+        }
+        return null;
+    }
+    
+    public String borrarPublicacion(){
+        
+        try {
+            publicacionBean.borrarPublicacion(publicacionId);
+            FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage("La publicacion fue eliminada correctamente"));
+                return "misPublicaciones";
+        } catch( AlquilaCosasException e ){
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Error al actualizar usuario", e.getMessage()));
@@ -465,13 +502,6 @@ public class ModificarPublicacionMBean {
         this.imagenABorrar = imagenABorrar;
     }
 
-//    public List<EstadoPublicacion> getEstadosPublicaciones() {
-//        return estadosPublicaciones;
-//    }
-//
-//    public void setEstadosPublicaciones(List<EstadoPublicacion> estadosPublicaciones) {
-//        this.estadosPublicaciones = estadosPublicaciones;
-//    }
 
     public int getSelectedSubcategoria1() {
         return selectedSubcategoria1;
@@ -545,4 +575,53 @@ public class ModificarPublicacionMBean {
         this.subcategorias3 = subcategorias3;
     }
 
+    public List<SelectItem> getPeriodoMaximos() {
+        return periodoMaximos;
+    }
+
+    public void setPeriodoMaximos(List<SelectItem> periodoMaximos) {
+        this.periodoMaximos = periodoMaximos;
+    }
+
+    public List<SelectItem> getPeriodoMinimos() {
+        return periodoMinimos;
+    }
+
+    public void setPeriodoMinimos(List<SelectItem> periodoMinimos) {
+        this.periodoMinimos = periodoMinimos;
+    }
+
+    public Integer getSelectedPeriodoMaximo() {
+        return selectedPeriodoMaximo;
+    }
+
+    public void setSelectedPeriodoMaximo(Integer selectedPeriodoMaximo) {
+        this.selectedPeriodoMaximo = selectedPeriodoMaximo;
+    }
+
+    public int getSelectedPeriodoMinimo() {
+        return selectedPeriodoMinimo;
+    }
+
+    public void setSelectedPeriodoMinimo(int selectedPeriodoMinimo) {
+        this.selectedPeriodoMinimo = selectedPeriodoMinimo;
+    }
+
+    public int getPeriodoMaximo() {
+        return periodoMaximo;
+    }
+
+    public void setPeriodoMaximo(int periodoMaximo) {
+        this.periodoMaximo = periodoMaximo;
+    }
+
+    public int getPeriodoMinimo() {
+        return periodoMinimo;
+    }
+
+    public void setPeriodoMinimo(int periodoMinimo) {
+        this.periodoMinimo = periodoMinimo;
+    }
+
+    
 }

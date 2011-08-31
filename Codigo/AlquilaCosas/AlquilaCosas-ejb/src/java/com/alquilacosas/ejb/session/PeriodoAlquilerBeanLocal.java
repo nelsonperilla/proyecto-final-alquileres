@@ -5,6 +5,7 @@
 package com.alquilacosas.ejb.session;
 
 import com.alquilacosas.common.AlquilaCosasException;
+import com.alquilacosas.dto.PeriodoDTO;
 import com.alquilacosas.ejb.entity.Periodo;
 import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
 import java.util.List;
@@ -17,7 +18,7 @@ import javax.ejb.Local;
 @Local
 public interface PeriodoAlquilerBeanLocal {
 
-     List<Periodo> getPeriodos();
+     List<PeriodoDTO> getPeriodos();
 
      void modificarPeriodo(Periodo periodoNuevo);
 
