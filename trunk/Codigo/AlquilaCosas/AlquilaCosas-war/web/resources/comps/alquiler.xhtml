@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.prime.com.tr/ui" >
+
+    <!-- INTERFACE -->
+    <cc:interface>
+        <cc:attribute name="var" type="java.lang.Object" required="true" />
+        <cc:attribute name="bean" type="java.lang.Object" required="true"  />    
+        <cc:attribute name="dlgCalificar" type="java.lang.String" required="true" />
+        <cc:attribute name="dlgCalificarId" type="java.lang.String" required="true" />
+        <cc:attribute name="dlgVerCalificacion" type="java.lang.String" required="true" />
+        <cc:attribute name="dlgVerCalificacionId" type="java.lang.String" required="true" />
+        <cc:attribute name="metodoVerPub" type="java.lang.String" required="true" />
+        <cc:attribute name="propPublicacion" type="java.lang.String" required="true" />
+        <cc:attribute name="metodoVerUsuario" type="java.lang.String" required="true" />
+        <cc:attribute name="propUsuario" type="java.lang.String" required="true" />
+        <cc:attribute name="metodoModAlq" type="java.lang.String" />
+        <cc:attribute name="propAlquiler" type="java.lang.String" />
+        <cc:attribute name="editable" type="java.lang.Boolean" default="false" />
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        
+        <h:panelGrid columns="3" >
+            
+            <h:panelGrid columns="2" >
+                <h:outputLabel value="Publicacion" />
+                <h:commandLink value="#{cc.attrs.bean[cc.attrs.metodoVerPub]}" >
+                    <f:setPropertyActionListener value="#{cc.attrs.var.idPublicacion}" 
+                                                 target="#{cc.attrs.bean[cc.attrs.propPublicacion]}" />
+                </h:commandLink>
+                <h:outputLabel value="Usuario" />
+                <h:commandLink value="#{cc.attrs.bean[cc.attrs.metodoVerUsuario]}" >
+                    <f:setPropertyActionListener value="#{cc.attrs.var.idUsuario}" 
+                                                 target="#{cc.attrs.bean[cc.attrs.propUsuario]}" />
+                </h:commandLink>
+            </h:panelGrid>
+            
+            <h:panelGrid columns="2" >
+                <h:outputLabel value="Fecha desde" />
+                <h:outputText value="#{cc.attrs.var.fechaInicio}" />
+                <h:outputLabel value="Fecha hasta" />
+                <h:outputText value="#{cc.attrs.var.fechaFin}" />
+            </h:panelGrid>
+            
+            <h:panelGrid columns="1" >
+                <h:outputText value="$#{cc.attrs.var.precio}" />
+                <p:commandButton value="Ver calificacion" update="#{cc.attrs.dlgVerCalificacionId}"
+                                 onclick="#{cc.attrs.dlgVerCalificacion}.show();" />
+                <p:commandButton value="Calificar" update="#{cc.attrs.dlgCalificarId}"
+                                 onclick="#{cc.attrs.dlgCalificar}.show();" />
+                <p:commandButton value="Modificar" rendered="#{cc.attrs.editable}"
+                                 action="#{cc.attrs.bean[cc.attrs.metodoModAlq]}" >
+                    <f:setPropertyActionListener value="#{cc.attrs.var.id}" 
+                                                 target="#{cc.attrs.bean[cc.attrs.propAlquiler]}" />
+                </p:commandButton>
+            </h:panelGrid>
+            
+        </h:panelGrid>
+        
+    </cc:implementation>
+</html>
