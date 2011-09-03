@@ -22,7 +22,9 @@ public interface ProvinciaBeanLocal {
 
      void borrarProvincia(Provincia provinciaBorrar) throws AlquilaCosasException ;
 
-     void registrarProvincia(Provincia nuevoProvincia) throws AlquilaCosasException ;
+     void registrarProvincia(String nombre, Pais pais) throws AlquilaCosasException ;
 
      List<Pais> getPaises();
+
+     List<Provincia> getProvinciaByPais(int idPais);
 }

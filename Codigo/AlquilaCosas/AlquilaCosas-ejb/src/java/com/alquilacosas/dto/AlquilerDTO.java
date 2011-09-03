@@ -20,7 +20,8 @@ public class AlquilerDTO {
     private Date fechaInicioAlquiler;
     private Date fechaFinAlquiler;
     private int cantidad;
-    
+    private double monto;
+    private boolean calificado;
     private EstadoAlquiler estadoAlquiler;
     
     public AlquilerDTO(){
@@ -39,6 +40,17 @@ public class AlquilerDTO {
         this.cantidad = cantidad;
         this.estadoAlquiler = estadoAlquiler;
     }
+
+     public AlquilerDTO(int idPublicacion, int idUsuario, int idAlquiler, Date fechaInicioAlquiler, 
+             Date fechaFinAlquiler, double monto, boolean calificado) {
+          this.idPublicacion = idPublicacion;
+          this.idUsuario = idUsuario;
+          this.idAlquiler = idAlquiler;
+          this.fechaInicioAlquiler = fechaInicioAlquiler;
+          this.fechaFinAlquiler = fechaFinAlquiler;
+          this.monto = monto;
+          this.calificado = calificado;
+     }
 
     public int getCantidad() {
         return cantidad;
@@ -95,4 +107,20 @@ public class AlquilerDTO {
     public void setIdUsuario(int idUsuario) {
         this.idUsuario = idUsuario;
     }
+
+     public double getMonto() {
+          return monto;
+     }
+
+     public void setMonto(double monto) {
+          this.monto = monto;
+     }
+
+     public boolean isCalificado() {
+          return calificado;
+     }
+
+     public void setCalificado(boolean calificado) {
+          this.calificado = calificado;
+     }
 }

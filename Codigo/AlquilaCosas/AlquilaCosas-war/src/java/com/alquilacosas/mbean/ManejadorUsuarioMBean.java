@@ -50,9 +50,9 @@ public class ManejadorUsuarioMBean implements Serializable {
         HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
         try {
             request.login(this.username, this.password);
-        } catch (Exception e) {
+        } catch (ServletException e) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Credenciales incorrectas", "Credenciales incorrectas"));
+                    "Credenciales incorrectas"+e.getMessage(), "Credenciales incorrectas"+e.getMessage()));
             return null;
         }
         try {
