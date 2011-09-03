@@ -23,14 +23,21 @@
 
                <ui:define name="principal">
                     
-                    <h:form id="formProvincia">  
+                    <h:form id="formProvincia" style="text-align: center">  
                          <p:growl id="messages" />
-                         <p:dataTable var="pro" value="#{provincia.provinciasF}" 
+                         
+                         <h:selectOneMenu  id="pais" value="#{provincia.paisSeleccionado}">
+                              <f:selectItems value="#{provincia.paises}" />
+                              <p:ajax event="change" update="tablaProvincia messages formProvincia"
+                                    listener="#{provincia.actualizarProvincias}" />
+                         </h:selectOneMenu>
+                         
+                         <p:dataTable var="pro" value="#{provincia.provincias}" 
                                       id="tablaProvincia" rowEditListener="#{provincia.modificarProvincia}" >  
                               <f:facet name="header">  
                                    Provincia
                               </f:facet>  
-                              <p:column headerText="Nombre" >  
+                              <p:column headerText="Nombre" >
                                    <p:cellEditor>  
                                         <f:facet name="output">  
                                              <h:outputText value="#{pro.nombre}" style="width:120px"/>  
@@ -41,19 +48,6 @@
                                    </p:cellEditor>  
                               </p:column>  
                               
-                              <p:column headerText="Pais" style="width:150px">  
-                                   <p:cellEditor>  
-                                        <f:facet name="output">  
-                                             <h:outputText value="#{pro.paisNombre}" />  
-                                        </f:facet>  
-                                        <f:facet name="input">  
-                                             <h:selectOneMenu value="#{pro.paisId}" >  
-                                                  <f:selectItems value="#{provincia.paises}" />  
-                                             </h:selectOneMenu>  
-                                        </f:facet>  
-                                   </p:cellEditor>  
-                              </p:column>
-
                               <p:column headerText="Opciones" style="width:70px">  
                                    <p:rowEditor />
                                    <p:commandButton update="tablaProvincia,messages" oncomplete="confirmacion.show()" 
@@ -82,16 +76,9 @@
                                    <p:inputText id="nombreNuevo" value="#{provincia.nombre}" required="true"
                                                 requiredMessage="Valor requerido"/>
                                    <p:message for="nombreNuevo" />
-                                   <h:outputLabel value="Pais" />
-                                   <h:selectOneMenu id="paisNuevo" value="#{provincia.pais}" required="true" 
-                                                    requiredMessage="Seleccione un País">  
-                                        <f:selectItems value="#{provincia.paises}" />  
-                                   </h:selectOneMenu> 
-                                   <p:message for="paisNuevo" />
                                    <f:facet name="footer" >
                                         <p:commandButton value="Guardar" actionListener="#{provincia.registrarProvincia}"
-                                                         oncomplete="nuevaProvincia.hide()"
-                                                         action="provincias"/>
+                                                         oncomplete="nuevaProvincia.hide()" action="provincias"/>
                                         <p:commandButton value="Limpiar" type="reset" />
                                    </f:facet>
                               </h:panelGrid>

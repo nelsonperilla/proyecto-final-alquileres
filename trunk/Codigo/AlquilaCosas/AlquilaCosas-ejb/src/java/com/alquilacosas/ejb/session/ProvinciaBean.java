@@ -49,9 +49,12 @@ public class ProvinciaBean implements ProvinciaBeanLocal {
      }
 
      @Override
-     public void registrarProvincia(Provincia nuevoProvincia) throws AlquilaCosasException {
+     public void registrarProvincia(String nombre, Pais pais) throws AlquilaCosasException {
+          Provincia nuevaProvincia = new  Provincia();
+          nuevaProvincia.setNombre(nombre);
+          nuevaProvincia.setPaisFk(pais);
           try{
-              provinciaFacade.create(nuevoProvincia); 
+              provinciaFacade.create(nuevaProvincia); 
           }
           catch(Exception e){
                throw new AlquilaCosasException("Error al insertar la Provincia - " + e.getMessage());
@@ -62,5 +65,9 @@ public class ProvinciaBean implements ProvinciaBeanLocal {
      public List<Pais> getPaises() {
           return paisFacade.findAll();
      }
-     
+
+     @Override
+     public List<Provincia> getProvinciaByPais(int idPais) {
+          return provinciaFacade.findByPais(idPais);
+     }     
 }

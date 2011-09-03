@@ -23,5 +23,7 @@ public interface PaisBeanLocal {
      void borrarPais(Pais paisBorrar) throws AlquilaCosasException ;
 
      void registrarPais(Pais nuevoPais) throws AlquilaCosasException ;
+
+     Pais getPaisById(int paisId);
      
 }

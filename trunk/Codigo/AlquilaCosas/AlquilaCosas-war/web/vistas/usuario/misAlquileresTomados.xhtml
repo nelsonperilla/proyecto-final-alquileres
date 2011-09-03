@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:comps="http://java.sun.com/jsf/composite/comps" >
+
+     <body>
+
+          <ui:composition template="./../../resources/templates/masterPage.xhtml">
+
+               <ui:define name="logInfo">
+                    <h:form>
+                         <h:commandLink value="inicio" action="inicio" />
+                    </h:form>
+               </ui:define>
+
+               <ui:define name="left">
+                    <p:outputPanel id="catMenu" >
+                         <comps:categoriesMenu />
+                    </p:outputPanel>
+               </ui:define>
+
+               <ui:define name="principal">
+                    <h1>Mis Alquileres Tomados</h1>
+                    <br />
+                    <h:form id="alquileres" >
+                         <h:outputLabel value="Ver Alquileres: " />
+                         <h:selectOneMenu id="ver" value="#{alquileresTomados.filtroSeleccionado}" >                                
+                              <f:selectItems value="#{alquileresTomados.filtros}" />
+                              <p:ajax event="change" update="tabla growl" process="@this"
+                                      listener="#{alquileresTomados.actualizarAlquileres}" />
+                         </h:selectOneMenu>
+                         <p:dataTable id="tabla" value="#{alquileresTomados.alquileres}" var="alq">
+                              <p:column>
+                                   <comps:alquiler var="#{alq}" bean="#{alquileresTomados}"
+                                                   dlgCalificar="calificarDlg"
+                                                   dlgCalificarId="dialogoCalifica"
+                                                   dlgVerCalificacion="verCalificacionDlg"
+                                                   dlgVerCalificacionId="dialogoVerCalifica"
+                                                   editable="false"
+                                                   metodoVerPub="verPublicacion"
+                                                   propPublicacion="publicacionId"
+                                                   metodoVerUsuario="verUsuario"
+                                                   propUsuario="usuarioId"
+                                                   metodoCalificar="tomarAlquilerACalificar"
+                                                   metodoVerCalif="verCalificacion" />
+                              </p:column>
+                         </p:dataTable>
+                    </h:form>
+                    
+                    <p:dialog modal="true" widgetVar="verCalificacionDlg" header="Ver Calificación">
+                         <h:form id="dialogoVerCalifica" >
+                              <h:outputLabel value="lalalal"></h:outputLabel>
+                         </h:form>
+                    </p:dialog>
+                    
+                    <p:dialog modal="true" widgetVar="calificarDlg" header="Calificar">
+                         <h:form id="dialogoCalifica">
+                              <h:outputLabel value="lalalal"></h:outputLabel>
+                         </h:form>
+                    </p:dialog>
+               </ui:define>
+
+               <ui:define name="right">
+                    <comps:loginBox />
+                    <comps:adminPanel />
+                    <comps:userPanel />
+               </ui:define>
+
+          </ui:composition>
+
+     </body>
+</html>

@@ -56,4 +56,9 @@ public class PaisBean implements PaisBeanLocal {
                throw new AlquilaCosasException("Error al insertar el Pais - " + e.getMessage());
           }
      }
+
+     @Override
+     public Pais getPaisById(int paisId) {
+          return paisFacade.find(paisId);
+     }
 }
