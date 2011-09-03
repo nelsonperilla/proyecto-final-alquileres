@@ -8,9 +8,7 @@ import com.alquilacosas.dto.ComentarioDTO;
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.CategoriaDTO;
 import com.alquilacosas.common.NotificacionEmail;
-import com.alquilacosas.dto.PeriodoDTO;
 import com.alquilacosas.dto.PrecioDTO;
-import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.entity.Categoria;
 import com.alquilacosas.ejb.entity.Comentario;
@@ -174,7 +172,6 @@ public class PublicacionBean implements PublicacionBeanLocal {
                     precio.setPrecio(precioDiario / 24.0);
                 } else if (p.getPeriodoNombre() == NombrePeriodo.SEMANA) {
                     precio.setPrecio(precioDiario * 7.0);
-                    System.out.println("pasaaaa");
                 } else if (p.getPeriodoNombre()  == NombrePeriodo.MES) {
                     precio.setPrecio(precioDiario * 30.0);
                 }
@@ -208,10 +205,17 @@ public class PublicacionBean implements PublicacionBeanLocal {
         if (pxe == null) {
             throw new AlquilaCosasException("PublicacionXEstado no encontrado para la publicacion seleccionada.");
         }
-        
-        PeriodoDTO periodo1 = periodoFacade.getPeriodo(p.getMinPeriodoAlquilerFk().getPeriodoId());
-        PeriodoDTO periodo2 = periodoFacade.getPeriodo(p.getMaxPeriodoAlquilerFk().getPeriodoId());
-        
+        Periodo periodo1 = null;
+        Periodo periodo2 = null;
+        try {
+            periodo1 = periodoFacade.getPeriodo(p.getMinPeriodoAlquilerFk().getPeriodoId());
+            if( p.getMaxPeriodoAlquilerFk().getPeriodoId() != null )
+                periodo2 = periodoFacade.getPeriodo(p.getMaxPeriodoAlquilerFk().getPeriodoId());
+            
+        } catch (Exception e) {
+            System.out.println("el periodo es nulo" + e.getStackTrace());
+        }
+          
         PublicacionDTO publicacionDto = new PublicacionDTO(
                 p.getPublicacionId(), p.getTitulo(), p.getDescripcion(),
                 p.getFechaDesde(), p.getFechaHasta(), p.getDestacada(),
@@ -328,7 +332,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
     @Override
     @PermitAll
     public PublicacionDTO getPublicacion(int id) {
-        Publicacion publicacion = entityManager.find(Publicacion.class, id);
+        Publicacion publicacion = publicacionFacade.find(id);
         PublicacionDTO resultado = null;
         if (publicacion != null) {
             resultado = new PublicacionDTO(publicacion.getPublicacionId(), publicacion.getTitulo(),
@@ -508,7 +512,9 @@ public class PublicacionBean implements PublicacionBeanLocal {
     @PermitAll
     public List<Periodo> getPeriodos()
     {
-        return periodoFacade.getPeriodosOrderByHoras();
+      return periodoFacade.getPeriodosOrderByHoras();
+       
+       
     }            
             
 }

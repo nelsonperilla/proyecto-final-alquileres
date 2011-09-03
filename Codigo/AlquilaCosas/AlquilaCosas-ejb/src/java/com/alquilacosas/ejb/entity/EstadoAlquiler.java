@@ -38,7 +38,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "EstadoAlquiler.findByDescripcion", query = "SELECT e FROM EstadoAlquiler e WHERE e.descripcion = :descripcion")})
 public class EstadoAlquiler implements Serializable {
     
-    public enum NombreEstadoAlquiler {PEDIDO, CONFIRMADO, ACTIVO, FINALIZADO}
+    public enum NombreEstadoAlquiler {PEDIDO, CONFIRMADO, ACTIVO, FINALIZADO, 
+    PEDIDO_CANCELADO, PEDIDO_RECHAZADO, CANCELADO_ALQUILADOR, CANCELADO}
     
     private static final long serialVersionUID = 1L;
     @Id

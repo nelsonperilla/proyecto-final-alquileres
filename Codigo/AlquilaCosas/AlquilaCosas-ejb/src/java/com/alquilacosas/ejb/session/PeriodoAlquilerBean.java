@@ -9,6 +9,7 @@ import com.alquilacosas.dto.PeriodoDTO;
 import com.alquilacosas.ejb.entity.Periodo;
 import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
 import com.alquilacosas.facade.PeriodoFacade;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -31,8 +32,12 @@ public class PeriodoAlquilerBean implements PeriodoAlquilerBeanLocal {
 
     @Override
     public List<PeriodoDTO> getPeriodos() {
-        
-        List<PeriodoDTO> periodosDto = periodoFacade.getPeriodos();
+        List<PeriodoDTO> periodosDto = new ArrayList<PeriodoDTO>();
+        List<Periodo> periodos = periodoFacade.getPeriodos();
+        for( Periodo p : periodos ){
+            PeriodoDTO periodoDto = new PeriodoDTO(p.getPeriodoId(), p.getNombre());
+            periodosDto.add(periodoDto);
+        }
         
         return periodosDto;
     }

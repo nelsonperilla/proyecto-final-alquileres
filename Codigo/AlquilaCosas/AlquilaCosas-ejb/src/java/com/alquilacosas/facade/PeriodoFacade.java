@@ -20,11 +20,11 @@ import javax.persistence.Query;
 @Stateless
 public class PeriodoFacade extends AbstractFacade<Periodo> {
     @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
-    private EntityManager entityManager;
+    private EntityManager em;
 
     @Override
     protected EntityManager getEntityManager() {
-        return entityManager;
+        return em;
     }
 
     public PeriodoFacade() {
@@ -32,27 +32,24 @@ public class PeriodoFacade extends AbstractFacade<Periodo> {
         
     }
     
-    public List<PeriodoDTO> getPeriodos() {
+    public List<Periodo> getPeriodos() {
         List<Periodo> periodos = null;
-        List<PeriodoDTO> periodosDTO = new ArrayList<PeriodoDTO>();
         Query query = em.createNamedQuery("Periodo.findAll");
         periodos = query.getResultList();
-        
-        for( Periodo p : periodos ){
-            PeriodoDTO periodoDto = new PeriodoDTO(p.getPeriodoId(), 
-                    p.getNombre());
-            periodosDTO.add(periodoDto);
-        }
-        
-        return periodosDTO;
+        return periodos;
     }
     
-    public PeriodoDTO getPeriodo( int periodoId ) {
+    public Periodo getPeriodo( int periodoId ) {
         
         Periodo p = em.find(Periodo.class, periodoId);
-        PeriodoDTO periodoDto = new PeriodoDTO(p.getPeriodoId(), p.getNombre());
-        return periodoDto;
+        return p;
         
+    }
+    
+    public List<Periodo> getPeriodosOrderByHoras()
+    {
+        Query query = em.createNamedQuery("Periodo.findAll");
+        return query.getResultList();   
     }
     
 }

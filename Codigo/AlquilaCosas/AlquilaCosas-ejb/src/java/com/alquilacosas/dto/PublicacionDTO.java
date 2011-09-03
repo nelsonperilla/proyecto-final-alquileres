@@ -7,6 +7,7 @@ package com.alquilacosas.dto;
 import com.alquilacosas.ejb.entity.Categoria;
 import com.alquilacosas.ejb.entity.EstadoPublicacion;
 import com.alquilacosas.ejb.entity.ImagenPublicacion;
+import com.alquilacosas.ejb.entity.Periodo;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -34,8 +35,8 @@ public class PublicacionDTO {
     private List<ImagenPublicacion> imagenes;
     private int periodoMinimo;
     private int periodoMaximo;
-    private PeriodoDTO periodo1;
-    private PeriodoDTO periodo2;
+    private Periodo periodo1;
+    private Periodo periodo2;
     private String ciudad;
     private String barrio;
     private String pais;
@@ -68,8 +69,8 @@ public class PublicacionDTO {
             Date fecha_desde, Date fecha_hasta, boolean destacada,
             int cantidad, Categoria categoria,
             List<ImagenPublicacion> imagenes, EstadoPublicacion estado, 
-            int periodoMinimo, PeriodoDTO periodo1, 
-            int periodoMaximo, PeriodoDTO periodo2)
+            int periodoMinimo, Periodo periodo1, 
+            int periodoMaximo, Periodo periodo2)
     {
         this.id = id;
         this.titulo = titulo;
@@ -291,19 +292,19 @@ public class PublicacionDTO {
         this.periodoMinimo = periodoMinimo;
     }
 
-    public PeriodoDTO getPeriodo1() {
+    public Periodo getPeriodo1() {
         return periodo1;
     }
 
-    public void setPeriodo1(PeriodoDTO periodo1) {
+    public void setPeriodo1(Periodo periodo1) {
         this.periodo1 = periodo1;
     }
 
-    public PeriodoDTO getPeriodo2() {
+    public Periodo getPeriodo2() {
         return periodo2;
     }
 
-    public void setPeriodo2(PeriodoDTO periodo2) {
+    public void setPeriodo2(Periodo periodo2) {
         this.periodo2 = periodo2;
     }
     
