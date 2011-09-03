@@ -130,8 +130,8 @@ public class ModificarPublicacionMBean {
         periodoMaximos = new ArrayList<SelectItem>();
         this.periodoMinimo = pf.getPeriodoMinimo();
         this.periodoMaximo = pf.getPeriodoMaximo();
-        this.selectedPeriodoMinimo = pf.getPeriodo1().getId();
-        this.selectedPeriodoMaximo = pf.getPeriodo2().getId();
+        this.selectedPeriodoMinimo = pf.getPeriodo1().getPeriodoId();
+        this.selectedPeriodoMaximo = pf.getPeriodo2().getPeriodoId();
         
         List<PeriodoDTO> periodos = periodosBean.getPeriodos();
         for ( PeriodoDTO p : periodos ){
