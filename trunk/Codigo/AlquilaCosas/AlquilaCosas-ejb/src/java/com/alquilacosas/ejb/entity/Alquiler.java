@@ -5,6 +5,7 @@
 package com.alquilacosas.ejb.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -82,6 +83,7 @@ public class Alquiler implements Serializable {
     private List<Calificacion> calificacionList;
 
     public Alquiler() {
+        alquilerXEstadoList = new ArrayList<AlquilerXEstado>();
     }
 
     public Alquiler(Integer alquilerId) {
@@ -93,6 +95,16 @@ public class Alquiler implements Serializable {
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
         this.cantidad = cantidad;
+    }
+    
+    public void agregarAlquilerXEstado( AlquilerXEstado axe ){
+        this.alquilerXEstadoList.add(axe);
+        axe.setAlquilerFk(this);
+    }
+    
+    public void removerAlquilerXEstado( AlquilerXEstado axe ){
+        this.alquilerXEstadoList.remove(axe);
+        axe.setAlquilerFk(null);
     }
 
     public Integer getAlquilerId() {

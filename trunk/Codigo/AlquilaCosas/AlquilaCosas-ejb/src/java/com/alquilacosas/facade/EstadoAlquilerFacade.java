@@ -8,6 +8,7 @@ import com.alquilacosas.ejb.entity.EstadoAlquiler;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -27,4 +28,18 @@ public class EstadoAlquilerFacade extends AbstractFacade<EstadoAlquiler> {
         super(EstadoAlquiler.class);
     }
     
+    public EstadoAlquiler getEstadoAlquiler( int alquilerId ){
+        EstadoAlquiler ae = new EstadoAlquiler();
+        Query query = em.createNamedQuery("EstadoAlquiler.findByAlquiler");
+        query.setParameter("alquilerId", alquilerId);
+        return ae;
+    }
+    
+    public EstadoAlquiler findByNombre( EstadoAlquiler.NombreEstadoAlquiler nombre ){
+        EstadoAlquiler estadoPublicacion = null;
+        Query query = em.createNamedQuery("EstadoAlquiler.findByNombre");
+        query.setParameter("nombre", nombre);
+        estadoPublicacion = (EstadoAlquiler) query.getSingleResult();
+        return estadoPublicacion;
+    }
 }
