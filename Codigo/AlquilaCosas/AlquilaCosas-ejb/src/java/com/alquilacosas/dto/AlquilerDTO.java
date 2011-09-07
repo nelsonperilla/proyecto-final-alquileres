@@ -5,6 +5,8 @@
 package com.alquilacosas.dto;
 
 import com.alquilacosas.ejb.entity.EstadoAlquiler;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -16,9 +18,12 @@ public class AlquilerDTO {
     private int idPublicacion;
     private int idUsuario;
     private int idAlquiler;
-    
-    private Date fechaInicioAlquiler;
-    private Date fechaFinAlquiler;
+    private String titulo; //Publicacion
+    private Date fechaInicio;
+    private Date fechaFin;
+    private String fechaDesde;
+    private String fechaHasta;
+    private Integer imagenId = -1;
     private int cantidad;
     private double monto;
     private boolean calificado;
@@ -28,17 +33,24 @@ public class AlquilerDTO {
         
     }
     
-    public AlquilerDTO( int idPublicacion, int idUsuario, int idAlquiler,
+    public AlquilerDTO( int idPublicacion, String titulo, int idUsuario, int idAlquiler,
             Date fechaInicioAlquiler, Date fechaFinAlquiler, int cantidad,
-            EstadoAlquiler estadoAlquiler){
+            EstadoAlquiler estadoAlquiler, Integer imagenId){
         
         this.idPublicacion = idPublicacion;
         this.idUsuario = idUsuario;
         this.idAlquiler = idAlquiler;
-        this.fechaInicioAlquiler = fechaInicioAlquiler;
-        this.fechaFinAlquiler = fechaFinAlquiler;
+        this.fechaInicio = fechaInicioAlquiler;
+        this.fechaFin = fechaFinAlquiler;
         this.cantidad = cantidad;
         this.estadoAlquiler = estadoAlquiler;
+        this.imagenId = imagenId;
+        this.titulo = titulo;
+        
+        
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        fechaDesde = formatter.format(fechaInicio);
+        fechaHasta = formatter.format(fechaFin);
     }
 
      public AlquilerDTO(int idPublicacion, int idUsuario, int idAlquiler, Date fechaInicioAlquiler, 
@@ -46,8 +58,8 @@ public class AlquilerDTO {
           this.idPublicacion = idPublicacion;
           this.idUsuario = idUsuario;
           this.idAlquiler = idAlquiler;
-          this.fechaInicioAlquiler = fechaInicioAlquiler;
-          this.fechaFinAlquiler = fechaFinAlquiler;
+          this.fechaInicio = fechaInicioAlquiler;
+          this.fechaFin = fechaFinAlquiler;
           this.monto = monto;
           this.calificado = calificado;
      }
@@ -69,19 +81,19 @@ public class AlquilerDTO {
     }
 
     public Date getFechaFinAlquiler() {
-        return fechaFinAlquiler;
+        return fechaFin;
     }
 
     public void setFechaFinAlquiler(Date fechaFinAlquiler) {
-        this.fechaFinAlquiler = fechaFinAlquiler;
+        this.fechaFin = fechaFinAlquiler;
     }
 
     public Date getFechaInicioAlquiler() {
-        return fechaInicioAlquiler;
+        return fechaInicio;
     }
 
     public void setFechaInicioAlquiler(Date fechaInicioAlquiler) {
-        this.fechaInicioAlquiler = fechaInicioAlquiler;
+        this.fechaInicio = fechaInicioAlquiler;
     }
 
     public int getIdAlquiler() {
@@ -123,4 +135,54 @@ public class AlquilerDTO {
      public void setCalificado(boolean calificado) {
           this.calificado = calificado;
      }
+
+    public String getFechaDesde() {
+        return fechaDesde;
+    }
+
+    public void setFechaDesde(String fechaDesde) {
+        this.fechaDesde = fechaDesde;
+    }
+
+    public Date getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(Date fechaFin) {
+        this.fechaFin = fechaFin;
+    }
+
+    public String getFechaHasta() {
+        return fechaHasta;
+    }
+
+    public void setFechaHasta(String fechaHasta) {
+        this.fechaHasta = fechaHasta;
+    }
+
+    public Date getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public void setFechaInicio(Date fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public Integer getImagenId() {
+        return imagenId;
+    }
+
+    public void setImagenId(Integer imagenId) {
+        this.imagenId = imagenId;
+    }
+     
+     
 }

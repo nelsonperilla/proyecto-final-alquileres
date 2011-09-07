@@ -5,6 +5,7 @@
 package com.alquilacosas.ejb.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -35,7 +36,11 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "EstadoAlquiler.findAll", query = "SELECT e FROM EstadoAlquiler e"),
     @NamedQuery(name = "EstadoAlquiler.findByEstadoAlquilerId", query = "SELECT e FROM EstadoAlquiler e WHERE e.estadoAlquilerId = :estadoAlquilerId"),
     @NamedQuery(name = "EstadoAlquiler.findByNombre", query = "SELECT e FROM EstadoAlquiler e WHERE e.nombre = :nombre"),
-    @NamedQuery(name = "EstadoAlquiler.findByDescripcion", query = "SELECT e FROM EstadoAlquiler e WHERE e.descripcion = :descripcion")})
+    @NamedQuery(name = "EstadoAlquiler.findByDescripcion", query = "SELECT e FROM EstadoAlquiler e WHERE e.descripcion = :descripcion"),
+    @NamedQuery(name = "EstadoAlquiler.findByAlquiler", query = "SELECT ea FROM EstadoAlquiler ea, AlquilerXEstado axe, Alquiler a "
+                + "WHERE a.alquilerId = axe.alquilerFk "
+                + "AND axe.estadoAlquilerFk = ea.estadoAlquilerId "
+                + "AND a.alquilerId = :alquilerId")})
 public class EstadoAlquiler implements Serializable {
     
     public enum NombreEstadoAlquiler {PEDIDO, CONFIRMADO, ACTIVO, FINALIZADO, 
@@ -63,6 +68,7 @@ public class EstadoAlquiler implements Serializable {
     private List<AlquilerXEstado> alquilerXEstadoList;
 
     public EstadoAlquiler() {
+        alquilerXEstadoList = new ArrayList<AlquilerXEstado>();
     }
 
     public EstadoAlquiler(Integer estadoAlquilerId) {
@@ -72,6 +78,16 @@ public class EstadoAlquiler implements Serializable {
     public EstadoAlquiler(Integer estadoAlquilerId, NombreEstadoAlquiler nombre) {
         this.estadoAlquilerId = estadoAlquilerId;
         this.nombre = nombre;
+    }
+    
+    public void agregarAlquilerXEstado( AlquilerXEstado axe ){
+        this.alquilerXEstadoList.add(axe);
+        axe.setEstadoAlquilerFk(this);
+    }
+    
+    public void removerAlquilerXEstado( AlquilerXEstado axe ){
+        this.alquilerXEstadoList.remove(axe);
+        axe.setEstadoAlquilerFk(null);
     }
 
     public Integer getEstadoAlquilerId() {

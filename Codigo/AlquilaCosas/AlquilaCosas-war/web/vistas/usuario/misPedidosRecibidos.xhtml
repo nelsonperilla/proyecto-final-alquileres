@@ -7,6 +7,8 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core">
 
+
+
     <ui:define name="logInfo">
         <h:form>
             <h:commandLink value="Inicio" action="inicio" />
@@ -15,24 +17,28 @@
 
     <ui:define name="left" >
         <comps:categoriesMenu />
-    </ui:define>
+    </ui:define>>
 
     <ui:define name="principal">
 
         <div id="items" >
             <h:form prependId="false">
 
-                <p:dataTable id="grid" value="#{misPublicaciones.publicacionesDto}" var="pub" 
+                <p:dataTable id="grid" value="#{misPedidosRecibidos.pedidos}" var="alquiler" 
                              rows="10" paginator="true" paginatorPosition="bottom"
                              styleClass="itemsTable" >
 
                     <p:column>
 
-                        <comps:itemInfo var="#{pub}" bean="#{misPublicaciones}"
-                                        method="mostrarPublicacion" 
-                                        property="publicacionId"
-                                        editable="true"
-                                        editMethod="editarPublicacion"/>
+                        <comps:itemPedido var="#{alquiler}" bean="#{misPedidosRecibidos}"
+                                        pubMethod="mostrarPublicacion" 
+                                        propertyPub="publicacionId"
+                                        propertyUser="usuarioId"
+                                        propertyAlq="alquilerId"
+                                        userMethod="mostrarUsuario"
+                                        okMethod="confirmarAlquiler"
+                                        koMethod="misPedidosRechazados"
+                                        idComponente="grid"/>
 
                     </p:column>
 

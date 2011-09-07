@@ -118,6 +118,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
         try {
             usuario = usuarioFacade.find(usuarioId);
         } catch (NoResultException e) {
+            context.setRollbackOnly();
             throw new AlquilaCosasException("No se encontro el Usuario en la "
                     + "base de datos.");
         }
@@ -126,6 +127,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
             Categoria c = categoriaFacade.find(categoria);
             publicacion.setCategoriaFk(c);
         } catch (NoResultException e) {
+            context.setRollbackOnly();
             throw new AlquilaCosasException("No se encontro la Categoria en la "
                     + "base de datos.");
         }

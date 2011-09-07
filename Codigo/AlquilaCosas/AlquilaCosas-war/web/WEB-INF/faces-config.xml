@@ -22,6 +22,15 @@
     </navigation-rule>
     
     <navigation-rule>
+        <from-view-id>/vistas/usuario/misPedidosRecibidos.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>mostrarPublicacion</from-outcome>
+            <to-view-id>/vistas/mostrarPublicacion.xhtml?id=#{misPedidosRecibidos.publicacionId}</to-view-id>
+            <redirect/>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
         <from-view-id>/vistas/usuario/misPublicaciones.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>mostrarPublicacion</from-outcome>
@@ -125,6 +134,11 @@
         <navigation-case>
             <from-outcome>usuarioCreado</from-outcome>
             <to-view-id>/vistas/usuarioCreado.xhtml?email=#{regUsuario.email}</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>misPedidosRecibidos</from-outcome>
+            <to-view-id>/vistas/usuario/misPedidosRecibidos.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
     </navigation-rule>

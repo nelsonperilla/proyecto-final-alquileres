@@ -7,10 +7,13 @@
         <Node id="vistas/usuario/nuevaPublicacion.xhtml" x="1150" y="150" zoom="true"/>
     </Scope>
     <Scope Scope="Project">
-        <Node id="vistas/admin/categorias.xhtml" x="400" y="750" zoom="true"/>
+        <Node id="vistas/usuario/misAlquileresTomados.xhtml" x="650" y="1050" zoom="true"/>
         <Node id="resources/comps/itemInfo.xhtml" x="150" y="300" zoom="true"/>
+        <Node id="vistas/admin/categorias.xhtml" x="400" y="750" zoom="true"/>
         <Node id="vistas/usuario/datosUsuario.xhtml" x="150" y="900" zoom="true"/>
         <Node id="vistas/admin/administrarUsuarios.xhtml" x="900" y="750" zoom="true"/>
+        <Node id="vistas/usuario/miReputacion.xhtml" x="2400" y="150" zoom="true"/>
+        <Node id="resources/comps/itemPedido.xhtml" x="1150" y="750" zoom="true"/>
         <Node id="vistas/mostrarPublicacion.xhtml?id=#{publicationsGroup.selectedPublicationId}" x="1400" y="300" zoom="true"/>
         <Node id="vistas/terminos.html" x="150" y="1200" zoom="true"/>
         <Node id="resources/comps/logoBar.xhtml" x="400" y="300" zoom="true"/>
@@ -19,6 +22,7 @@
         <Node id="vistas/usuario/misPublicaciones.xhtml" x="1650" y="300" zoom="true"/>
         <Node id="vistas/usuarioCreado.xhtml" x="400" y="600" zoom="true"/>
         <Node id="vistas/usuario/modificarUsuario.xhtml" x="900" y="300" zoom="true"/>
+        <Node id="vistas/usuario/misPedidosRecibidos.xhtml" x="400" y="1200" zoom="true"/>
         <Node id="vistas/resultados.xhtml" x="1400" y="150" zoom="true"/>
         <Node id="vistas/usuario/nuevaPublicacion.xhtml" x="1150" y="150" zoom="true"/>
         <Node id="vistas/mostrarPublicacion.xhtml?id=#{resultadosBean.publicacionSeleccionada}" x="1400" y="450" zoom="true"/>
@@ -28,24 +32,25 @@
         <Node id="vistas/verCategoria.xhtml" x="400" y="900" zoom="true"/>
         <Node id="resources/templates/masterPage.xhtml" x="400" y="450" zoom="true"/>
         <Node id="vistas/inicio.xhtml" x="150" y="150" zoom="true"/>
-        <Node id="*" x="150" y="750" zoom="true"/>
         <Node id="vistas/activarCuenta.xhtml" x="650" y="450" zoom="true"/>
+        <Node id="vistas/usuarioCreado.xhtml?email=#{regUsuario.email}" x="1400" y="600" zoom="true"/>
+        <Node id="*" x="150" y="750" zoom="true"/>
         <Node id="resources/comps/itemPreguntas.xhtml" x="900" y="600" zoom="true"/>
         <Node id="vistas/login.xhtml" x="650" y="600" zoom="true"/>
         <Node id="vistas/usuario/responderPreguntas.xhtml" x="2150" y="150" zoom="true"/>
         <Node id="vistas/admin/provincias.xhtml" x="1900" y="300" zoom="true"/>
-        <Node id="resources/comps/userPanel.xhtml" x="150" y="600" zoom="true"/>
         <Node id="vistas/mostrarPublicacion.xhtml?id=#{misPublicaciones.publicacionId}" x="400" y="1050" zoom="true"/>
+        <Node id="resources/comps/userPanel.xhtml" x="150" y="600" zoom="true"/>
         <Node id="resources/comps/adminPanel.xhtml" x="900" y="450" zoom="true"/>
         <Node id="vistas/resultados.xhtml?art=#{buscarBean.buscar}" x="1150" y="300" zoom="true"/>
         <Node id="vistas/verCategoria.xhtml?id=#{menuCatBean.categoriaSeleccionada}" x="150" y="1050" zoom="true"/>
         <Node id="index.xhtml" x="150" y="450" zoom="true"/>
-        <Node id="resources/comps/loginBox.xhtml" x="1650" y="450" zoom="true"/>
-        <Node id="vistas/usuario/modificarPublicacion.xhtml" x="650" y="750" zoom="true"/>
+        <Node id="vistas/mostrarPublicacion.xhtml?id=#{verCategoriaBean.publicacionSeleccionada}" x="900" y="900" zoom="true"/>
         <Node id="vistas/admin/paises.xhtml" x="900" y="150" zoom="true"/>
-        <Node id="vistas/noEncontrado.xhtml" x="650" y="900" zoom="true"/>
-        <Node id="resources/comps/categoriesMenu.xhtml" x="650" y="150" zoom="true"/>
         <Node id="vistas/usuario/modificarPublicacion.xhtml" x="650" y="750" zoom="true"/>
+        <Node id="resources/comps/loginBox.xhtml" x="1650" y="450" zoom="true"/>
+        <Node id="resources/comps/alquiler.xhtml" x="150" y="1350" zoom="true"/>
+        <Node id="vistas/noEncontrado.xhtml" x="650" y="900" zoom="true"/>
         <Node id="vistas/verCategoria.xhtml?id=#{verCategoriaBean.subcategoriaSeleccionada}" x="1900" y="150" zoom="true"/>
         <Node id="resources/comps/categoriesMenu.xhtml" x="650" y="150" zoom="true"/>
     </Scope>

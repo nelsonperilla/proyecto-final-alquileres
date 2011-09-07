@@ -24,8 +24,8 @@ public class MisPublicacionesMBean {
     @EJB
     private MisPublicacionesBeanLocal misPublicacionesBean;
     @ManagedProperty(value="#{login}")
-    private ManejadorUsuarioMBean usuarioMBean;
-    private List<PublicacionDTO> publicacionesFacade;
+    private ManejadorUsuarioMBean usuarioLogueado;
+    private List<PublicacionDTO> publicacionesDto;
     private int publicacionId;
     
     public MisPublicacionesMBean() {
@@ -34,18 +34,18 @@ public class MisPublicacionesMBean {
     
     @PostConstruct
     public void init() {
-        if( usuarioMBean.getUsuarioId() != null ){
-            publicacionesFacade = misPublicacionesBean.getPublicaciones(usuarioMBean.getUsuarioId());
+        if( usuarioLogueado.getUsuarioId() != null ){
+            publicacionesDto = misPublicacionesBean.getPublicaciones(usuarioLogueado.getUsuarioId());
         }
   
     }
 
-    public List<PublicacionDTO> getPublicacionesFacade() {
-        return publicacionesFacade;
+    public List<PublicacionDTO> getPublicacionesDto() {
+        return publicacionesDto;
     }
 
-    public void setPublicacionesFacade(List<PublicacionDTO> publicacionesFacade) {
-        this.publicacionesFacade = publicacionesFacade;
+    public void setPublicacionesDto(List<PublicacionDTO> publicacionesDto) {
+        this.publicacionesDto = publicacionesDto;
     }
     
 
@@ -57,12 +57,12 @@ public class MisPublicacionesMBean {
         this.misPublicacionesBean = misPublicacionesBean;
     }
 
-    public ManejadorUsuarioMBean getUsuarioMBean() {
-        return usuarioMBean;
+    public ManejadorUsuarioMBean getUsuarioLogueado() {
+        return usuarioLogueado;
     }
 
-    public void setUsuarioMBean(ManejadorUsuarioMBean usuarioMBean) {
-        this.usuarioMBean = usuarioMBean;
+    public void setUsuarioLogueado(ManejadorUsuarioMBean usuarioLogueado) {
+        this.usuarioLogueado = usuarioLogueado;
     }
 
     public int getPublicacionId() {

@@ -33,7 +33,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "AlquilerXEstado.findAll", query = "SELECT a FROM AlquilerXEstado a"),
     @NamedQuery(name = "AlquilerXEstado.findByAlquilerXEstadoId", query = "SELECT a FROM AlquilerXEstado a WHERE a.alquilerXEstadoId = :alquilerXEstadoId"),
     @NamedQuery(name = "AlquilerXEstado.findByFechaDesde", query = "SELECT a FROM AlquilerXEstado a WHERE a.fechaDesde = :fechaDesde"),
-    @NamedQuery(name = "AlquilerXEstado.findByFechaHasta", query = "SELECT a FROM AlquilerXEstado a WHERE a.fechaHasta = :fechaHasta")})
+    @NamedQuery(name = "AlquilerXEstado.findByFechaHasta", query = "SELECT a FROM AlquilerXEstado a WHERE a.fechaHasta = :fechaHasta"),
+    @NamedQuery(name = "AlquilerXEstado.findByAlquiler", query = "SELECT axe FROM AlquilerXEstado axe WHERE axe.alquilerFk.alquilerId = :alquilerId and axe.fechaHasta IS NULL")})
 public class AlquilerXEstado implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -66,6 +67,12 @@ public class AlquilerXEstado implements Serializable {
 
     public AlquilerXEstado(Integer alquilerXEstadoId, Date fechaDesde) {
         this.alquilerXEstadoId = alquilerXEstadoId;
+        this.fechaDesde = fechaDesde;
+    }
+    
+    public AlquilerXEstado( Alquiler a, EstadoAlquiler ea, Date fechaDesde ) {
+        this.alquilerFk = a;
+        this.estadoAlquilerFk = ea;
         this.fechaDesde = fechaDesde;
     }
 

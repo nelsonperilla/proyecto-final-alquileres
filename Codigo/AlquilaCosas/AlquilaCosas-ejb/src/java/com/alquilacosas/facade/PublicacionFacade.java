@@ -260,4 +260,5 @@ public class PublicacionFacade extends AbstractFacade<Publicacion> {
         return em.createQuery(cq).getSingleResult();
     }
     
+    
 }

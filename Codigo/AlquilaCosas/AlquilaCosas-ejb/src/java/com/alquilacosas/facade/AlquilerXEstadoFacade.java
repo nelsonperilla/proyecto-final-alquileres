@@ -6,6 +6,7 @@ package com.alquilacosas.facade;
 
 import com.alquilacosas.ejb.entity.AlquilerXEstado;
 import javax.ejb.Stateless;
+import javax.persistence.Query;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -26,4 +27,11 @@ public class AlquilerXEstadoFacade extends AbstractFacade<AlquilerXEstado> {
         super(AlquilerXEstado.class);
     }
     
+    public AlquilerXEstado findByAlquiler( int alquilerId ){
+        AlquilerXEstado axe = new AlquilerXEstado();
+        Query query = em.createNamedQuery("AlquilerXEstado.findByAlquiler");
+        query.setParameter("alquilerId", alquilerId);
+        axe = (AlquilerXEstado) query.getSingleResult();
+        return axe;
+    }
 }
