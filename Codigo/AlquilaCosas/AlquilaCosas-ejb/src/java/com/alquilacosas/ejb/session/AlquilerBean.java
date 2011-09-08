@@ -85,6 +85,18 @@ public class AlquilerBean implements AlquilerBeanLocal {
     }
     
     @Override
+    public void rechazarPedidoDeAlquiler(Integer alquilerId) throws AlquilaCosasException{
+        
+        try {
+            Alquiler alquiler = alquilerFacade.find(alquilerId);
+            this.rechazarAlquiler(alquiler);
+        } catch (Exception e) {
+            context.getRollbackOnly();
+            System.out.println("El rechazo del alquiler no pudo realizarse" + e.getStackTrace());
+        }
+    }
+    
+    @Override
     public List<AlquilerDTO> getPedidosRecibidos( int usuarioDuenioId ){
         
         Usuario usuarioDuenio = usuariofacade.find(usuarioDuenioId);
@@ -168,9 +180,6 @@ public class AlquilerBean implements AlquilerBeanLocal {
     private List<Date> getIntervaloFechas( Date fechaInicio, Date fechaFin ) {
         
         List<Date> dates = new ArrayList<Date>();
-        DateFormat formatter = null; 
-        formatter = new SimpleDateFormat("dd/MM/yyyy");
-        
         
         long interval = 24*1000 * 60 * 60; // 1 hour in millis
         long endTime = fechaFin.getTime() ; 
@@ -180,9 +189,7 @@ public class AlquilerBean implements AlquilerBeanLocal {
           dates.add(new Date(curTime));
           curTime += interval;
         }
-        for(int i=0;i<dates.size();i++){
-            Date lDate =(Date)dates.get(i);
-        }
+        
         return dates;
     }
     
@@ -198,7 +205,8 @@ public class AlquilerBean implements AlquilerBeanLocal {
     private void rechazarAlquiler( Alquiler alquiler) throws AlquilaCosasException{
         
         this.crearNuevoEstadoDeAlquiler(alquiler, EstadoAlquiler.NombreEstadoAlquiler.PEDIDO_RECHAZADO);
-        this.enviarMail(alquiler, EstadoAlquiler.NombreEstadoAlquiler.PEDIDO_RECHAZADO.name());
+        String estado = this.convertNombreEstadoAlquiler(EstadoAlquiler.NombreEstadoAlquiler.PEDIDO_RECHAZADO);
+        this.enviarMail(alquiler, estado);
     }
     
     private void crearNuevoEstadoDeAlquiler( Alquiler alquiler, EstadoAlquiler.NombreEstadoAlquiler estado){
@@ -219,7 +227,9 @@ public class AlquilerBean implements AlquilerBeanLocal {
         Publicacion publicacion = publicacionFacade.find(alquiler.getPublicacionFk().getPublicacionId());
         Usuario usuario = usuariofacade.find(alquiler.getUsuarioFk().getUsuarioId());
         Usuario usuarioDuenio = usuariofacade.find(publicacion.getUsuarioFk().getUsuarioId());
-        
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        String fechaIncio = formatter.format(alquiler.getFechaInicio());
+        String fechaFin = formatter.format(alquiler.getFechaFin());
         try {
             Connection connection = connectionFactory.createConnection();
             Session session = connection.createSession(true,
@@ -227,11 +237,11 @@ public class AlquilerBean implements AlquilerBeanLocal {
             MessageProducer producer = session.createProducer(destination);
             ObjectMessage message = session.createObjectMessage();
 
-            String asunto = "Tu alquiler por el " + publicacion.getTitulo() + " ha sido" + estadoAlquiler +" ";
+            String asunto = "Tu alquiler por el/la " + publicacion.getTitulo() + " ha sido " + estadoAlquiler +" ";
             String texto = "<html>Hola " + usuario.getNombre() + ", <br/><br/>"
-                    + "El usuario <b>" + usuarioDuenio.getNombre() + "ha "+ estadoAlquiler + " el alquiler de "
-                    +  alquiler.getCantidad() + " articulos desde el" + alquiler.getFechaInicio() + " " 
-                    + "hasta el" + alquiler.getFechaFin() + ". <br/><br/>"
+                    + "El usuario <b>" + usuarioDuenio.getNombre() + "</b> ha <b>"+ estadoAlquiler + "</b> el pedido de alquiler de "
+                    +  alquiler.getCantidad() + " articulos solicitados para la fecha " + fechaIncio + " " 
+                    + "hasta la fecha " + fechaFin + ". <br/><br/>"
                     + "Atentamente, <br/> <b>AlquilaCosas </b>";
             NotificacionEmail notificacion = new NotificacionEmail(usuario.getEmail(), asunto, texto);
             message.setObject(notificacion);
@@ -243,5 +253,29 @@ public class AlquilerBean implements AlquilerBeanLocal {
             throw new AlquilaCosasException("Excepcion al enviar la notificacion" + e.getMessage());
         }
     }
+    
+    private String convertNombreEstadoAlquiler(EstadoAlquiler.NombreEstadoAlquiler estado){
+        String state = null;
+        if( estado.compareTo(EstadoAlquiler.NombreEstadoAlquiler.ACTIVO) == 0 ){
+            state = "activo";
+        }else if( estado.compareTo(EstadoAlquiler.NombreEstadoAlquiler.CANCELADO) == 0 ){
+            state = "cancelado";
+        }else if( estado.compareTo(EstadoAlquiler.NombreEstadoAlquiler.CANCELADO_ALQUILADOR) == 0 ){
+            state = "cancelado por el alquilador";
+        }else if( estado.compareTo(EstadoAlquiler.NombreEstadoAlquiler.CONFIRMADO) == 0 ){
+            state = "confirmado";
+        }else if( estado.compareTo(EstadoAlquiler.NombreEstadoAlquiler.FINALIZADO) == 0 ){
+            state = "finalizado";
+        }else if( estado.compareTo(EstadoAlquiler.NombreEstadoAlquiler.PEDIDO) == 0 ){
+            state = "pedido";
+        }else if( estado.compareTo(EstadoAlquiler.NombreEstadoAlquiler.PEDIDO_CANCELADO) == 0 ){
+            state = "cancelado";
+        }else if( estado.compareTo(EstadoAlquiler.NombreEstadoAlquiler.PEDIDO_RECHAZADO) == 0 ){
+            state = "rechazado";
+        }
+        return state;
+    }
+
+    
     
 }

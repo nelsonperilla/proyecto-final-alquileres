@@ -17,7 +17,7 @@
         <cc:attribute name="userMethod" type="java.lang.String" required="true"/>
         <cc:attribute name="okMethod" type="java.lang.String" required="true"/>
         <cc:attribute name="koMethod" type="java.lang.String" required="true"/>
-        <cc:attribute name="idComponente" type="java.lang.String" required="true"/>
+        <cc:attribute name="lista" type="java.lang.String" required="true"/>
     </cc:interface>
 
     <!-- IMPLEMENTATION -->
@@ -53,10 +53,11 @@
                     <h:panelGrid columns="2" style="padding: 0 10px; text-align: left" width="50px" 
                                  cellspacing="0" cellpadding="0">   
                         <p:commandButton value="SI" actionListener="#{cc.attrs.bean[cc.attrs.okMethod]}"
-                                         update="#{cc.attrs.idComponente}" >
+                                         update="#{cc.attrs.lista}">
                             <f:attribute name="alq" value="#{cc.attrs.var.idAlquiler}" />
                         </p:commandButton>
                         <p:commandButton value="NO" actionListener="#{cc.attrs.bean[cc.attrs.koMethod]}">
+                            <p:collector value="#{cc.attrs.var}" removeFrom="#{cc.attrs.bean[cc.attrs.lista]}" /> 
                             <f:attribute name="alq" value="#{cc.attrs.var.idAlquiler}" />
                         </p:commandButton>
                     </h:panelGrid> 
