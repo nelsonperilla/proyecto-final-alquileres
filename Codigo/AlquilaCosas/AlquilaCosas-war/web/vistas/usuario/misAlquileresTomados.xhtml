@@ -59,7 +59,20 @@
                     
                     <p:dialog modal="true" widgetVar="calificarDlg" header="Calificar">
                          <h:form id="dialogoCalifica">
-                              <h:outputLabel value="lalalal"></h:outputLabel>
+                              <h:panelGrid columns="1" >  
+                                   <h:outputText value="Puntuación:" />
+                                   <h:selectOneMenu id="puntuacion" value="#{alquileresTomados.puntuacion}" >
+                                        <f:selectItems id="itemsPuntuacion" value="#{alquileresTomados.puntuaciones}" />
+                                   </h:selectOneMenu>                                   
+                                   <h:outputText value="Comentario:" />
+                                   <p:inputTextarea id="comentario" value="#{alquileresTomados.comentario}" 
+                                                    style="width:200px;height:100px;" effectDuration="100" maxHeight="255" />
+                                   <f:facet name="footer" >
+                                        <p:commandButton value="Calificar" actionListener="#{alquileresTomados.registrarCalificacion}" 
+                                                         oncomplete="calificarDlg.hide()" update="alquileres tabla" />
+                                        <p:commandButton value="Limpiar" type="reset" />
+                                   </f:facet>
+                              </h:panelGrid>
                          </h:form>
                     </p:dialog>
                </ui:define>

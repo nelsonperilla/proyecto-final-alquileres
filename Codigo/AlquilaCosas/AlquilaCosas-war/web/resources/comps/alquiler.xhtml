@@ -56,17 +56,17 @@
                                  actionListener="#{cc.attrs.bean[cc.attrs.metodoVerCalif]}"
                                  update="#{cc.attrs.dlgVerCalificacionId}" rendered="#{cc.attrs.var.calificado}"
                                  oncomplete="#{cc.attrs.dlgVerCalificacion}.show();" >
-                     <f:attribute name="alq" value="#{cc.attrs.var.id}" />
+                     <f:attribute name="alq" value="#{cc.attrs.var.idAlquiler}" />
                 </p:commandButton>
                 <p:commandButton value="Calificar" update="#{cc.attrs.dlgCalificarId}"
                                  actionListener="#{cc.attrs.bean[cc.attrs.metodoCalificar]}"
                                  rendered="#{not cc.attrs.var.calificado}"
                                  oncomplete="#{cc.attrs.dlgCalificar}.show();" >
-                     <f:attribute name="alq" value="#{cc.attrs.var.id}" />
+                     <f:attribute name="alq" value="#{cc.attrs.var.idAlquiler}" />
                 </p:commandButton>
                 <p:commandButton value="Modificar" rendered="#{cc.attrs.editable}"
                                  action="#{cc.attrs.bean[cc.attrs.metodoModAlq]}" >
-                    <f:setPropertyActionListener value="#{cc.attrs.var.id}" 
+                    <f:setPropertyActionListener value="#{cc.attrs.var.idAlquiler}" 
                                                  target="#{cc.attrs.bean[cc.attrs.propAlquiler]}" />
                 </p:commandButton>
             </h:panelGrid>
