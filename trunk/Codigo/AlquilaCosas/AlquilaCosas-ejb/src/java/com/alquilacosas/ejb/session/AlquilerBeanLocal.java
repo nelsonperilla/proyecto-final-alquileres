@@ -19,4 +19,6 @@ public interface AlquilerBeanLocal {
     public void confirmarPedidoDeAlquiler( int alquilerId )throws AlquilaCosasException;
     
     public List<AlquilerDTO> getPedidosRecibidos( int usuarioDuenioId );
+
+    void rechazarPedidoDeAlquiler(Integer alquilerId)throws AlquilaCosasException;
 }

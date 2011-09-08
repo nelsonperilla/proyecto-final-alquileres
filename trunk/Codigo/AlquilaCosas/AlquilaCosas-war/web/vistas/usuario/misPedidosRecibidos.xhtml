@@ -17,7 +17,7 @@
 
     <ui:define name="left" >
         <comps:categoriesMenu />
-    </ui:define>>
+    </ui:define>
 
     <ui:define name="principal">
 
@@ -37,9 +37,8 @@
                                         propertyAlq="alquilerId"
                                         userMethod="mostrarUsuario"
                                         okMethod="confirmarAlquiler"
-                                        koMethod="misPedidosRechazados"
-                                        idComponente="grid"/>
-
+                                        koMethod="rechazarAlquiler"
+                                        lista="grid"/>
                     </p:column>
 
                 </p:dataTable>

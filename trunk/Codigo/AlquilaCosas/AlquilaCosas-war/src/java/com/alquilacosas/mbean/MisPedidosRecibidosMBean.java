@@ -47,19 +47,38 @@ public class MisPedidosRecibidosMBean {
     public void confirmarAlquiler(ActionEvent event){
         
         try {
-            
             alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
             if( alquilerId == null ){
                 FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
                     "Error al cargar pagina", "No se brindo el id del alquiler");
             FacesContext.getCurrentInstance().addMessage(null, msg);
-         
-            }
-                
+            }    
             alquilerBean.confirmarPedidoDeAlquiler(alquilerId);
+            
             
         } catch (AlquilaCosasException e) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                    "No se pudo confirmar el alquiler", e.getMessage());
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+         
+        }
+    }
+    
+    public void rechazarAlquiler(ActionEvent event){
+        FacesMessage msg = null;
+        
+        try {
+            alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
+            if( alquilerId == null ){
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                    "Error al cargar pagina", "No se brindo el id del alquiler");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            }    
+            alquilerBean.rechazarPedidoDeAlquiler(alquilerId);
+            msg = new FacesMessage("Alquiler Confirmado");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        } catch (AlquilaCosasException e) {
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
                     "No se pudo confirmar el alquiler", e.getMessage());
             FacesContext.getCurrentInstance().addMessage(null, msg);
          
