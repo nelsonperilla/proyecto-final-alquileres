@@ -295,7 +295,7 @@ public class AlquilerBean implements AlquilerBeanLocal {
                     + "Atentamente, <br/> <b>AlquilaCosas </b>";
             NotificacionEmail notificacion = new NotificacionEmail(usuario.getEmail(), asunto, texto);
             message.setObject(notificacion);
-        //    producer.send(message);
+            producer.send(message);
             session.close();
             connection.close();
 
