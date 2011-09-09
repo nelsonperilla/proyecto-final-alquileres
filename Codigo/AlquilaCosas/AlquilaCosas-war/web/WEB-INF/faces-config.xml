@@ -141,5 +141,10 @@
             <to-view-id>/vistas/usuario/misPedidosRecibidos.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>misPedidosRealizados</from-outcome>
+            <to-view-id>/vistas/usuario/misPedidosRealizados.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
     </navigation-rule>
 </faces-config>

@@ -30,6 +30,7 @@ import com.alquilacosas.facade.PrecioFacade;
 import com.alquilacosas.facade.PublicacionFacade;
 import com.alquilacosas.facade.PublicacionXEstadoFacade;
 import com.alquilacosas.facade.UsuarioFacade;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -168,10 +169,12 @@ public class PublicacionBean implements PublicacionBeanLocal {
 
             periodo = periodoBean.getPeriodo(p.getPeriodoNombre());
             precio = new Precio();
-
+            DecimalFormat formatter = new DecimalFormat();
+            formatter.applyPattern("0.0#");
+            String precioHora = formatter.format(precioDiario / 24.0);
             if (p.getPrecio() == 0) {
                 if (p.getPeriodoNombre() == NombrePeriodo.HORA) {
-                    precio.setPrecio(precioDiario / 24.0);
+                    precio.setPrecio(Double.valueOf(precioHora));
                 } else if (p.getPeriodoNombre() == NombrePeriodo.SEMANA) {
                     precio.setPrecio(precioDiario * 7.0);
                 } else if (p.getPeriodoNombre()  == NombrePeriodo.MES) {
@@ -295,13 +298,15 @@ public class PublicacionBean implements PublicacionBeanLocal {
         }
 
         double precioDiario = precios.get(1).getPrecio();
-
+        DecimalFormat formatter = new DecimalFormat();
+        formatter.applyPattern("0.0#");
+        String precioHora = formatter.format(precioDiario / 24.0);
         for (PrecioDTO precioDto : precios) {
 
             if (precioDto.getPrecio() == 0.0) {
                 
                 if (precioDto.getPeriodoNombre() == NombrePeriodo.HORA) {
-                    precioDto.setPrecio(precioDiario / 24.0);
+                    precioDto.setPrecio(Double.valueOf(precioHora));
                 } else if (precioDto.getPeriodoNombre() == NombrePeriodo.SEMANA) {
                     precioDto.setPrecio(precioDiario * 7.0);
                 } else if (precioDto.getPeriodoNombre() == NombrePeriodo.MES) {

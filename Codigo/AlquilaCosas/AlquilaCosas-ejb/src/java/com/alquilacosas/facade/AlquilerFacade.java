@@ -7,6 +7,7 @@ package com.alquilacosas.facade;
 import com.alquilacosas.ejb.entity.Alquiler;
 import com.alquilacosas.ejb.entity.EstadoAlquiler;
 import com.alquilacosas.ejb.entity.Publicacion;
+import com.alquilacosas.ejb.entity.Usuario;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -75,6 +76,14 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
                 + "AND ( ea.nombre = :estado1 OR ea.nombre = :estado2 ) ");
         query.setParameter("estado1", EstadoAlquiler.NombreEstadoAlquiler.CONFIRMADO);
         query.setParameter("estado2", EstadoAlquiler.NombreEstadoAlquiler.ACTIVO);
+        alquileres = query.getResultList();
+        return alquileres;
+    }
+    
+    public List<Alquiler> getAlquileresPorUsuario( Usuario usuario ){
+        List<Alquiler> alquileres = null;
+        Query query = em.createNamedQuery("Alquiler.findByUsuario");
+        query.setParameter("usuario", usuario);
         alquileres = query.getResultList();
         return alquileres;
     }

@@ -110,7 +110,8 @@
                         
                         <h:outputLabel value="Minimo: " /> 
                         <p:inputText id="MinimoId" value="#{publicacion.periodoMinimo}" required="true"
-                                     requiredMessage="Valor requerido"/>
+                                     requiredMessage="Valor requerido"
+                                     style="text-align: right; margin-left: 3px; width: 50px"/>
                         <h:selectOneMenu id="minimo" value="#{publicacion.selectedPeriodoMinimo}" >
                                 <f:selectItem itemLabel="Seleccione un periodo" itemValue="" />
                                 <f:selectItems value="#{publicacion.periodoMinimos}" />
@@ -118,8 +119,9 @@
                         <p:message id="MinimoVal" for="MinimoId"/>
                         
                         <h:outputLabel value="Maximo: " /> 
-                        <p:inputText id="MaximoId" value="#{publicacion.periodoMaximo}" />
-                        <h:selectOneMenu id="manimo" value="#{publicacion.selectedPeriodoMaximo}" >
+                        <p:inputText id="MaximoId" value="#{publicacion.periodoMaximo}" 
+                                     style="text-align: right; margin-left: 3px; width: 50px"/>
+                        <h:selectOneMenu id="maximo" value="#{publicacion.selectedPeriodoMaximo}" >
                                 <f:selectItem itemLabel="Seleccione un periodo" itemValue="" />
                                 <f:selectItems value="#{publicacion.periodoMaximos}" />
                         </h:selectOneMenu>
