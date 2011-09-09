@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,8 +22,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -43,87 +40,27 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Publicacion.findByFechaDesde", query = "SELECT p FROM Publicacion p WHERE p.fechaDesde = :fechaDesde"),
     @NamedQuery(name = "Publicacion.findByFechaHasta", query = "SELECT p FROM Publicacion p WHERE p.fechaHasta = :fechaHasta"),
     @NamedQuery(name = "Publicacion.findByDestacada", query = "SELECT p FROM Publicacion p WHERE p.destacada = :destacada"),
-    @NamedQuery(name = "Publicacion.findByCantidad", query = "SELECT p FROM Publicacion p WHERE p.cantidad = :cantidad"),
-    @NamedQuery(name = "Publicacion.findByPalabraClave", 
-        query = "SELECT p FROM Publicacion p, PublicacionXEstado pxe WHERE pxe.estadoPublicacion.nombre = ?2 "
-        + "AND pxe.fechaHasta IS NULL AND pxe.publicacion.publicacionId = p.publicacionId AND "
-        + "((p.titulo LIKE ?1) OR (p.descripcion LIKE ?1))"),
-    @NamedQuery(name = "Publicacion.countByPalabraClave", 
-        query = "SELECT COUNT(p.publicacionId) FROM Publicacion p, PublicacionXEstado pxe WHERE pxe.estadoPublicacion.nombre = ?2 "
-        + "AND pxe.fechaHasta IS NULL AND pxe.publicacion.publicacionId = p.publicacionId AND "
-        + "(p.titulo LIKE ?1 OR p.descripcion LIKE ?1)"),
-    @NamedQuery(name = "Publicacion.findByCategoria", 
-        query = "SELECT p FROM Publicacion p, PublicacionXEstado pxe WHERE pxe.estadoPublicacion.nombre = :estado"
-        + " AND pxe.fechaHasta IS NULL AND pxe.publicacion.publicacionId = p.publicacionId AND (p.categoriaFk = :categoriaFk OR p.categoriaFk.categoriaFk = :categoriaFk)"),
-    @NamedQuery(name = "Publicacion.countByCategoria", 
-        query = "SELECT COUNT(p.publicacionId) FROM Publicacion p, PublicacionXEstado pxe WHERE pxe.estadoPublicacion.nombre = :estado"
-        + " AND pxe.fechaHasta IS NULL AND pxe.publicacion.publicacionId = p.publicacionId AND (p.categoriaFk = :categoriaFk OR p.categoriaFk.categoriaFk = :categoriaFk)"),
-    @NamedQuery(name = "Publicacion.findByPalabraClaveAndCat", 
-        query = "SELECT p FROM Publicacion p WHERE p.categoriaFk = :categoriaFk AND (p.titulo LIKE ?1 OR "
-        + "p.descripcion LIKE ?1)"),
-    @NamedQuery(name = "Publicacion.countByPalabraClaveAndCat", 
-        query = "SELECT COUNT(p.publicacionId) FROM Publicacion p WHERE p.categoriaFk = :categoriaFk AND (p.titulo LIKE ?1 OR "
-        + "p.descripcion LIKE ?1)"),
-    @NamedQuery(name = "Publicacion.findByPalabraAndUbicacion", 
-        query = "SELECT p FROM Publicacion p, Usuario u, Domicilio d WHERE p.usuarioFk.usuarioId = u.usuarioId AND d.usuarioFk.usuarioId = u.usuarioId AND (p.titulo LIKE ?1 OR "
-        + "p.descripcion LIKE ?1) AND (d.barrio LIKE ?2 OR d.ciudad LIKE ?2)"),
-    @NamedQuery(name = "Publicacion.countByPalabraAndUbicacion", 
-        query = "SELECT COUNT(p.publicacionId) FROM Publicacion p, Usuario u, Domicilio d WHERE p.usuarioFk.usuarioId = u.usuarioId AND d.usuarioFk.usuarioId = u.usuarioId AND (p.titulo LIKE ?1 OR "
-        + "p.descripcion LIKE ?1) AND (d.barrio LIKE ?2 OR d.ciudad LIKE ?2)"),
-    @NamedQuery(name = "Publicacion.findByPalabraCategoriaUbicacion", 
-        query = "SELECT p FROM Publicacion p, Usuario u, Domicilio d WHERE p.categoriaFk = :categoriaFk AND p.usuarioFk.usuarioId = u.usuarioId AND d.usuarioFk.usuarioId = u.usuarioId AND (p.titulo LIKE ?1 OR "
-        + "p.descripcion LIKE ?1) AND (d.barrio LIKE ?2 OR d.ciudad LIKE ?2)"),
-    @NamedQuery(name = "Publicacion.countByPalabraCategoriaUbicacion", 
-        query = "SELECT COUNT(p.publicacionId) FROM Publicacion p, Usuario u, Domicilio d WHERE p.categoriaFk = :categoriaFk AND p.usuarioFk.usuarioId = u.usuarioId AND d.usuarioFk.usuarioId = u.usuarioId AND (p.titulo LIKE ?1 OR "
-        + "p.descripcion LIKE ?1) AND (d.barrio LIKE ?2 OR d.ciudad LIKE ?2)"),
-    @NamedQuery(name = "Publicacion.findByPalabraCategoriaPrecio", 
-        query = "SELECT p FROM Publicacion p, Precio pre WHERE p.categoriaFk = :categoriaFk AND (p.titulo LIKE ?1 OR "
-        + "p.descripcion LIKE ?1) AND pre.publicacionFk = p AND pre.periodoFk = :periodoFk AND pre.precio BETWEEN ?2 AND ?3"),
-    @NamedQuery(name = "Publicacion.countByPalabraCategoriaPrecio", 
-        query = "SELECT COUNT(p.publicacionId) FROM Publicacion p, Precio pre WHERE p.categoriaFk = :categoriaFk AND (p.titulo LIKE ?1 OR "
-        + "p.descripcion LIKE ?1) AND pre.publicacionFk = p AND pre.periodoFk = :periodoFk AND pre.precio BETWEEN ?2 AND ?3")})
+    @NamedQuery(name = "Publicacion.findByCantidad", query = "SELECT p FROM Publicacion p WHERE p.cantidad = :cantidad")})
 public class Publicacion implements Serializable {
     
     private static final long serialVersionUID = 1L;
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "PUBLICACION_ID")
     private Integer publicacionId;
     
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
     @Column(name = "TITULO")
     private String titulo;
     
-    @Size(max = 2000)
     @Column(name = "DESCRIPCION")
     private String descripcion;
     
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "DESTACADA")
     private boolean destacada;
     
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "CANTIDAD")
     private int cantidad;
-    
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "FECHA_DESDE")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaDesde;
-    
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "FECHA_HASTA")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaHasta;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "publicacionFk")
     private List<Alquiler> alquilerList;
@@ -161,6 +98,17 @@ public class Publicacion implements Serializable {
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "publicacionFk")
     private List<Precio> precioList;
+    
+    @Column(name = "FECHA_DESDE")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaDesde;
+    
+    @Column(name = "FECHA_HASTA")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaHasta;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "publicacionFk")
+    private List<ServicioDestacacion> servicioDestacacionList;
 
     public Publicacion() {
         imagenPublicacionList = new ArrayList<ImagenPublicacion>();
@@ -191,6 +139,7 @@ public class Publicacion implements Serializable {
     
     public ImagenPublicacion removerImagen(ImagenPublicacion imagen) {
         imagenPublicacionList.remove(imagen);
+        imagen.setPublicacionFk(null);
         return imagen;
     }
     
@@ -395,6 +344,15 @@ public class Publicacion implements Serializable {
 
     public void setMinPeriodoAlquilerFk(Periodo minPeriodoAlquilerFk) {
         this.minPeriodoAlquilerFk = minPeriodoAlquilerFk;
+    }
+
+    @XmlTransient
+    public List<ServicioDestacacion> getServicioDestacacionList() {
+        return servicioDestacacionList;
+    }
+
+    public void setServicioDestacacionList(List<ServicioDestacacion> servicioDestacacionList) {
+        this.servicioDestacacionList = servicioDestacacionList;
     }
 
 }

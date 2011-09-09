@@ -5,10 +5,6 @@
 package com.alquilacosas.ejb.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -18,12 +14,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -47,28 +40,25 @@ public class EstadoAlquiler implements Serializable {
     PEDIDO_CANCELADO, PEDIDO_RECHAZADO, CANCELADO_ALQUILADOR, CANCELADO}
     
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "ESTADO_ALQUILER_ID")
     private Integer estadoAlquilerId;
     
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 50)
-    @Column(name = "NOMBRE")
     @Enumerated(EnumType.STRING)
+    @Column(name = "NOMBRE")
     private NombreEstadoAlquiler nombre;
     
     @Size(max = 150)
     @Column(name = "DESCRIPCION")
     private String descripcion;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "estadoAlquilerFk")
-    private List<AlquilerXEstado> alquilerXEstadoList;
+    
+    //@OneToMany(cascade = CascadeType.ALL, mappedBy = "estadoAlquilerFk")
+    //private List<AlquilerXEstado> alquilerXEstadoList;
 
     public EstadoAlquiler() {
-        alquilerXEstadoList = new ArrayList<AlquilerXEstado>();
+        //alquilerXEstadoList = new ArrayList<AlquilerXEstado>();
     }
 
     public EstadoAlquiler(Integer estadoAlquilerId) {
@@ -80,15 +70,15 @@ public class EstadoAlquiler implements Serializable {
         this.nombre = nombre;
     }
     
-    public void agregarAlquilerXEstado( AlquilerXEstado axe ){
-        this.alquilerXEstadoList.add(axe);
-        axe.setEstadoAlquilerFk(this);
-    }
-    
-    public void removerAlquilerXEstado( AlquilerXEstado axe ){
-        this.alquilerXEstadoList.remove(axe);
-        axe.setEstadoAlquilerFk(null);
-    }
+//    public void agregarAlquilerXEstado( AlquilerXEstado axe ){
+//        this.alquilerXEstadoList.add(axe);
+//        axe.setEstadoAlquilerFk(this);
+//    }
+//    
+//    public void removerAlquilerXEstado( AlquilerXEstado axe ){
+//        this.alquilerXEstadoList.remove(axe);
+//        axe.setEstadoAlquilerFk(null);
+//    }
 
     public Integer getEstadoAlquilerId() {
         return estadoAlquilerId;
@@ -114,14 +104,14 @@ public class EstadoAlquiler implements Serializable {
         this.descripcion = descripcion;
     }
 
-    @XmlTransient
-    public List<AlquilerXEstado> getAlquilerXEstadoList() {
-        return alquilerXEstadoList;
-    }
-
-    public void setAlquilerXEstadoList(List<AlquilerXEstado> alquilerXEstadoList) {
-        this.alquilerXEstadoList = alquilerXEstadoList;
-    }
+//    @XmlTransient
+//    public List<AlquilerXEstado> getAlquilerXEstadoList() {
+//        return alquilerXEstadoList;
+//    }
+//
+//    public void setAlquilerXEstadoList(List<AlquilerXEstado> alquilerXEstadoList) {
+//        this.alquilerXEstadoList = alquilerXEstadoList;
+//    }
 
     @Override
     public int hashCode() {

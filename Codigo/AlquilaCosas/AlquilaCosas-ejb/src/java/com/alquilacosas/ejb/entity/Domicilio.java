@@ -5,7 +5,6 @@
 package com.alquilacosas.ejb.entity;
 
 import java.io.Serializable;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,7 +15,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -36,11 +34,23 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Domicilio.findByDepto", query = "SELECT d FROM Domicilio d WHERE d.depto = :depto"),
     @NamedQuery(name = "Domicilio.findByBarrio", query = "SELECT d FROM Domicilio d WHERE d.barrio = :barrio")})
 public class Domicilio implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "DOMICILIO_ID")
+    private Integer domicilioId;
+    
+    @Column(name = "CALLE")
+    private String calle;
+    
+    @Column(name = "NUMERO")
+    private int numero;
+    
     @Column(name = "PISO")
     private Integer piso;
     
-    @Basic(optional = false)
-    @NotNull
     @Size(min = 1, max = 100)
     @Column(name = "CIUDAD")
     private String ciudad;
@@ -49,34 +59,10 @@ public class Domicilio implements Serializable {
     @ManyToOne(optional = false)
     private Provincia provinciaFk;
     
-    private static final long serialVersionUID = 1L;
     
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "DOMICILIO_ID")
-    private Integer domicilioId;
-    
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
-    @Column(name = "CALLE")
-    private String calle;
-    
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "NUMERO")
-    private int numero;
-    
-    @Basic(optional = false)
-    @Size(max = 45)
     @Column(name = "DEPTO")
     private String depto;
     
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
     @Column(name = "BARRIO")
     private String barrio;
     

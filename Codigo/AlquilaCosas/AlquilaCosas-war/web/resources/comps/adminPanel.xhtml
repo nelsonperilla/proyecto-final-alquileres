@@ -13,7 +13,8 @@
     <cc:implementation>
         <p:outputPanel rendered="#{login.administrador}">
             <h:form >
-                <p:panel header="Administracion" styleClass="controlPanel" >
+                <p:panel styleClass="controlPanel" >
+                    <h3 style="color:gainsboro; margin-top: 1px">Administracion</h3>
                     <h:panelGrid columns="1" cellpadding="2" style="width: 100%; text-align: center">
                         <h:commandLink value="Categorias" action="categorias" />
                         <h:commandLink value="Usuarios" action="administrarUsuarios" />

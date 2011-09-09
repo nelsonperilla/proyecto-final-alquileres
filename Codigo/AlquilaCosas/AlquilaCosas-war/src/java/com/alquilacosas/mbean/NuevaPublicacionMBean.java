@@ -65,6 +65,8 @@ public class NuevaPublicacionMBean implements Serializable {
     
     private Date today;
     private List<byte[]> imagenes;
+    
+    private Integer publicacionId;
 
 
     @PostConstruct
@@ -123,7 +125,7 @@ public class NuevaPublicacionMBean implements Serializable {
         try {
             Calendar hoy = Calendar.getInstance();
             hoy.add(Calendar.DATE, 60);
-            if( selectedPeriodoMaximo == null )
+             if( selectedPeriodoMaximo == null )
                 selectedPeriodoMaximo = 0;
             publicacionBean.registrarPublicacion( titulo, descripcion,
                     new Date(), hoy.getTime(), destacada, cantidad,
@@ -134,7 +136,7 @@ public class NuevaPublicacionMBean implements Serializable {
             context.addMessage(null,
                     new FacesMessage("Publicacion Creada"));
 
-            return "misPublicaciones";
+            return "destacarPublicacion";
 
         } catch (AlquilaCosasException e) {
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
@@ -429,6 +431,14 @@ public class NuevaPublicacionMBean implements Serializable {
 
     public void setSubcategoria3Render(boolean subcategoria3Render) {
         this.subcategoria3Render = subcategoria3Render;
+    }
+
+    public Integer getPublicacionId() {
+        return publicacionId;
+    }
+
+    public void setPublicacionId(Integer publicacionId) {
+        this.publicacionId = publicacionId;
     }
 
     public List<SelectItem> getSubcategorias1() {

@@ -33,25 +33,24 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "VariableDeSistema.findByValorNumerico", query = "SELECT v FROM VariableDeSistema v WHERE v.valorNumerico = :valorNumerico"),
     @NamedQuery(name = "VariableDeSistema.findByValorString", query = "SELECT v FROM VariableDeSistema v WHERE v.valorString = :valorString")})
 public class VariableDeSistema implements Serializable {
+    
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "VARIABLE_ID")
     private Integer variableId;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
+    
     @Column(name = "NOMBRE")
     private String nombre;
-    @Size(max = 255)
+    
     @Column(name = "DESCRIPCION")
     private String descripcion;
+    
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "VALOR_NUMERICO")
     private Double valorNumerico;
-    @Size(max = 255)
+    
     @Column(name = "VALOR_STRING")
     private String valorString;
 

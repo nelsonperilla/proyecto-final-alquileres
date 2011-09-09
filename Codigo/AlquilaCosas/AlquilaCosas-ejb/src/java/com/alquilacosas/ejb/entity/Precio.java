@@ -6,7 +6,6 @@ package com.alquilacosas.ejb.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,7 +18,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -40,18 +38,12 @@ public class Precio implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "PRECIO_ID")
     private Integer precioId;
     
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "PRECIO")
     private double precio;
     
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "FECHA_DESDE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaDesde;
@@ -124,14 +116,6 @@ public class Precio implements Serializable {
         return "com.alquilacosas.ejb.entity.Precio[ precioId=" + precioId + " ]";
     }
 
-    public double getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(double precio) {
-        this.precio = precio;
-    }
-
     public Date getFechaDesde() {
         return fechaDesde;
     }
@@ -146,6 +130,14 @@ public class Precio implements Serializable {
 
     public void setFechaHasta(Date fechaHasta) {
         this.fechaHasta = fechaHasta;
+    }
+
+    public double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(double precio) {
+        this.precio = precio;
     }
     
 }

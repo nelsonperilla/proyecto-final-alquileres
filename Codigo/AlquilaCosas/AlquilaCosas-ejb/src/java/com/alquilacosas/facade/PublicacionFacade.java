@@ -17,6 +17,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
@@ -43,6 +44,17 @@ public class PublicacionFacade extends AbstractFacade<Publicacion> {
 
     public PublicacionFacade() {
         super(Publicacion.class);
+    }
+    
+    public List<Publicacion> getPublicacionesInicio() {
+        String q = "SELECT p FROM Publicacion p, PublicacionXEstado pxe, EstadoPublicacion e"
+                + " WHERE pxe.publicacion.publicacionId = p.publicacionId AND "
+                + "pxe.estadoPublicacion.estadoPublicacionId = e.estadoPublicacionId "
+                + "AND e.nombre = :estado ORDER BY p.destacada DESC, p.fechaDesde DESC";
+        TypedQuery<Publicacion> query = em.createQuery(q, Publicacion.class);
+        query.setParameter("estado", NombreEstadoPublicacion.ACTIVA);
+        query.setMaxResults(10);
+        return query.getResultList();
     }
     
     public List<Publicacion> findPublicaciones(String palabra, Integer categoriaId,
@@ -91,19 +103,19 @@ public class PublicacionFacade extends AbstractFacade<Publicacion> {
         if(periodoId != null && periodoId != 0 && (precioDesde != null || precioHasta != null)) {
             Join<Publicacion, Precio> joinPrecio = root.join("precioList");
             Path expPeriod = ((Path)joinPrecio.as(Precio.class)).get("periodoFk").get("periodoId");
-            Path expPrecio = ((Path)joinPrecio.as(Precio.class)).get("precio");
+            Path expPrecio = ((Path)joinPrecio.as(Precio.class));
             
             Predicate pred0 = criteriaBuilder.equal(expPeriod, periodoId);
             Predicate pred1 = criteriaBuilder.isNull(expPrecio.get("fechaHasta"));
             Predicate pred2 = null;
             if(precioDesde != null && precioHasta != null) {
-                pred2 = criteriaBuilder.between(expPrecio, precioDesde, precioHasta);
+                pred2 = criteriaBuilder.between(expPrecio.get("precio"), precioDesde, precioHasta);
             }
             else if(precioDesde != null && precioHasta == null) {
-                pred2 = criteriaBuilder.greaterThanOrEqualTo(expPrecio, precioDesde);
+                pred2 = criteriaBuilder.greaterThanOrEqualTo(expPrecio.get("precio"), precioDesde);
             }
             else if(precioDesde == null && precioHasta != null) {
-                pred2 = criteriaBuilder.lessThanOrEqualTo(expPrecio, precioHasta);
+                pred2 = criteriaBuilder.lessThanOrEqualTo(expPrecio.get("precio"), precioHasta);
             }
             predicates.add(pred0);
             predicates.add(pred1);
@@ -123,6 +135,8 @@ public class PublicacionFacade extends AbstractFacade<Publicacion> {
         Predicate[] predicateArray = new Predicate[predicates.size()];
         predicates.toArray(predicateArray);
         cq.where(predicateArray);
+        
+        cq.orderBy(criteriaBuilder.desc(root.get("destacada")));
         
         Query query = em.createQuery(cq);
         query.setMaxResults(registros);
@@ -172,19 +186,19 @@ public class PublicacionFacade extends AbstractFacade<Publicacion> {
         if(periodoId != null && periodoId != 0 && (precioDesde != null || precioHasta != null)) {
             Join<Publicacion, Precio> joinPrecio = root.join("precioList");
             Path expPeriod = ((Path)joinPrecio.as(Precio.class)).get("periodoFk").get("periodoId");
-            Path expPrecio = ((Path)joinPrecio.as(Precio.class)).get("precio");
+            Path expPrecio = ((Path)joinPrecio.as(Precio.class));
             
             Predicate pred0 = criteriaBuilder.equal(expPeriod, periodoId);
             Predicate pred1 = criteriaBuilder.isNull(expPrecio.get("fechaHasta"));
             Predicate pred2 = null;
             if(precioDesde != null && precioHasta != null) {
-                pred2 = criteriaBuilder.between(expPrecio, precioDesde, precioHasta);
+                pred2 = criteriaBuilder.between(expPrecio.get("precio"), precioDesde, precioHasta);
             }
             else if(precioDesde != null && precioHasta == null) {
-                pred2 = criteriaBuilder.greaterThanOrEqualTo(expPrecio, precioDesde);
+                pred2 = criteriaBuilder.greaterThanOrEqualTo(expPrecio.get("precio"), precioDesde);
             }
             else if(precioDesde == null && precioHasta != null) {
-                pred2 = criteriaBuilder.lessThanOrEqualTo(expPrecio, precioHasta);
+                pred2 = criteriaBuilder.lessThanOrEqualTo(expPrecio.get("precio"), precioHasta);
             }
             predicates.add(pred0);
             predicates.add(pred1);
@@ -208,7 +222,7 @@ public class PublicacionFacade extends AbstractFacade<Publicacion> {
         return em.createQuery(cq).getSingleResult();
     }
     
-    public List<Publicacion> findByCategoria(int categoriaId, int registros, int desde) {
+    public List<Publicacion> findByCategoria(List<Integer> categoriaIds, int registros, int desde) {
         
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<Publicacion> cq =  criteriaBuilder.createQuery(Publicacion.class);
@@ -217,46 +231,79 @@ public class PublicacionFacade extends AbstractFacade<Publicacion> {
         EntityType<Publicacion> Publicacion_ = m.entity(Publicacion.class);
         
         Root<Publicacion> root = cq.from(Publicacion_);
+        List<Predicate> predicates = new ArrayList<Predicate>();
         
         Join<Publicacion, PublicacionXEstado> join = root.join("publicacionXEstadoList");
         Path exp1 = ((Path)join.as(PublicacionXEstado.class)).get("fechaHasta");
         Predicate predicate1 = criteriaBuilder.isNull(exp1);
+        predicates.add(predicate1);
         
         Join<PublicacionXEstado, EstadoPublicacion> join2 = join.join("estadoPublicacion");
         Path exp2 = ((Path) join2.as(EstadoPublicacion.class)).get("nombre");
         Predicate predicate2 = criteriaBuilder.equal(exp2, NombreEstadoPublicacion.ACTIVA);
+        predicates.add(predicate2);
         
-//        Predicate predicate2 = criteriaBuilder.equal(((Path)join.as(EstadoPublicacion.class)).
-//                get("estadoPublicacion").get("nombre"), NombreEstadoPublicacion.ACTIVA);
+        Path expCat = root.get("categoriaFk");
+        List<Predicate> orPredicates = new ArrayList<Predicate>();
         
-        Predicate predicate3 = criteriaBuilder.equal(root.get("categoriaFk").get("categoriaId"), categoriaId);
+        for(Integer i: categoriaIds) {
+            Predicate p = criteriaBuilder.equal(expCat.get("categoriaId"), i);
+            orPredicates.add(p);
+        }
+        Predicate[] orPredicateArray = new Predicate[orPredicates.size()];
+        orPredicates.toArray(orPredicateArray);
         
-        cq.where(predicate1, predicate2, predicate3);
+        Predicate orPredicate = criteriaBuilder.or(orPredicateArray);
+        predicates.add(orPredicate);
+        
+        Predicate[] predicateArray = new Predicate[predicates.size()];
+        predicates.toArray(predicateArray);
+        cq.where(predicateArray);
+        cq.orderBy(criteriaBuilder.desc(root.get("destacada")));
         Query query = em.createQuery(cq);
         query.setMaxResults(registros);
         query.setFirstResult(desde);
         return query.getResultList();
+        
     }
     
-    public Long countByCategoria(int categoriaId) {
+    public Long countByCategoria(List<Integer> categoriaIds) {
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<Long> cq =  criteriaBuilder.createQuery(Long.class);
-        Root<Publicacion> root = cq.from(Publicacion.class);
+        
+        Metamodel m = em.getMetamodel();
+        EntityType<Publicacion> Publicacion_ = m.entity(Publicacion.class);
+        Root<Publicacion> root = cq.from(Publicacion_);
+        
+        List<Predicate> predicates = new ArrayList<Predicate>();
         
         Join<Publicacion, PublicacionXEstado> join = root.join("publicacionXEstadoList");
         Path exp1 = ((Path)join.as(PublicacionXEstado.class)).get("fechaHasta");
         Predicate predicate1 = criteriaBuilder.isNull(exp1);
+        predicates.add(predicate1);
         
         Join<PublicacionXEstado, EstadoPublicacion> join2 = join.join("estadoPublicacion");
         Path exp2 = ((Path) join2.as(EstadoPublicacion.class)).get("nombre");
         Predicate predicate2 = criteriaBuilder.equal(exp2, NombreEstadoPublicacion.ACTIVA);
+        predicates.add(predicate2);
         
-//        Predicate predicate2 = criteriaBuilder.equal(((Path)join.as(EstadoPublicacion.class)).
-//                get("estadoPublicacion").get("nombre"), NombreEstadoPublicacion.ACTIVA);        
-        Predicate predicate3 = criteriaBuilder.equal(root.get("categoriaFk").get("categoriaId"), categoriaId);
+        Path expCat = root.get("categoriaFk");
+        List<Predicate> orPredicates = new ArrayList<Predicate>();
         
+        for(Integer i: categoriaIds) {
+            Predicate p = criteriaBuilder.equal(expCat.get("categoriaId"), i);
+            orPredicates.add(p);
+        }
+        Predicate[] orPredicateArray = new Predicate[orPredicates.size()];
+        orPredicates.toArray(orPredicateArray);
+        
+        Predicate orPredicate = criteriaBuilder.or(orPredicateArray);
+        predicates.add(orPredicate);
+        
+        Predicate[] predicateArray = new Predicate[predicates.size()];
+        predicates.toArray(predicateArray);
+        cq.where(predicateArray);
         cq.select(criteriaBuilder.count(root));
-        cq.where(predicate1, predicate2, predicate3);
         return em.createQuery(cq).getSingleResult();
     }
     

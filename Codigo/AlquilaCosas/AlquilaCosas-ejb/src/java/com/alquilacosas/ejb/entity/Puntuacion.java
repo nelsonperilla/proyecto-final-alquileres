@@ -18,7 +18,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -36,25 +35,26 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Puntuacion.findByNombre", query = "SELECT p FROM Puntuacion p WHERE p.nombre = :nombre"),
     @NamedQuery(name = "Puntuacion.findByPuntaje", query = "SELECT p FROM Puntuacion p WHERE p.puntaje = :puntaje")})
 public class Puntuacion implements Serializable {
+    
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "PUNTUACION_ID")
     private Integer puntuacionId;
+    
     @Basic(optional = false)
-    @NotNull
     @Size(min = 1, max = 50)
     @Column(name = "NOMBRE")
     private String nombre;
+    
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "PUNTAJE")
     private BigDecimal puntaje;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "puntuacionFk")
     private List<Reputacion> reputacionList;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "puntuacionFk")
     private List<Calificacion> calificacionList;
 

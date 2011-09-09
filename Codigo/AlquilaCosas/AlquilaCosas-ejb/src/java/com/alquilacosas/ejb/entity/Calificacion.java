@@ -6,7 +6,6 @@ package com.alquilacosas.ejb.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,7 +18,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -38,32 +36,29 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Calificacion.findByFechaReplica", query = "SELECT c FROM Calificacion c WHERE c.fechaReplica = :fechaReplica"),
     @NamedQuery(name = "Calificacion.findByComentarioReplica", query = "SELECT c FROM Calificacion c WHERE c.comentarioReplica = :comentarioReplica")})
 public class Calificacion implements Serializable {
+    
     private static final long serialVersionUID = 1L;
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "CALIFICACION_ID")
     private Integer calificacionId;
-    
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "FECHA_CALIFICACION")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaCalificacion;
     
     @Size(max = 255)
     @Column(name = "COMENTARIO_CALIFICADOR")
     private String comentarioCalificador;
     
-    @Column(name = "FECHA_REPLICA")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaReplica;
-    
     @Size(max = 255)
     @Column(name = "COMENTARIO_REPLICA")
     private String comentarioReplica;
+    
+    @Column(name = "FECHA_CALIFICACION")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaCalificacion;
+    
+    @Column(name = "FECHA_REPLICA")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaReplica;
     
     @JoinColumn(name = "PUNTUACION_FK", referencedColumnName = "PUNTUACION_ID")
     @ManyToOne(optional = false)

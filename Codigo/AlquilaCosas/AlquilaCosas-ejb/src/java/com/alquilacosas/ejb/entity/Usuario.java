@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,8 +20,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Pattern;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -43,57 +41,34 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Usuario.findByDni", query = "SELECT u FROM Usuario u WHERE u.dni = :dni"),
     @NamedQuery(name = "Usuario.findByFechaNac", query = "SELECT u FROM Usuario u WHERE u.fechaNac = :fechaNac")})
 public class Usuario implements Serializable {
-    @Basic(optional = false)
-    @NotNull
+
     @Column(name = "FECHA_NAC")
     @Temporal(TemporalType.DATE)
     private Date fechaNac;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
-    private List<Reputacion> reputacionList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
-    private List<Alquiler> alquilerList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
-    private List<Pago> pagoList;
-    @OneToMany(mappedBy = "usuarioReplicadorFk")
-    private List<Calificacion> calificacionList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioCalificadorFk")
-    private List<Calificacion> calificacionList1;
+    private List<Publicidad> publicidadList;
     
     private static final long serialVersionUID = 1L;
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "USUARIO_ID")
     private Integer usuarioId;
     
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
     @Column(name = "NOMBRE")
     private String nombre;
     
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
     @Column(name = "APELLIDO")
     private String apellido;
     
-    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
+    @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     @Column(name = "EMAIL")
     private String email;
     
-    @Size(max = 45)
     @Column(name = "TELEFONO")
     private String telefono;
     
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
     @Column(name = "DNI")
     private String dni;
     
@@ -107,6 +82,9 @@ public class Usuario implements Serializable {
     private List<Publicacion> publicacionList;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
+    private List<Servicio> servicioList;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
     private List<Comentario> comentarioList;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
@@ -117,6 +95,18 @@ public class Usuario implements Serializable {
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
     private List<Suspension> suspensionList;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
+    private List<Reputacion> reputacionList;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
+    private List<Alquiler> alquilerList;
+    
+    @OneToMany(mappedBy = "usuarioReplicadorFk")
+    private List<Calificacion> calificacionList;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioCalificadorFk")
+    private List<Calificacion> calificacionList1;
 
     public Usuario() {
         domicilioList = new ArrayList<Domicilio>();
@@ -177,6 +167,14 @@ public class Usuario implements Serializable {
         publicacionList.remove(publicacion);
         publicacion.setUsuarioFk(this);
         return publicacion;
+    }
+    
+    public Publicacion getPublicacion(int publicacionId) {
+        for(Publicacion p: publicacionList) {
+            if(p.getPublicacionId() == publicacionId) 
+                return p;
+        }
+        return null;
     }
 
     public Integer getUsuarioId() {
@@ -317,15 +315,6 @@ public class Usuario implements Serializable {
     }
 
     @XmlTransient
-    public List<Pago> getPagoList() {
-        return pagoList;
-    }
-
-    public void setPagoList(List<Pago> pagoList) {
-        this.pagoList = pagoList;
-    }
-
-    @XmlTransient
     public List<Calificacion> getCalificacionList() {
         return calificacionList;
     }
@@ -341,6 +330,23 @@ public class Usuario implements Serializable {
 
     public void setCalificacionList1(List<Calificacion> calificacionList1) {
         this.calificacionList1 = calificacionList1;
+    }
+    
+    @XmlTransient
+    public List<Publicidad> getPublicidadList() {
+        return publicidadList;
+    }
+
+    public void setPublicidadList(List<Publicidad> publicidadList) {
+        this.publicidadList = publicidadList;
+    }
+
+    public List<Servicio> getServicioList() {
+        return servicioList;
+    }
+
+    public void setServicioList(List<Servicio> servicioList) {
+        this.servicioList = servicioList;
     }
 
     @Override

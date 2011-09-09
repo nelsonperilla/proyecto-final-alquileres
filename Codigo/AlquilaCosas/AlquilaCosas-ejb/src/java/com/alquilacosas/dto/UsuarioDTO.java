@@ -4,16 +4,14 @@
  */
 package com.alquilacosas.dto;
 
-import com.alquilacosas.ejb.entity.Rol;
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 /**
  *
  * @author damiancardozo
  */
-public class UsuarioDTO {
+public class UsuarioDTO implements Serializable {
     
     private Integer id;
     private String nombre, apellido, email, telefono, dni;

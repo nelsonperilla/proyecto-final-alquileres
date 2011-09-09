@@ -180,34 +180,6 @@ h1, h2, h3 {
     width: 300px;
 }
 
-
-#items .item{
-    background-image:url(../resources/images/item.png);
-    padding: 0px 0px 0px 0px; 
-    height: 100px;
-    width: 600px;
-    font-size: 24px;
-    font-family: Ubuntu;
-    color: #2c2c2c;  
-}
-
-#items .itemInfo{
-    font-size: 14px;
-    text-overflow: ellipsis;
-    white-space: nowrap; 
-    overflow: hidden;
-    font-family: Trebuchet MS;
-    padding: 1px 1px 1px 1px;
-}
-
-
-#items .itemTitle{
-    font-size: 16px;    
-    font-family: Trebuchet MS;
-    color: #0066ff;
-    text-decoration: underline;
-}
-
 #simpleItem .dataPrincipal {
     border-right-style: solid;
     border-left-style: solid;
@@ -417,7 +389,7 @@ h1, h2, h3 {
     text-align: right;
 }
 
-/* Data table en resultados.xhtml */
+/* Data table que contiene publicaciones (itemInfo) */
 
 .ui-datatable.itemsTable table {
     border: none !important;
@@ -447,23 +419,6 @@ h1, h2, h3 {
     border: none !important;
 } /* Fin de data table en resultados.xhtml */
 
-.itemImgCol {
-    width: 40px;
-    padding: 2px 2px 2px 5px;
-}
-
-.itemContentCol {
-    width: 320px;
-    text-align: left;
-    font-size: 14px;
-}
-
-.itemPriceCol {
-    text-align: left;
-    width: 130px;
-    font-size: 14px;
-}
-
 .filtroActual {
     font-size: 15px;
     font-weight: bold;
@@ -479,9 +434,11 @@ h1, h2, h3 {
 }
 
 .controlPanel {
-    background-image: -moz-linear-gradient(top, #0620E2, #384CE2 40px, #6F7DE8 12px, #E0E3F8);
+/*    background-image: -moz-linear-gradient(top, #0620E2, #384CE2 40px, #6F7DE8 12px, #E0E3F8);
     background-image: -webkit-gradient(linear, left top, left bottom, from(#0620E2), 
-        color-stop(0.3, #384CE2), color-stop(0.3, #6F7DE8), to(#E0E3F8));   
+		    color-stop(0.3, #384CE2), color-stop(0.3, #6F7DE8), to(#E0E3F8));   */
+    background-image: -moz-linear-gradient(top, #0620E2, #384CE2 20px, #6F7DE8 12px, #E0E3F8);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#0620E2), to(#E0E3F8));
     width: 100%; 
     text-align: center;
 
@@ -496,25 +453,7 @@ h1, h2, h3 {
     margin-bottom: 10px;
 }
 
-/* Menu Categorias --------------------- */
-/*
-#category {
-    border-right-style: solid;
-    border-left-style: solid;
-    border-bottom-style: solid;
-    border-top-style: solid;
-    border-right-width: 1px;
-    border-left-width: 1px;
-    border-bottom-width: 1px;
-    border-top-width: 1px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-    border-right-color: #d2d0d0;
-    border-left-color: #d2d0d0;
-    border-bottom-color: #d2d0d0;
-    border-top-color: #d2d0d0; 
-    padding: 2px 2px 2px 2px;
-}*/
+/* ------- Menu categorias ---------- */
 
 #category ul {
     list-style: none; /* Remove the bullets */
@@ -523,27 +462,22 @@ h1, h2, h3 {
     width:200px; /* Menu width */
     z-index: 1000;
 }
-
 #category a {
     color: #000;
     text-decoration: none;
     font-family: Tahoma;
     font-size: 17px;
 }
-
 #category ul li {
     display: block; /* Make a menu item a block (height 100%, width 100%) */
     height:100%;
     width:100%;
     position: relative;
-    /*background: lightskyblue;*/
-    /*background-image: -moz-linear-gradient(top, #0620E2, #384CE2 14px, #4F7DE8 12px, #E0E3F8);*/
     background-image: -moz-linear-gradient(top, #E0E3F8, #4F7DE8 14px, #384CE2 12px, #0620E2);
     background-image: -webkit-gradient(linear, left top, left bottom, from(#E0E3F8), 
         color-stop(0.3, #4F7DE8), color-stop(0.3, #384CE2), to(#0620E2)); 
     border-bottom:1px solid #fff;
     float:left; /* Make sure (in IE) there is no margin between the menu items */
-    /*    border: 1px solid goldenrod;*/
 }
 #category ul li a{
     display:block; /* When rollover the menu item, the whole item will be seen as link. */
@@ -551,12 +485,12 @@ h1, h2, h3 {
 }
 #category ul li a:hover {
     color: #fff;
-    /*background: cornflowerblue;*/
     background-image: -moz-linear-gradient(top, #0620E2, #384CE2 14px, #4F7DE8 12px, #E0E3F8);
     background-image: -webkit-gradient(linear, left top, left bottom, from(#E0E3F8), 
         color-stop(0.3, #4F7DE8), color-stop(0.3, #384CE2), to(#0620E2)); 
 
 }
+/* Fin Menu categorias */
 
 /* Primer submenu */
 #category ul ul {
@@ -598,6 +532,138 @@ h1, h2, h3 {
     background-image: -moz-linear-gradient(top, #0101DF, #2E2EFE 14px, #5858FA 12px, #A9BCF5) !important;
     background-image: -webkit-gradient(linear, left top, left bottom, from(#0101DF), 
         color-stop(0.3, #2E2EFE), color-stop(0.3, #5858FA), to(#A9BCF5)) !important;
+}
+
+/* -------- Item info (publicacion) styles ---------- */
+
+.item{
+    background-image:url(../resources/images/item.png);
+    margin-top: 5px;    
+/*    -moz-border-radius: 10px;
+    background: -moz-linear-gradient(top, #E9FDFE, white);
+     Chrome, Safari:
+    background: -webkit-gradient(linear,
+                left top, left bottom, from(#E9FDFE), to(white));
+    border-radius: 10px;
+    border: 1px solid cornflowerblue;*/
+    padding: 0px 0px 0px 0px; 
+    height: 100px;
+    width: 600px;
+    font-size: 24px;
+    color: #2c2c2c;
+}
+
+.itemDestacado {
+/*    background: url(../resources/images/item.png) no-repeat;
+    background-size: 600px,120px; */
+    margin-top: 3px;    
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    border: 2px solid cornflowerblue;
+    background: -moz-linear-gradient(top, cornflowerblue, white);
+    /* Chrome, Safari:*/
+    background: -webkit-gradient(linear,
+                left top, left bottom, from(cornflowerblue), to(white));
+    /*background-color: #E9FDFE; */
+    display: block;
+    padding: 0px 0px 0px 0px; 
+    height: 120px;
+    width: 600px;
+    font-size: 28px;
+    font-family: Ubuntu;
+    color: #2c2c2c; 
+}
+
+/*.itemInfo{
+    font-size: 14px;
+    text-overflow: ellipsis;
+    white-space: nowrap; 
+    overflow: hidden;
+    font-family: Trebuchet MS;
+    padding: 1px 1px 1px 1px;
+}*/
+
+
+.itemTitle{
+    font-size: 16px;    
+    font-family: Trebuchet MS;
+    color: #0066ff;
+    text-decoration: underline;
+}
+
+.itemDestacado .itemTitle {
+    font-size: 20px;  
+}
+
+.itemDestacado .imagenPublicacion {
+    border: 1px solid gray; 
+    margin-top: 7px;
+}
+
+.item .imagenPublicacion {
+    border: 1px solid gray; 
+    margin-top: 5px;
+}
+
+.editColumn {
+    width: 50px;
+    font-weight: bold;
+    text-align: left;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: small;
+}
+
+.editColumn a:hover {
+    color: #6a6a6a;
+}
+
+.precioColDesc {
+    text-align: left;
+    
+}
+
+.precioColValor {
+    text-align: left;
+    font-weight: bold;
+    font-family: Arial,Helvetica,sans-serif;
+}
+
+.itemImgCol {
+    width: 50px;
+    padding: 2px 2px 2px 5px;
+}
+
+.itemContentCol {
+    width: 300px;
+    text-align: left;
+    font-size: 14px;
+}
+
+.itemPriceCol {
+    text-align: left;
+    width: 150px;
+    font-size: 14px;
+}
+/* fin itemInfo styles */
+
+/* ---------- estilos Alquiler (composite) --------*/
+.itemAlquiler {
+    margin: 10px;    
+    -moz-border-radius: 10px;
+    background: -moz-linear-gradient(top, cornflowerblue, white);
+    /* Chrome, Safari:*/
+    background: -webkit-gradient(linear,
+                left top, left bottom, from(cornflowerblue), to(white));
+    border-radius: 10px;
+}
+
+/* tabla destacarPublicacion */
+.titleRow {
+    font-weight: bold;
+    border: 1px solid black;
+}
+.dataRow {
+    
 }
 
 #div1

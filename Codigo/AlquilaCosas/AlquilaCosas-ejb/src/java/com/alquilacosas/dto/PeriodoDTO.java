@@ -5,12 +5,13 @@
 package com.alquilacosas.dto;
 
 import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
+import java.io.Serializable;
 
 /**
  *
  * @author damiancardozo
  */
-public class PeriodoDTO {
+public class PeriodoDTO implements Serializable  {
     
     private int id;
     private NombrePeriodo nombre;

@@ -38,4 +38,10 @@ public class PrecioFacade extends AbstractFacade<Precio> {
         return precios;
     }
     
+    public List<Precio> findByPublicacion(Publicacion publicacion) {
+        Query query = em.createNamedQuery("Precio.findByPublicacion");
+        query.setParameter("publicacion", publicacion);
+        return query.getResultList();   
+    }
+    
 }

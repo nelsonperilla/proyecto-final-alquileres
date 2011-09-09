@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:comps="http://java.sun.com/jsf/composite/comps"
+      xmlns:p="http://primefaces.prime.com.tr/ui" 
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" >
+
+    <body>
+
+        <ui:composition template="./../../resources/templates/masterPage.xhtml">
+
+            <ui:define name="logInfo">
+                <h:form>
+                    <h:commandLink value="Inicio" action="inicio" />
+                </h:form>
+            </ui:define>
+
+            <ui:define name="left">
+                <comps:categoriesMenu />
+            </ui:define>
+
+            <ui:define name="principal">
+                <p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide();"/>
+                <p:dialog modal="true" widgetVar="statusDialog" header="Espere por favor..." 
+                          draggable="false" closable="false">
+                    <p:graphicImage value="#{resource['images:ajaxLoadingBar.gif']}" />
+                </p:dialog>
+
+                <h:form>
+                    <h1>Destacar Publicacion</h1>
+                    <p>
+                        De hacerlo, la misma aparecera antes que otras publicaciones no destacadas, y de
+                        esta forma esta incrementando las posibilidades de que su producto sea alquilado.
+                    </p>
+                    <h:panelGrid columns="3" cellpadding="5" style="text-align: center; border: 1px solid black" >
+                        <h:outputLabel value="Titulo" />
+                        <h:outputLabel value="Fecha de publicacion" />
+                        <h:outputLabel value="Fecha de finalizacion" />
+
+                        <h:outputText value="#{destacarBean.tituloPublicacion}" />
+                        <h:outputText value="#{destacarBean.fechaPublicacion}" >
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                        <h:outputText value="#{destacarBean.fechaFinalizacion}" >
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </h:panelGrid>
+                    <p>
+                        El servicio tiene un costo de $<h:outputText value="#{destacarBean.precio}" />
+                    </p>
+                    <h:panelGrid columns="2" rowClasses="titleRow,dataRow" >
+                        <p:commandLink actionListener="#{destacarBean.destacar}" >
+                            <h:graphicImage value="#{resource['images:paypalCheckout.gif']}" />
+                        </p:commandLink>
+                        <p:commandButton value="No, gracias" action="misPublicaciones" ajax="false" />
+                    </h:panelGrid>
+                    <p:growl id="growl" globalOnly="true" />
+                </h:form>
+            </ui:define>
+
+            <ui:define name="right">
+                <comps:loginBox />
+                <comps:adminPanel />
+                <comps:userPanel />
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

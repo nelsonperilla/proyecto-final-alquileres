@@ -29,10 +29,11 @@
                     <p:column>
 
                         <comps:itemInfo var="#{pub}" bean="#{misPublicaciones}"
-                                        method="mostrarPublicacion" 
+                                        method="mostrarPublicacion"
                                         property="publicacionId"
                                         editable="true"
-                                        editMethod="editarPublicacion"/>
+                                        editMethod="editarPublicacion"
+                                        deleteMethod="borrarPublicacion" />
 
                     </p:column>
 

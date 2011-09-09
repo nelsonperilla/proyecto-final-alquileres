@@ -4,13 +4,14 @@
  */
 package com.alquilacosas.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  *
  * @author jorge
  */
-public class ComentarioDTO {
+public class ComentarioDTO implements Serializable  {
     
     private int id;
     private String comentario;

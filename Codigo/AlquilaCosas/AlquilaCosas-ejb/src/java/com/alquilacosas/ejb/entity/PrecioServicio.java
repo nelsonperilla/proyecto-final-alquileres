@@ -6,7 +6,6 @@ package com.alquilacosas.ejb.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,7 +18,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -36,28 +34,28 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "PrecioServicio.findByFechaDesde", query = "SELECT p FROM PrecioServicio p WHERE p.fechaDesde = :fechaDesde"),
     @NamedQuery(name = "PrecioServicio.findByFechaHasta", query = "SELECT p FROM PrecioServicio p WHERE p.fechaHasta = :fechaHasta")})
 public class PrecioServicio implements Serializable {
+    
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "PRECIO_SERVICIO_ID")
     private Integer precioServicioId;
-    @Basic(optional = false)
-    @NotNull
+    
     @Column(name = "PRECIO")
     private double precio;
-    @Basic(optional = false)
-    @NotNull
+    
     @Column(name = "FECHA_DESDE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaDesde;
+    
     @Column(name = "FECHA_HASTA")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaHasta;
-    @JoinColumn(name = "SERVICIO_FK", referencedColumnName = "SERVICIO_ID")
+    
+    @JoinColumn(name = "TIPO_SERVICIO_FK", referencedColumnName = "TIPO_SERVICIO_ID")
     @ManyToOne(optional = false)
-    private Servicio servicioFk;
+    private TipoServicio tipoServicioFk;
 
     public PrecioServicio() {
     }
@@ -103,13 +101,13 @@ public class PrecioServicio implements Serializable {
     public void setFechaHasta(Date fechaHasta) {
         this.fechaHasta = fechaHasta;
     }
-
-    public Servicio getServicioFk() {
-        return servicioFk;
+    
+    public TipoServicio getTipoServicioFk() {
+        return tipoServicioFk;
     }
 
-    public void setServicioFk(Servicio servicioFk) {
-        this.servicioFk = servicioFk;
+    public void setTipoServicioFk(TipoServicio tipoServicioFk) {
+        this.tipoServicioFk = tipoServicioFk;
     }
 
     @Override

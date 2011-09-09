@@ -4,6 +4,7 @@
  */
 package com.alquilacosas.dto;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
  *
  * @author damiancardozo
  */
-public class CategoriaDTO {
+public class CategoriaDTO implements Serializable  {
     
     private int id, padreId;
     private String nombre, descripcion;

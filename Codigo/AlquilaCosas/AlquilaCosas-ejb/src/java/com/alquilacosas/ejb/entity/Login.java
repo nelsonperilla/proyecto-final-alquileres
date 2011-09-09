@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,7 +23,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -46,42 +44,34 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Login.findByUsuarioFk", query = "SELECT l FROM Login l WHERE l.usuarioFk = :usuarioFk")})
 public class Login implements Serializable {
     
-    private static final long serialVersionUID = 1L;
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "LOGIN_ID")
-    private Integer loginId;
-    
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
-    @Column(name = "USERNAME")
-    private String username;
-    
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
-    @Column(name = "PASSWORD")
-    private String password;
-    
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
-    @Column(name = "CODIGO_ACTIVACION")
-    private String codigoActivacion;
-    
-    @Basic(optional =     false)
-    @NotNull
+    //@Basic(optional = false)
+    //@NotNull
     @Column(name = "FECHA_CREACION")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;
     
-    @Column(name =     "FECHA_ULTIMO_INGRESO")
+    @Column(name = "FECHA_ULTIMO_INGRESO")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaUltimoIngreso;
+    
+    private static final long serialVersionUID = 1L;
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "LOGIN_ID")
+    private Integer loginId;
+    
+    @Size(min = 1, max = 45)
+    @Column(name = "USERNAME")
+    private String username;
+    
+    @Size(min = 1, max = 45)
+    @Column(name = "PASSWORD")
+    private String password;
+    
+    @Size(min = 1, max = 45)
+    @Column(name = "CODIGO_ACTIVACION")
+    private String codigoActivacion;
     
     @JoinTable(name = "LOGIN_X_ROL", joinColumns = {
         @JoinColumn(name = "LOGIN_FK", referencedColumnName = "LOGIN_ID")}, inverseJoinColumns = {
@@ -116,7 +106,6 @@ public class Login implements Serializable {
     
     public void removerRol(Rol rol) {
         rolList.remove(rol);
-        rol.removerLogin(this);
     }
 
     public Integer getLoginId() {

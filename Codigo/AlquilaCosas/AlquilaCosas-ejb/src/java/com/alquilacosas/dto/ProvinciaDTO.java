@@ -2,13 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.alquilacosas.common;
+package com.alquilacosas.dto;
 
 /**
  *
  * @author wilson
  */
-public class ProvinciaFacade {
+public class ProvinciaDTO {
      private int id, paisId;
      private String nombre, paisNombre;
 
@@ -20,7 +20,7 @@ public class ProvinciaFacade {
           this.paisNombre = paisNombre;
      }
      
-     public ProvinciaFacade(int Id, String Nombre, int PaisId, String PaisNombre) {
+     public ProvinciaDTO(int Id, String Nombre, int PaisId, String PaisNombre) {
           id=Id;
           nombre=Nombre;
           paisId=PaisId;

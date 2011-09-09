@@ -4,9 +4,7 @@
  */
 package com.alquilacosas.facade;
 
-import com.alquilacosas.dto.PeriodoDTO;
 import com.alquilacosas.ejb.entity.Periodo;
-import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -46,8 +44,7 @@ public class PeriodoFacade extends AbstractFacade<Periodo> {
         
     }
     
-    public List<Periodo> getPeriodosOrderByHoras()
-    {
+    public List<Periodo> getPeriodosOrderByHoras() {
         Query query = em.createNamedQuery("Periodo.findAll");
         return query.getResultList();   
     }

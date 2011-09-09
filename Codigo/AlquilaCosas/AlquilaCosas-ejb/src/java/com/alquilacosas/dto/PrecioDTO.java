@@ -5,6 +5,7 @@
 package com.alquilacosas.dto;
 
 import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  *
  * @author ignaciogiagante
  */
-public class PrecioDTO {
+public class PrecioDTO implements Serializable  {
     
     private int periodoId;
     private int precioId;

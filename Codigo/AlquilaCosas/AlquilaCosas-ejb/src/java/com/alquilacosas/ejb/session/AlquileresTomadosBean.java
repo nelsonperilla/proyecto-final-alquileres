@@ -59,9 +59,6 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
           return alquileresDTO;
      }
 
-     // Add business logic below. (Right-click in editor and choose
-     // "Insert Code > Add Business Method")
-
      @Override
      public Alquiler getAlquilerPorId(int alquilerId) {
           Alquiler alquiler = entityManager.find(Alquiler.class, alquilerId);

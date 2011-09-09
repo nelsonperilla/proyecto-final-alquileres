@@ -22,35 +22,35 @@ import javax.ejb.Local;
 @Local
 public interface PublicacionBeanLocal {
     
-    void registrarPublicacion( String titulo, String descripcion, 
-            Date fecha_desde, Date fecha_hasta, boolean destacada, int cantidad,
+    public Integer registrarPublicacion( String titulo, String descripcion, 
+            Date fechaDesde, Date fechaHasta, boolean destacada, int cantidad,
             int usuarioId, int categoria, List<PrecioDTO> precios, 
             List<byte[]> imagenes, int periodoMinimo, int periodoMinimoFK, 
             int periodoMaximo, int periodoMaximoFk ) throws AlquilaCosasException;
 
-    PublicacionDTO getPublicacion(int id);
+    public PublicacionDTO getPublicacion(int id);
 
-    List<ComentarioDTO> getPreguntas(int publicationId);
+    public List<ComentarioDTO> getPreguntas(int publicationId);
 
-    void setPregunta(int publicacionId,ComentarioDTO nuevaPregunta) 
+    public void setPregunta(int publicacionId,ComentarioDTO nuevaPregunta) 
             throws AlquilaCosasException;
     
-    List<ComentarioDTO> getPreguntasSinResponder(int usuarioId);
+    public List<ComentarioDTO> getPreguntasSinResponder(int usuarioId);
     
-    void setRespuesta(ComentarioDTO preguntaConRespuesta)
+    public void setRespuesta(ComentarioDTO preguntaConRespuesta)
             throws AlquilaCosasException ;
 
-    PublicacionDTO getDatosPublicacion(int publicacionId) throws AlquilaCosasException;
+    public PublicacionDTO getDatosPublicacion(int publicacionId) throws AlquilaCosasException;
 
-    void actualizarPublicacion( int publicacionId, String titulo, String descripcion, 
+    public void actualizarPublicacion( int publicacionId, String titulo, String descripcion, 
             Date fecha_desde, Date fecha_hasta, boolean destacada, int cantidad,
             int usuarioId, int categoria, List<PrecioDTO> precios, 
             List<byte[]> imagenesAgregar, List<Integer> imagenesABorrar, 
             NombreEstadoPublicacion estadoPublicacion  ) throws AlquilaCosasException;
     
-    List<Periodo> getPeriodos();
+
+    public List<Periodo> getPeriodos();
     
     public List<Date> getFechasSinStock(int publicationId, int cantidad);
 
-    public void borrarPublicacion( Integer publicacionId ) throws AlquilaCosasException;
 }

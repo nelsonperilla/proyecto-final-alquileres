@@ -6,7 +6,6 @@ package com.alquilacosas.ejb.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,7 +18,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -36,22 +34,21 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "PublicacionXEstado.findByFechaDesde", query = "SELECT p FROM PublicacionXEstado p WHERE p.fechaDesde = :fechaDesde"),
     @NamedQuery(name = "PublicacionXEstado.findByFechaHasta", query = "SELECT p FROM PublicacionXEstado p WHERE p.fechaHasta = :fechaHasta")})
 public class PublicacionXEstado implements Serializable {
-    @Basic(optional = false)
-    @NotNull
+    
+    private static final long serialVersionUID = 1L;
+    
+    @Id()
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "PUBLICACION_X_ESTADO_ID")
+    private Integer publicacionXEstadoId;
+    
     @Column(name = "FECHA_DESDE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaDesde;
-    @Column(name = "FECHA_HASTA")
+    
+    @Column(name =     "FECHA_HASTA")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaHasta;
-    
-    private static final long serialVersionUID = 1L;
-    @Id()
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "PUBLICACION_X_ESTADO_ID")
-    private Integer publicacionXEstadoId;
     
     @JoinColumn(name = "ESTADO_FK", referencedColumnName = "ESTADO_PUBLICACION_ID")
     @ManyToOne(optional = false)

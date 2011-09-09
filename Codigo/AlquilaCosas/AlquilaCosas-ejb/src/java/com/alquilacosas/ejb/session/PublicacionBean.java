@@ -107,8 +107,8 @@ public class PublicacionBean implements PublicacionBeanLocal {
 
     @Override
     @RolesAllowed({"USUARIO", "ADMIN"})
-    public void registrarPublicacion(String titulo, String descripcion,
-            Date fecha_desde, Date fecha_hasta, boolean destacada, int cantidad,
+    public Integer registrarPublicacion(String titulo, String descripcion,
+            Date fechaDesde, Date fechaHasta, boolean destacada, int cantidad,
             int usuarioId, int categoria, List<PrecioDTO> precios,
             List<byte[]> imagenes, int periodoMinimo, int periodoMinimoFk, 
             int periodoMaximo, int periodoMaximoFk) throws AlquilaCosasException {
@@ -116,8 +116,12 @@ public class PublicacionBean implements PublicacionBeanLocal {
         Publicacion publicacion = new Publicacion();
         publicacion.setTitulo(titulo);
         publicacion.setDescripcion(descripcion);
-        publicacion.setFechaDesde(fecha_desde);
-        publicacion.setFechaHasta(fecha_hasta);
+        publicacion.setFechaDesde(new Date());
+        
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.MONTH, 2);
+        publicacion.setFechaHasta(calendar.getTime());
         publicacion.setDestacada(destacada);
         publicacion.setCantidad(cantidad);
 
@@ -191,6 +195,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
 
             precio.setFechaDesde(new Date());
             precio.setPeriodoFk(periodo);
+            precio.setFechaDesde(new Date());
             publicacion.agregarPrecio(precio);
         }
 
@@ -202,7 +207,8 @@ public class PublicacionBean implements PublicacionBeanLocal {
         }
 
         usuario.agregarPublicacion(publicacion);
-        publicacionFacade.create(publicacion);
+        publicacion = publicacionFacade.create(publicacion);
+        return publicacion.getPublicacionId();
     }
 
     @Override
@@ -260,6 +266,12 @@ public class PublicacionBean implements PublicacionBeanLocal {
             List<byte[]> imagenesAgregar, List<Integer> imagenesABorrar,
             NombreEstadoPublicacion estadoPublicacion) throws AlquilaCosasException {
 
+//        Usuario usuario = usuarioFacade.find(usuarioId);
+//        Publicacion publicacion = usuario.getPublicacion(publicacionId);
+//        
+//        if(publicacion == null) {
+//            throw new AlquilaCosasException("No se encontro la Publicacion seleccionada");
+//        }
         Publicacion publicacion = null;
         try {
             publicacion = publicacionFacade.find(publicacionId);
@@ -336,9 +348,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
             ip.setImagen(imagen);
             publicacion.agregarImagen(ip);
         }
-        publicacionFacade.edit(publicacion); 
-        publicacionFacade.refresh(publicacion);
-
+        publicacion = publicacionFacade.edit(publicacion);
     }
 
     @Override
@@ -353,7 +363,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
                     publicacion.getCantidad());
 
             Domicilio domicilio = publicacion.getUsuarioFk().getDomicilioList().get(0);
-            resultado.setPais(domicilio.getProvinciaFk().getPaisFk().getNombre());
+            resultado.setProvincia(domicilio.getProvinciaFk().getNombre());
             resultado.setCiudad(domicilio.getProvinciaFk().getNombre());
             resultado.setBarrio(domicilio.getBarrio());
 
@@ -376,12 +386,6 @@ public class PublicacionBean implements PublicacionBeanLocal {
             imagenes.add(new Integer(-1));
         }
         return imagenes;
-    }
-    
-    @Override
-    public void borrarPublicacion( Integer publicacionId ) throws AlquilaCosasException{
-        Publicacion p = publicacionFacade.find(publicacionId);
-        publicacionFacade.remove(p);
     }
 
     @Override
