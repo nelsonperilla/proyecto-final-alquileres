@@ -25,7 +25,6 @@ import javax.faces.event.ActionEvent;
 @RequestScoped
 public class MisPedidosRecibidosMBean {
     
-    
     @EJB
     private AlquilerBeanLocal alquilerBean;
     @ManagedProperty(value = "#{login}")
@@ -45,22 +44,22 @@ public class MisPedidosRecibidosMBean {
     }
     
     public void confirmarAlquiler(ActionEvent event){
-        
+        FacesMessage msg = null;
         try {
             alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
             if( alquilerId == null ){
-                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
                     "Error al cargar pagina", "No se brindo el id del alquiler");
             FacesContext.getCurrentInstance().addMessage(null, msg);
             }    
             alquilerBean.confirmarPedidoDeAlquiler(alquilerId);
-            
-            
+            pedidosRecibidos = alquilerBean.getPedidosRecibidos(usuarioLogueado.getUsuarioId());
+            msg = new FacesMessage("Alquiler Confirmado");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (AlquilaCosasException e) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
                     "No se pudo confirmar el alquiler", e.getMessage());
             FacesContext.getCurrentInstance().addMessage(null, msg);
-         
         }
     }
     
@@ -75,7 +74,8 @@ public class MisPedidosRecibidosMBean {
             FacesContext.getCurrentInstance().addMessage(null, msg);
             }    
             alquilerBean.rechazarPedidoDeAlquiler(alquilerId);
-            msg = new FacesMessage("Alquiler Confirmado");
+            pedidosRecibidos = alquilerBean.getPedidosRecibidos(usuarioLogueado.getUsuarioId());
+            msg = new FacesMessage("Alquiler Rechazado");
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (AlquilaCosasException e) {
                 msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 

@@ -123,6 +123,27 @@ public class AlquilerBean implements AlquilerBeanLocal {
         return pedidos;
     }
     
+    @Override
+    public List<AlquilerDTO> getPedidosRealizados(Integer usuarioId) {
+        
+        Usuario usuario = usuariofacade.find(usuarioId);
+        List<Alquiler> alquileres = alquilerFacade.getAlquileresPorUsuario(usuario);
+        List<AlquilerDTO> pedidos = new ArrayList<AlquilerDTO>();
+        
+        for( Alquiler a : alquileres ){
+            
+            Publicacion p = a.getPublicacionFk();
+            Integer imagenId = this.getIdImagenPrincipal( p );
+            EstadoAlquiler ea = estadoAlquilerFacade.getEstadoAlquiler(a.getAlquilerId());
+            
+            AlquilerDTO alquilerDto = new AlquilerDTO( p.getPublicacionId(), p.getTitulo(),
+                            usuarioId, a.getAlquilerId(), a.getFechaInicio(), 
+                            a.getFechaFin(), a.getCantidad(), ea, imagenId);
+            pedidos.add(alquilerDto);
+        }
+        return pedidos;
+    }
+    
     //mover este método a donde corresponde
     private Integer getIdImagenPrincipal( Publicacion publicacion ) {
         List<Integer> imagenes = new ArrayList<Integer>();
@@ -275,7 +296,5 @@ public class AlquilerBean implements AlquilerBeanLocal {
         }
         return state;
     }
-
-    
-    
+ 
 }

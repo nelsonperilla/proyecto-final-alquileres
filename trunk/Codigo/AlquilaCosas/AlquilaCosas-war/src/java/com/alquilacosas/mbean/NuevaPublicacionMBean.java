@@ -8,7 +8,6 @@ import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.CategoriaDTO;
 import com.alquilacosas.dto.PeriodoDTO;
 import com.alquilacosas.dto.PrecioDTO;
-import com.alquilacosas.ejb.entity.Periodo;
 import com.alquilacosas.ejb.session.CategoriaBeanLocal;
 import com.alquilacosas.ejb.session.PeriodoAlquilerBeanLocal;
 import com.alquilacosas.ejb.session.PublicacionBeanLocal;
@@ -65,7 +64,7 @@ public class NuevaPublicacionMBean implements Serializable {
     private List<SelectItem> periodoMinimos;
     private int selectedPeriodoMinimo;
     private List<SelectItem> periodoMaximos;
-    private int selectedPeriodoMaximo;
+    private Integer selectedPeriodoMaximo;
     
     private Date today;
     private List<byte[]> imagenes;
@@ -125,6 +124,8 @@ public class NuevaPublicacionMBean implements Serializable {
         try {
             Calendar hoy = Calendar.getInstance();
             hoy.add(Calendar.DATE, 60);
+            if( selectedPeriodoMaximo == null )
+                selectedPeriodoMaximo = 0;
             publicacionBean.registrarPublicacion( titulo, descripcion,
                     new Date(), hoy.getTime(), destacada, cantidad,
                     login.getUsuarioId(), categoria, precios, imagenes,
@@ -394,11 +395,11 @@ public class NuevaPublicacionMBean implements Serializable {
         this.periodoMinimos = periodoMinimos;
     }
 
-    public int getSelectedPeriodoMaximo() {
+    public Integer getSelectedPeriodoMaximo() {
         return selectedPeriodoMaximo;
     }
 
-    public void setSelectedPeriodoMaximo(int selectedPeriodoMaximo) {
+    public void setSelectedPeriodoMaximo(Integer selectedPeriodoMaximo) {
         this.selectedPeriodoMaximo = selectedPeriodoMaximo;
     }
 

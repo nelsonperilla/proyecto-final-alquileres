@@ -24,13 +24,13 @@
         <div id="items" >
             <h:form prependId="false">
 
-                <p:dataTable id="grid" value="#{misPedidosRecibidos.pedidos}" var="alquiler" 
+                <p:dataTable id="grid" value="#{misPedidosRealizados.pedidosRealizados}" var="alquiler" 
                              rows="10" paginator="true" paginatorPosition="bottom"
                              styleClass="itemsTable" >
 
                     <p:column>
 
-                        <comps:itemPedido var="#{alquiler}" bean="#{misPedidosRecibidos}"
+                        <comps:itemPedido var="#{alquiler}" bean="#{misPedidosRealizados}"
                                         pubMethod="mostrarPublicacion" 
                                         propertyPub="publicacionId"
                                         propertyUser="usuarioId"
@@ -38,8 +38,7 @@
                                         userMethod="mostrarUsuario"
                                         metodoAceptar="confirmarAlquiler"
                                         metodoRechazar="rechazarAlquiler"
-                                        lista="grid"
-                                        confirmable="true"/>
+                                        lista="grid"/>
                     </p:column>
 
                 </p:dataTable>

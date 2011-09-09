@@ -15,9 +15,10 @@
         <cc:attribute name="propertyUser" type="java.lang.String" required="true" />
         <cc:attribute name="propertyAlq" type="java.lang.String" required="true" />
         <cc:attribute name="userMethod" type="java.lang.String" required="true"/>
-        <cc:attribute name="okMethod" type="java.lang.String" required="true"/>
-        <cc:attribute name="koMethod" type="java.lang.String" required="true"/>
+        <cc:attribute name="metodoAceptar" type="java.lang.String" required="true"/>
+        <cc:attribute name="metodoRechazar" type="java.lang.String" required="true"/>
         <cc:attribute name="lista" type="java.lang.String" required="true"/>
+        <cc:attribute name="confirmable" type="java.lang.Boolean" default="false" />
     </cc:interface>
 
     <!-- IMPLEMENTATION -->
@@ -52,12 +53,12 @@
                     
                     <h:panelGrid columns="2" style="padding: 0 10px; text-align: left" width="50px" 
                                  cellspacing="0" cellpadding="0">   
-                        <p:commandButton value="SI" actionListener="#{cc.attrs.bean[cc.attrs.okMethod]}"
-                                         update="#{cc.attrs.lista}">
+                        <p:commandButton value="SI" actionListener="#{cc.attrs.bean[cc.attrs.metodoAceptar]}"
+                                         update="#{cc.attrs.lista}" rendered="#{cc.attrs.confirmable}">
                             <f:attribute name="alq" value="#{cc.attrs.var.idAlquiler}" />
                         </p:commandButton>
-                        <p:commandButton value="NO" actionListener="#{cc.attrs.bean[cc.attrs.koMethod]}">
-                            <p:collector value="#{cc.attrs.var}" removeFrom="#{cc.attrs.bean[cc.attrs.lista]}" /> 
+                        <p:commandButton value="NO" actionListener="#{cc.attrs.bean[cc.attrs.metodoRechazar]}"
+                                         update="#{cc.attrs.lista}" rendered="#{cc.attrs.confirmable}"> 
                             <f:attribute name="alq" value="#{cc.attrs.var.idAlquiler}" />
                         </p:commandButton>
                     </h:panelGrid> 
