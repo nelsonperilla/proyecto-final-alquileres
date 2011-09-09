@@ -8,6 +8,7 @@ import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.CategoriaDTO;
 import com.alquilacosas.dto.PeriodoDTO;
 import com.alquilacosas.dto.PrecioDTO;
+import com.alquilacosas.ejb.entity.Categoria;
 import com.alquilacosas.ejb.session.CategoriaBeanLocal;
 import com.alquilacosas.ejb.session.PeriodoAlquilerBeanLocal;
 import com.alquilacosas.ejb.session.PublicacionBeanLocal;
@@ -47,15 +48,11 @@ public class NuevaPublicacionMBean implements Serializable {
     private Date fechaHasta;
     private boolean destacada;
     private int cantidad;
-    //Select Items
-    private List<SelectItem> categorias;
-    private int selectedCategoria;
-    private List<SelectItem> subCategorias;
-    private int selectedSubCategoria;
-    private List<SelectItem> subCategorias1;
-    private int selectedSubCategoria1;
-    private boolean subCategoriaRender;
-    private boolean subCategoria1Render;
+    private Categoria categoria;
+    //Select Items categorias
+    private List<SelectItem> categorias, subcategorias1, subcategorias2, subcategorias3;
+    private int selectedCategoria, selectedSubcategoria1, selectedSubcategoria2, selectedSubcategoria3;
+    private boolean subcategoria1Render, subcategoria2Render, subcategoria3Render;
     //Precios y Periodos
     private List<PrecioDTO> precios;
     private PrecioDTO precioFacade;
@@ -80,10 +77,9 @@ public class NuevaPublicacionMBean implements Serializable {
         }
         today = new Date();
         categorias = new ArrayList<SelectItem>();
-        subCategorias = new ArrayList<SelectItem>();
-        subCategorias1 = new ArrayList<SelectItem>();
-        subCategoriaRender = false;
-        subCategoria1Render = false;
+        subcategorias1 = new ArrayList<SelectItem>();
+        subcategorias2 = new ArrayList<SelectItem>();
+        subcategorias3 = new ArrayList<SelectItem>();
         
         periodoMinimos = new ArrayList<SelectItem>();
         periodoMaximos = new ArrayList<SelectItem>();
@@ -102,23 +98,26 @@ public class NuevaPublicacionMBean implements Serializable {
     }
 
     public String crearPublicacion() {
+        
         FacesContext context = FacesContext.getCurrentInstance();
         FacesMessage msg = null;
+        
+        int cat = 0;
+        if (selectedSubcategoria3 > 0) {
+            cat = selectedSubcategoria3;
+        } else if (selectedSubcategoria2 > 0) {
+            cat = selectedSubcategoria2;
+        } else if (selectedSubcategoria1 > 0) {
+            cat = selectedSubcategoria1;
+        } else {
+            cat = selectedCategoria;
+        }
 
         if (precios.get(1).getPrecio() == 0) {
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Error al crear publicacion", "El precio por día es obligatorio");
             context.addMessage(null, msg);
             return null;
-        }
-
-        int categoria = 0;
-        if (selectedSubCategoria1 > 0) {
-            categoria = selectedSubCategoria1;
-        } else if (selectedSubCategoria > 0) {
-            categoria = selectedSubCategoria;
-        } else {
-            categoria = selectedCategoria;
         }
         
         try {
@@ -128,7 +127,7 @@ public class NuevaPublicacionMBean implements Serializable {
                 selectedPeriodoMaximo = 0;
             publicacionBean.registrarPublicacion( titulo, descripcion,
                     new Date(), hoy.getTime(), destacada, cantidad,
-                    login.getUsuarioId(), categoria, precios, imagenes,
+                    login.getUsuarioId(), cat, precios, imagenes,
                     periodoMinimo, selectedPeriodoMinimo, periodoMaximo,
                     selectedPeriodoMaximo);
 
@@ -144,6 +143,57 @@ public class NuevaPublicacionMBean implements Serializable {
             return null;
         }
 
+    }
+    
+    public void categoriaSeleccionadaCambio() {
+        subcategorias1.clear();
+        subcategorias2.clear();
+        subcategorias3.clear();
+        selectedSubcategoria1 = 0;
+        selectedSubcategoria2 = 0;
+        selectedSubcategoria3 = 0;
+        List<CategoriaDTO> categoriaList = categoriaBean.getSubCategorias(selectedCategoria);
+        if (!categoriaList.isEmpty()) {
+            subcategoria1Render = true;
+            for (CategoriaDTO c : categoriaList) {
+                subcategorias1.add(new SelectItem(c.getId(), c.getNombre()));
+            }
+        } else {
+            subcategoria1Render = false;
+        }
+        subcategoria2Render = false;
+        subcategoria3Render = false;
+    }
+
+    public void subcategoria1SeleccionadaCambio() {
+        subcategorias2.clear();
+        subcategorias3.clear();
+        selectedSubcategoria2 = 0;
+        selectedSubcategoria3 = 0;
+        List<CategoriaDTO> categoriaList = categoriaBean.getSubCategorias(selectedSubcategoria1);
+        if (!categoriaList.isEmpty()) {
+            subcategoria2Render = true;
+            for (CategoriaDTO c : categoriaList) {
+                subcategorias2.add(new SelectItem(c.getId(), c.getNombre()));
+            }
+        } else {
+            subcategoria2Render = false;
+        }
+        subcategoria3Render = false;
+    }
+    
+    public void subcategoria2SeleccionadaCambio() {
+        subcategorias3.clear();
+        selectedSubcategoria3 = 0;
+        List<CategoriaDTO> categoriaList = categoriaBean.getSubCategorias(selectedSubcategoria2);
+        if (!categoriaList.isEmpty()) {
+            subcategoria3Render = true;
+            for (CategoriaDTO c : categoriaList) {
+                subcategorias3.add(new SelectItem(c.getId(), c.getNombre()));
+            }
+        } else {
+            subcategoria3Render = false;
+        }
     }
 
     public void handleFileUpload(FileUploadEvent event) {
@@ -172,36 +222,6 @@ public class NuevaPublicacionMBean implements Serializable {
 
     }
 
-    public void actualizarCategorias() {
-        subCategorias.clear();
-        subCategorias1.clear();
-        selectedSubCategoria = 0;
-        selectedSubCategoria1 = 0;
-        List<CategoriaDTO> categoriaList = categoriaBean.getSubCategorias(selectedCategoria);
-        if (!categoriaList.isEmpty()) {
-            subCategoriaRender = true;
-            for (CategoriaDTO c : categoriaList) {
-                subCategorias.add(new SelectItem(c.getId(), c.getNombre()));
-            }
-        } else {
-            subCategoriaRender = false;
-            subCategoria1Render = false;
-        }
-    }
-
-    public void actualizarSubCategorias() {
-        subCategorias1.clear();
-        selectedSubCategoria1 = 0;
-        List<CategoriaDTO> categoriaList = categoriaBean.getSubCategorias(selectedSubCategoria);
-        if (!categoriaList.isEmpty()) {
-            subCategoria1Render = true;
-            for (CategoriaDTO c : categoriaList) {
-                subCategorias1.add(new SelectItem(c.getId(), c.getNombre()));
-            }
-        } else {
-            subCategoria1Render = false;
-        }
-    }
 
     public int getCantidad() {
         return cantidad;
@@ -307,62 +327,6 @@ public class NuevaPublicacionMBean implements Serializable {
         this.login = login;
     }
 
-    public int getSelectedSubcategoria() {
-        return selectedSubCategoria;
-    }
-
-    public void setSelectedSubcategoria(int selectedSubcategoria) {
-        this.selectedSubCategoria = selectedSubcategoria;
-    }
-
-    public List<SelectItem> getSubCategorias() {
-        return subCategorias;
-    }
-
-    public void setSubCategorias(List<SelectItem> subCategorias) {
-        this.subCategorias = subCategorias;
-    }
-
-    public int getSelectedSubCategoria() {
-        return selectedSubCategoria;
-    }
-
-    public void setSelectedSubCategoria(int selectedSubCategoria) {
-        this.selectedSubCategoria = selectedSubCategoria;
-    }
-
-    public int getSelectedSubCategoria1() {
-        return selectedSubCategoria1;
-    }
-
-    public void setSelectedSubCategoria1(int selectedSubCategoria1) {
-        this.selectedSubCategoria1 = selectedSubCategoria1;
-    }
-
-    public List<SelectItem> getSubCategorias1() {
-        return subCategorias1;
-    }
-
-    public void setSubCategorias1(List<SelectItem> subCategorias1) {
-        this.subCategorias1 = subCategorias1;
-    }
-
-    public boolean isSubCategoria1Render() {
-        return subCategoria1Render;
-    }
-
-    public void setSubCategoria1Render(boolean subCategoria1Render) {
-        this.subCategoria1Render = subCategoria1Render;
-    }
-
-    public boolean isSubCategoriaRender() {
-        return subCategoriaRender;
-    }
-
-    public void setSubCategoriaRender(boolean subCategoriaRender) {
-        this.subCategoriaRender = subCategoriaRender;
-    }
-
     public int getPeriodoMaximo() {
         return periodoMaximo;
     }
@@ -409,6 +373,86 @@ public class NuevaPublicacionMBean implements Serializable {
 
     public void setSelectedPeriodoMinimo(int selectedPeriodoMinimo) {
         this.selectedPeriodoMinimo = selectedPeriodoMinimo;
+    }
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
+
+    public int getSelectedSubcategoria1() {
+        return selectedSubcategoria1;
+    }
+
+    public void setSelectedSubcategoria1(int selectedSubcategoria1) {
+        this.selectedSubcategoria1 = selectedSubcategoria1;
+    }
+
+    public int getSelectedSubcategoria2() {
+        return selectedSubcategoria2;
+    }
+
+    public void setSelectedSubcategoria2(int selectedSubcategoria2) {
+        this.selectedSubcategoria2 = selectedSubcategoria2;
+    }
+
+    public int getSelectedSubcategoria3() {
+        return selectedSubcategoria3;
+    }
+
+    public void setSelectedSubcategoria3(int selectedSubcategoria3) {
+        this.selectedSubcategoria3 = selectedSubcategoria3;
+    }
+
+    public boolean isSubcategoria1Render() {
+        return subcategoria1Render;
+    }
+
+    public void setSubcategoria1Render(boolean subcategoria1Render) {
+        this.subcategoria1Render = subcategoria1Render;
+    }
+
+    public boolean isSubcategoria2Render() {
+        return subcategoria2Render;
+    }
+
+    public void setSubcategoria2Render(boolean subcategoria2Render) {
+        this.subcategoria2Render = subcategoria2Render;
+    }
+
+    public boolean isSubcategoria3Render() {
+        return subcategoria3Render;
+    }
+
+    public void setSubcategoria3Render(boolean subcategoria3Render) {
+        this.subcategoria3Render = subcategoria3Render;
+    }
+
+    public List<SelectItem> getSubcategorias1() {
+        return subcategorias1;
+    }
+
+    public void setSubcategorias1(List<SelectItem> subcategorias1) {
+        this.subcategorias1 = subcategorias1;
+    }
+
+    public List<SelectItem> getSubcategorias2() {
+        return subcategorias2;
+    }
+
+    public void setSubcategorias2(List<SelectItem> subcategorias2) {
+        this.subcategorias2 = subcategorias2;
+    }
+
+    public List<SelectItem> getSubcategorias3() {
+        return subcategorias3;
+    }
+
+    public void setSubcategorias3(List<SelectItem> subcategorias3) {
+        this.subcategorias3 = subcategorias3;
     }
     
      

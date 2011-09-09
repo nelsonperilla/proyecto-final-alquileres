@@ -6,6 +6,7 @@ package com.alquilacosas.ejb.session;
 
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.common.NotificacionEmail;
+import com.alquilacosas.common.Util;
 import com.alquilacosas.dto.AlquilerDTO;
 import com.alquilacosas.ejb.entity.Alquiler;
 import com.alquilacosas.ejb.entity.AlquilerXEstado;
@@ -84,6 +85,11 @@ public class AlquilerBean implements AlquilerBeanLocal {
         
     }
     
+    /*
+     * En el siguiente método el duenio del producto rechaza el pedido de alquiler por el 
+     * alquilador
+     */
+    
     @Override
     public void rechazarPedidoDeAlquiler(Integer alquilerId) throws AlquilaCosasException{
         
@@ -93,6 +99,23 @@ public class AlquilerBean implements AlquilerBeanLocal {
         } catch (Exception e) {
             context.getRollbackOnly();
             System.out.println("El rechazo del alquiler no pudo realizarse" + e.getStackTrace());
+        }
+    }
+    
+    /*
+     * En el siguiente método el alquilador cancela el pedido de alquiler realizado en 
+     * algún momento
+     */
+    
+    @Override
+    public void cancelarPedidoDeAlquiler(Integer alquilerId) throws AlquilaCosasException{
+        
+        try {
+            Alquiler alquiler = alquilerFacade.find(alquilerId);
+            this.cancelarAlquiler(alquiler);
+        } catch (Exception e) {
+            context.getRollbackOnly();
+            System.out.println("La cancelacion del alquiler no pudo realizarse" + e.getStackTrace());
         }
     }
     
@@ -226,7 +249,14 @@ public class AlquilerBean implements AlquilerBeanLocal {
     private void rechazarAlquiler( Alquiler alquiler) throws AlquilaCosasException{
         
         this.crearNuevoEstadoDeAlquiler(alquiler, EstadoAlquiler.NombreEstadoAlquiler.PEDIDO_RECHAZADO);
-        String estado = this.convertNombreEstadoAlquiler(EstadoAlquiler.NombreEstadoAlquiler.PEDIDO_RECHAZADO);
+        String estado = Util.convertNombreEstadoAlquilerToString(EstadoAlquiler.NombreEstadoAlquiler.PEDIDO_RECHAZADO);
+        this.enviarMail(alquiler, estado);
+    }
+    
+    private void cancelarAlquiler( Alquiler alquiler) throws AlquilaCosasException{
+        
+        this.crearNuevoEstadoDeAlquiler(alquiler, EstadoAlquiler.NombreEstadoAlquiler.CANCELADO_ALQUILADOR);
+        String estado = Util.convertNombreEstadoAlquilerToString(EstadoAlquiler.NombreEstadoAlquiler.CANCELADO_ALQUILADOR);
         this.enviarMail(alquiler, estado);
     }
     
@@ -240,7 +270,6 @@ public class AlquilerBean implements AlquilerBeanLocal {
         AlquilerXEstado axe = new AlquilerXEstado( alquiler, ea, new Date() );
         alquiler.agregarAlquilerXEstado(axe);
         alquilerFacade.edit(alquiler);
-        alquilerFacade.flush();
     }
     
     private void enviarMail( Alquiler alquiler, String estadoAlquiler ) throws AlquilaCosasException{
@@ -266,7 +295,7 @@ public class AlquilerBean implements AlquilerBeanLocal {
                     + "Atentamente, <br/> <b>AlquilaCosas </b>";
             NotificacionEmail notificacion = new NotificacionEmail(usuario.getEmail(), asunto, texto);
             message.setObject(notificacion);
-            producer.send(message);
+        //    producer.send(message);
             session.close();
             connection.close();
 
@@ -275,26 +304,6 @@ public class AlquilerBean implements AlquilerBeanLocal {
         }
     }
     
-    private String convertNombreEstadoAlquiler(EstadoAlquiler.NombreEstadoAlquiler estado){
-        String state = null;
-        if( estado.compareTo(EstadoAlquiler.NombreEstadoAlquiler.ACTIVO) == 0 ){
-            state = "activo";
-        }else if( estado.compareTo(EstadoAlquiler.NombreEstadoAlquiler.CANCELADO) == 0 ){
-            state = "cancelado";
-        }else if( estado.compareTo(EstadoAlquiler.NombreEstadoAlquiler.CANCELADO_ALQUILADOR) == 0 ){
-            state = "cancelado por el alquilador";
-        }else if( estado.compareTo(EstadoAlquiler.NombreEstadoAlquiler.CONFIRMADO) == 0 ){
-            state = "confirmado";
-        }else if( estado.compareTo(EstadoAlquiler.NombreEstadoAlquiler.FINALIZADO) == 0 ){
-            state = "finalizado";
-        }else if( estado.compareTo(EstadoAlquiler.NombreEstadoAlquiler.PEDIDO) == 0 ){
-            state = "pedido";
-        }else if( estado.compareTo(EstadoAlquiler.NombreEstadoAlquiler.PEDIDO_CANCELADO) == 0 ){
-            state = "cancelado";
-        }else if( estado.compareTo(EstadoAlquiler.NombreEstadoAlquiler.PEDIDO_RECHAZADO) == 0 ){
-            state = "rechazado";
-        }
-        return state;
-    }
+    
  
 }

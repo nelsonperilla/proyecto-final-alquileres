@@ -4,14 +4,18 @@
  */
 package com.alquilacosas.mbean;
 
+import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.AlquilerDTO;
 import com.alquilacosas.ejb.session.AlquilerBeanLocal;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 
 /**
  *
@@ -38,6 +42,35 @@ public class MisPedidosRealizados {
     @PostConstruct
     public void init() {
         pedidosRealizados = alquilerBean.getPedidosRealizados(usuarioLogueado.getUsuarioId());
+    }
+    
+    public void cancelarPedidoDeAlquiler( ActionEvent event ){
+        FacesMessage msg = null;
+        try {
+            alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
+            if( alquilerId == null ){
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                    "Error al cargar pagina", "No se brindo el id del alquiler");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            }    
+            
+            alquilerBean.cancelarPedidoDeAlquiler(alquilerId);
+            pedidosRealizados = alquilerBean.getPedidosRealizados(usuarioLogueado.getUsuarioId());
+            msg = new FacesMessage("Alquiler Confirmado");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        } catch (AlquilaCosasException e) {
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                    "No se pudo confirmar el alquiler", e.getMessage());
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+    }
+    
+    public String mostrarPublicacion(){
+        return "mostrarPublicacion";    
+    }
+    
+    public String mostrarUsuario(){
+        return "mostrarUsuario";    
     }
 
     public AlquilerBeanLocal getAlquilerBean() {

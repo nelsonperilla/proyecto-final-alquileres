@@ -8,6 +8,7 @@ import com.alquilacosas.dto.ComentarioDTO;
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.CategoriaDTO;
 import com.alquilacosas.common.NotificacionEmail;
+import com.alquilacosas.common.Util;
 import com.alquilacosas.dto.PrecioDTO;
 import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.entity.Alquiler;
@@ -175,12 +176,10 @@ public class PublicacionBean implements PublicacionBeanLocal {
 
             periodo = periodoBean.getPeriodo(p.getPeriodoNombre());
             precio = new Precio();
-            DecimalFormat formatter = new DecimalFormat();
-            formatter.applyPattern("0.0#");
-            String precioHora = formatter.format(precioDiario / 24.0);
+            
             if (p.getPrecio() == 0) {
                 if (p.getPeriodoNombre() == NombrePeriodo.HORA) {
-                    precio.setPrecio(Double.valueOf(precioHora));
+                    precio.setPrecio( Util.roundToDecimals( precioDiario / 24.0, 2) );
                 } else if (p.getPeriodoNombre() == NombrePeriodo.SEMANA) {
                     precio.setPrecio(precioDiario * 7.0);
                 } else if (p.getPeriodoNombre()  == NombrePeriodo.MES) {
@@ -526,8 +525,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
     public List<Periodo> getPeriodos()
     {
       return periodoFacade.getPeriodosOrderByHoras();
-       
-       
+        
     }     
     
     @Override

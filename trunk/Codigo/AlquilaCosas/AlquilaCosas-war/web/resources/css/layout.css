@@ -36,7 +36,7 @@ h1, h2, h3 {
 
 /* JS disabled styles */  
 #menu nav li:hover ul { display:block; left: 190px}
-  
+
 /* base nav styles */  
 #menu nav { 
     display:block; 
@@ -59,7 +59,7 @@ h1, h2, h3 {
 #menu nav ul:after { content:"."; display:block; height:0; clear:both; visibility:hidden; }  
 #menu nav li a {display:block; padding:10px 20px; border-left:1px solid #999; border-bottom:1px solid #0000DD; color:#eee; text-decoration:none; }  
 #menu nav li a:focus { outline:none; text-decoration:underline; }  
- 
+
 
 #menu nav li.last a { border-right:none; }  
 #menu nav a span { 
@@ -109,7 +109,7 @@ h1, h2, h3 {
     -webkit-border-bottom-right-radius:4px; 
     border-bottom-right-radius:4px;
 }  
- 
+
 #menu nav ul ul li.first {  
     border-left:1px solid rgba(0,0,0,0.1); 
     border-bottom:1px solid rgba(0,0,0,0.1); 
@@ -221,7 +221,7 @@ h1, h2, h3 {
     padding: 10px 1px 1px 1px;
     width: 300px;
 
-    
+
     -moz-border-radius: 20px;
     border-radius: 20px;
     border-right-color: #aaaaaa;
@@ -231,7 +231,7 @@ h1, h2, h3 {
 }
 
 #simpleItem .data {
-    
+
     border-right-style: solid;
     border-left-style: solid;
     border-bottom-style: solid;
@@ -245,8 +245,8 @@ h1, h2, h3 {
     padding-top: 20px;
     padding-bottom: 20px;
     width: 100%;
-    
-    
+
+
     -moz-border-radius: 20px;
     border-radius: 20px;
     border-right-color: #d2d0d0;
@@ -256,7 +256,7 @@ h1, h2, h3 {
 }
 
 #simpleItem td {
-    
+
     text-align: left;
     vertical-align: top;
     font-family: Trebuchet MS;
@@ -282,10 +282,10 @@ h1, h2, h3 {
 }
 
 #simpleItem .itemPrice{
-    
+
     color: #0000ff;
     font-size: 18px;
-    
+
     text-align: right;
 }
 
@@ -301,7 +301,7 @@ h1, h2, h3 {
     border-radius: 2px;
     background-image: -moz-linear-gradient(top, #F58585, #DF4D4D 14px, #E03131 12px, #E40000);
     background-image: -webkit-gradient(linear, left top, left bottom, from(#F58585), 
-		       color-stop(0.3, #DF4D4D), color-stop(0.3, #E03131), to(#E40000));    
+        color-stop(0.3, #DF4D4D), color-stop(0.3, #E03131), to(#E40000));    
     font-family: Trebuchet MS;
     padding-top: 2px;
     margin-left: 30px;
@@ -339,7 +339,7 @@ h1, h2, h3 {
 #itemPregunta {
     background-image: -moz-linear-gradient(top, #999999, #dddddd 14px, #eeeeee 12px, #ffffff);
     background-image: -webkit-gradient(linear, left top, left bottom, from(#999999), 
-		    color-stop(0.3, #dddddd), color-stop(0.3, #eeeeee), to(#ffffff));
+        color-stop(0.3, #dddddd), color-stop(0.3, #eeeeee), to(#ffffff));
     border-right-style: solid;
     border-left-style: solid;
     border-bottom-style: solid;
@@ -363,7 +363,7 @@ h1, h2, h3 {
 }
 
 #itemPregunta td{
-    
+
     text-align: left;
     margin-right: 1px;
     margin-left: 1px;
@@ -388,7 +388,7 @@ h1, h2, h3 {
     border-top-color: #6773fe;
     text-align:left;
     width: 600px;
-    
+
     padding-right: 5px;
     padding-left: 5px;
     padding-bottom: 5px;
@@ -481,10 +481,10 @@ h1, h2, h3 {
 .controlPanel {
     background-image: -moz-linear-gradient(top, #0620E2, #384CE2 40px, #6F7DE8 12px, #E0E3F8);
     background-image: -webkit-gradient(linear, left top, left bottom, from(#0620E2), 
-		    color-stop(0.3, #384CE2), color-stop(0.3, #6F7DE8), to(#E0E3F8));   
+        color-stop(0.3, #384CE2), color-stop(0.3, #6F7DE8), to(#E0E3F8));   
     width: 100%; 
     text-align: center;
-   
+
 }
 
 .labelBienvenida {
@@ -540,10 +540,10 @@ h1, h2, h3 {
     /*background-image: -moz-linear-gradient(top, #0620E2, #384CE2 14px, #4F7DE8 12px, #E0E3F8);*/
     background-image: -moz-linear-gradient(top, #E0E3F8, #4F7DE8 14px, #384CE2 12px, #0620E2);
     background-image: -webkit-gradient(linear, left top, left bottom, from(#E0E3F8), 
-		    color-stop(0.3, #4F7DE8), color-stop(0.3, #384CE2), to(#0620E2)); 
+        color-stop(0.3, #4F7DE8), color-stop(0.3, #384CE2), to(#0620E2)); 
     border-bottom:1px solid #fff;
     float:left; /* Make sure (in IE) there is no margin between the menu items */
-/*    border: 1px solid goldenrod;*/
+    /*    border: 1px solid goldenrod;*/
 }
 #category ul li a{
     display:block; /* When rollover the menu item, the whole item will be seen as link. */
@@ -554,7 +554,7 @@ h1, h2, h3 {
     /*background: cornflowerblue;*/
     background-image: -moz-linear-gradient(top, #0620E2, #384CE2 14px, #4F7DE8 12px, #E0E3F8);
     background-image: -webkit-gradient(linear, left top, left bottom, from(#E0E3F8), 
-		    color-stop(0.3, #4F7DE8), color-stop(0.3, #384CE2), to(#0620E2)); 
+        color-stop(0.3, #4F7DE8), color-stop(0.3, #384CE2), to(#0620E2)); 
 
 }
 
@@ -563,20 +563,20 @@ h1, h2, h3 {
     position: absolute;
     top: 0;
     display:none; /* Display nothing when not 'hovered' */
-    
+
 }
 #category ul li ul li{
     /*background: lightskyblue;*/
     background-image: -moz-linear-gradient(top, #E0E3F8, #4F7DE8 14px, #384CE2 12px, #0620E2);
     background-image: -webkit-gradient(linear, left top, left bottom, from(#E0E3F8), 
-		    color-stop(0.3, #4F7DE8), color-stop(0.3, #384CE2), to(#0620E2));     
+        color-stop(0.3, #4F7DE8), color-stop(0.3, #384CE2), to(#0620E2));     
     border: 1px solid goldenrod;
 }
 #category ul li ul li a:hover{
     /*background: cornflowerblue;*/
     background-image: -moz-linear-gradient(top, #0620E2, #384CE2 14px, #4F7DE8 12px, #E0E3F8);
     background-image: -webkit-gradient(linear, left top, left bottom, from(#E0E3F8), 
-		    color-stop(0.3, #4F7DE8), color-stop(0.3, #384CE2), to(#0620E2)); 
+        color-stop(0.3, #4F7DE8), color-stop(0.3, #384CE2), to(#0620E2)); 
 }
 #category ul li:hover ul{
     display: block; /* Make sure the submenu is displayed as blocks as well. */
@@ -597,6 +597,43 @@ h1, h2, h3 {
     color: #fdeab6;
     background-image: -moz-linear-gradient(top, #0101DF, #2E2EFE 14px, #5858FA 12px, #A9BCF5) !important;
     background-image: -webkit-gradient(linear, left top, left bottom, from(#0101DF), 
-		    color-stop(0.3, #2E2EFE), color-stop(0.3, #5858FA), to(#A9BCF5)) !important;
+        color-stop(0.3, #2E2EFE), color-stop(0.3, #5858FA), to(#A9BCF5)) !important;
 }
 
+#div1
+{
+    margin:2px;
+    border:1px solid #0000ff;
+    height:auto;
+    width:auto;
+    float:left;
+    text-align:center;
+}
+#div1 img
+{
+    display:inline;
+    margin:3px;
+    border:1px solid #ffffff;
+}
+#div1 a:hover img
+{
+    border:1px solid #0000ff;
+}
+
+.borrarBoton{
+    width: 80px; 
+    height: 25px; 
+    border: 1px; 
+    margin: 2px;
+    background-color: white;
+    float: none;
+}
+.text_line
+{
+    clear:both;
+    margin-bottom:2px;
+}
+.imagenes {
+    width: 600px;
+    height: 600px;
+}

@@ -31,6 +31,15 @@
     </navigation-rule>
     
     <navigation-rule>
+        <from-view-id>/vistas/usuario/misPedidosRealizados.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>mostrarPublicacion</from-outcome>
+            <to-view-id>/vistas/mostrarPublicacion.xhtml?id=#{misPedidosRealizados.publicacionId}</to-view-id>
+            <redirect/>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
         <from-view-id>/vistas/usuario/misPublicaciones.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>mostrarPublicacion</from-outcome>
