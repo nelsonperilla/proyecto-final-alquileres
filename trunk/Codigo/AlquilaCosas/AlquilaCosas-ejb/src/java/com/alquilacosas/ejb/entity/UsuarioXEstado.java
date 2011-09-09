@@ -38,20 +38,19 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "UsuarioXEstado.findCurrentByUsuarioFk", query = "SELECT u FROM UsuarioXEstado u WHERE u.usuario = :usuario AND u.fechaHasta IS NULL")})
 
 public class UsuarioXEstado implements Serializable {
-    @Basic(optional = false)
-    @NotNull
+    
+    @Id()
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "USUARIO_X_ESTADO_ID")
+    private Integer usuarioXEstadoId;
+    
     @Column(name = "FECHA_DESDE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaDesde;
-    @Column(name = "FECHA_HASTA")
+    
+    @Column(name =     "FECHA_HASTA")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaHasta;
-    @Id()
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "USUARIO_X_ESTADO_ID")
-    private Integer usuarioXEstadoId;
     
     @JoinColumn(name = "ESTADO_FK", referencedColumnName = "ESTADO_USUARIO_ID")
     @ManyToOne(optional = false)

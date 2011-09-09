@@ -6,7 +6,6 @@ package com.alquilacosas.ejb.entity;
 
 import java.io.Serializable;
 import java.util.List;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -18,8 +17,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -44,22 +41,16 @@ public class Periodo implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "PERIODO_ID")
     private Integer periodoId;
     
-    @Size(max = 45)
-    @Column(name = "NOMBRE")
     @Enumerated(EnumType.STRING)
+    @Column(name = "NOMBRE")
     private NombrePeriodo nombre;
     
-    @Size(max = 45)
     @Column(name = "DESCRIPCION")
     private String descripcion;
     
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "HORAS")
     private int horas;
     

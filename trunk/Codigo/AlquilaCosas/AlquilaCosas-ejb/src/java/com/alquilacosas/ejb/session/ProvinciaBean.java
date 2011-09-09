@@ -42,10 +42,8 @@ public class ProvinciaBean implements ProvinciaBeanLocal {
      @Override
      public void borrarProvincia(Provincia provincia) throws AlquilaCosasException {
           Provincia borrarProvincia = provinciaFacade.find(provincia.getProvinciaId());
-          if (borrarProvincia.getDomicilioList().isEmpty())
-               provinciaFacade.remove(borrarProvincia);               
-          else
-               throw new AlquilaCosasException("El Provincia tiene Domicilios Asociados");
+          provinciaFacade.remove(borrarProvincia);               
+          //     throw new AlquilaCosasException("El Provincia tiene Domicilios Asociados");
      }
 
      @Override

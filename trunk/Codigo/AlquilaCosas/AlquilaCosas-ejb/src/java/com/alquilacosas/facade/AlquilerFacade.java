@@ -158,4 +158,22 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
         alquileres = query.getResultList();
         return alquileres;
     }
+    
+    /*
+     * Trae los alquileres confirmados, activos o finalizados en los cuales el usuario es
+     * el dueño del producto alquilado
+     */
+    public List<Alquiler> getAlquileresOfrecidos(Usuario usuario) {
+        Query query = em.createQuery("SELECT a FROM Alquiler a, AlquilerXEstado axe, EstadoAlquiler ea "
+                + "WHERE a.publicacionFk.usuarioFk = :usuario AND"
+                + " a.alquilerId = axe.alquilerFk.alquilerId "
+                + "AND axe.estadoAlquilerFk.estadoAlquilerId = ea.estadoAlquilerId "
+                + "AND axe.fechaHasta IS NULL "
+                + "AND (ea.nombre = :estadoConf OR ea.nombre = :estadoAct OR ea.nombre = :estadoFin)");
+        query.setParameter("usuario", usuario);
+        query.setParameter("estadoConf", EstadoAlquiler.NombreEstadoAlquiler.CONFIRMADO);
+        query.setParameter("estadoAct", EstadoAlquiler.NombreEstadoAlquiler.ACTIVO);
+        query.setParameter("estadoFin", EstadoAlquiler.NombreEstadoAlquiler.FINALIZADO);
+        return query.getResultList();
+    }
 }

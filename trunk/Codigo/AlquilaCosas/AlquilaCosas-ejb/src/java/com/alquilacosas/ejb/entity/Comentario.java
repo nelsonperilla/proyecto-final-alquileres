@@ -46,31 +46,24 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Comentario.findByComentario", query = "SELECT c FROM Comentario c WHERE c.comentario = :comentario"),
     @NamedQuery(name = "Comentario.findByFecha", query = "SELECT c FROM Comentario c WHERE c.fecha = :fecha")})
 public class Comentario implements Serializable {
-    @Basic(optional =     false)
-    @NotNull
-    @Column(name = "FECHA")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fecha;
-    
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "PREGUNTA")
-    private Boolean pregunta;
     
     private static final long serialVersionUID = 1L;
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "COMENTARIO_ID")
     private Integer comentarioId;
     
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
     @Column(name = "COMENTARIO")
     private String comentario;
+    
+    @Column(name = "FECHA")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fecha;
+    
+    @Column(name = "PREGUNTA")
+    private Boolean pregunta;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "respuesta")
     private List<Comentario> comentarioList;
@@ -148,6 +141,22 @@ public class Comentario implements Serializable {
     public void setUsuarioFk(Usuario usuarioFk) {
         this.usuarioFk = usuarioFk;
     }
+    
+    public Boolean getPregunta() {
+        return pregunta;
+    }
+
+    public void setPregunta(Boolean pregunta) {
+        this.pregunta = pregunta;
+    }
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
+    }
 
     @Override
     public int hashCode() {
@@ -172,22 +181,6 @@ public class Comentario implements Serializable {
     @Override
     public String toString() {
         return "com.alquilacosas.ejb.entity.Comentario[ comentarioId=" + comentarioId + " ]";
-    }
-
-    public Date getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
-    }
-
-    public Boolean getPregunta() {
-        return pregunta;
-    }
-
-    public void setPregunta(Boolean pregunta) {
-        this.pregunta = pregunta;
     }
     
 }

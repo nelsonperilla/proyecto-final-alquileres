@@ -6,13 +6,14 @@ package com.alquilacosas.common;
 
 import com.alquilacosas.dto.CategoriaDTO;
 import com.alquilacosas.dto.PublicacionDTO;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  *
  * @author damiancardozo
  */
-public class Busqueda {
+public class Busqueda implements Serializable {
     
     private List<PublicacionDTO> publicaciones;
     private List<CategoriaDTO> categorias;

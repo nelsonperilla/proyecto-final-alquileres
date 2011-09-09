@@ -6,7 +6,6 @@ package com.alquilacosas.ejb.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,8 +18,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -36,23 +33,21 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Suspension.findByDuracion", query = "SELECT s FROM Suspension s WHERE s.duracion = :duracion"),
     @NamedQuery(name = "Suspension.findByFecha", query = "SELECT s FROM Suspension s WHERE s.fecha = :fecha")})
 public class Suspension implements Serializable {
-    @Basic(optional =     false)
-    @NotNull
+
+    private static final long serialVersionUID = 1L;
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "SUSPENSION_ID")
+    private Integer suspensionId;
+    
+    @Column(name = "DURACION")
+    private String duracion;
+    
     @Column(name = "FECHA")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fecha;
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "SUSPENSION_ID")
-    private Integer suspensionId;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
-    @Column(name = "DURACION")
-    private String duracion;
+    
     @JoinColumn(name = "USUARIO_FK", referencedColumnName = "USUARIO_ID")
     @ManyToOne(optional = false)
     private Usuario usuarioFk;

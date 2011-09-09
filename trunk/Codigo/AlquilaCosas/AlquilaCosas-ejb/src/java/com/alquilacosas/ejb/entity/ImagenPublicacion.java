@@ -5,7 +5,6 @@
 package com.alquilacosas.ejb.entity;
 
 import java.io.Serializable;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,7 +16,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -32,18 +30,17 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "ImagenPublicacion.findByPublicacionId", query = "SELECT i FROM ImagenPublicacion i WHERE i.publicacionFk = :publicacion"),
     @NamedQuery(name = "ImagenPublicacion.findByImagenPublicacionId", query = "SELECT i FROM ImagenPublicacion i WHERE i.imagenPublicacionId = :imagenPublicacionId")})
 public class ImagenPublicacion implements Serializable {
-    @Lob
-    @Column(name = "IMAGEN")
-    private byte[] imagen;
     
     private static final long serialVersionUID = 1L;
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "IMAGEN_PUBLICACION_ID")
     private Integer imagenPublicacionId;
+    
+    @Lob
+    @Column(name = "IMAGEN")
+    private byte[] imagen;
     
     @JoinColumn(name = "PUBLICACION_FK", referencedColumnName = "PUBLICACION_ID")
     @ManyToOne()

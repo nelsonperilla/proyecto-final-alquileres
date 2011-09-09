@@ -31,20 +31,22 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Reputacion.findByReputacionId", query = "SELECT r FROM Reputacion r WHERE r.reputacionId = :reputacionId"),
     @NamedQuery(name = "Reputacion.findByValor", query = "SELECT r FROM Reputacion r WHERE r.valor = :valor")})
 public class Reputacion implements Serializable {
+    
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "REPUTACION_ID")
     private Integer reputacionId;
+    
     @Basic(optional = false)
-    @NotNull
     @Column(name = "VALOR")
     private int valor;
+    
     @JoinColumn(name = "PUNTUACION_FK", referencedColumnName = "PUNTUACION_ID")
     @ManyToOne(optional = false)
     private Puntuacion puntuacionFk;
+    
     @JoinColumn(name = "USUARIO_FK", referencedColumnName = "USUARIO_ID")
     @ManyToOne(optional = false)
     private Usuario usuarioFk;

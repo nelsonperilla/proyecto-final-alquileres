@@ -21,7 +21,7 @@ public class DomicilioDTO implements Serializable {
         
     }
     
-    public DomicilioDTO(String calle, int numero, int piso,
+    public DomicilioDTO(String calle, Integer numero, Integer piso,
             String depto, String barrio, String ciudad) {
         this.calle = calle;
         this.numero = numero;
@@ -31,7 +31,7 @@ public class DomicilioDTO implements Serializable {
         this.ciudad = ciudad;
     }
     
-    public DomicilioDTO(String calle, int numero, String barrio, 
+    public DomicilioDTO(String calle, Integer numero, String barrio, 
             String ciudad) {
         this.calle = calle;
         this.numero = numero;

@@ -5,6 +5,7 @@
 package com.alquilacosas.facade;
 
 import com.alquilacosas.ejb.entity.Login;
+import com.alquilacosas.ejb.entity.Usuario;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -38,6 +39,12 @@ public class LoginFacade extends AbstractFacade<Login> {
             
         }
         return login;
+    }
+    
+    public Login findByUsuario(Usuario usuario) {
+       Query query = em.createNamedQuery("Login.findByUsuarioFk");
+       query.setParameter("usuarioFk", usuario);
+       return (Login) query.getSingleResult();
     }
     
 }

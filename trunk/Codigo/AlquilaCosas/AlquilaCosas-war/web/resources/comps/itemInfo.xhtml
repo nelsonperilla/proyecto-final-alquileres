@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:cc="http://java.sun.com/jsf/composite"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.prime.com.tr/ui" >
 
     <!-- INTERFACE -->
     <cc:interface>
@@ -13,45 +14,67 @@
         <cc:attribute name="property" type="java.lang.String" required="true" />
         <cc:attribute name="editable" type="java.lang.Boolean" default="false" />
         <cc:attribute name="editMethod" type="java.lang.String" />
+        <cc:attribute name="deleteMethod" type="java.lang.String" />
     </cc:interface>
 
     <!-- IMPLEMENTATION -->
     <cc:implementation>
-        <div class="item">
-            
-                <h:panelGrid columns="3" style="border: none; padding: 5px 10px;"
-                             cellspacing="0" cellpadding="0" 
-                             columnClasses="itemImgCol,itemContentCol,itemPriceCol" > 
-                    <h:graphicImage value="/image?id=#{cc.attrs.var.imagenId}" 
-                                    width="113" height="85" style="border: 1px solid gray; margin-top: 5px"
-                                    rendered="#{cc.attrs.var.imagenId != -1}" />
-                    <h:graphicImage value="#{resource['images:noImage.png']}"
-                                    width="113" height="85" style="border: 1px solid gray; margin-top: 5px"
-                                    rendered="#{cc.attrs.var.imagenId == -1}" />
-                    <h:panelGrid style="padding: 0 10px; text-align: left" columns="1"   >
-                        <h:commandLink value="#{cc.attrs.var.titulo}"
-                                       action="#{cc.attrs.bean[cc.attrs.method]}" 
-                                       styleClass="itemTitle" >
-                            <f:setPropertyActionListener value="#{cc.attrs.var.id}" target="#{cc.attrs.bean[cc.attrs.property]}" />
-                        </h:commandLink>
-                        <h:commandLink value="(editar)" rendered="#{cc.attrs.editable}"
+        <div class="#{cc.attrs.var.destacada ? 'itemDestacado':'item'}" >
+            <h:panelGrid columns="3" style="border: none; padding: 5px 10px;"
+                         cellspacing="0" cellpadding="0" 
+                         columnClasses="itemImgCol,itemContentCol,itemPriceCol" > 
+                <h:graphicImage value="/image?id=#{cc.attrs.var.imagenId}"
+                                width="113" height="85" styleClass="imagenPublicacion"
+                                rendered="#{cc.attrs.var.imagenId != -1}" />
+                <h:graphicImage value="#{resource['images:noImage.png']}" 
+                                width="#{cc.attrs.var.destacada ? '140':'113'}" 
+                                height="#{cc.attrs.var.destacada ? '105':'85'}" styleClass="imagenPublicacion"
+                                rendered="#{cc.attrs.var.imagenId == -1}" />
+                <h:panelGrid styleClass="gridCentro" style="padding: 0 10px;text-align: left; font-family: Ubuntu;" 
+                             columns="1"   >
+                    <h:commandLink value="#{cc.attrs.var.titulo}"
+                                   action="#{cc.attrs.bean[cc.attrs.method]}" 
+                                   styleClass="itemTitle" >
+                        <f:setPropertyActionListener value="#{cc.attrs.var.id}" target="#{cc.attrs.bean[cc.attrs.property]}" />
+                    </h:commandLink>
+
+                    <h:panelGrid columns="3" columnClasses="editColumn,editColumn" >
+                        <h:commandLink value="editar" rendered="#{cc.attrs.editable}"
                                        action="#{cc.attrs.bean[cc.attrs.editMethod]}" >
                             <f:setPropertyActionListener value="#{cc.attrs.var.id}" target="#{cc.attrs.bean[cc.attrs.property]}" />
                         </h:commandLink>
-                        <h:outputText value="(#{cc.attrs.var.ciudad}, #{cc.attrs.var.pais})" />
-                        <h:outputText value="Cantidad disponible: #{cc.attrs.var.cantidad}" styleClass="itemInfo"/>  
+                        <p:commandLink value="eliminar" rendered="#{cc.attrs.editable}"
+                                       onclick="confirmarDlg.show()" >
+                            <f:setPropertyActionListener value="#{cc.attrs.var.id}" target="#{cc.attrs.bean[cc.attrs.property]}" />
+                        </p:commandLink>
+                        <p/>
                     </h:panelGrid>
-                    <h:dataTable value="#{cc.attrs.var.precios}"
-                                 var="precio" style="text-align: left">
-                        <h:column >
-                            <h:outputText value="#{precio.periodoNombre}:" style="text-align: left" />  
-                        </h:column>        
-                        <h:column>
-                            <h:outputText value=" $ #{precio.precio}" 
-                                  style="color: #0000ff;"/>  
-                        </h:column>
-                    </h:dataTable>
-               </h:panelGrid>
+
+                    <h:outputText value="(#{cc.attrs.var.ciudad}, #{cc.attrs.var.provincia})" />
+                    <h:outputText value="Cantidad disponible: #{cc.attrs.var.cantidad}" styleClass="itemInfo"/>  
+                </h:panelGrid>
+                <h:dataTable value="#{cc.attrs.var.precios}" columnClasses="precioColDesc,precioColValor"
+                             var="precio" style="text-align: left">
+                    <h:column >
+                        <h:outputText value="#{precio.periodoNombre}:" />  
+                    </h:column>        
+                    <h:column>
+                        <h:outputText value=" $ #{precio.precio}" />  
+                    </h:column>
+                </h:dataTable>
+            </h:panelGrid>
         </div>
+
+        <p:dialog widgetVar="confirmarDlg" header="Eliminar publicacion" modal="true" >
+
+            Esta seguro que desea eliminar esta publicacion?
+            <br/><br/>
+            <h:panelGrid columns="2" >
+                <p:commandButton value="Aceptar" action="#{cc.attrs.bean[cc.attrs.deleteMethod]}"
+                                 oncomplete="confirmarDlg.hide()" ajax="false" >    
+                </p:commandButton>
+                <p:commandButton value="Cancelar" onclick="confirmarDlg.hide()" />
+            </h:panelGrid>
+        </p:dialog>
     </cc:implementation>
 </html>

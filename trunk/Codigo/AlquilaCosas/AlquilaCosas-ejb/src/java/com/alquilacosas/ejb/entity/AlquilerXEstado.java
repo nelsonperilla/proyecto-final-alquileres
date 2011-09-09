@@ -36,24 +36,26 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "AlquilerXEstado.findByFechaHasta", query = "SELECT a FROM AlquilerXEstado a WHERE a.fechaHasta = :fechaHasta"),
     @NamedQuery(name = "AlquilerXEstado.findByAlquiler", query = "SELECT axe FROM AlquilerXEstado axe WHERE axe.alquilerFk.alquilerId = :alquilerId and axe.fechaHasta IS NULL")})
 public class AlquilerXEstado implements Serializable {
+    
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "ALQUILER_X_ESTADO_ID")
     private Integer alquilerXEstadoId;
-    @Basic(optional = false)
-    @NotNull
+    
     @Column(name = "FECHA_DESDE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaDesde;
+    
     @Column(name = "FECHA_HASTA")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaHasta;
+    
     @JoinColumn(name = "ESTADO_ALQUILER_FK", referencedColumnName = "ESTADO_ALQUILER_ID")
     @ManyToOne(optional = false)
     private EstadoAlquiler estadoAlquilerFk;
+    
     @JoinColumn(name = "ALQUILER_FK", referencedColumnName = "ALQUILER_ID")
     @ManyToOne(optional = false)
     private Alquiler alquilerFk;

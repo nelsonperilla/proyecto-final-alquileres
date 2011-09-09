@@ -236,21 +236,6 @@ public class ModificarPublicacionMBean {
         }
         return null;
     }
-    
-    public String borrarPublicacion(){
-        
-        try {
-            publicacionBean.borrarPublicacion(publicacionId);
-            FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage("La publicacion fue eliminada correctamente"));
-                return "misPublicaciones";
-        } catch( AlquilaCosasException e ){
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Error al actualizar usuario", e.getMessage()));
-        }
-        return null;
-    }
 
     public void categoriaSeleccionadaCambio() {
         subcategorias1.clear();

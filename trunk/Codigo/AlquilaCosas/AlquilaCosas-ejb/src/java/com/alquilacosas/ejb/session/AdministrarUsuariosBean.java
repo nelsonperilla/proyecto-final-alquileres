@@ -8,9 +8,13 @@ import com.alquilacosas.dto.UsuarioDTO;
 import com.alquilacosas.ejb.entity.Login;
 import com.alquilacosas.ejb.entity.Rol;
 import com.alquilacosas.ejb.entity.Usuario;
+import com.alquilacosas.facade.LoginFacade;
+import com.alquilacosas.facade.RolFacade;
+import com.alquilacosas.facade.UsuarioFacade;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -31,6 +35,13 @@ public class AdministrarUsuariosBean implements AdministrarUsuariosBeanLocal {
 
     @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
     private EntityManager entityManager;
+    
+    @EJB
+    private UsuarioFacade usuarioFacade;
+    @EJB
+    private LoginFacade loginFacade;
+    @EJB
+    private RolFacade rolFacade;
 
     @Override
     public List<UsuarioDTO> getUsuariosList() {
@@ -71,13 +82,11 @@ public class AdministrarUsuariosBean implements AdministrarUsuariosBeanLocal {
     }
 
     @Override
-    public void setRoles(UsuarioDTO usuarioFacade, List<Integer> rolesVista) {
+    public void setRoles(UsuarioDTO usuarioDTO, List<Integer> rolesVista) {
        
-       Usuario usuario = entityManager.find(Usuario.class, usuarioFacade.getId());
-        
-       Query loginQuery = entityManager.createNamedQuery("Login.findByUsuarioFk");
-       loginQuery.setParameter("usuarioFk", usuario);
-       Login login = (Login) loginQuery.getSingleResult();
+       Usuario usuario = usuarioFacade.find(usuarioDTO.getId());
+       
+       Login login = loginFacade.findByUsuario(usuario);
        List<Rol> rols = login.getRolList();
        List<Integer> rolIds = new ArrayList<Integer>();
        for(Rol r: rols) {
@@ -86,7 +95,7 @@ public class AdministrarUsuariosBean implements AdministrarUsuariosBeanLocal {
        
        for(Integer i: rolesVista) {
            if(!rolIds.contains(i)) {
-               Rol r = entityManager.find(Rol.class, i);
+               Rol r = rolFacade.find(i);
                rols.add(r);               
            }
        }
@@ -102,6 +111,6 @@ public class AdministrarUsuariosBean implements AdministrarUsuariosBeanLocal {
            }
        }
        login.setRolList(rols);
-       entityManager.merge(login); 
+       loginFacade.edit(login); 
     }
 }

@@ -40,25 +40,20 @@ public class Pago implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "PAGO_ID")
     private Integer pagoId;
-    @Basic(optional = false)
-    @NotNull
+    
     @Column(name = "FECHA_PAGO")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaPago;
-    @Basic(optional = false)
-    @NotNull
+    
     @Column(name = "MONTO")
     private double monto;
-    @JoinColumn(name = "USUARIO_FK", referencedColumnName = "USUARIO_ID")
-    @ManyToOne(optional = false)
-    private Usuario usuarioFk;
+    
     @JoinColumn(name = "SERVICIO_FK", referencedColumnName = "SERVICIO_ID")
     @ManyToOne(optional = false)
     private Servicio servicioFk;
+    
     @JoinColumn(name = "TIPO_PAGO_FK", referencedColumnName = "TIPO_PAGO_ID")
     @ManyToOne(optional = false)
     private TipoPago tipoPagoFk;
@@ -98,14 +93,6 @@ public class Pago implements Serializable {
 
     public void setMonto(double monto) {
         this.monto = monto;
-    }
-
-    public Usuario getUsuarioFk() {
-        return usuarioFk;
-    }
-
-    public void setUsuarioFk(Usuario usuarioFk) {
-        this.usuarioFk = usuarioFk;
     }
 
     public Servicio getServicioFk() {

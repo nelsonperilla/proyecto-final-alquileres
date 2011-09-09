@@ -21,6 +21,7 @@ public class PublicacionXEstadoFacade extends AbstractFacade<PublicacionXEstado>
     @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
     private EntityManager em;
 
+    @Override
     protected EntityManager getEntityManager() {
         return em;
     }

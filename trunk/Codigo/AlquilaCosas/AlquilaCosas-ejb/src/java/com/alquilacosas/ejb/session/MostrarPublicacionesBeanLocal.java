@@ -18,8 +18,7 @@ import javax.ejb.Local;
 public interface MostrarPublicacionesBeanLocal {
     
     List<PublicacionDTO> getPublicacionesRandom(int pagina);
-    List<PublicacionDTO> getPublicacionesPoCategoria(int pagina,int categoria);
+    
     List<byte[]> getImage(int id);
-//    void setSelectedPublication(int id);
-//    Publicacion getSelectedPublication();
+
 }

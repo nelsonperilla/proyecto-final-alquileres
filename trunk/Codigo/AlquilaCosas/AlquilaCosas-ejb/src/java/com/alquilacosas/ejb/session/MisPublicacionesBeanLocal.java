@@ -16,7 +16,9 @@ import javax.ejb.Local;
 @Local
 public interface MisPublicacionesBeanLocal {
     
-    List<PublicacionDTO> getPublicaciones( int usuarioId );
+    public List<PublicacionDTO> getPublicaciones( int usuarioId );
     
-    List<EstadoPublicacion> getEstados();
+    public List<EstadoPublicacion> getEstados();
+
+    public void borrarPublicacion(java.lang.Integer publicacionId) throws com.alquilacosas.common.AlquilaCosasException;
 }

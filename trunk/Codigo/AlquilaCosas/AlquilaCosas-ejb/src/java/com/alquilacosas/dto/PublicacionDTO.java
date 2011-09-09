@@ -8,6 +8,7 @@ import com.alquilacosas.ejb.entity.Categoria;
 import com.alquilacosas.ejb.entity.EstadoPublicacion;
 import com.alquilacosas.ejb.entity.ImagenPublicacion;
 import com.alquilacosas.ejb.entity.Periodo;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
  *
  * @author jorge
  */
-public class PublicacionDTO {
+public class PublicacionDTO implements Serializable  {
     
     private int id;
     private String titulo;
@@ -37,33 +38,7 @@ public class PublicacionDTO {
     private int periodoMaximo;
     private Periodo periodo1;
     private Periodo periodo2;
-    private String ciudad;
-    private String barrio;
-    private String pais;
-
-    public Categoria getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
-    }
-
-    public EstadoPublicacion getEstado() {
-        return estado;
-    }
-
-    public void setEstado(EstadoPublicacion estado) {
-        this.estado = estado;
-    }
-
-    public List<PrecioDTO> getPrecios() {
-        return precios;
-    }
-
-    public void setPrecios(List<PrecioDTO> precios) {
-        this.precios = precios;
-    }
+    private String provincia, ciudad, barrio;
     
     public PublicacionDTO(int id,String titulo,String descripcion, 
             Date fecha_desde, Date fecha_hasta, boolean destacada,
@@ -91,8 +66,7 @@ public class PublicacionDTO {
     
     public PublicacionDTO(int id,String titulo,String descripcion, 
             Date fecha_desde, Date fecha_hasta, boolean destacada,
-            int cantidad)
-    {
+            int cantidad) {
         this.id = id;
         this.titulo = titulo;
         this.descripcion = descripcion;
@@ -100,7 +74,6 @@ public class PublicacionDTO {
         this.fecha_hasta = fecha_hasta;
         this.destacada = destacada;
         this.cantidad = cantidad;
-
     }
 
     public List<ImagenPublicacion> getImagenes() {
@@ -260,20 +233,6 @@ public class PublicacionDTO {
         this.categoriaF = categoriaF;
     }
 
-    /**
-     * @return the pais
-     */
-    public String getPais() {
-        return pais;
-    }
-
-    /**
-     * @param pais the pais to set
-     */
-    public void setPais(String pais) {
-        this.pais = pais;
-    }
-
     public int getPeriodoMaximo() {
         return periodoMaximo;
     }
@@ -308,6 +267,36 @@ public class PublicacionDTO {
         this.periodo2 = periodo2;
     }
     
-    
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
+
+    public EstadoPublicacion getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoPublicacion estado) {
+        this.estado = estado;
+    }
+
+    public List<PrecioDTO> getPrecios() {
+        return precios;
+    }
+
+    public void setPrecios(List<PrecioDTO> precios) {
+        this.precios = precios;
+    }
+
+    public String getProvincia() {
+        return provincia;
+    }
+
+    public void setProvincia(String provincia) {
+        this.provincia = provincia;
+    }
     
 }

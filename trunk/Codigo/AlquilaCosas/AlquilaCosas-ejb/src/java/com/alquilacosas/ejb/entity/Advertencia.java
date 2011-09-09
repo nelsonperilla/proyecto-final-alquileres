@@ -6,7 +6,6 @@ package com.alquilacosas.ejb.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,7 +18,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -36,23 +34,22 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Advertencia.findByFecha", query = "SELECT a FROM Advertencia a WHERE a.fecha = :fecha"),
     @NamedQuery(name = "Advertencia.findByMotivo", query = "SELECT a FROM Advertencia a WHERE a.motivo = :motivo")})
 public class Advertencia implements Serializable {
-    @Basic(optional =     false)
-    @NotNull
+    
     @Column(name = "FECHA")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fecha;
+    
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "ADVERTENCIA_ID")
     private Integer advertenciaId;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 150)
+    
+    @Size(max = 150)
     @Column(name = "MOTIVO")
     private String motivo;
+    
     @JoinColumn(name = "USUARIO_FK", referencedColumnName = "USUARIO_ID")
     @ManyToOne(optional = false)
     private Usuario usuarioFk;
@@ -93,6 +90,14 @@ public class Advertencia implements Serializable {
     public void setUsuarioFk(Usuario usuarioFk) {
         this.usuarioFk = usuarioFk;
     }
+    
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
+    }
 
     @Override
     public int hashCode() {
@@ -117,14 +122,6 @@ public class Advertencia implements Serializable {
     @Override
     public String toString() {
         return "com.alquilacosas.ejb.entity.Advertencia[ advertenciaId=" + advertenciaId + " ]";
-    }
-
-    public Date getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
     }
     
 }

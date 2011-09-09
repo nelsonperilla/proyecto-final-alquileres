@@ -6,17 +6,16 @@ package com.alquilacosas.ejb.session;
 
 import com.alquilacosas.dto.PrecioDTO;
 import com.alquilacosas.dto.PublicacionDTO;
-import com.alquilacosas.ejb.entity.Categoria;
 import com.alquilacosas.ejb.entity.Domicilio;
 import com.alquilacosas.ejb.entity.ImagenPublicacion;
 import com.alquilacosas.ejb.entity.Precio;
 import com.alquilacosas.ejb.entity.Publicacion;
+import com.alquilacosas.facade.PrecioFacade;
+import com.alquilacosas.facade.PublicacionFacade;
 import java.util.ArrayList;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 /**
  *
@@ -25,15 +24,14 @@ import javax.persistence.Query;
 @Stateless
 public class MostrarPublicacionesBean implements MostrarPublicacionesBeanLocal {
     
-    @PersistenceContext(unitName="AlquilaCosas-ejbPU") 
-    private EntityManager entityManager;
+    @EJB
+    private PublicacionFacade publicacionFacade;
+    @EJB
+    private PrecioFacade precioFacade;
     
     @Override
     public List<PublicacionDTO> getPublicacionesRandom(int pagina) {
-        Query query = entityManager.createNamedQuery("Publicacion.findAll");
-        query.setMaxResults(10);
-
-        List<Publicacion> publicaciones = query.getResultList();
+        List<Publicacion> publicaciones = publicacionFacade.getPublicacionesInicio();
         List<PublicacionDTO> resultado = new ArrayList<PublicacionDTO>();
         for(Publicacion publicacion: publicaciones) {
             PublicacionDTO tempPublication = new PublicacionDTO(publicacion.getPublicacionId(), publicacion.getTitulo(),
@@ -44,8 +42,8 @@ public class MostrarPublicacionesBean implements MostrarPublicacionesBeanLocal {
                 imagenes.add(imagen.getImagenPublicacionId());
             }
             Domicilio domicilio = publicacion.getUsuarioFk().getDomicilioList().get(0);
-            tempPublication.setPais(domicilio.getProvinciaFk().getPaisFk().getNombre());
-            tempPublication.setCiudad(domicilio.getProvinciaFk().getNombre());               
+            tempPublication.setProvincia(domicilio.getProvinciaFk().getNombre());
+            tempPublication.setCiudad(domicilio.getCiudad());               
             tempPublication.setImagenIds(imagenes);
             tempPublication.setPrecios(getPrecios(publicacion));
             resultado.add(tempPublication);
@@ -53,24 +51,13 @@ public class MostrarPublicacionesBean implements MostrarPublicacionesBeanLocal {
         
         return resultado;        
     }
-
-    @Override
-    public List<PublicacionDTO> getPublicacionesPoCategoria(int pagina, int categoria) {
-        Categoria filter = entityManager.find(Categoria.class, categoria);
-        Query query = entityManager.createNamedQuery("Publicacion.findByCategoria");
-        query.setParameter("categoria", filter);
-        List<PublicacionDTO> publicaciones = query.getResultList();
-        return publicaciones;//reescribir metodo!
-    }
     
     @Override
-    public List<byte[]> getImage(int publicacion)
+    public List<byte[]> getImage(int publicacionId)
     {
-        List<ImagenPublicacion> images;//=new ArrayList<ImagenPublicacion>();
-        Publicacion filter=entityManager.find(Publicacion.class,publicacion);
-        Query query = entityManager.createNamedQuery("ImagenPublicacion.findByPublicacionId");
-        query.setParameter("publicacion", filter);
-        images = query.getResultList();
+        List<ImagenPublicacion> images = null;
+        Publicacion publicacion = publicacionFacade.find(publicacionId);
+        images = publicacion.getImagenPublicacionList();
         List<byte[]> result=new ArrayList<byte[]>();
         for(ImagenPublicacion image : images)
             result.add(image.getImagen());
@@ -79,10 +66,7 @@ public class MostrarPublicacionesBean implements MostrarPublicacionesBeanLocal {
 
     private List<PrecioDTO> getPrecios(Publicacion filter){
         List<PrecioDTO> resultado = new ArrayList<PrecioDTO>();
-        List<Precio> precios;
-        Query query = entityManager.createNamedQuery("Precio.findByPublicacion");
-        query.setParameter("publicacion", filter);
-        precios = query.getResultList();   
+        List<Precio> precios = precioFacade.findByPublicacion(filter);
         
         for(Precio precio: precios) {
             PrecioDTO dto = new PrecioDTO(precio.getPrecio(), precio.getPeriodoFk().getNombre());
@@ -90,7 +74,6 @@ public class MostrarPublicacionesBean implements MostrarPublicacionesBeanLocal {
         }
         
         return resultado;
-
     }    
     
 }

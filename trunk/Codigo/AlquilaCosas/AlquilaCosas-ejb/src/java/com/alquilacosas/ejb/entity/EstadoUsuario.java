@@ -5,9 +5,6 @@
 package com.alquilacosas.ejb.entity;
 
 import java.io.Serializable;
-import java.util.List;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -17,12 +14,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -44,25 +37,18 @@ public class EstadoUsuario implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "ESTADO_USUARIO_ID")
     private Integer estadoUsuarioId;
     
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
-    @Column(name = "NOMBRE")
     @Enumerated(EnumType.STRING)
+    @Column(name = "NOMBRE")
     private NombreEstadoUsuario nombre;
     
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
     @Column(name = "DESCRIPCION")
     private String descripcion;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "estadoUsuario")
-    private List<UsuarioXEstado> usuarioXEstadoList;
+    
+    //@OneToMany(mappedBy = "estadoUsuario")
+    //private List<UsuarioXEstado> usuarioXEstadoList;
 
     public EstadoUsuario() {
     }
@@ -77,14 +63,6 @@ public class EstadoUsuario implements Serializable {
         this.descripcion = descripcion;
     }
 
-    public NombreEstadoUsuario getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(NombreEstadoUsuario nombre) {
-        this.nombre = nombre;
-    }
-
     public Integer getEstadoUsuarioId() {
         return estadoUsuarioId;
     }
@@ -93,21 +71,20 @@ public class EstadoUsuario implements Serializable {
         this.estadoUsuarioId = estadoUsuarioId;
     }
 
+    public NombreEstadoUsuario getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(NombreEstadoUsuario nombre) {
+        this.nombre = nombre;
+    }
+
     public String getDescripcion() {
         return descripcion;
     }
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
-    }
-
-    @XmlTransient
-    public List<UsuarioXEstado> getUsuarioXEstadoList() {
-        return usuarioXEstadoList;
-    }
-
-    public void setUsuarioXEstadoList(List<UsuarioXEstado> usuarioXEstadoList) {
-        this.usuarioXEstadoList = usuarioXEstadoList;
     }
 
     @Override

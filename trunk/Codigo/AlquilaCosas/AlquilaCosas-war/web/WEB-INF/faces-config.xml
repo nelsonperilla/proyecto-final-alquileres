@@ -40,6 +40,15 @@
     </navigation-rule>
     
     <navigation-rule>
+        <from-view-id>/vistas/usuario/misAlquileresOfrecidos.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>mostrarPublicacion</from-outcome>
+            <to-view-id>/vistas/mostrarPublicacion.xhtml?id=#{alquileresOfrecidos.publicacionId}</to-view-id>
+            <redirect/>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
         <from-view-id>/vistas/usuario/misPublicaciones.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>mostrarPublicacion</from-outcome>
@@ -148,6 +157,16 @@
         <navigation-case>
             <from-outcome>misPedidosRecibidos</from-outcome>
             <to-view-id>/vistas/usuario/misPedidosRecibidos.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>destacarPublicacion</from-outcome>
+            <to-view-id>/vistas/usuario/destacarPublicacion.xhtml?id=#{publicacion.publicacionId}</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>misAlquileresOfrecidos</from-outcome>
+            <to-view-id>/vistas/usuario/misAlquileresOfrecidos.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
         <navigation-case>

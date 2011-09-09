@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,7 +22,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -47,27 +45,22 @@ public class Alquiler implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "ALQUILER_ID")
     private Integer alquilerId;
     
-    @Basic(optional = false)
-    @NotNull
+    @Column(name = "CANTIDAD")
+    private int cantidad;
+    
+    @Column(name = "MONTO")
+    private double monto;
+    
     @Column(name = "FECHA_INICIO")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaInicio;
     
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "FECHA_FIN")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaFin;
-    
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "CANTIDAD")
-    private int cantidad;
     
     @JoinColumn(name = "PUBLICACION_FK", referencedColumnName = "PUBLICACION_ID")
     @ManyToOne(optional = false)
@@ -85,13 +78,16 @@ public class Alquiler implements Serializable {
 
     public Alquiler() {
         alquilerXEstadoList = new ArrayList<AlquilerXEstado>();
+        calificacionList = new ArrayList<Calificacion>();
     }
 
     public Alquiler(Integer alquilerId) {
+        this();
         this.alquilerId = alquilerId;
     }
 
     public Alquiler(Integer alquilerId, Date fechaInicio, Date fechaFin, int cantidad) {
+        this();
         this.alquilerId = alquilerId;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
@@ -106,6 +102,11 @@ public class Alquiler implements Serializable {
     public void removerAlquilerXEstado( AlquilerXEstado axe ){
         this.alquilerXEstadoList.remove(axe);
         axe.setAlquilerFk(null);
+    }
+    
+    public void agregarCalificacion(Calificacion calificacion) {
+        calificacionList.add(calificacion);
+        calificacion.setAlquilerFk(this);
     }
 
     public Integer getAlquilerId() {
@@ -138,6 +139,14 @@ public class Alquiler implements Serializable {
 
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
+    }
+
+    public double getMonto() {
+        return monto;
+    }
+
+    public void setMonto(double monto) {
+        this.monto = monto;
     }
 
     public Publicacion getPublicacionFk() {

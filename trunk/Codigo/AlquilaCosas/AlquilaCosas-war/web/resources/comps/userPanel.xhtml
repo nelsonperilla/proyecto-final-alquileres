@@ -14,7 +14,8 @@
     <cc:implementation>
         <p:outputPanel rendered="#{login.logueado}" >
             <h:form>
-                <p:panel header="Usuario" styleClass="controlPanel">
+                <p:panel styleClass="controlPanel">
+                    <h3 style="color:gainsboro; margin-top: 1px">Usuario</h3>
                     <h:panelGrid columns="1" cellpadding="2" style="width: 100%; text-align: center">
                         <h:outputLabel value="Hola #{login.username}" styleClass="labelBienvenida" />
                         <h:commandLink value="Publicar" action="nuevaPublicacion" />
@@ -23,6 +24,7 @@
                         <h:commandLink value="Mis datos" action="datosUsuario" />
                         <h:commandLink value="Pedidos Recibidos" action="misPedidosRecibidos" />
                         <h:commandLink value="Pedidos Realizados" action="misPedidosRealizados" />
+                        <h:commandLink value="Mis Alquileres ofrecidos" action="misAlquileresOfrecidos" />
                     
                         <f:facet name="footer" >
                             <h:commandLink value="Salir" action="#{login.logout}" />

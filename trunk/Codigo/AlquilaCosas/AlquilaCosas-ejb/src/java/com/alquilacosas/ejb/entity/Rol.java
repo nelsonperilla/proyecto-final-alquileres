@@ -5,8 +5,6 @@
 package com.alquilacosas.ejb.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,14 +13,10 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -43,46 +37,30 @@ public class Rol implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "ROL_ID")
     private Integer rolId;
     
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
-    @Column(name = "NOMBRE")
     @Enumerated(EnumType.STRING)
+    @Column(name = "NOMBRE")
     private NombreRol nombre;
     
-    @Size(max = 45)
     @Column(name = "DESCRIPCION")
     private String descripcion;
-    @ManyToMany(mappedBy = "rolList")
-    private List<Login> loginList;
+    
+    //@ManyToMany(mappedBy = "rolList")
+    //private List<Login> loginList;
 
     public Rol() {
-        loginList = new ArrayList<Login>();
     }
 
     public Rol(Integer rolId) {
-        this();
         this.rolId = rolId;
     }
 
     public Rol(Integer rolId, NombreRol nombre) {
-        this();
         this.rolId = rolId;
         this.nombre = nombre;
-    }
-    
-    public void agregarLogin(Login login) {
-        loginList.add(login);
-    }
-    
-    public Login removerLogin(Login login) {
-        loginList.remove(login);
-        return login;
     }
 
     public Integer getRolId() {
@@ -92,14 +70,6 @@ public class Rol implements Serializable {
     public void setRolId(Integer rolId) {
         this.rolId = rolId;
     }
-    
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
 
     public NombreRol getNombre() {
         return nombre;
@@ -108,14 +78,13 @@ public class Rol implements Serializable {
     public void setNombre(NombreRol nombre) {
         this.nombre = nombre;
     }
-
-    @XmlTransient
-    public List<Login> getLoginList() {
-        return loginList;
+    
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setLoginList(List<Login> loginList) {
-        this.loginList = loginList;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     @Override

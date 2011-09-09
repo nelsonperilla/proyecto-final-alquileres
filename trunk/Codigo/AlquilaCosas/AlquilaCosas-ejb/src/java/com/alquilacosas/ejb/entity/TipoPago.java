@@ -44,19 +44,16 @@ public class TipoPago implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "TIPO_PAGO_ID")
     private Integer tipoPagoId;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 50)
-    @Column(name = "NOMBRE")
+    
     @Enumerated(EnumType.STRING)
+    @Column(name = "NOMBRE")
     private NombreTipoPago nombre;
-    @Size(max = 255)
+    
     @Column(name = "DESCRIPCION")
     private String descripcion;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tipoPagoFk")
     private List<Pago> pagoList;
 

@@ -83,7 +83,25 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
     @Override
     public Busqueda buscarPublicacionesPorCategoria(int categoriaId, int registros, int desde) {
         
-        List<Publicacion> publicaciones = publicacionFacade.findByCategoria(categoriaId, registros, desde);
+        List<Integer> listaCategorias = new ArrayList<Integer>();
+        Categoria cat = categoriaFacade.find(categoriaId);
+        listaCategorias.add(cat.getCategoriaId());
+        List<Categoria> sublista = cat.getCategoriaList();
+        List<Categoria> sublista2 = new ArrayList<Categoria>();
+        for(Categoria c: sublista) {
+            sublista2.add(c);
+            listaCategorias.add(c.getCategoriaId());
+        }
+        List<Categoria> sublista3 = new ArrayList<Categoria>();
+        for(Categoria c: sublista2) {
+            sublista.add(c);
+            listaCategorias.add(c.getCategoriaId());
+        }
+        for(Categoria c: sublista3)
+            listaCategorias.add(c.getCategoriaId());
+        
+        
+        List<Publicacion> publicaciones = publicacionFacade.findByCategoria(listaCategorias, registros, desde);
         List<PublicacionDTO> pubFacadeList = new ArrayList<PublicacionDTO>();
         for (Publicacion p : publicaciones) {
             
@@ -98,7 +116,7 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
         Busqueda busqueda = new Busqueda(pubFacadeList, categorias);
 
         if (desde == 0) {
-            Long totalRegistros = publicacionFacade.countByCategoria(categoriaId);
+            Long totalRegistros = publicacionFacade.countByCategoria(listaCategorias);
             if (totalRegistros != null) {
                 busqueda.setTotalRegistros(totalRegistros.intValue());
             }
@@ -128,8 +146,8 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
         }
         facade.setImagenIds(imagenes);
         Domicilio d = publicacion.getUsuarioFk().getDomicilioList().get(0);
-        facade.setPais(d.getProvinciaFk().getPaisFk().getNombre());
-        facade.setCiudad(d.getProvinciaFk().getNombre());
+        facade.setProvincia(d.getProvinciaFk().getNombre());
+        facade.setCiudad(d.getCiudad());
         List<PrecioDTO> precios = precioBean.getPrecios(publicacion);
         facade.setPrecios(precios);
         
