@@ -147,8 +147,14 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
     
     public List<Alquiler> getAlquileresPorUsuario( Usuario usuario ){
         List<Alquiler> alquileres = null;
-        Query query = em.createNamedQuery("Alquiler.findByUsuario");
+        Query query = em.createQuery("SELECT a FROM Alquiler a, AlquilerXEstado axe, EstadoAlquiler ea "
+                + "WHERE a.alquilerId = axe.alquilerFk.alquilerId "
+                + "AND axe.estadoAlquilerFk.estadoAlquilerId = ea.estadoAlquilerId "
+                + "AND axe.fechaHasta IS NULL "
+                + "AND ea.nombre = :estado "
+                + "AND a.usuarioFk = :usuario");
         query.setParameter("usuario", usuario);
+        query.setParameter("estado", EstadoAlquiler.NombreEstadoAlquiler.PEDIDO);
         alquileres = query.getResultList();
         return alquileres;
     }

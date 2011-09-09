@@ -25,7 +25,8 @@
             <h:form prependId="false">
 
                 <p:dataTable id="grid" value="#{misPedidosRealizados.pedidosRealizados}" var="alquiler" 
-                             rows="10" paginator="true" paginatorPosition="bottom"
+                             rows="10" paginator="true" paginatorPosition="bottom" 
+                             emptyMessage="No existen Pedidos de Alquiler"
                              styleClass="itemsTable" >
 
                     <p:column>
@@ -38,7 +39,9 @@
                                         userMethod="mostrarUsuario"
                                         metodoAceptar="confirmarAlquiler"
                                         metodoRechazar="rechazarAlquiler"
-                                        lista="grid"/>
+                                        metodoCancelarPedido="cancelarPedidoDeAlquiler"
+                                        lista="grid"
+                                        cancelable="true"/>
                     </p:column>
 
                 </p:dataTable>
