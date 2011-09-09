@@ -49,6 +49,9 @@ public class DesplieguePublicacionMBean {
     private int periodoAlquiler;
     private List<SelectItem> periodos;
     private int periodoSeleccionado;    
+    private Date today;
+    private ComentarioDTO nuevaPregunta;
+    private int cantidadProductos;
 
     /** Creates a new instance of DesplieguePublicacionMBean */
     public DesplieguePublicacionMBean() {
@@ -56,59 +59,72 @@ public class DesplieguePublicacionMBean {
 
     @PostConstruct
     public void init() {
-        effect = "fade";
-        fechas = new ArrayList<Date>();
-        Calendar test =Calendar.getInstance();
-        test.set(2011,7,29);
-        fechas.add(test.getTime());
-        createDictionary();
+        
+//        fechas = new ArrayList<Date>();
+//        Calendar test =Calendar.getInstance();
+//        test.set(2011,7,29);
+//        fechas.add(test.getTime());
+        
+        
+        cantidadProductos = 1;
         fechaInicio = new Date();
-        
-        
+        effect = "fade";
+        today = new Date(); 
         periodos = new ArrayList<SelectItem>();
         List<Periodo> listaPeriodos = publicationBean.getPeriodos();
         for(Periodo periodo: listaPeriodos)
             periodos.add(new SelectItem(periodo.getPeriodoId(),periodo.getNombre().name()));
         periodoSeleccionado = 1; //alto hardCode, para que por defecto este seleccionado dia y no hora (Jorge)
         String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
-        //nuevaPregunta = new ComentarioFacade();
+        setNuevaPregunta(new ComentarioDTO());
         if (id != null) {
             int publicationId = Integer.parseInt(id);
             setPublicacion(publicationBean.getPublicacion(publicationId));
             setComentarios(publicationBean.getPreguntas(publicationId));
+            fechas = publicationBean.getFechasSinStock(publicationId,cantidadProductos);
+            
             if (publicacion != null && publicacion.getFecha_hasta() != null) {
                 setFecha_hasta(DateFormat.getDateInstance(DateFormat.SHORT).format(publicacion.getFecha_hasta()));
             }
 
         }
+        createDictionary();
     }
 
     public void actualizarPreguntas() {
         comentarios = publicationBean.getPreguntas(publicacion.getId());
     }
 
+    public void actualizarFechas()
+    {
+        fechas = publicationBean.getFechasSinStock(publicacion.getId(),cantidadProductos);
+    }
+    
     public void preguntar() {
         boolean logueado = usuarioLogueado.isLogueado();
         RequestContext context = RequestContext.getCurrentInstance();
         context.addCallbackParam("logueado", logueado);
     }
 
-    public void guardarPregunta() {
-        ComentarioDTO nuevaPregunta = new ComentarioDTO();
-        nuevaPregunta.setComentario(comentario);
-        nuevaPregunta.setUsuarioId(usuarioLogueado.getUsuarioId());
-        //nuevaPregunta.setUsuario(usuarioLogueado.getUsername());
-        nuevaPregunta.setFecha(new Date());
+    public String guardarPregunta() {
+        getNuevaPregunta().setUsuarioId(usuarioLogueado.getUsuarioId());
+        getNuevaPregunta().setUsuario(usuarioLogueado.getUsername());
+        getNuevaPregunta().setFecha(new Date());
         try {
-            publicationBean.setPregunta(publicacion.getId(), nuevaPregunta);
-            //setNuevaPregunta(new ComentarioFacade());
-            actualizarPreguntas();
-            comentario = "";
+            publicationBean.setPregunta(publicacion.getId(), getNuevaPregunta());
+            setNuevaPregunta(new ComentarioDTO());
+            //actualizarPreguntas();
         } catch (AlquilaCosasException e) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Error al enviar pregunta", e.getMessage()));
         }
+        return null;
+    }
+    
+    public void confirmarPedido()
+    {
+        
     }
     
     private void createDictionary() {
@@ -293,5 +309,47 @@ public class DesplieguePublicacionMBean {
      */
     public void setPeriodoSeleccionado(int periodoSeleccionado) {
         this.periodoSeleccionado = periodoSeleccionado;
+    }
+
+    /**
+     * @return the today
+     */
+    public Date getToday() {
+        return today;
+    }
+
+    /**
+     * @param today the today to set
+     */
+    public void setToday(Date today) {
+        this.today = today;
+    }
+
+    /**
+     * @return the nuevaPregunta
+     */
+    public ComentarioDTO getNuevaPregunta() {
+        return nuevaPregunta;
+    }
+
+    /**
+     * @param nuevaPregunta the nuevaPregunta to set
+     */
+    public void setNuevaPregunta(ComentarioDTO nuevaPregunta) {
+        this.nuevaPregunta = nuevaPregunta;
+    }
+
+    /**
+     * @return the cantidadProductos
+     */
+    public int getCantidadProductos() {
+        return cantidadProductos;
+    }
+
+    /**
+     * @param cantidadProductos the cantidadProductos to set
+     */
+    public void setCantidadProductos(int cantidadProductos) {
+        this.cantidadProductos = cantidadProductos;
     }
 }

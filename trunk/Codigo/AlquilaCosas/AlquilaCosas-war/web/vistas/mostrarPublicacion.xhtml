@@ -68,11 +68,16 @@
                                                   styleClass="itemInfo" escape="false"/>  
                                     <h:outputText value="Finaliza el #{publicacionDesplegada.fecha_hasta}" 
                                                   styleClass="itemInfo" escape="false"/>  
-                                    <h:outputText value="Cantidad disponible: #{publicacionDesplegada.publicacion.cantidad}" 
+                                    <h:outputText value="Disponibilidad maxima: #{publicacionDesplegada.publicacion.cantidad}" 
                                                   styleClass="itemInfo"/>  
-                                    <p:commandButton value="Alquilar" onclick="confirmRent.show()" styleClass="buttom"/>
-
                                 </h:panelGrid>                            
+                                <h:panelGrid columns="3" styleClass="dataPrincipal" style="margin-top: 10px; vertical-align: center">
+                                    <h:outputLabel   value="Cantidad:" />
+                                    <p:inputText value="#{publicacionDesplegada.cantidadProductos}" required="true"
+                                         style="width:30px"/>
+                                    <p:commandButton value="Alquilar" action="#{publicacionDesplegada.actualizarFechas}" 
+                                                     onclick="confirmRent.show()" styleClass="buttom"/>
+                                </h:panelGrid>
                             </h:form>
                             <h:form id="rent">
                                  <script type="text/javascript" >
@@ -99,13 +104,13 @@
                                         </h:selectOneMenu>
                                         <h:outputLabel value="Fecha de inicio: "/>
                                         <p:calendar id="rentCalendar" mode="inline" navigator="false" value="#{publicacionDesplegada.fechaInicio}" 
-                                            pattern="dd/MM/yyyy" >
+                                                    pattern="dd/MM/yyyy" mindate="#{publicacionDesplegada.today}" >
                                             <p:ajax event="dateSelect" listener="#{publicacionDesplegada.seleccionarFecha}"
                                                 update="panel" oncomplete="absDialog.show()" />
                                         </p:calendar>
                                     </h:panelGrid>
-                                    <p:commandButton value="Confirmar" onclick="confirmRent.hide()"
-                                                     />
+                                    <p:commandButton value="Confirmar" action="#{publicacionDesplegada.confirmarPedido}" 
+                                                     onclick="confirmRent.hide()" />
                                 
                             </p:dialog>
                             </h:form>
@@ -121,20 +126,37 @@
                     </tr>
                     <tr>
                         <td colspan="2">
-                            <h:form id="nuevaPregunta">
+                            <h:form id="desplieguePreguntas" style="width: 100%">  
+                                <p:dialog id="loginDialog" header="Ingreso" widgetVar="loginDlg" >
+                                        <h:panelGrid columns="2" cellpadding="2" >
+                                            <h:outputLabel  value="Usuario:" />
+                                            <p:inputText value="#{login.username}" required="true"
+                                                         style="width:175px" />
+                                            <h:outputLabel value="Contraseña:" />
+                                            <p:password feedback="false" minLength="1" 
+                                                        value="#{login.password}" required="true"
+                                                        style="width:175px; " />
+                                        </h:panelGrid>
+                                        <p:commandButton value="Entrar" actionListener="#{login.loginEnPagina}"
+                                                         oncomplete="revisarLogueo(xhr, status, args)"
+                                                         update="paneles" />
+                                </p:dialog>
+
                                 <p:growl id="msgs"/>
                                 <p:dialog header="Ingrese su pregunta" widgetVar="nuevaPregunta" modal="true"
                                           showEffect="fade" width="280" >
                                     <h:panelGrid columns="1" id="grid" style="text-align: center; width: 250px">  
                                         <h:outputLabel value="Pregunta: " for="txt_title" /> 
                                         <p:inputTextarea id="txt_title" autoResize="false" rows="5"     
-                                                         value="#{publicacionDesplegada.comentario}" 
+                                                         value="#{publicacionDesplegada.nuevaPregunta.comentario}" 
                                                          style="width: 200px;" />  
                                         <h:panelGrid columns="2">
                                             <p:commandButton value="Limpiar" type="reset"/>  
-                                            <p:commandButton value="Enviar Pregunta" update="@form :desplieguePreguntas"  
+                                            <p:commandButton value="Enviar Pregunta" update="preguntas msgs @parent"  
                                                              action="#{publicacionDesplegada.guardarPregunta}"
                                                              onclick="nuevaPregunta.hide()">  
+                                                <p:collector value="#{publicacionDesplegada.nuevaPregunta}"   
+                                                            addTo="#{publicacionDesplegada.comentarios}" />  
                                             </p:commandButton>  
                                         </h:panelGrid>
                                     </h:panelGrid>  
@@ -146,9 +168,7 @@
                                     <f:facet name="complete">  
                                         <h:outputText value="" />  
                                     </f:facet>  
-                                </p:ajaxStatus>  
-                            </h:form>
-                            <h:form id="desplieguePreguntas" style="width: 100%">  
+                                </p:ajaxStatus>
                                 <div class="preguntas">
                                     <p:outputPanel id="preguntas" >  
                                         <p:commandButton style="margin: 10px 10px 0px 5px;" value="Hacer una pregunta" 
@@ -161,25 +181,8 @@
                                         </h:dataTable>  
                                     </p:outputPanel>  
                                 </div>
+
                             </h:form>   
-
-                            <p:dialog id="loginDialog" header="Ingreso" widgetVar="loginDlg" >
-                                <h:form id="loginForm">
-                                    <h:panelGrid columns="2" cellpadding="2" >
-                                        <h:outputLabel  value="Usuario:" />
-                                        <p:inputText value="#{login.username}" required="true"
-                                                     style="width:175px" />
-                                        <h:outputLabel value="Contraseña:" />
-                                        <p:password feedback="false" minLength="1" 
-                                                    value="#{login.password}" required="true"
-                                                    style="width:175px; " />
-                                    </h:panelGrid>
-                                    <p:commandButton value="Entrar" actionListener="#{login.loginEnPagina}"
-                                                     oncomplete="revisarLogueo(xhr, status, args)"
-                                                     update="paneles" />
-                                </h:form>
-                            </p:dialog>
-
                         </td>
                     </tr>
                 </table>

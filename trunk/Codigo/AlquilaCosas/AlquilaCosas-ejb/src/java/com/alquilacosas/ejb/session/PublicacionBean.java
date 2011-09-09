@@ -10,6 +10,7 @@ import com.alquilacosas.dto.CategoriaDTO;
 import com.alquilacosas.common.NotificacionEmail;
 import com.alquilacosas.dto.PrecioDTO;
 import com.alquilacosas.dto.PublicacionDTO;
+import com.alquilacosas.ejb.entity.Alquiler;
 import com.alquilacosas.ejb.entity.Categoria;
 import com.alquilacosas.ejb.entity.Comentario;
 import com.alquilacosas.ejb.entity.Domicilio;
@@ -22,6 +23,7 @@ import com.alquilacosas.ejb.entity.Precio;
 import com.alquilacosas.ejb.entity.Publicacion;
 import com.alquilacosas.ejb.entity.PublicacionXEstado;
 import com.alquilacosas.ejb.entity.Usuario;
+import com.alquilacosas.facade.AlquilerFacade;
 import com.alquilacosas.facade.CategoriaFacade;
 import com.alquilacosas.facade.EstadoPublicacionFacade;
 import com.alquilacosas.facade.ImagenPublicacionFacade;
@@ -34,6 +36,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.annotation.security.DeclareRoles;
@@ -96,6 +99,9 @@ public class PublicacionBean implements PublicacionBeanLocal {
     private PrecioFacade precioFacade;
     @EJB
     private PeriodoFacade periodoFacade;
+    @EJB
+    private AlquilerFacade alquilerFacade;
+    
     
 
     @Override
@@ -522,6 +528,39 @@ public class PublicacionBean implements PublicacionBeanLocal {
       return periodoFacade.getPeriodosOrderByHoras();
        
        
-    }            
+    }     
+    
+    @Override
+    @PermitAll
+    public List<Date> getFechasSinStock(int publicationId, int cantidad)
+    {
+        List<Date> respuesta = new ArrayList<Date>();
+        List<Alquiler> alquileres = alquilerFacade.getAlquileresByPublicacionFromToday(publicationId);
+        Iterator<Alquiler> itAlquiler =  alquileres.iterator();
+        
+        Calendar today = Calendar.getInstance();
+        today.setTime(new Date());
+        today.set(Calendar.HOUR_OF_DAY, 0);
+        today.set(Calendar.MINUTE, 0);
+        today.set(Calendar.SECOND, 0);
+        
+        int disponibles = entityManager.find(Publicacion.class, publicationId).getCantidad();
+        
+        while (itAlquiler.hasNext())
+        {
+            
+            Alquiler temp = itAlquiler.next();
+            Calendar date = Calendar.getInstance();
+            date.setTime(temp.getFechaInicio());
+            if(date.before(today))
+                date.setTime(today.getTime());
+            if(cantidad > disponibles - temp.getCantidad())
+                while(date.before(temp.getFechaFin()))
+                {
+                    
+                }
+        }
+        return respuesta;
+    }
             
 }

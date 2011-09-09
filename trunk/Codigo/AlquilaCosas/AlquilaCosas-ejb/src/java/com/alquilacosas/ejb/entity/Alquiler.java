@@ -4,6 +4,7 @@
  */
 package com.alquilacosas.ejb.entity;
 
+import com.alquilacosas.ejb.entity.EstadoAlquiler.NombreEstadoAlquiler;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,6 +42,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Alquiler.findByFechaFin", query = "SELECT a FROM Alquiler a WHERE a.fechaFin = :fechaFin"),
     @NamedQuery(name = "Alquiler.findByCantidad", query = "SELECT a FROM Alquiler a WHERE a.cantidad = :cantidad"),
     @NamedQuery(name = "Alquiler.findByUsuario", query = "SELECT a FROM Alquiler a WHERE a.usuarioFk = :usuario")})
+
 public class Alquiler implements Serializable {
     
     private static final long serialVersionUID = 1L;

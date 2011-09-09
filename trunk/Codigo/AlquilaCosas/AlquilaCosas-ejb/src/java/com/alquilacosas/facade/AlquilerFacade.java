@@ -5,15 +5,31 @@
 package com.alquilacosas.facade;
 
 import com.alquilacosas.ejb.entity.Alquiler;
+import com.alquilacosas.ejb.entity.AlquilerXEstado;
+import com.alquilacosas.ejb.entity.Alquiler_;
 import com.alquilacosas.ejb.entity.EstadoAlquiler;
+import com.alquilacosas.ejb.entity.EstadoAlquiler.NombreEstadoAlquiler;
 import com.alquilacosas.ejb.entity.Publicacion;
+import java.util.ArrayList;
 import com.alquilacosas.ejb.entity.Usuario;
+import java.util.Calendar;
+
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.Metamodel;
 
 /**
  *
@@ -32,6 +48,55 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
         super(Alquiler.class);
     }
     
+
+    /** Trae todos los alquileres que han sido confirmados o estan activos
+     * para una publicacion en paricular, eliminando de la lista aquellos que
+     * han finalizado antes de la fecha actual.
+     * @param publicacionId
+     * @return 
+     */
+    public List<Alquiler> getAlquileresByPublicacionFromToday(int publicationId)
+    {
+        //List<Alquiler> respuesta = new ArrayList<Alquiler>();
+//        Publicacion filter = em.find(Publicacion.class, publicationId);
+//        Query query = em.createNamedQuery("Alquiler.findAlquileresByPublicacionFromToday");
+//        query.setParameter("publicacion", filter);
+//        query.setParameter("estadoConfirmado", NombreEstadoAlquiler.CONFIRMADO);
+//        query.setParameter("estadoActivo", NombreEstadoAlquiler.ACTIVO);
+//        respuesta = query.getResultList();        
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<Alquiler> queryBuilder =  criteriaBuilder.createQuery(Alquiler.class);
+        
+        Metamodel m = em.getMetamodel();
+        EntityType<Alquiler> alquiler = m.entity(Alquiler.class);
+        
+        Root<Alquiler> root = queryBuilder.from(alquiler);
+        
+        Join<Alquiler, AlquilerXEstado> join = root.join("alquilerXEstadoList");
+        Path endDate = ((Path)join.as(AlquilerXEstado.class)).get("fechaHasta");
+        Predicate lastState = criteriaBuilder.isNull(endDate);
+        
+        Join<AlquilerXEstado, EstadoAlquiler> join2 = join.join("estadoAlquilerFk");
+        Path stateName = ((Path) join2.as(EstadoAlquiler.class)).get("nombre");
+        Predicate confirmState = criteriaBuilder.equal(stateName, NombreEstadoAlquiler.CONFIRMADO);
+        Predicate activeState = criteriaBuilder.equal(stateName, NombreEstadoAlquiler.ACTIVO);
+        Predicate orStates = criteriaBuilder.or(confirmState,activeState);
+        
+        Calendar date = Calendar.getInstance();
+        date.setTime(new Date());
+        date.set(Calendar.HOUR_OF_DAY, 0);
+        date.set(Calendar.MINUTE, 0);
+        date.set(Calendar.SECOND, 0);
+
+        Predicate endAlquiler = criteriaBuilder.greaterThanOrEqualTo(root.get(Alquiler_.fechaFin),date.getTime()); 
+        
+        queryBuilder.where(endAlquiler, orStates);
+        Query query = em.createQuery(queryBuilder);
+
+        
+        return query.getResultList();        
+        
+    }
     public List<Alquiler> getAlquilerPorPeriodo( Date fechaInicio, Date fechaFin, Integer idAlqConfirmado ){
         
         List<Alquiler> alquileres = null;
