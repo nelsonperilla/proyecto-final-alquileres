@@ -49,6 +49,8 @@ public interface PublicacionBeanLocal {
             NombreEstadoPublicacion estadoPublicacion  ) throws AlquilaCosasException;
     
     List<Periodo> getPeriodos();
+    
+    public List<Date> getFechasSinStock(int publicationId, int cantidad);
 
     public void borrarPublicacion( Integer publicacionId ) throws AlquilaCosasException;
 }
