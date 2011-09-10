@@ -135,10 +135,10 @@ public class AlquilerBean implements AlquilerBeanLocal {
             
             for( Alquiler a : listaAlquiler ){
                 
-                EstadoAlquiler ea = estadoAlquilerFacade.getEstadoAlquiler(a.getAlquilerId());
+                EstadoAlquiler ea = estadoAlquilerFacade.getEstadoAlquiler(a);
                 AlquilerDTO alquilerDto = new AlquilerDTO( p.getPublicacionId(), p.getTitulo(),
                             usuarioDuenioId, a.getAlquilerId(), a.getFechaInicio(), 
-                            a.getFechaFin(), a.getCantidad(), ea, imagenId);
+                            a.getFechaFin(), a.getCantidad(), ea.getNombre(), imagenId);
                 pedidos.add(alquilerDto);
             }         
         }
@@ -157,11 +157,11 @@ public class AlquilerBean implements AlquilerBeanLocal {
             
             Publicacion p = a.getPublicacionFk();
             Integer imagenId = this.getIdImagenPrincipal( p );
-            EstadoAlquiler ea = estadoAlquilerFacade.getEstadoAlquiler(a.getAlquilerId());
+            EstadoAlquiler ea = estadoAlquilerFacade.getEstadoAlquiler(a);
             
             AlquilerDTO alquilerDto = new AlquilerDTO( p.getPublicacionId(), p.getTitulo(),
                             usuarioId, a.getAlquilerId(), a.getFechaInicio(), 
-                            a.getFechaFin(), a.getCantidad(), ea, imagenId);
+                            a.getFechaFin(), a.getCantidad(), ea.getNombre(), imagenId);
             pedidos.add(alquilerDto);
         }
         return pedidos;

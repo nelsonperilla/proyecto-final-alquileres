@@ -50,12 +50,6 @@ public class AlquileresOfrecidosMBean implements Serializable {
         }
     }
 
-    public void prepararCalificar(ActionEvent event) {
-    }
-
-    public void prepararVerCalificacion(ActionEvent event) {
-    }
-
     public String verPublicacion() {
         return "mostrarPublicacion";
     }
@@ -63,10 +57,27 @@ public class AlquileresOfrecidosMBean implements Serializable {
     public String verUsuario() {
         return "";
     }
-
-    public String modificarAlquiler() {
-        return "";
+    
+    public void prepararCalificar(ActionEvent event) {
+        alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
     }
+
+    public void prepararVerCalificacion(ActionEvent event) {
+        alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
+    }
+    
+    public void prepararCancelarAlquiler(ActionEvent event) {
+        alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
+    }
+    
+    public void prepararModificarAlquiler(ActionEvent event) {
+        alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
+    }
+    
+    public void prepararPedirCambio(ActionEvent event) {
+        alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
+    }
+    
     
     public void registrarCalificacion() {
         alquileresBean.registrarCalificacion(usuarioLogueado, alquilerId, puntuacionId, comentario);  

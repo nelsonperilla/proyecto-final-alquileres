@@ -5,6 +5,7 @@
 package com.alquilacosas.dto;
 
 import com.alquilacosas.ejb.entity.EstadoAlquiler;
+import com.alquilacosas.ejb.entity.EstadoAlquiler.NombreEstadoAlquiler;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,7 +28,7 @@ public class AlquilerDTO implements Serializable {
     private int cantidad;
     private double monto;
     private boolean calificado;
-    private EstadoAlquiler estadoAlquiler;
+    private NombreEstadoAlquiler estadoAlquiler;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
     public AlquilerDTO() {
@@ -35,7 +36,7 @@ public class AlquilerDTO implements Serializable {
 
     public AlquilerDTO(int idPublicacion, String titulo, int idUsuario, int idAlquiler,
             Date fechaInicioAlquiler, Date fechaFinAlquiler, int cantidad,
-            EstadoAlquiler estadoAlquiler, Integer imagenId) {
+            NombreEstadoAlquiler estadoAlquiler, Integer imagenId) {
 
         this.idPublicacion = idPublicacion;
         this.idUsuario = idUsuario;
@@ -51,8 +52,10 @@ public class AlquilerDTO implements Serializable {
         fechaHasta = sdf.format(fechaFin);
     }
 
-    public AlquilerDTO(int idPublicacion, int idUsuario, int idAlquiler, Date fechaInicioAlquiler,
-            Date fechaFinAlquiler, String titulo, String usuario, int cantidad, double monto, boolean calificado) {
+    public AlquilerDTO(int idPublicacion, int idUsuario, int idAlquiler, int imagenId,
+            Date fechaInicioAlquiler,
+            Date fechaFinAlquiler, NombreEstadoAlquiler estado, String titulo, 
+            String usuario, int cantidad, double monto, boolean calificado) {
         this.idPublicacion = idPublicacion;
         this.idUsuario = idUsuario;
         this.idAlquiler = idAlquiler;
@@ -63,7 +66,8 @@ public class AlquilerDTO implements Serializable {
         this.cantidad = cantidad;
         this.monto = monto;
         this.calificado = calificado;
-
+        this.estadoAlquiler = estado;
+        this.imagenId = imagenId;
         fechaDesde = sdf.format(fechaInicio);
         fechaHasta = sdf.format(fechaFin);
     }
@@ -90,11 +94,11 @@ public class AlquilerDTO implements Serializable {
         this.cantidad = cantidad;
     }
 
-    public EstadoAlquiler getEstadoAlquiler() {
+    public NombreEstadoAlquiler getEstadoAlquiler() {
         return estadoAlquiler;
     }
 
-    public void setEstadoAlquiler(EstadoAlquiler estadoAlquiler) {
+    public void setEstadoAlquiler(NombreEstadoAlquiler estadoAlquiler) {
         this.estadoAlquiler = estadoAlquiler;
     }
 
@@ -192,5 +196,24 @@ public class AlquilerDTO implements Serializable {
 
     public void setUsuario(String usuario) {
         this.usuario = usuario;
+    }
+    
+    public boolean isCancelable() {
+        if(estadoAlquiler == NombreEstadoAlquiler.CONFIRMADO ||
+                estadoAlquiler == NombreEstadoAlquiler.ACTIVO) {
+            return true;
+        }
+        else
+            return false;
+    }
+    
+    public boolean isCalificable() {
+        if(estadoAlquiler == NombreEstadoAlquiler.FINALIZADO ||
+                estadoAlquiler == NombreEstadoAlquiler.CANCELADO ||
+                estadoAlquiler == NombreEstadoAlquiler.CANCELADO_ALQUILADOR) {
+            return true;
+        }
+        else
+            return false;
     }
 }

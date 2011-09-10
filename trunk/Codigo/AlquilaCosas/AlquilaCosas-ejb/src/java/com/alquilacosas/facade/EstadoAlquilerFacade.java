@@ -4,9 +4,11 @@
  */
 package com.alquilacosas.facade;
 
+import com.alquilacosas.ejb.entity.Alquiler;
 import com.alquilacosas.ejb.entity.EstadoAlquiler;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -28,11 +30,15 @@ public class EstadoAlquilerFacade extends AbstractFacade<EstadoAlquiler> {
         super(EstadoAlquiler.class);
     }
     
-    public EstadoAlquiler getEstadoAlquiler( int alquilerId ){
-        EstadoAlquiler ae = new EstadoAlquiler();
+    public EstadoAlquiler getEstadoAlquiler( Alquiler alquiler ){
+        EstadoAlquiler estado = null;
         Query query = em.createNamedQuery("EstadoAlquiler.findByAlquiler");
-        query.setParameter("alquilerId", alquilerId);
-        return ae;
+        query.setParameter("alquiler", alquiler);
+        try {
+            estado = (EstadoAlquiler) query.getSingleResult();
+        } catch (NoResultException e) {
+        }
+        return estado;
     }
     
     public EstadoAlquiler findByNombre( EstadoAlquiler.NombreEstadoAlquiler nombre ){
