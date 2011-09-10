@@ -70,3 +70,12 @@ function highlightCalendar(specialDays, date, cssClass) {
     }
     return result; // no change
 }
+
+function revisarDisponibilidad(xhr, status, args){
+    
+    if(args.validationFailed || !args.hayDisponibilidad) 
+        ;
+    else
+        confirmRent.show();
+    
+}
