@@ -72,9 +72,9 @@ public class DesplieguePublicacionMBean {
         today = new Date(); 
         periodos = new ArrayList<SelectItem>();
         List<Periodo> listaPeriodos = publicationBean.getPeriodos();
+        periodoSeleccionado = 2; //alto hardCode, para que por defecto este seleccionado dia y no hora (Jorge)
         for(Periodo periodo: listaPeriodos)
             periodos.add(new SelectItem(periodo.getPeriodoId(),periodo.getNombre().name()));
-        periodoSeleccionado = 1; //alto hardCode, para que por defecto este seleccionado dia y no hora (Jorge)
         String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
         setNuevaPregunta(new ComentarioDTO());
         if (id != null) {
@@ -97,7 +97,20 @@ public class DesplieguePublicacionMBean {
 
     public void actualizarFechas()
     {
-        fechas = publicationBean.getFechasSinStock(publicacion.getId(),cantidadProductos);
+        boolean disponibilidad = true;
+        if(cantidadProductos > publicacion.getCantidad())
+        {
+            disponibilidad = false;
+            FacesContext.getCurrentInstance().addMessage(null, 
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                "La disponibilidad maxima es de " + publicacion.getCantidad() + " producto/s","" ));
+        }
+        else
+            fechas = publicationBean.getFechasSinStock(publicacion.getId(),cantidadProductos);
+        
+        RequestContext context = RequestContext.getCurrentInstance();
+        context.addCallbackParam("hayDisponibilidad", disponibilidad);
+        
     }
     
     public void preguntar() {
@@ -124,7 +137,7 @@ public class DesplieguePublicacionMBean {
     
     public void confirmarPedido()
     {
-        
+        Date test = fechaInicio;
     }
     
     private void createDictionary() {

@@ -57,13 +57,7 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
      */
     public List<Alquiler> getAlquileresByPublicacionFromToday(int publicationId)
     {
-        //List<Alquiler> respuesta = new ArrayList<Alquiler>();
-//        Publicacion filter = em.find(Publicacion.class, publicationId);
-//        Query query = em.createNamedQuery("Alquiler.findAlquileresByPublicacionFromToday");
-//        query.setParameter("publicacion", filter);
-//        query.setParameter("estadoConfirmado", NombreEstadoAlquiler.CONFIRMADO);
-//        query.setParameter("estadoActivo", NombreEstadoAlquiler.ACTIVO);
-//        respuesta = query.getResultList();        
+  
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<Alquiler> queryBuilder =  criteriaBuilder.createQuery(Alquiler.class);
         
@@ -93,8 +87,8 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
         queryBuilder.where(endAlquiler, orStates);
         Query query = em.createQuery(queryBuilder);
 
-        
-        return query.getResultList();        
+        List<Alquiler> respuesta = query.getResultList();
+        return respuesta;        
         
     }
     public List<Alquiler> getAlquilerPorPeriodo( Date fechaInicio, Date fechaFin, Integer idAlqConfirmado ){

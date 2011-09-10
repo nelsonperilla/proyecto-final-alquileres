@@ -37,6 +37,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import javax.annotation.Resource;
@@ -532,6 +533,8 @@ public class PublicacionBean implements PublicacionBeanLocal {
         
     }     
     
+    
+    
     @Override
     @PermitAll
     public List<Date> getFechasSinStock(int publicationId, int cantidad)
@@ -548,20 +551,76 @@ public class PublicacionBean implements PublicacionBeanLocal {
         
         int disponibles = entityManager.find(Publicacion.class, publicationId).getCantidad();
         
+        HashMap<String, Integer> dataCounter = new HashMap(60);//probablemente no existan pedidos mas haya de 60 dias desde hoy
+        Calendar lastDate = Calendar.getInstance();
+        lastDate.setTime(new Date());
+       
         while (itAlquiler.hasNext())
         {
             
             Alquiler temp = itAlquiler.next();
             Calendar date = Calendar.getInstance();
             date.setTime(temp.getFechaInicio());
+            date.set(Calendar.HOUR_OF_DAY, 0);
+            date.set(Calendar.MINUTE, 0);
+            date.set(Calendar.SECOND, 0);
+            Calendar fechaFin = Calendar.getInstance();
+            fechaFin.setTime(temp.getFechaFin());
+            if(fechaFin.get(Calendar.HOUR_OF_DAY) == 0 && fechaFin.get(Calendar.MINUTE)  == 0 
+                    && fechaFin.get(Calendar.SECOND)  == 0 )
+                fechaFin.add(Calendar.SECOND, 1); 
+            //No me importan las fechas anteriores a hoy, no son seleccionables
             if(date.before(today))
                 date.setTime(today.getTime());
-            if(cantidad > disponibles - temp.getCantidad())
-                while(date.before(temp.getFechaFin()))
+            //Me fijo si en los dias que dura el alquiler analizado hay disponibilidad de
+            //productos para el pedido que estoy creando
+            if(cantidad <= disponibles - temp.getCantidad())
+                //Si alcanzan los dias guardo en el hashmap el dia y la cantidad de
+                //productos del alquiler, para ir acumulando esta cantidad para cada fecha
+                //al final me fijo por cada fecha si alcanza, porque ya tengo todos los 
+                //alquileres analizados
+                while(date.before(fechaFin))
                 {
-                    
+                    Integer acumulado = dataCounter.get(date.getTime().toString());
+                    if(acumulado != null)
+                        dataCounter.put(date.getTime().toString(),new Integer(acumulado + temp.getCantidad()));
+                    else
+                        dataCounter.put(date.getTime().toString(),new Integer(temp.getCantidad()));
+                    date.add(Calendar.DATE, 1);
                 }
+            else
+                //si no alcanza, marco a todos los dias de este alquiler en el hasmap con el valor
+                //de la disponibilidad total de la publicacion, lo cual significa que no va a alcanzar
+                //ese dia para hacer el pedido ni siquiera de 1 producto
+                
+                while(date.before(fechaFin)){//temp.getFechaFin())){
+                    dataCounter.put(date.getTime().toString(),new Integer(disponibles));
+                    date.add(Calendar.DATE, 1);
+                }
+                
+                if(date.after(lastDate))
+                    lastDate = date;
+
         }
+        //Reviso el hashmap y voy llenando la lista de respuesta con las fechas que 
+        //no me alcanza el stock disponible
+        Calendar date = Calendar.getInstance();
+        date.setTime(new Date());
+        date.set(Calendar.HOUR_OF_DAY, 0);
+        date.set(Calendar.MINUTE, 0);
+        date.set(Calendar.SECOND, 0);
+        
+        if(lastDate.get(Calendar.HOUR_OF_DAY) == 0 && lastDate.get(Calendar.MINUTE)  == 0 
+                && lastDate.get(Calendar.SECOND)  == 0 )
+            lastDate.add(Calendar.SECOND, 1); 
+        while(date.before(lastDate)){
+            Integer acumulado = dataCounter.get(date.getTime().toString());
+            if(acumulado != null)
+                if(cantidad > (disponibles - acumulado))
+                    respuesta.add(date.getTime());
+            date.add(Calendar.DATE, 1);
+        }
+        
         return respuesta;
     }
             

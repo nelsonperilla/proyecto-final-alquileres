@@ -75,9 +75,11 @@
                                     <h:outputLabel   value="Cantidad:" />
                                     <p:inputText value="#{publicacionDesplegada.cantidadProductos}" required="true"
                                          style="width:30px"/>
-                                    <p:commandButton value="Alquilar" action="#{publicacionDesplegada.actualizarFechas}" 
-                                                     onclick="confirmRent.show()" styleClass="buttom"/>
+                                    <p:commandButton value="Alquilar" actionListener="#{publicacionDesplegada.actualizarFechas}" 
+                                                     oncomplete="revisarDisponibilidad(xhr, status, args)" styleClass="buttom"
+                                                     update="growl" />
                                 </h:panelGrid>
+                                <p:growl id="growl" showDetail="true" globalOnly="true" />
                             </h:form>
                             <h:form id="rent">
                                  <script type="text/javascript" >
@@ -110,7 +112,7 @@
                                         </p:calendar>
                                     </h:panelGrid>
                                     <p:commandButton value="Confirmar" action="#{publicacionDesplegada.confirmarPedido}" 
-                                                     onclick="confirmRent.hide()" />
+                                                     onclick ="confirmRent.hide()" />
                                 
                             </p:dialog>
                             </h:form>
