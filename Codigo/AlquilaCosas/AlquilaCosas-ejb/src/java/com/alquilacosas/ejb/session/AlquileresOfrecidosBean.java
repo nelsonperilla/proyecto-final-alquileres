@@ -7,11 +7,15 @@ package com.alquilacosas.ejb.session;
 import com.alquilacosas.dto.AlquilerDTO;
 import com.alquilacosas.ejb.entity.Alquiler;
 import com.alquilacosas.ejb.entity.Calificacion;
+import com.alquilacosas.ejb.entity.EstadoAlquiler;
+import com.alquilacosas.ejb.entity.EstadoAlquiler.NombreEstadoAlquiler;
+import com.alquilacosas.ejb.entity.ImagenPublicacion;
 import com.alquilacosas.ejb.entity.Publicacion;
 import com.alquilacosas.ejb.entity.Puntuacion;
 import com.alquilacosas.ejb.entity.Usuario;
 import com.alquilacosas.facade.AlquilerFacade;
 import com.alquilacosas.facade.CalificacionFacade;
+import com.alquilacosas.facade.EstadoAlquilerFacade;
 import com.alquilacosas.facade.PuntuacionFacade;
 import com.alquilacosas.facade.UsuarioFacade;
 import java.util.ArrayList;
@@ -35,6 +39,8 @@ public class AlquileresOfrecidosBean implements AlquileresOfrecidosBeanLocal {
     private CalificacionFacade calificacionFacade;
     @EJB
     private PuntuacionFacade puntuacionFacade;
+    @EJB
+    private EstadoAlquilerFacade estadoFacade;
     
     @Override
     public List<AlquilerDTO> getAlquileres(int usuarioId) {
@@ -45,9 +51,15 @@ public class AlquileresOfrecidosBean implements AlquileresOfrecidosBeanLocal {
             boolean calificado = calificacionFacade.isCalificacionExistente(usuario, a);
             Publicacion pub = a.getPublicacionFk();
             Usuario dueno = pub.getUsuarioFk();
+            EstadoAlquiler estado = estadoFacade.getEstadoAlquiler(a);
+            List<ImagenPublicacion> imagenes = pub.getImagenPublicacionList();
+            int imagenId = -1;
+            if(!imagenes.isEmpty())
+                imagenId = imagenes.get(0).getImagenPublicacionId();
             listaAlquileres.add(new AlquilerDTO(pub.getPublicacionId(), usuarioId, 
-                    a.getAlquilerId(), a.getFechaInicio(), a.getFechaFin(), pub.getTitulo(), 
-                    "Pepe", a.getCantidad(), a.getMonto(), calificado));
+                    a.getAlquilerId(), imagenId, a.getFechaInicio(), a.getFechaFin(), 
+                    NombreEstadoAlquiler.ACTIVO, pub.getTitulo(), 
+                    dueno.getNombre(), a.getCantidad(), a.getMonto(), calificado));
         }
         return listaAlquileres;
     }
