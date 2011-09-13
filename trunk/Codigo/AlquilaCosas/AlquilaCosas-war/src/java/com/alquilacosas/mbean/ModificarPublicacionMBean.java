@@ -128,12 +128,12 @@ public class ModificarPublicacionMBean {
         
         periodoMinimos = new ArrayList<SelectItem>();
         periodoMaximos = new ArrayList<SelectItem>();
-        this.periodoMinimo = pf.getPeriodoMinimo();
-        this.periodoMaximo = pf.getPeriodoMaximo();
-        this.selectedPeriodoMinimo = pf.getPeriodo1().getPeriodoId();
+        this.periodoMinimo = pf.getPeriodoMinimoValor();
+        this.periodoMaximo = pf.getPeriodoMaximoValor();
+        this.selectedPeriodoMinimo = pf.getPeriodoMinimo().getPeriodoId();
         
-        if( !(pf.getPeriodo2() == null) )
-            this.selectedPeriodoMaximo = pf.getPeriodo2().getPeriodoId();
+        if( !(pf.getPeriodoMaximo() == null) )
+            this.selectedPeriodoMaximo = pf.getPeriodoMaximo().getPeriodoId();
         else
             this.selectedPeriodoMaximo = 0;
         

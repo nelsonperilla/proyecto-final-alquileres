@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.prime.com.tr/ui" 
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+        <cc:attribute name="bean" type="java.lang.Object" required="true" />
+        <cc:attribute name="property" type="java.lang.String" required="true" />
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <p:dialog id="loginDialog" header="Ingreso" widgetVar="loginDlg" >
+                <h:panelGrid columns="2" cellpadding="2" >
+                    <h:outputLabel  value="Usuario:" />
+                    <p:inputText value="#{login.username}" required="true"
+                                 style="width:175px" />
+                    <h:outputLabel value="Contraseña:" />
+                    <p:password feedback="false" minLength="1" 
+                                value="#{login.password}" required="true"
+                                style="width:175px; " />
+                </h:panelGrid>
+                <p:commandButton value="Entrar" action="#{login.loginEnPagina}"
+                                 oncomplete="revisarLogueo(xhr, status, args)"
+                                 update="paneles" >
+                    <f:setPropertyActionListener target="#{login.loginOnPageArg}" value="#{cc.attrs.bean[cc.attrs.property]}" />
+                </p:commandButton>
+        </p:dialog>
+    </cc:implementation>
+</html>

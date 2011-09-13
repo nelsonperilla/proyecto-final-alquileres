@@ -28,7 +28,9 @@ public class ManejadorUsuarioMBean implements Serializable {
 
     @EJB
     private LoginBeanLocal loginBean;
-    private String username, password;
+    private String username;
+    private String password;
+    private String loginOnPageArg;
     private Integer usuarioId;
     private boolean logueado, administrador;
 
@@ -90,6 +92,8 @@ public class ManejadorUsuarioMBean implements Serializable {
         logueado = true;
         RequestContext reqContext = RequestContext.getCurrentInstance();
         reqContext.addCallbackParam("logueado", logueado);
+        reqContext.addCallbackParam(loginOnPageArg, true);
+        
         return "";
     }
 
@@ -146,5 +150,19 @@ public class ManejadorUsuarioMBean implements Serializable {
 
     public void setUsuarioId(Integer usuarioId) {
         this.usuarioId = usuarioId;
+    }
+
+    /**
+     * @return the loginOnPageArg
+     */
+    public String getLoginOnPageArg() {
+        return loginOnPageArg;
+    }
+
+    /**
+     * @param loginOnPageArg the loginOnPageArg to set
+     */
+    public void setLoginOnPageArg(String loginOnPageArg) {
+        this.loginOnPageArg = loginOnPageArg;
     }
 }

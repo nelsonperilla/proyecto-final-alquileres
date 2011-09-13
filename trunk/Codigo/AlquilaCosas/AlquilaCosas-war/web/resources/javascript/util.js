@@ -49,7 +49,14 @@ function revisarLogueo(xhr, status, args) {
         }, 100);
     } else {
         loginDlg.hide();
-        nuevaPregunta.show();
+        if(args.preguntar){
+            loginDlg.hide();
+            nuevaPregunta.show();
+        }
+        else if(args.alquilar){
+            loginDlg.hide();
+            confirmRent.show();
+        }
     }
 }
 
@@ -73,9 +80,14 @@ function highlightCalendar(specialDays, date, cssClass) {
 
 function revisarDisponibilidad(xhr, status, args){
     
-    if(args.validationFailed || !args.hayDisponibilidad) 
-        ;
-    else
-        confirmRent.show();
-    
+    if(!(args.validationFailed || !args.hayDisponibilidad)) {
+        if(args.logueado){
+            confirmRent.show();
+        }
+        else{
+            loginDlg.show();
+            
+        }
+    }
+        
 }

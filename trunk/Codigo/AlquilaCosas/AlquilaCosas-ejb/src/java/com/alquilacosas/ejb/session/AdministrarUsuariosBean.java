@@ -50,7 +50,7 @@ public class AdministrarUsuariosBean implements AdministrarUsuariosBeanLocal {
         
         Query query = entityManager.createNativeQuery("select u.usuario_id, l.username, "
                 + "u.email, u.nombre, u.apellido, uxe.fecha_desde, COUNT(r.rol_id) as NumRoles, r.nombre "
-       + " from rol r, login_x_rol lxr, login l, usuario u, usuario_x_estado uxe, estado_usuario eu "
+       + " from ROL r, LOGIN_X_ROL lxr, LOGIN l, USUARIO u, USUARIO_X_ESTADO uxe, ESTADO_USUARIO eu "
        + " where lxr.rol_fk = r.rol_id "
        + " and lxr.login_fk = l.login_id " 
        + " and l.usuario_fk = u.usuario_id "

@@ -12,9 +12,12 @@ import com.alquilacosas.common.Util;
 import com.alquilacosas.dto.PrecioDTO;
 import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.entity.Alquiler;
+import com.alquilacosas.ejb.entity.AlquilerXEstado;
+import com.alquilacosas.ejb.entity.Alquiler_;
 import com.alquilacosas.ejb.entity.Categoria;
 import com.alquilacosas.ejb.entity.Comentario;
 import com.alquilacosas.ejb.entity.Domicilio;
+import com.alquilacosas.ejb.entity.EstadoAlquiler;
 import com.alquilacosas.ejb.entity.EstadoPublicacion;
 import com.alquilacosas.ejb.entity.EstadoPublicacion.NombreEstadoPublicacion;
 import com.alquilacosas.ejb.entity.ImagenPublicacion;
@@ -25,6 +28,7 @@ import com.alquilacosas.ejb.entity.Publicacion;
 import com.alquilacosas.ejb.entity.PublicacionXEstado;
 import com.alquilacosas.ejb.entity.Usuario;
 import com.alquilacosas.facade.AlquilerFacade;
+import com.alquilacosas.facade.AlquilerXEstadoFacade;
 import com.alquilacosas.facade.CategoriaFacade;
 import com.alquilacosas.facade.EstadoPublicacionFacade;
 import com.alquilacosas.facade.ImagenPublicacionFacade;
@@ -103,6 +107,8 @@ public class PublicacionBean implements PublicacionBeanLocal {
     private PeriodoFacade periodoFacade;
     @EJB
     private AlquilerFacade alquilerFacade;
+    @EJB
+    private AlquilerXEstadoFacade estadoAlquiler;
     
     
 
@@ -363,6 +369,11 @@ public class PublicacionBean implements PublicacionBeanLocal {
                     publicacion.getDestacada(),
                     publicacion.getCantidad());
 
+            resultado.setPeriodoMinimoValor(publicacion.getMinValor());
+            resultado.setPeriodoMaximoValor(publicacion.getMaxValor());
+            resultado.setPeriodoMinimo(publicacion.getMinPeriodoAlquilerFk());
+            resultado.setPeriodoMaximo(publicacion.getMaxPeriodoAlquilerFk());
+            
             Domicilio domicilio = publicacion.getUsuarioFk().getDomicilioList().get(0);
             resultado.setProvincia(domicilio.getProvinciaFk().getNombre());
             resultado.setCiudad(domicilio.getProvinciaFk().getNombre());
@@ -623,5 +634,25 @@ public class PublicacionBean implements PublicacionBeanLocal {
         
         return respuesta;
     }
-            
+    
+    
+    @Override
+    @PermitAll
+    public void crearPedidoAlquiler(int publicationId, int usuarioId, 
+        Date beginDate, Date endDate, double monto, int cantidad)
+    {
+        Alquiler nuevoPedido = new Alquiler();
+        Publicacion publicacionPedido = entityManager.find(Publicacion.class, publicationId);
+        nuevoPedido.setPublicacionFk(publicacionPedido);
+        nuevoPedido.setUsuarioFk(entityManager.find(Usuario.class, usuarioId));
+        nuevoPedido.setFechaInicio(beginDate);
+        nuevoPedido.setFechaFin(endDate);
+        nuevoPedido.setMonto(monto);
+        nuevoPedido.setCantidad(cantidad);
+        
+        entityManager.persist(nuevoPedido);
+
+        estadoAlquiler.saveState(nuevoPedido, EstadoAlquiler.NombreEstadoAlquiler.PEDIDO);
+    }
+    
 }
