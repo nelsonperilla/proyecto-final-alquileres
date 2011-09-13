@@ -34,18 +34,18 @@ public class PublicacionDTO implements Serializable  {
     private List<PrecioDTO> precios;
     private EstadoPublicacion estado;
     private List<ImagenPublicacion> imagenes;
-    private int periodoMinimo;
-    private int periodoMaximo;
-    private Periodo periodo1;
-    private Periodo periodo2;
+    private int periodoMinimoValor;
+    private int periodoMaximoValor;
+    private Periodo periodoMinimo;
+    private Periodo periodoMaximo;
     private String provincia, ciudad, barrio;
     
     public PublicacionDTO(int id,String titulo,String descripcion, 
             Date fecha_desde, Date fecha_hasta, boolean destacada,
             int cantidad, Categoria categoria,
             List<ImagenPublicacion> imagenes, EstadoPublicacion estado, 
-            int periodoMinimo, Periodo periodo1, 
-            int periodoMaximo, Periodo periodo2)
+            int periodoMinimoValor, Periodo periodoMinimo, 
+            int periodoMaximoValor, Periodo periodoMaximo)
     {
         this.id = id;
         this.titulo = titulo;
@@ -58,10 +58,10 @@ public class PublicacionDTO implements Serializable  {
         this.imagenes = imagenes;
         precios = new ArrayList<PrecioDTO>();
         this.estado = estado;
+        this.periodoMinimoValor = periodoMinimoValor;
         this.periodoMinimo = periodoMinimo;
-        this.periodo1 = periodo1;
+        this.periodoMaximoValor = periodoMaximoValor;
         this.periodoMaximo = periodoMaximo;
-        this.periodo2 = periodo2;
     }
     
     public PublicacionDTO(int id,String titulo,String descripcion, 
@@ -233,38 +233,38 @@ public class PublicacionDTO implements Serializable  {
         this.categoriaF = categoriaF;
     }
 
-    public int getPeriodoMaximo() {
-        return periodoMaximo;
+    public int getPeriodoMaximoValor() {
+        return periodoMaximoValor;
     }
 
-    public void setPeriodoMaximo(int periodoMaximo) {
-        this.periodoMaximo = periodoMaximo;
+    public void setPeriodoMaximoValor(int periodoMaximo) {
+        this.periodoMaximoValor = periodoMaximo;
     }
 
 
 
-    public int getPeriodoMinimo() {
+    public int getPeriodoMinimoValor() {
+        return periodoMinimoValor;
+    }
+
+    public void setPeriodoMinimoValor(int periodoMinimo) {
+        this.periodoMinimoValor = periodoMinimo;
+    }
+
+    public Periodo getPeriodoMinimo() {
         return periodoMinimo;
     }
 
-    public void setPeriodoMinimo(int periodoMinimo) {
+    public void setPeriodoMinimo(Periodo periodoMinimo) {
         this.periodoMinimo = periodoMinimo;
     }
 
-    public Periodo getPeriodo1() {
-        return periodo1;
+    public Periodo getPeriodoMaximo() {
+        return periodoMaximo;
     }
 
-    public void setPeriodo1(Periodo periodo1) {
-        this.periodo1 = periodo1;
-    }
-
-    public Periodo getPeriodo2() {
-        return periodo2;
-    }
-
-    public void setPeriodo2(Periodo periodo2) {
-        this.periodo2 = periodo2;
+    public void setPeriodoMaximo(Periodo periodoMaximo) {
+        this.periodoMaximo = periodoMaximo;
     }
     
     public Categoria getCategoria() {

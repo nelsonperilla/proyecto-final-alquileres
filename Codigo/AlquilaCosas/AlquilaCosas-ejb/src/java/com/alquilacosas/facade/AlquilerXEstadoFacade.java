@@ -4,7 +4,11 @@
  */
 package com.alquilacosas.facade;
 
+import com.alquilacosas.ejb.entity.Alquiler;
 import com.alquilacosas.ejb.entity.AlquilerXEstado;
+import com.alquilacosas.ejb.entity.EstadoAlquiler;
+import com.alquilacosas.ejb.entity.EstadoAlquiler.NombreEstadoAlquiler;
+import java.util.Date;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
 import javax.persistence.EntityManager;
@@ -33,5 +37,19 @@ public class AlquilerXEstadoFacade extends AbstractFacade<AlquilerXEstado> {
         query.setParameter("alquilerId", alquilerId);
         axe = (AlquilerXEstado) query.getSingleResult();
         return axe;
+    }
+
+    public void saveState(Alquiler alquiler, NombreEstadoAlquiler nombreEstadoAlquiler) {
+        AlquilerXEstado estadoActual = new AlquilerXEstado();
+        estadoActual.setAlquilerFk(alquiler);
+        
+        Query query = em.createNamedQuery("EstadoAlquiler.findByNombre");
+        query.setParameter("nombre", nombreEstadoAlquiler);
+        EstadoAlquiler estado = (EstadoAlquiler) query.getSingleResult();
+        estadoActual.setEstadoAlquilerFk(estado);
+        estadoActual.setFechaDesde(new Date());
+        
+        alquiler.agregarAlquilerXEstado(estadoActual);
+        em.persist(estadoActual);
     }
 }

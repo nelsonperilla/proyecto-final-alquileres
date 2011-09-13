@@ -13,6 +13,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -52,6 +53,7 @@ public class DesplieguePublicacionMBean {
     private Date today;
     private ComentarioDTO nuevaPregunta;
     private int cantidadProductos;
+    private String action;
 
     /** Creates a new instance of DesplieguePublicacionMBean */
     public DesplieguePublicacionMBean() {
@@ -59,13 +61,6 @@ public class DesplieguePublicacionMBean {
 
     @PostConstruct
     public void init() {
-        
-//        fechas = new ArrayList<Date>();
-//        Calendar test =Calendar.getInstance();
-//        test.set(2011,7,29);
-//        fechas.add(test.getTime());
-        
-        
         cantidadProductos = 1;
         fechaInicio = new Date();
         effect = "fade";
@@ -108,17 +103,20 @@ public class DesplieguePublicacionMBean {
         else
             fechas = publicationBean.getFechasSinStock(publicacion.getId(),cantidadProductos);
         
+        boolean logueado = usuarioLogueado.isLogueado();
         RequestContext context = RequestContext.getCurrentInstance();
+        context.addCallbackParam("logueado", logueado);
         context.addCallbackParam("hayDisponibilidad", disponibilidad);
-        
+        action = "alquilar";
     }
     
     public void preguntar() {
         boolean logueado = usuarioLogueado.isLogueado();
         RequestContext context = RequestContext.getCurrentInstance();
         context.addCallbackParam("logueado", logueado);
+        action = "preguntar";
     }
-
+    
     public String guardarPregunta() {
         getNuevaPregunta().setUsuarioId(usuarioLogueado.getUsuarioId());
         getNuevaPregunta().setUsuario(usuarioLogueado.getUsername());
@@ -137,7 +135,131 @@ public class DesplieguePublicacionMBean {
     
     public void confirmarPedido()
     {
-        Date test = fechaInicio;
+        Calendar beginDate = Calendar.getInstance();
+        beginDate.setTime(fechaInicio);
+        Calendar endDate = Calendar.getInstance();
+        endDate.setTime(fechaInicio);
+        
+        switch (periodoSeleccionado)
+        {
+            case 1: //horas
+                endDate.add(Calendar.HOUR_OF_DAY, periodoAlquiler);
+                break;
+            case 2: //dias
+                endDate.add(Calendar.DATE, periodoAlquiler);
+                break;
+            case 3: //semanas
+                endDate.add(Calendar.WEEK_OF_YEAR, periodoAlquiler);
+                break;
+            case 4: //meses
+                endDate.add(Calendar.MONTH, periodoAlquiler);
+        }
+
+        long minDuration = publicacion.getPeriodoMinimoValor();
+        long maxDuration = publicacion.getPeriodoMaximoValor();
+        
+        switch (publicacion.getPeriodoMinimo().getPeriodoId())
+        {
+            case 1: //horas
+                minDuration *= 60 * 60 * 1000;
+                break;
+            case 2: //dias
+                minDuration *= 24 * 60 * 60 * 1000;
+                break;
+            case 3: //semanas
+                minDuration *= 7 * 24 * 60 * 60 * 1000;
+                break;
+            case 4: //meses
+                Date now = new Date();
+                Calendar temp = Calendar.getInstance();
+                temp.setTime(now);
+                temp.add(Calendar.MONTH,(int)minDuration);
+                minDuration = temp.getTimeInMillis() - now.getTime();
+        }
+
+        switch (publicacion.getPeriodoMaximo().getPeriodoId())
+        {
+            case 1: //horas
+                maxDuration *= 60 * 60 * 1000;
+                break;
+            case 2: //dias
+                maxDuration *= 24 * 60 * 60 * 1000;
+                break;
+            case 3: //semanas
+                maxDuration *= 7 * 24 * 60 * 60 * 1000;
+                break;
+            case 4: //meses
+                Date now = new Date();
+                Calendar temp = Calendar.getInstance();
+                temp.setTime(now);
+                temp.add(Calendar.MONTH,(int)maxDuration);
+                maxDuration = temp.getTimeInMillis() - now.getTime();
+        }
+        
+        
+        long periodoAlquilerEnMillis = endDate.getTimeInMillis() - beginDate.getTimeInMillis();
+        if(periodoAlquilerEnMillis < minDuration || periodoAlquilerEnMillis > maxDuration )
+            ;//mensaje de error, no respeta los periodos minimos o maximos
+        else{
+            Iterator<Date> itFechasSinStock = fechas.iterator();
+            boolean noStockFlag = false;
+            Calendar temp = Calendar.getInstance();
+            while(!noStockFlag && itFechasSinStock.hasNext()){
+                temp.setTime(itFechasSinStock.next());
+                if( beginDate.before(temp) && endDate.after(temp))//la fecha sin stock cae en el periodo
+                    noStockFlag = true;
+            }
+            if(noStockFlag)
+                ;//mensaje de error, cae una fecha sin stock en el periodo seleccionado
+            else{
+                //calculo el monto
+                double monto = 0;
+                temp.setTime(beginDate.getTime());
+                temp.add(Calendar.MONTH, 1);
+                endDate.add(Calendar.SECOND, 1);
+                while(endDate.after(temp)){
+                    //hardCode muy duro, se el orden porque hice la consulta con orderby
+                    //si se agregan periodos nuevos corregir esto
+                    monto+= publicacion.getPrecios().get(3).getPrecio();
+                    temp.add(Calendar.MONTH, 1);
+                }
+                
+                temp.add(Calendar.MONTH, -1);
+                temp.add(Calendar.WEEK_OF_YEAR, 1);
+                while(endDate.after(temp)){
+                    //hardCode muy duro, se el orden porque hice la consulta con orderby
+                    //si se agregan periodos nuevos corregir esto
+                    monto+= publicacion.getPrecios().get(2).getPrecio();
+                    temp.add(Calendar.WEEK_OF_YEAR, 1);
+                }
+                
+                temp.add(Calendar.WEEK_OF_YEAR, -1);
+                temp.add(Calendar.DATE, 1);
+                while(endDate.after(temp)){
+                    //hardCode muy duro, se el orden porque hice la consulta con orderby
+                    //si se agregan periodos nuevos corregir esto
+                    monto+= publicacion.getPrecios().get(1).getPrecio();
+                    temp.add(Calendar.DATE, 1);
+                }
+                
+                temp.add(Calendar.DATE, -1);
+                temp.add(Calendar.HOUR_OF_DAY, 1);
+                while(endDate.after(temp)){
+                    //hardCode muy duro, se el orden porque hice la consulta con orderby
+                    //si se agregan periodos nuevos corregir esto
+                    monto+= publicacion.getPrecios().get(0).getPrecio();
+                    temp.add(Calendar.HOUR_OF_DAY, 1);
+                }
+                    
+                endDate.add(Calendar.SECOND, -1);
+                publicationBean.crearPedidoAlquiler(publicacion.getId(), 
+                        usuarioLogueado.getUsuarioId(), beginDate.getTime(), 
+                        endDate.getTime(), monto, cantidadProductos);
+
+            }
+        }
+            
+
     }
     
     private void createDictionary() {
@@ -364,5 +486,19 @@ public class DesplieguePublicacionMBean {
      */
     public void setCantidadProductos(int cantidadProductos) {
         this.cantidadProductos = cantidadProductos;
+    }
+
+    /**
+     * @return the action
+     */
+    public String getAction() {
+        return action;
+    }
+
+    /**
+     * @param action the action to set
+     */
+    public void setAction(String action) {
+        this.action = action;
     }
 }
