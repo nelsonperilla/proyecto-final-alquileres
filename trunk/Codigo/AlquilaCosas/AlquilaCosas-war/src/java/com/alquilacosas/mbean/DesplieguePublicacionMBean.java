@@ -15,6 +15,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -104,9 +106,20 @@ public class DesplieguePublicacionMBean {
             fechas = publicationBean.getFechasSinStock(publicacion.getId(),cantidadProductos);
         
         boolean logueado = usuarioLogueado.isLogueado();
+        boolean ownerLogged = false;
+        if(logueado)
+        {
+            if(usuarioLogueado.getUsuarioId() == publicacion.getPropietario().getId()){
+                FacesContext.getCurrentInstance().addMessage(null, 
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                "Usted no puede alquilar sus propios productos","" ));
+                ownerLogged = true;
+            }
+        }
         RequestContext context = RequestContext.getCurrentInstance();
         context.addCallbackParam("logueado", logueado);
         context.addCallbackParam("hayDisponibilidad", disponibilidad);
+        context.addCallbackParam("ownerLogged", ownerLogged);
         action = "alquilar";
     }
     
@@ -135,130 +148,150 @@ public class DesplieguePublicacionMBean {
     
     public void confirmarPedido()
     {
-        Calendar beginDate = Calendar.getInstance();
-        beginDate.setTime(fechaInicio);
-        Calendar endDate = Calendar.getInstance();
-        endDate.setTime(fechaInicio);
-        
-        switch (periodoSeleccionado)
-        {
-            case 1: //horas
-                endDate.add(Calendar.HOUR_OF_DAY, periodoAlquiler);
-                break;
-            case 2: //dias
-                endDate.add(Calendar.DATE, periodoAlquiler);
-                break;
-            case 3: //semanas
-                endDate.add(Calendar.WEEK_OF_YEAR, periodoAlquiler);
-                break;
-            case 4: //meses
-                endDate.add(Calendar.MONTH, periodoAlquiler);
-        }
+        if(usuarioLogueado.getUsuarioId() == publicacion.getPropietario().getId())
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "No esta permitido alquilar sus propios productos", ""));
 
-        long minDuration = publicacion.getPeriodoMinimoValor();
-        long maxDuration = publicacion.getPeriodoMaximoValor();
-        
-        switch (publicacion.getPeriodoMinimo().getPeriodoId())
+        else
         {
-            case 1: //horas
-                minDuration *= 60 * 60 * 1000;
-                break;
-            case 2: //dias
-                minDuration *= 24 * 60 * 60 * 1000;
-                break;
-            case 3: //semanas
-                minDuration *= 7 * 24 * 60 * 60 * 1000;
-                break;
-            case 4: //meses
-                Date now = new Date();
-                Calendar temp = Calendar.getInstance();
-                temp.setTime(now);
-                temp.add(Calendar.MONTH,(int)minDuration);
-                minDuration = temp.getTimeInMillis() - now.getTime();
-        }
+            Calendar beginDate = Calendar.getInstance();
+            beginDate.setTime(fechaInicio);
+            Calendar endDate = Calendar.getInstance();
+            endDate.setTime(fechaInicio);
 
-        switch (publicacion.getPeriodoMaximo().getPeriodoId())
-        {
-            case 1: //horas
-                maxDuration *= 60 * 60 * 1000;
-                break;
-            case 2: //dias
-                maxDuration *= 24 * 60 * 60 * 1000;
-                break;
-            case 3: //semanas
-                maxDuration *= 7 * 24 * 60 * 60 * 1000;
-                break;
-            case 4: //meses
-                Date now = new Date();
-                Calendar temp = Calendar.getInstance();
-                temp.setTime(now);
-                temp.add(Calendar.MONTH,(int)maxDuration);
-                maxDuration = temp.getTimeInMillis() - now.getTime();
-        }
-        
-        
-        long periodoAlquilerEnMillis = endDate.getTimeInMillis() - beginDate.getTimeInMillis();
-        if(periodoAlquilerEnMillis < minDuration || periodoAlquilerEnMillis > maxDuration )
-            ;//mensaje de error, no respeta los periodos minimos o maximos
-        else{
-            Iterator<Date> itFechasSinStock = fechas.iterator();
-            boolean noStockFlag = false;
-            Calendar temp = Calendar.getInstance();
-            while(!noStockFlag && itFechasSinStock.hasNext()){
-                temp.setTime(itFechasSinStock.next());
-                if( beginDate.before(temp) && endDate.after(temp))//la fecha sin stock cae en el periodo
-                    noStockFlag = true;
+            switch (periodoSeleccionado)
+            {
+                case 1: //horas
+                    endDate.add(Calendar.HOUR_OF_DAY, periodoAlquiler);
+                    break;
+                case 2: //dias
+                    endDate.add(Calendar.DATE, periodoAlquiler);
+                    break;
+                case 3: //semanas
+                    endDate.add(Calendar.WEEK_OF_YEAR, periodoAlquiler);
+                    break;
+                case 4: //meses
+                    endDate.add(Calendar.MONTH, periodoAlquiler);
             }
-            if(noStockFlag)
-                ;//mensaje de error, cae una fecha sin stock en el periodo seleccionado
+
+            long minDuration = publicacion.getPeriodoMinimoValor();
+            long maxDuration = publicacion.getPeriodoMaximoValor();
+
+            switch (publicacion.getPeriodoMinimo().getPeriodoId())
+            {
+                case 1: //horas
+                    minDuration *= 60 * 60 * 1000;
+                    break;
+                case 2: //dias
+                    minDuration *= 24 * 60 * 60 * 1000;
+                    break;
+                case 3: //semanas
+                    minDuration *= 7 * 24 * 60 * 60 * 1000;
+                    break;
+                case 4: //meses
+                    Date now = new Date();
+                    Calendar temp = Calendar.getInstance();
+                    temp.setTime(now);
+                    temp.add(Calendar.MONTH,(int)minDuration);
+                    minDuration = temp.getTimeInMillis() - now.getTime();
+            }
+
+            switch (publicacion.getPeriodoMaximo().getPeriodoId())
+            {
+                case 1: //horas
+                    maxDuration *= 60 * 60 * 1000;
+                    break;
+                case 2: //dias
+                    maxDuration *= 24 * 60 * 60 * 1000;
+                    break;
+                case 3: //semanas
+                    maxDuration *= 7 * 24 * 60 * 60 * 1000;
+                    break;
+                case 4: //meses
+                    Date now = new Date();
+                    Calendar temp = Calendar.getInstance();
+                    temp.setTime(now);
+                    temp.add(Calendar.MONTH,(int)maxDuration);
+                    maxDuration = temp.getTimeInMillis() - now.getTime();
+            }
+
+
+            long periodoAlquilerEnMillis = endDate.getTimeInMillis() - beginDate.getTimeInMillis();
+            if(periodoAlquilerEnMillis < minDuration || periodoAlquilerEnMillis > maxDuration )
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "el periodo minimo de alquiler es de " + "y el maximo de", ""));
+
             else{
-                //calculo el monto
-                double monto = 0;
-                temp.setTime(beginDate.getTime());
-                temp.add(Calendar.MONTH, 1);
-                endDate.add(Calendar.SECOND, 1);
-                while(endDate.after(temp)){
-                    //hardCode muy duro, se el orden porque hice la consulta con orderby
-                    //si se agregan periodos nuevos corregir esto
-                    monto+= publicacion.getPrecios().get(3).getPrecio();
+                Iterator<Date> itFechasSinStock = fechas.iterator();
+                boolean noStockFlag = false;
+                Calendar temp = Calendar.getInstance();
+                while(!noStockFlag && itFechasSinStock.hasNext()){
+                    temp.setTime(itFechasSinStock.next());
+                    if( beginDate.before(temp) && endDate.after(temp))//la fecha sin stock cae en el periodo
+                        noStockFlag = true;
+                }
+                if(noStockFlag)
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Hay fechas sin stock en el periodo seleccionado", ""));
+                else{
+                    //calculo el monto
+                    double monto = 0;
+                    temp.setTime(beginDate.getTime());
                     temp.add(Calendar.MONTH, 1);
-                }
-                
-                temp.add(Calendar.MONTH, -1);
-                temp.add(Calendar.WEEK_OF_YEAR, 1);
-                while(endDate.after(temp)){
-                    //hardCode muy duro, se el orden porque hice la consulta con orderby
-                    //si se agregan periodos nuevos corregir esto
-                    monto+= publicacion.getPrecios().get(2).getPrecio();
-                    temp.add(Calendar.WEEK_OF_YEAR, 1);
-                }
-                
-                temp.add(Calendar.WEEK_OF_YEAR, -1);
-                temp.add(Calendar.DATE, 1);
-                while(endDate.after(temp)){
-                    //hardCode muy duro, se el orden porque hice la consulta con orderby
-                    //si se agregan periodos nuevos corregir esto
-                    monto+= publicacion.getPrecios().get(1).getPrecio();
-                    temp.add(Calendar.DATE, 1);
-                }
-                
-                temp.add(Calendar.DATE, -1);
-                temp.add(Calendar.HOUR_OF_DAY, 1);
-                while(endDate.after(temp)){
-                    //hardCode muy duro, se el orden porque hice la consulta con orderby
-                    //si se agregan periodos nuevos corregir esto
-                    monto+= publicacion.getPrecios().get(0).getPrecio();
-                    temp.add(Calendar.HOUR_OF_DAY, 1);
-                }
-                    
-                endDate.add(Calendar.SECOND, -1);
-                publicationBean.crearPedidoAlquiler(publicacion.getId(), 
-                        usuarioLogueado.getUsuarioId(), beginDate.getTime(), 
-                        endDate.getTime(), monto, cantidadProductos);
+                    endDate.add(Calendar.SECOND, 1);
+                    while(endDate.after(temp)){
+                        //hardCode muy duro, se el orden porque hice la consulta con orderby
+                        //si se agregan periodos nuevos corregir esto
+                        monto+= publicacion.getPrecios().get(3).getPrecio();
+                        temp.add(Calendar.MONTH, 1);
+                    }
 
+                    temp.add(Calendar.MONTH, -1);
+                    temp.add(Calendar.WEEK_OF_YEAR, 1);
+                    while(endDate.after(temp)){
+                        //hardCode muy duro, se el orden porque hice la consulta con orderby
+                        //si se agregan periodos nuevos corregir esto
+                        monto+= publicacion.getPrecios().get(2).getPrecio();
+                        temp.add(Calendar.WEEK_OF_YEAR, 1);
+                    }
+
+                    temp.add(Calendar.WEEK_OF_YEAR, -1);
+                    temp.add(Calendar.DATE, 1);
+                    while(endDate.after(temp)){
+                        //hardCode muy duro, se el orden porque hice la consulta con orderby
+                        //si se agregan periodos nuevos corregir esto
+                        monto+= publicacion.getPrecios().get(1).getPrecio();
+                        temp.add(Calendar.DATE, 1);
+                    }
+
+                    temp.add(Calendar.DATE, -1);
+                    temp.add(Calendar.HOUR_OF_DAY, 1);
+                    while(endDate.after(temp)){
+                        //hardCode muy duro, se el orden porque hice la consulta con orderby
+                        //si se agregan periodos nuevos corregir esto
+                        monto+= publicacion.getPrecios().get(0).getPrecio();
+                        temp.add(Calendar.HOUR_OF_DAY, 1);
+                    }
+
+                    endDate.add(Calendar.SECOND, -1);
+                    String mensaje = "El pedido de alquiler ha sido enviado";
+                    try {
+                        publicationBean.crearPedidoAlquiler(publicacion.getId(), 
+                                usuarioLogueado.getUsuarioId(), beginDate.getTime(), 
+                                endDate.getTime(), monto, cantidadProductos);
+                    } catch (AlquilaCosasException ex) {
+                        mensaje = "El pedido de alquiler no se ha concretado, por favor intente de nuevo";
+                        Logger.getLogger(DesplieguePublicacionMBean.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                        FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                            mensaje, ""));
+                    }
             }
         }
-            
 
     }
     

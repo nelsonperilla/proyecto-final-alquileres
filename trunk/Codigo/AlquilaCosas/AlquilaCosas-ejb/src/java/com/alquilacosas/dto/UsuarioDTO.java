@@ -4,6 +4,7 @@
  */
 package com.alquilacosas.dto;
 
+import com.alquilacosas.ejb.entity.Usuario;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -34,6 +35,18 @@ public class UsuarioDTO implements Serializable {
         this.dni = dni;
         this.fechaNacimiento = fechaNacimiento;
     }
+
+    public UsuarioDTO(Usuario usuario) {
+        this.id = usuario.getUsuarioId();
+        this.nombre = usuario.getNombre();
+        this.apellido = usuario.getApellido();
+        this.email = usuario.getEmail();
+        this.telefono = usuario.getTelefono();
+        this.dni = usuario.getDni();
+        this.fechaNacimiento = usuario.getFechaNac();
+        
+    }
+    
     
     public UsuarioDTO( Integer id, String username, String email, String nombre, String apellido,
             Date fechaDeRegistro, Long numRoles, String tipoUsuario){

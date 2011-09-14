@@ -4,6 +4,7 @@
  */
 package com.alquilacosas.facade;
 
+import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.ejb.entity.Alquiler;
 import com.alquilacosas.ejb.entity.AlquilerXEstado;
 import com.alquilacosas.ejb.entity.EstadoAlquiler;
@@ -39,7 +40,8 @@ public class AlquilerXEstadoFacade extends AbstractFacade<AlquilerXEstado> {
         return axe;
     }
 
-    public void saveState(Alquiler alquiler, NombreEstadoAlquiler nombreEstadoAlquiler) {
+    public void saveState(Alquiler alquiler, NombreEstadoAlquiler nombreEstadoAlquiler)
+        throws AlquilaCosasException{
         AlquilerXEstado estadoActual = new AlquilerXEstado();
         estadoActual.setAlquilerFk(alquiler);
         
@@ -50,6 +52,10 @@ public class AlquilerXEstadoFacade extends AbstractFacade<AlquilerXEstado> {
         estadoActual.setFechaDesde(new Date());
         
         alquiler.agregarAlquilerXEstado(estadoActual);
-        em.persist(estadoActual);
+        try {
+            em.persist(estadoActual);
+        }catch (Exception e){
+            throw new AlquilaCosasException(e.getMessage());
+        }
     }
 }
