@@ -227,15 +227,17 @@ public class DesplieguePublicacionMBean {
                 Iterator<Date> itFechasSinStock = fechas.iterator();
                 boolean noStockFlag = false;
                 Calendar temp = Calendar.getInstance();
+                //Recorro la lista de fechas sin stock fijandome si alguna cae
+                //en el periodo seleccionado
                 while(!noStockFlag && itFechasSinStock.hasNext()){
                     temp.setTime(itFechasSinStock.next());
                     if( beginDate.before(temp) && endDate.after(temp))//la fecha sin stock cae en el periodo
                         noStockFlag = true;
                 }
                 if(noStockFlag)
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Hay fechas sin stock en el periodo seleccionado", ""));
+                    FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "Hay fechas sin stock en el periodo seleccionado", ""));
                 else{
                     //calculo el monto
                     double monto = 0;
