@@ -647,9 +647,9 @@ public class PublicacionBean implements PublicacionBeanLocal {
     {
         Alquiler nuevoPedido = new Alquiler();
         Publicacion publicacion = entityManager.find(Publicacion.class, publicationId);
-        Usuario propietario = entityManager.find(Usuario.class, usuarioId);
+        Usuario propietario = publicacion.getUsuarioFk();
         nuevoPedido.setPublicacionFk(publicacion);
-        nuevoPedido.setUsuarioFk(propietario);
+        nuevoPedido.setUsuarioFk(entityManager.find(Usuario.class, usuarioId));
         nuevoPedido.setFechaInicio(beginDate);
         nuevoPedido.setFechaFin(endDate);
         nuevoPedido.setMonto(monto);
@@ -672,7 +672,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
             texto.append(propietario.getNombre());
             texto.append(", <br/><br/> Has recibido una solicitud de alquiler por el articulo <b>");
             texto.append(publicacion.getTitulo());
-            texto.append("</b>: <br/><br/>");
+            texto.append("</b> <br/><br/>");
             texto.append(" Para aceptarlo, ingresa a tu panel de usuario en alquilaCosas.com.ar ");
             texto.append("<br/><br/><br/> Atentamente, <br/> <b>AlquilaCosas </b>");
             

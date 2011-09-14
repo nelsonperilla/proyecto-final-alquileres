@@ -85,7 +85,6 @@ function revisarDisponibilidad(xhr, status, args){
                 confirmRent.show();
             else
                 loginDlg.show();
-
         }
     }
 }
