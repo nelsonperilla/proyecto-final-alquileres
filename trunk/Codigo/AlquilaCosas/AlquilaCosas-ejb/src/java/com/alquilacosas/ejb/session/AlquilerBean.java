@@ -16,6 +16,7 @@ import com.alquilacosas.ejb.entity.Publicacion;
 import com.alquilacosas.ejb.entity.Usuario;
 import com.alquilacosas.facade.AlquilerFacade;
 import com.alquilacosas.facade.AlquilerXEstadoFacade;
+import com.alquilacosas.facade.CalificacionFacade;
 import com.alquilacosas.facade.EstadoAlquilerFacade;
 import com.alquilacosas.facade.PublicacionFacade;
 import com.alquilacosas.facade.UsuarioFacade;
@@ -67,6 +68,8 @@ public class AlquilerBean implements AlquilerBeanLocal {
     private PublicacionFacade publicacionFacade;
     @EJB
     private UsuarioFacade usuariofacade;
+    @EJB
+    private CalificacionFacade calificacionFacade;
    
     @Override
     @RolesAllowed({"USUARIO", "ADMIN"})
@@ -132,14 +135,17 @@ public class AlquilerBean implements AlquilerBeanLocal {
             List<Alquiler> listaAlquiler = new ArrayList<Alquiler>();
             listaAlquiler = alquilerFacade.getAlquileresPorPublicacion( p,
                     EstadoAlquiler.NombreEstadoAlquiler.PEDIDO);
-            
+            Usuario alquilador = p.getUsuarioFk();
             for( Alquiler a : listaAlquiler ){
                 
+                boolean calificado = calificacionFacade.isCalificacionExistente(usuarioDuenio, a);
                 EstadoAlquiler ea = estadoAlquilerFacade.getEstadoAlquiler(a);
-                AlquilerDTO alquilerDto = new AlquilerDTO( p.getPublicacionId(), p.getTitulo(),
-                            usuarioDuenioId, a.getAlquilerId(), a.getFechaInicio(), 
-                            a.getFechaFin(), a.getCantidad(), ea.getNombre(), imagenId);
+                AlquilerDTO alquilerDto = new AlquilerDTO( p.getPublicacionId(), usuarioDuenioId,
+                            a.getAlquilerId(), imagenId, a.getFechaInicio(), 
+                            a.getFechaFin(), ea.getNombre(), p.getTitulo(), alquilador.getNombre(),
+                            a.getCantidad(), a.getMonto(), calificado);
                 pedidos.add(alquilerDto);
+               
             }         
         }
         
@@ -158,10 +164,12 @@ public class AlquilerBean implements AlquilerBeanLocal {
             Publicacion p = a.getPublicacionFk();
             Integer imagenId = this.getIdImagenPrincipal( p );
             EstadoAlquiler ea = estadoAlquilerFacade.getEstadoAlquiler(a);
-            
-            AlquilerDTO alquilerDto = new AlquilerDTO( p.getPublicacionId(), p.getTitulo(),
-                            usuarioId, a.getAlquilerId(), a.getFechaInicio(), 
-                            a.getFechaFin(), a.getCantidad(), ea.getNombre(), imagenId);
+            Usuario alquilador = p.getUsuarioFk();
+            boolean calificado = calificacionFacade.isCalificacionExistente(usuario, a);
+            AlquilerDTO alquilerDto = new AlquilerDTO( p.getPublicacionId(), usuarioId,
+                            a.getAlquilerId(), imagenId, a.getFechaInicio(), 
+                            a.getFechaFin(), ea.getNombre(), p.getTitulo(), alquilador.getNombre(),
+                            a.getCantidad(), a.getMonto(), calificado);
             pedidos.add(alquilerDto);
         }
         return pedidos;
