@@ -79,15 +79,13 @@ function highlightCalendar(specialDays, date, cssClass) {
 }
 
 function revisarDisponibilidad(xhr, status, args){
-    
-    if(!(args.validationFailed || !args.hayDisponibilidad)) {
-        if(args.logueado){
-            confirmRent.show();
-        }
-        else{
-            loginDlg.show();
-            
+    if(!args.ownerLogged){
+        if(args.hayDisponibilidad) {
+            if(args.logueado)
+                confirmRent.show();
+            else
+                loginDlg.show();
+
         }
     }
-        
 }

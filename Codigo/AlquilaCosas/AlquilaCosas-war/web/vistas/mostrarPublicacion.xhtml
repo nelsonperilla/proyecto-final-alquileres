@@ -115,7 +115,8 @@
                                         </p:calendar>
                                     </h:panelGrid>
                                     <p:commandButton value="Confirmar" action="#{publicacionDesplegada.confirmarPedido}" 
-                                                     onclick ="confirmRent.hide()" />
+                                                     onclick ="confirmRent.hide()" update="grow"/>
+                                    <p:growl id="grow" showDetail="true" globalOnly="true" />
                                 
                             </p:dialog>
                             </h:form>

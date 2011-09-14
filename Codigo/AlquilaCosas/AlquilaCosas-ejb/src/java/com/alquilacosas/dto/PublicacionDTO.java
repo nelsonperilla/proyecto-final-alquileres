@@ -39,6 +39,7 @@ public class PublicacionDTO implements Serializable  {
     private Periodo periodoMinimo;
     private Periodo periodoMaximo;
     private String provincia, ciudad, barrio;
+    private UsuarioDTO propietario;
     
     public PublicacionDTO(int id,String titulo,String descripcion, 
             Date fecha_desde, Date fecha_hasta, boolean destacada,
@@ -297,6 +298,20 @@ public class PublicacionDTO implements Serializable  {
 
     public void setProvincia(String provincia) {
         this.provincia = provincia;
+    }
+
+    /**
+     * @return the propietario
+     */
+    public UsuarioDTO getPropietario() {
+        return propietario;
+    }
+
+    /**
+     * @param propietario the propietario to set
+     */
+    public void setPropietario(UsuarioDTO propietario) {
+        this.propietario = propietario;
     }
     
 }

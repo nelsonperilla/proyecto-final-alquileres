@@ -11,6 +11,7 @@ import com.alquilacosas.common.NotificacionEmail;
 import com.alquilacosas.common.Util;
 import com.alquilacosas.dto.PrecioDTO;
 import com.alquilacosas.dto.PublicacionDTO;
+import com.alquilacosas.dto.UsuarioDTO;
 import com.alquilacosas.ejb.entity.Alquiler;
 import com.alquilacosas.ejb.entity.AlquilerXEstado;
 import com.alquilacosas.ejb.entity.Alquiler_;
@@ -374,6 +375,9 @@ public class PublicacionBean implements PublicacionBeanLocal {
             resultado.setPeriodoMinimo(publicacion.getMinPeriodoAlquilerFk());
             resultado.setPeriodoMaximo(publicacion.getMaxPeriodoAlquilerFk());
             
+            UsuarioDTO propietario = new UsuarioDTO(publicacion.getUsuarioFk());
+            resultado.setPropietario(propietario);
+            
             Domicilio domicilio = publicacion.getUsuarioFk().getDomicilioList().get(0);
             resultado.setProvincia(domicilio.getProvinciaFk().getNombre());
             resultado.setCiudad(domicilio.getProvinciaFk().getNombre());
@@ -637,14 +641,15 @@ public class PublicacionBean implements PublicacionBeanLocal {
     
     
     @Override
-    @PermitAll
+    @RolesAllowed({"USUARIO", "ADMIN"})
     public void crearPedidoAlquiler(int publicationId, int usuarioId, 
-        Date beginDate, Date endDate, double monto, int cantidad)
+        Date beginDate, Date endDate, double monto, int cantidad) throws AlquilaCosasException
     {
         Alquiler nuevoPedido = new Alquiler();
-        Publicacion publicacionPedido = entityManager.find(Publicacion.class, publicationId);
-        nuevoPedido.setPublicacionFk(publicacionPedido);
-        nuevoPedido.setUsuarioFk(entityManager.find(Usuario.class, usuarioId));
+        Publicacion publicacion = entityManager.find(Publicacion.class, publicationId);
+        Usuario propietario = entityManager.find(Usuario.class, usuarioId);
+        nuevoPedido.setPublicacionFk(publicacion);
+        nuevoPedido.setUsuarioFk(propietario);
         nuevoPedido.setFechaInicio(beginDate);
         nuevoPedido.setFechaFin(endDate);
         nuevoPedido.setMonto(monto);
@@ -653,6 +658,34 @@ public class PublicacionBean implements PublicacionBeanLocal {
         entityManager.persist(nuevoPedido);
 
         estadoAlquiler.saveState(nuevoPedido, EstadoAlquiler.NombreEstadoAlquiler.PEDIDO);
+        
+        try {
+            Connection connection = connectionFactory.createConnection();
+            Session session = connection.createSession(true,
+                    Session.AUTO_ACKNOWLEDGE);
+            MessageProducer producer = session.createProducer(destination);
+            ObjectMessage message = session.createObjectMessage();
+
+            String asunto = "Han solicitado alquilar el articulo " + publicacion.getTitulo();
+            StringBuilder texto = new StringBuilder();
+            texto.append("<html>Hola ");
+            texto.append(propietario.getNombre());
+            texto.append(", <br/><br/> Has recibido una solicitud de alquiler por el articulo <b>");
+            texto.append(publicacion.getTitulo());
+            texto.append("</b>: <br/><br/>");
+            texto.append(" Para aceptarlo, ingresa a tu panel de usuario en alquilaCosas.com.ar ");
+            texto.append("<br/><br/><br/> Atentamente, <br/> <b>AlquilaCosas </b>");
+            
+            NotificacionEmail notificacion = new NotificacionEmail
+                    (propietario.getEmail(), asunto, texto.toString());
+            message.setObject(notificacion);
+            producer.send(message);
+            session.close();
+            connection.close();
+
+        } catch (Exception e) {
+            throw new AlquilaCosasException(e.getMessage());
+        }
     }
     
 }

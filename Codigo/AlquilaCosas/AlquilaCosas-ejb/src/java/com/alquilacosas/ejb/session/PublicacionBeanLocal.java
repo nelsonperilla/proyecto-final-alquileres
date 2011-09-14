@@ -54,6 +54,7 @@ public interface PublicacionBeanLocal {
     public List<Date> getFechasSinStock(int publicationId, int cantidad);
     
     public void crearPedidoAlquiler(int publicationId, int usuarioId, 
-            Date beginDate, Date endDate, double monto, int cantidad);
+            Date beginDate, Date endDate, double monto, int cantidad)
+            throws AlquilaCosasException;
 
 }
