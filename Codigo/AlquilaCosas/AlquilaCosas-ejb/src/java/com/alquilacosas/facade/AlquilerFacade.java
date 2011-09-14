@@ -95,6 +95,8 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
         
         List<Alquiler> alquileres = null;
         String id = String.valueOf(idAlqConfirmado);
+        Alquiler alquiler = em.find(Alquiler.class, idAlqConfirmado);
+        String idUsuario = String.valueOf(alquiler.getUsuarioFk().getUsuarioId());
         java.sql.Date fechaDesde = new java.sql.Date(fechaInicio.getTime());
         java.sql.Date fechaHasta = new java.sql.Date(fechaFin.getTime());
         
@@ -106,6 +108,7 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
                 + "AND a.alquiler_Id = axe.alquiler_FK "
                 + "AND axe.estado_Alquiler_FK = ea.estado_Alquiler_Id " 
                 + "AND axe.fecha_hasta IS NULL AND ea.nombre = 'PEDIDO' "
+                + "AND a.usuario_Fk <> " + idUsuario + " "
                 + "AND a.alquiler_id <> " + id +" ", Alquiler.class);
 
         alquileres = query.getResultList();

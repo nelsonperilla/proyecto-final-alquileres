@@ -25,54 +25,56 @@
 
     <!-- IMPLEMENTATION -->
     <cc:implementation>
-        <div class="item">
+        <div class="itemAlquiler">
 
-            <h:panelGrid columns="2" style="border: none; padding: 5px 10px;"
-                         cellspacing="0" cellpadding="0" 
-                         columnClasses="itemImgCol,itemContentCol,itemPriceCol" > 
-                <h:graphicImage value="/image?id=#{cc.attrs.var.imagenId}" 
-                                width="113" height="85" style="border: 1px solid gray; margin-top: 5px"
-                                rendered="#{cc.attrs.var.imagenId != -1}" />
-                <h:graphicImage value="#{resource['images:noImage.png']}"
-                                width="113" height="85" style="border: 1px solid gray; margin-top: 5px"
-                                rendered="#{cc.attrs.var.imagenId == -1}" />
-
-                <h:panelGrid style="padding: 0 10px; text-align: left" columns="1"   >
-                    
-                    <h:commandLink value="#{cc.attrs.var.titulo}"
-                                   action="#{cc.attrs.bean[cc.attrs.pubMethod]}" 
-                                   styleClass="itemTitle" >
-                        <f:setPropertyActionListener value="#{cc.attrs.var.idPublicacion}" target="#{cc.attrs.bean[cc.attrs.propertyPub]}" />
-                    </h:commandLink>
-                    
-                    <h:commandLink value="Usuario" 
-                                   action="#{cc.attrs.bean[cc.attrs.userMethod]}" >
-                        <f:setPropertyActionListener value="#{cc.attrs.var.idUsuario}" target="#{cc.attrs.bean[cc.attrs.propertyUser]}" />
-                    </h:commandLink>
-                    
-                    <h:outputText value="(#{cc.attrs.var.fechaDesde}, #{cc.attrs.var.fechaHasta})" />
-                    <h:outputText value="Cantidad: #{cc.attrs.var.cantidad}" styleClass="itemInfo"/> 
-                    
-                    <p:commandButton value="Cancelar Pedido" actionListener="#{cc.attrs.bean[cc.attrs.metodoCancelarPedido]}"
-                                         update="#{cc.attrs.lista}" rendered="#{cc.attrs.cancelable}">
-                            <f:attribute name="alq" value="#{cc.attrs.var.idAlquiler}" />
-                    </p:commandButton>
-                    
-                    <h:panelGrid columns="2" style="padding: 0 10px; text-align: left" width="50px" 
-                                 cellspacing="0" cellpadding="0">   
-                        <p:commandButton value="SI" actionListener="#{cc.attrs.bean[cc.attrs.metodoAceptar]}"
-                                         update="#{cc.attrs.lista}" rendered="#{cc.attrs.confirmable}">
-                            <f:attribute name="alq" value="#{cc.attrs.var.idAlquiler}" />
-                        </p:commandButton>
-                        <p:commandButton value="NO" actionListener="#{cc.attrs.bean[cc.attrs.metodoRechazar]}"
-                                         update="#{cc.attrs.lista}" rendered="#{cc.attrs.confirmable}"> 
-                            <f:attribute name="alq" value="#{cc.attrs.var.idAlquiler}" />
-                        </p:commandButton>
-                    </h:panelGrid> 
-                    
+            <h:panelGrid columns="4"> 
+                <h:panelGrid columns="1">
+                    <h:graphicImage value="/image?id=#{cc.attrs.var.imagenId}" 
+                                    width="113" height="85" style="border: 1px solid gray; margin-top: 5px"
+                                    rendered="#{cc.attrs.var.imagenId != -1}" />
+                    <h:graphicImage value="#{resource['images:noImage.png']}"
+                                    width="113" height="85" style="border: 1px solid gray; margin-top: 5px"
+                                    rendered="#{cc.attrs.var.imagenId == -1}" />
                 </h:panelGrid>
 
+                <h:panelGrid columns="1" >
+                    <h:commandLink value="#{cc.attrs.var.titulo}" action="#{cc.attrs.bean[cc.attrs.pubMethod]}" >
+                        <f:setPropertyActionListener value="#{cc.attrs.var.idPublicacion}" 
+                                                     target="#{cc.attrs.bean[cc.attrs.propertyPub]}" />
+                    </h:commandLink>
+                    <h:commandLink value="De: #{cc.attrs.var.usuario}" action="#{cc.attrs.bean[cc.attrs.userMethod]}" >
+                        <f:setPropertyActionListener value="#{cc.attrs.var.idUsuario}" 
+                                                     target="#{cc.attrs.bean[cc.attrs.propertyUser]}" />
+                    </h:commandLink>
+
+                </h:panelGrid>
+
+                <h:panelGrid columns="1" >
+                    <h:outputText value="cantidad: #{cc.attrs.var.cantidad}, $ #{cc.attrs.var.monto}" />
+                    <h:outputLabel value="Comienza: #{cc.attrs.var.fechaDesde}" />
+                    <h:outputLabel value="Finaliza: #{cc.attrs.var.fechaHasta}" />
+                </h:panelGrid>
+
+                <h:panelGrid columns="1">
+                    <p:commandButton value="Cancelar Pedido" 
+                                     actionListener="#{cc.attrs.bean[cc.attrs.metodoCancelarPedido]}"
+                                     update="#{cc.attrs.lista}" rendered="#{cc.attrs.cancelable}">
+                        <f:attribute name="alq" value="#{cc.attrs.var.idAlquiler}" />
+                    </p:commandButton>
+                    <p:commandButton value="Aceptar" actionListener="#{cc.attrs.bean[cc.attrs.metodoAceptar]}"
+                                     update="#{cc.attrs.lista}" rendered="#{cc.attrs.confirmable}">
+                        <f:attribute name="alq" value="#{cc.attrs.var.idAlquiler}" />
+                    </p:commandButton>
+                    <p:commandButton value="Rechazar" actionListener="#{cc.attrs.bean[cc.attrs.metodoRechazar]}"
+                                     update="#{cc.attrs.lista}" rendered="#{cc.attrs.confirmable}"> 
+                        <f:attribute name="alq" value="#{cc.attrs.var.idAlquiler}" />
+                    </p:commandButton>
+                </h:panelGrid>
+
+
             </h:panelGrid>
+
+
         </div>
     </cc:implementation>
 </html>
