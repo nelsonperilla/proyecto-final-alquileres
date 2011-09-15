@@ -55,7 +55,7 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
      * @param publicacionId
      * @return 
      */
-    public List<Alquiler> getAlquileresByPublicacionFromToday(int publicationId)
+    public List<Alquiler> getAlquileresByPublicacionFromToday(Publicacion publicacion)
     {
   
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
@@ -65,6 +65,9 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
         EntityType<Alquiler> alquiler = m.entity(Alquiler.class);
         
         Root<Alquiler> root = queryBuilder.from(alquiler);
+        
+        
+        Predicate idPublicacion = criteriaBuilder.equal(root.get(Alquiler_.publicacionFk), publicacion);
         
         Join<Alquiler, AlquilerXEstado> join = root.join("alquilerXEstadoList");
         Path endDate = ((Path)join.as(AlquilerXEstado.class)).get("fechaHasta");
@@ -84,7 +87,7 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
 
         Predicate endAlquiler = criteriaBuilder.greaterThanOrEqualTo(root.get(Alquiler_.fechaFin),date.getTime()); 
         
-        queryBuilder.where(endAlquiler, orStates);
+        queryBuilder.where(idPublicacion, endAlquiler, orStates);
         Query query = em.createQuery(queryBuilder);
 
         List<Alquiler> respuesta = query.getResultList();

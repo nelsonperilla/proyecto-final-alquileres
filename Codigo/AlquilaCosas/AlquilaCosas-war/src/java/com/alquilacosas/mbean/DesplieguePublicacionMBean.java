@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
+import javax.faces.application.FacesMessage.Severity;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
@@ -56,6 +57,7 @@ public class DesplieguePublicacionMBean {
     private ComentarioDTO nuevaPregunta;
     private int cantidadProductos;
     private String action;
+    private double userRating;
 
     /** Creates a new instance of DesplieguePublicacionMBean */
     public DesplieguePublicacionMBean() {
@@ -83,9 +85,11 @@ public class DesplieguePublicacionMBean {
             if (publicacion != null && publicacion.getFecha_hasta() != null) {
                 setFecha_hasta(DateFormat.getDateInstance(DateFormat.SHORT).format(publicacion.getFecha_hasta()));
             }
+            userRating = publicationBean.getUserRate(publicacion.getPropietario());
 
         }
         createDictionary();
+        
     }
 
     public void actualizarPreguntas() {
@@ -152,7 +156,6 @@ public class DesplieguePublicacionMBean {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "No esta permitido alquilar sus propios productos", ""));
-
         else
         {
             Calendar beginDate = Calendar.getInstance();
@@ -175,54 +178,32 @@ public class DesplieguePublicacionMBean {
                     endDate.add(Calendar.MONTH, periodoAlquiler);
             }
 
-            long minDuration = publicacion.getPeriodoMinimoValor();
-            long maxDuration = publicacion.getPeriodoMaximoValor();
-
-            switch (publicacion.getPeriodoMinimo().getPeriodoId())
-            {
-                case 1: //horas
-                    minDuration *= 60 * 60 * 1000;
-                    break;
-                case 2: //dias
-                    minDuration *= 24 * 60 * 60 * 1000;
-                    break;
-                case 3: //semanas
-                    minDuration *= 7 * 24 * 60 * 60 * 1000;
-                    break;
-                case 4: //meses
-                    Date now = new Date();
-                    Calendar temp = Calendar.getInstance();
-                    temp.setTime(now);
-                    temp.add(Calendar.MONTH,(int)minDuration);
-                    minDuration = temp.getTimeInMillis() - now.getTime();
-            }
-
-            switch (publicacion.getPeriodoMaximo().getPeriodoId())
-            {
-                case 1: //horas
-                    maxDuration *= 60 * 60 * 1000;
-                    break;
-                case 2: //dias
-                    maxDuration *= 24 * 60 * 60 * 1000;
-                    break;
-                case 3: //semanas
-                    maxDuration *= 7 * 24 * 60 * 60 * 1000;
-                    break;
-                case 4: //meses
-                    Date now = new Date();
-                    Calendar temp = Calendar.getInstance();
-                    temp.setTime(now);
-                    temp.add(Calendar.MONTH,(int)maxDuration);
-                    maxDuration = temp.getTimeInMillis() - now.getTime();
-            }
+            long minDuration = calcularDuracion(
+                    publicacion.getPeriodoMinimo().getPeriodoId(),
+                    publicacion.getPeriodoMinimoValor());
+            long maxDuration = calcularDuracion(
+                    publicacion.getPeriodoMinimo().getPeriodoId(),
+                    publicacion.getPeriodoMaximoValor());
 
 
             long periodoAlquilerEnMillis = endDate.getTimeInMillis() - beginDate.getTimeInMillis();
             if(periodoAlquilerEnMillis < minDuration || periodoAlquilerEnMillis > maxDuration )
-            FacesContext.getCurrentInstance().addMessage(null,
+            {
+                StringBuilder mensaje = new StringBuilder();
+                mensaje.append("El periodo minimo de alquiler es de ");
+                mensaje.append(publicacion.getPeriodoMinimoValor());
+                mensaje.append(" ");
+                mensaje.append(publicacion.getPeriodoMinimo().getNombre());
+                mensaje.append("/s ");
+                mensaje.append("y el maximo de ");
+                mensaje.append(publicacion.getPeriodoMaximoValor());
+                mensaje.append(" ");
+                mensaje.append(publicacion.getPeriodoMaximo().getNombre());
+                mensaje.append("/s ");
+                FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "el periodo minimo de alquiler es de " + "y el maximo de", ""));
-
+                    mensaje.toString() , ""));
+            }
             else{
                 Iterator<Date> itFechasSinStock = fechas.iterator();
                 boolean noStockFlag = false;
@@ -231,70 +212,104 @@ public class DesplieguePublicacionMBean {
                 //en el periodo seleccionado
                 while(!noStockFlag && itFechasSinStock.hasNext()){
                     temp.setTime(itFechasSinStock.next());
-                    if( beginDate.before(temp) && endDate.after(temp))//la fecha sin stock cae en el periodo
+                    if(beginDate.before(temp) && endDate.after(temp))//la fecha sin stock cae en el periodo
                         noStockFlag = true;
                 }
                 if(noStockFlag)
                     FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_ERROR,
                         "Hay fechas sin stock en el periodo seleccionado", ""));
-                else{
+                else
+                {
                     //calculo el monto
-                    double monto = 0;
-                    temp.setTime(beginDate.getTime());
-                    temp.add(Calendar.MONTH, 1);
-                    endDate.add(Calendar.SECOND, 1);
-                    while(endDate.after(temp)){
-                        //hardCode muy duro, se el orden porque hice la consulta con orderby
-                        //si se agregan periodos nuevos corregir esto
-                        monto+= publicacion.getPrecios().get(3).getPrecio();
-                        temp.add(Calendar.MONTH, 1);
-                    }
-
-                    temp.add(Calendar.MONTH, -1);
-                    temp.add(Calendar.WEEK_OF_YEAR, 1);
-                    while(endDate.after(temp)){
-                        //hardCode muy duro, se el orden porque hice la consulta con orderby
-                        //si se agregan periodos nuevos corregir esto
-                        monto+= publicacion.getPrecios().get(2).getPrecio();
-                        temp.add(Calendar.WEEK_OF_YEAR, 1);
-                    }
-
-                    temp.add(Calendar.WEEK_OF_YEAR, -1);
-                    temp.add(Calendar.DATE, 1);
-                    while(endDate.after(temp)){
-                        //hardCode muy duro, se el orden porque hice la consulta con orderby
-                        //si se agregan periodos nuevos corregir esto
-                        monto+= publicacion.getPrecios().get(1).getPrecio();
-                        temp.add(Calendar.DATE, 1);
-                    }
-
-                    temp.add(Calendar.DATE, -1);
-                    temp.add(Calendar.HOUR_OF_DAY, 1);
-                    while(endDate.after(temp)){
-                        //hardCode muy duro, se el orden porque hice la consulta con orderby
-                        //si se agregan periodos nuevos corregir esto
-                        monto+= publicacion.getPrecios().get(0).getPrecio();
-                        temp.add(Calendar.HOUR_OF_DAY, 1);
-                    }
-
-                    endDate.add(Calendar.SECOND, -1);
+                    double monto = calcularMonto(beginDate, endDate);
+                    
                     String mensaje = "El pedido de alquiler ha sido enviado";
+                    Severity icon = FacesMessage.SEVERITY_INFO;
                     try {
                         publicationBean.crearPedidoAlquiler(publicacion.getId(), 
                                 usuarioLogueado.getUsuarioId(), beginDate.getTime(), 
                                 endDate.getTime(), monto, cantidadProductos);
                     } catch (AlquilaCosasException ex) {
                         mensaje = "El pedido de alquiler no se ha concretado, por favor intente de nuevo";
+                        icon = FacesMessage.SEVERITY_ERROR;
                         Logger.getLogger(DesplieguePublicacionMBean.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                        FacesContext.getCurrentInstance().addMessage(null,
-                            new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                            mensaje, ""));
-                    }
+                    FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(icon, mensaje, ""));
+                }
             }
         }
 
+    }
+    
+    private double calcularMonto(Calendar beginDate, Calendar endDate)
+    {
+        double monto = 0;
+        Calendar temp = Calendar.getInstance();
+        temp.setTime(beginDate.getTime());
+        temp.add(Calendar.MONTH, 1);
+        endDate.add(Calendar.SECOND, 1);
+        while(endDate.after(temp)){
+            //hardCode muy duro, se el orden porque hice la consulta con orderby
+            //si se agregan periodos nuevos corregir esto
+            monto+= publicacion.getPrecios().get(3).getPrecio();
+            temp.add(Calendar.MONTH, 1);
+        }
+
+        temp.add(Calendar.MONTH, -1);
+        temp.add(Calendar.WEEK_OF_YEAR, 1);
+        while(endDate.after(temp)){
+            //hardCode muy duro, se el orden porque hice la consulta con orderby
+            //si se agregan periodos nuevos corregir esto
+            monto+= publicacion.getPrecios().get(2).getPrecio();
+            temp.add(Calendar.WEEK_OF_YEAR, 1);                
+
+
+        }
+
+        temp.add(Calendar.WEEK_OF_YEAR, -1);
+        temp.add(Calendar.DATE, 1);
+        while(endDate.after(temp)){
+            //hardCode muy duro, se el orden porque hice la consulta con orderby
+            //si se agregan periodos nuevos corregir esto
+            monto+= publicacion.getPrecios().get(1).getPrecio();
+            temp.add(Calendar.DATE, 1);
+        }
+
+        temp.add(Calendar.DATE, -1);
+        temp.add(Calendar.HOUR_OF_DAY, 1);
+        while(endDate.after(temp)){
+            //hardCode muy duro, se el orden porque hice la consulta con orderby
+            //si se agregan periodos nuevos corregir esto
+            monto+= publicacion.getPrecios().get(0).getPrecio();
+            temp.add(Calendar.HOUR_OF_DAY, 1);
+        }
+        endDate.add(Calendar.SECOND, -1);
+        return monto;
+    }
+    
+    private long calcularDuracion(int periodoId, long periodo)
+    {
+        switch (periodoId)
+        {
+            case 1: //horas
+                periodo *= 60 * 60 * 1000;
+                break;
+            case 2: //dias
+                periodo *= 24 * 60 * 60 * 1000;
+                break;
+            case 3: //semanas
+                periodo *= 7 * 24 * 60 * 60 * 1000;
+                break;
+            case 4: //meses
+                Date now = new Date();
+                Calendar temp = Calendar.getInstance();
+                temp.setTime(now);
+                temp.add(Calendar.MONTH,(int)periodo);
+                periodo = temp.getTimeInMillis() - now.getTime();
+        }
+        return periodo;
     }
     
     private void createDictionary() {
@@ -535,5 +550,19 @@ public class DesplieguePublicacionMBean {
      */
     public void setAction(String action) {
         this.action = action;
+    }
+
+    /**
+     * @return the userRating
+     */
+    public double getUserRating() {
+        return userRating;
+    }
+
+    /**
+     * @param userRating the userRating to set
+     */
+    public void setUserRating(double userRating) {
+        this.userRating = userRating;
     }
 }
