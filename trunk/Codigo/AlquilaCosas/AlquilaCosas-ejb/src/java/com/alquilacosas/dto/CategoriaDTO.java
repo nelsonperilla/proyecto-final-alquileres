@@ -14,8 +14,10 @@ import java.util.List;
  */
 public class CategoriaDTO implements Serializable  {
     
-    private int id, padreId;
-    private String nombre, descripcion;
+    private int id;
+    private int padreId;
+    private String nombre;
+    private String descripcion;
     private List<CategoriaDTO> subcategorias;
 
     public CategoriaDTO(int id, int padreId, String nombre, String descripcion) {

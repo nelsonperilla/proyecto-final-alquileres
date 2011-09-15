@@ -26,16 +26,25 @@
 
                 <table id="simpleItem">
                     <tr>
-                        <td>
-                            <h:outputText value="#{publicacionDesplegada.publicacion.titulo}" 
-                                          styleClass="itemTitle" />                            
+                        <td colspan="2">
+                            <h:form>
+                                <h:commandLink value="#{publicacionDesplegada.publicacion.categoriaF.nombre}->  " 
+                                    style="font-size: 18px; text-decoration: none"
+                                    action ="verCategoria">
+                                <f:setPropertyActionListener target="#{menuCatBean.categoriaSeleccionada}" 
+                                                             value="#{publicacionDesplegada.publicacion.categoriaF.id}" />
+                                </h:commandLink>                            
+                                <h:outputText value="#{publicacionDesplegada.publicacion.titulo}" 
+                                              styleClass="itemTitle" />                            
+                                
+                            </h:form>
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <h:form >
                                 <p:galleria effect="#{publicacionDesplegada.effect}" effectSpeed="1000"
-                                            style="height: 300px; width: 300px">  
+                                            style="height: 350px; width: 300px">  
                                     <ui:repeat value="#{publicacionDesplegada.publicacion.imagenIds}" 
                                                var="image">  
                                         <h:graphicImage value="/image?id=#{image}"  
@@ -49,8 +58,14 @@
                         </td>
                         <td   width="100%">
                             <h:form>
-                                
-                                <h:panelGrid  styleClass="dataPrincipal" columns="1"  >
+                                <h:panelGrid  styleClass="dataPrincipal" columns="2"  >
+                                    <h:outputText value="Propietario: " styleClass="itemInfo"  escape="false"/>
+                                    <h:outputText value="#{publicacionDesplegada.publicacion.propietario.nombre}" 
+                                                  styleClass="itemInfo" style=" color: #556275" escape="false"/>  
+                                    <h:outputText value="Reputacion: " styleClass="itemInfo" escape="false"/>
+                                    <p:rating value="#{publicacionDesplegada.userRating}" stars="10" disabled="true"/> 
+                                </h:panelGrid>                                 
+                                <h:panelGrid  styleClass="dataPrincipal" style="margin-top: 10px;" columns="1"  >
                                     
                                     <h:dataTable value="#{publicacionDesplegada.publicacion.precios}"
                                                  var="precio" style="width: 100%" >
@@ -66,8 +81,6 @@
                                     <h:outputText value="Origen: #{publicacionDesplegada.publicacion.barrio}, 
                                                   #{publicacionDesplegada.publicacion.ciudad}" 
                                                   styleClass="itemInfo" escape="false"/> 
-                                    <h:outputText value="Categoria: #{publicacionDesplegada.publicacion.categoriaF.nombre}" 
-                                                  styleClass="itemInfo" escape="false"/>  
                                     <h:outputText value="Finaliza el #{publicacionDesplegada.fecha_hasta}" 
                                                   styleClass="itemInfo" escape="false"/>  
                                     <h:outputText value="Disponibilidad maxima: #{publicacionDesplegada.publicacion.cantidad}" 

@@ -554,8 +554,9 @@ public class PublicacionBean implements PublicacionBeanLocal {
     @PermitAll
     public List<Date> getFechasSinStock(int publicationId, int cantidad)
     {
+        Publicacion publicacion = entityManager.find(Publicacion.class, publicationId);
         List<Date> respuesta = new ArrayList<Date>();
-        List<Alquiler> alquileres = alquilerFacade.getAlquileresByPublicacionFromToday(publicationId);
+        List<Alquiler> alquileres = alquilerFacade.getAlquileresByPublicacionFromToday(publicacion);
         Iterator<Alquiler> itAlquiler =  alquileres.iterator();
         
         Calendar today = Calendar.getInstance();
@@ -564,7 +565,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
         today.set(Calendar.MINUTE, 0);
         today.set(Calendar.SECOND, 0);
         
-        int disponibles = entityManager.find(Publicacion.class, publicationId).getCantidad();
+        int disponibles = publicacion.getCantidad();
         
         HashMap<String, Integer> dataCounter = new HashMap(60);//probablemente no existan pedidos mas haya de 60 dias desde hoy
         Calendar lastDate = Calendar.getInstance();
@@ -583,7 +584,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
             fechaFin.setTime(temp.getFechaFin());
             if(fechaFin.get(Calendar.HOUR_OF_DAY) == 0 && fechaFin.get(Calendar.MINUTE)  == 0 
                     && fechaFin.get(Calendar.SECOND)  == 0 )
-                fechaFin.add(Calendar.SECOND, 1); 
+                //fechaFin.add(Calendar.SECOND, 1); 
             //No me importan las fechas anteriores a hoy, no son seleccionables
             if(date.before(today))
                 date.setTime(today.getTime());
@@ -686,6 +687,13 @@ public class PublicacionBean implements PublicacionBeanLocal {
         } catch (Exception e) {
             throw new AlquilaCosasException(e.getMessage());
         }
+    }
+
+    @Override
+    @PermitAll
+    public double getUserRate(UsuarioDTO propietario) {
+        double rating = 7;
+        return rating;//hacer el metodo!!
     }
     
 }

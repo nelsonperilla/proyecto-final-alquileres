@@ -9,6 +9,7 @@ import com.alquilacosas.dto.ComentarioDTO;
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.PrecioDTO;
 import com.alquilacosas.dto.PublicacionDTO;
+import com.alquilacosas.dto.UsuarioDTO;
 import com.alquilacosas.ejb.entity.EstadoPublicacion.NombreEstadoPublicacion;
 import com.alquilacosas.ejb.entity.Periodo;
 import java.util.Date;
@@ -56,5 +57,7 @@ public interface PublicacionBeanLocal {
     public void crearPedidoAlquiler(int publicationId, int usuarioId, 
             Date beginDate, Date endDate, double monto, int cantidad)
             throws AlquilaCosasException;
+
+    public double getUserRate(UsuarioDTO propietario);
 
 }
