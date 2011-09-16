@@ -12,8 +12,8 @@
         <cc:attribute name="bean" type="java.lang.Object" required="true"  />    
         <cc:attribute name="dlgCalificar" type="java.lang.String" required="true" />
         <cc:attribute name="dlgVerCalificacion" type="java.lang.String" required="true" />
-        <cc:attribute name="dlgModificar" type="java.lang.String" required="true" />
-        <cc:attribute name="dlgPedirCambio" type="java.lang.String" required="true" />
+        <cc:attribute name="dlgModificar" type="java.lang.String" />
+        <cc:attribute name="dlgPedirCambio" type="java.lang.String" />
         <cc:attribute name="dlgCancelar" type="java.lang.String" required="true" />
         <cc:attribute name="panelDialogos" type="java.lang.String" required="true" />
         <cc:attribute name="propPublicacion" type="java.lang.String" required="true" />
@@ -60,10 +60,10 @@
                     <h:outputLabel value="Comienza: #{cc.attrs.var.fechaDesde}" />
                     <h:outputLabel value="Finaliza: #{cc.attrs.var.fechaHasta}" />
                 </h:panelGrid>
-                
+                 <!--cc.attrs.var.calificable and -->
                 <h:panelGrid columns="1" >
-                    <p:commandButton value="Ver calificacion" 
-                                     rendered="#{cc.attrs.var.calificable and cc.attrs.var.calificado}"
+                     <p:commandButton value="Ver calificacion" 
+                                     rendered="#{cc.attrs.var.calificado}"
                                      actionListener="#{cc.attrs.bean[cc.attrs.metodoVerCalif]}"
                                      update="#{cc.attrs.panelDialogos}"
                                      oncomplete="#{cc.attrs.dlgVerCalificacion}.show();" >

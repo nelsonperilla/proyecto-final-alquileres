@@ -26,55 +26,104 @@
                <ui:define name="principal">
                     <h1>Mis Alquileres Tomados</h1>
                     <br />
-                    <h:form id="alquileres" >
+                    <h:form id="alquileres">
                          <h:outputLabel value="Ver Alquileres: " />
                          <h:selectOneMenu id="ver" value="#{alquileresTomados.filtroSeleccionado}" >                                
                               <f:selectItems value="#{alquileresTomados.filtros}" />
-                              <p:ajax event="change" update="tabla growl" process="@this"
-                                      listener="#{alquileresTomados.actualizarAlquileres}" />
                          </h:selectOneMenu>
-                         <p:dataTable id="tabla" value="#{alquileresTomados.alquileres}" var="alq">
+                         <p:commandButton value="Buscar" actionListener="#{alquileresTomados.actualizarAlquileres}"
+                                               update="alquileres tabla" />
+                         <p:dataTable id="tabla" value="#{alquileresTomados.alquileres}" var="alq"
+                                      styleClass="itemsTable" emptyMessage="No hay alquileres para mostrar.">
                               <p:column>
                                    <comps:alquiler var="#{alq}" bean="#{alquileresTomados}"
                                                    dlgCalificar="calificarDlg"
-                                                   dlgCalificarId="dialogoCalifica"
                                                    dlgVerCalificacion="verCalificacionDlg"
-                                                   dlgVerCalificacionId="dialogoVerCalifica"
+                                                   dlgCancelar="cancelarDlg"
+                                                   dlgPedirCambio="pedirCambioDlg"
+                                                   panelDialogos="dialogos"  
                                                    editable="false"
-                                                   metodoVerPub="verPublicacion"
                                                    propPublicacion="publicacionId"
-                                                   metodoVerUsuario="verUsuario"
                                                    propUsuario="usuarioId"
-                                                   metodoCalificar="tomarAlquilerACalificar"
-                                                   metodoVerCalif="verCalificacion" />
+                                                   propAlquiler="alquilerId"
+                                                   metodoVerPub="verPublicacion"
+                                                   metodoVerUsuario="verUsuario"
+                                                   metodoCalificar="prepararCalificar"
+                                                   metodoVerCalif="prepararVerCalificacion"
+                                                   metodoCancelar="prepararCancelarAlquiler"
+                                                   metodoPedirCambio="prepararPedirCambioAlquiler" />
                               </p:column>
                          </p:dataTable>
                     </h:form>
-                    
-                    <p:dialog modal="true" widgetVar="verCalificacionDlg" header="Ver Calificación">
-                         <h:form id="dialogoVerCalifica" >
-                              <h:outputLabel value="lalalal"></h:outputLabel>
-                         </h:form>
-                    </p:dialog>
-                    
-                    <p:dialog modal="true" widgetVar="calificarDlg" header="Calificar">
-                         <h:form id="dialogoCalifica">
-                              <h:panelGrid columns="1" >  
-                                   <h:outputText value="Puntuación:" />
-                                   <h:selectOneMenu id="puntuacion" value="#{alquileresTomados.puntuacion}" >
-                                        <f:selectItems id="itemsPuntuacion" value="#{alquileresTomados.puntuaciones}" />
-                                   </h:selectOneMenu>                                   
-                                   <h:outputText value="Comentario:" />
-                                   <p:inputTextarea id="comentario" value="#{alquileresTomados.comentario}" 
-                                                    style="width:200px;height:100px;" effectDuration="100" maxHeight="255" />
-                                   <f:facet name="footer" >
-                                        <p:commandButton value="Calificar" actionListener="#{alquileresTomados.registrarCalificacion}" 
-                                                         oncomplete="calificarDlg.hide()" update="alquileres tabla" />
-                                        <p:commandButton value="Limpiar" type="reset" />
-                                   </f:facet>
+
+                    <p:outputPanel id="dialogos" >
+                         <p:dialog modal="true" widgetVar="calificarDlg" header="Calificar">
+                              <h:form>
+                                   <h:panelGrid columns="1" >  
+                                        <h:outputText value="Puntuación:" />
+                                        <h:selectOneMenu id="puntuacion" value="#{alquileresTomados.puntuacion}" >
+                                             <f:selectItems id="itemsPuntuacion" value="#{alquileresTomados.puntuaciones}" />
+                                        </h:selectOneMenu>                                   
+                                        <h:outputText value="Comentario:" />
+                                        <p:inputTextarea id="comentario" value="#{alquileresTomados.comentario}" 
+                                                         style="width:200px;height:100px;" effectDuration="100" maxHeight="255" />
+                                        <f:facet name="footer" >
+                                             <p:commandButton value="Calificar" actionListener="#{alquileresTomados.registrarCalificacion()}" 
+                                                              update="alquileres tabla" oncomplete="calificarDlg.hide()"/>
+                                             <p:commandButton value="Cerrar" oncomplete="calificarDlg.hide()" />
+                                        </f:facet>
+                                   </h:panelGrid>
+                              </h:form>
+                         </p:dialog>
+                         
+                         <p:dialog modal="true" widgetVar="verCalificacionDlg" header="Ver Calificación">
+                              <h:form>
+                                   <h:panelGrid columns="2">
+                                        <h:panelGrid columns="1">
+                                             <h:outputText value="Usuario que Tomó Alquiler: #{alquileresTomados.calificacionToma.nombreUsuarioCalificador}" />
+                                             <h:outputText value="Puntuacion: #{alquileresTomados.calificacionToma.nombrePuntuacion}" />
+                                             <h:outputText value="Comentario:" />
+                                             <h:outputText value="    #{alquileresTomados.calificacionToma.comentarioCalificacion}" />
+                                             <h:outputText value="Replica:" />
+                                             <h:inputTextarea value="#{alquileresTomados.calificacionToma.comentarioReplica}" 
+                                                              disabled="#{not alquileresTomados.toma or alquileresTomados.calificacionToma.yaReplico}" />
+                                             <p:commandButton value="Enviar Replica" actionListener="#{alquileresTomados.registrarReplica}" 
+                                                              rendered="#{alquileresTomados.toma and (not alquileresTomados.calificacionToma.yaReplico)}" />
+                                        </h:panelGrid>
+                                        <h:panelGrid columns="1">
+                                             <h:outputText value="Usuario que Ofreció: #{alquileresTomados.calificacionOfrece.nombreUsuarioCalificador}" />
+                                             <h:outputText value="Puntuacion: #{alquileresTomados.calificacionOfrece.nombrePuntuacion}" />
+                                             <h:outputText value="Comentario:" />
+                                             <h:outputText value="    #{alquileresTomados.calificacionOfrece.comentarioCalificacion}" />
+                                             <h:outputText value="Replica:" />
+                                             <h:inputTextarea value="#{alquileresTomados.calificacionOfrece.comentarioReplica}" 
+                                                              disabled="#{not alquileresTomados.ofrece or alquileresTomados.calificacionOfrece.yaReplico}" />
+                                             <p:commandButton value="Enviar Replica" actionListener="#{alquileresTomados.registrarReplica}" 
+                                                              rendered="#{alquileresTomados.ofrece and (not alquileresTomados.calificacionOfrece.yaReplico)}" />
+                                        </h:panelGrid>
+                                        <p:commandButton value="Salir" oncomplete="verCalificacionDlg.hide()"/>
+                                   </h:panelGrid>
+                              </h:form>
+                         </p:dialog>
+
+
+                         <p:dialog modal="true" widgetVar="cancelarDlg" header="Cancelar Alquiler">
+                              <h:form>
+                                   <h:panelGrid columns="2">
+                                        
+                                   </h:panelGrid>
+                              </h:form>
+                         </p:dialog>
+                         
+                         <p:dialog modal="true" widgetVar="pedirCambioDlg" header="Pedir Cambio de Alquiler">
+                         <h:form>
+                              <h:panelGrid columns="2">
+                                   
                               </h:panelGrid>
                          </h:form>
                     </p:dialog>
+
+                    </p:outputPanel>
                </ui:define>
 
                <ui:define name="right">

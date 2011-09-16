@@ -18,34 +18,74 @@ import javax.persistence.Query;
  */
 @Stateless
 public class CalificacionFacade extends AbstractFacade<Calificacion> {
-    @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
-    private EntityManager em;
 
-    @Override
-    protected EntityManager getEntityManager() {
-        return em;
-    }
+     @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
+     private EntityManager em;
 
-    public CalificacionFacade() {
-        super(Calificacion.class);
-    }
-    
-    public boolean isCalificacionExistente(Usuario usuario, Alquiler alquiler) {
-        Query query = em.createQuery("SELECT count(c.calificacionId) FROM "
-                + "Calificacion c WHERE c.alquilerFk = :alquiler AND "
-                + "c.usuarioCalificadorFk = :usuario");
-        query.setParameter("usuario", usuario);
-        query.setParameter("alquiler", alquiler);
-        Integer resultado = 0;
-        try {
-            resultado = (Integer) query.getSingleResult();
-        } catch (Exception e) {
-        }
-        if(resultado > 0)
-            return true;
-        else
-            return false;
-       
-    }
-    
+     @Override
+     protected EntityManager getEntityManager() {
+          return em;
+     }
+
+     public CalificacionFacade() {
+          super(Calificacion.class);
+     }
+
+     public boolean isCalificacionExistente(Usuario usuario, Alquiler alquiler) {
+          Query query = em.createQuery("SELECT count(c.calificacionId) FROM "
+                  + "Calificacion c WHERE c.alquilerFk = :alquiler AND "
+                  + "c.usuarioCalificadorFk = :usuario");
+          query.setParameter("usuario", usuario);
+          query.setParameter("alquiler", alquiler);
+          Integer resultado = 0;
+          try {
+               resultado = (Integer) query.getSingleResult();
+          } catch (Exception e) {
+          }
+          if (resultado > 0) {
+               return true;
+          } else {
+               return false;
+          }
+
+     }
+
+     public Calificacion getCalificacionPorAlquilerUsuarioToma(Alquiler alquiler, Usuario usuario) {
+          Query query = em.createQuery("SELECT c "
+                  + "FROM Alquiler a, Calificacion c "
+                  + "WHERE c.alquilerFk = a "
+                  + "AND a = :alquiler "
+                  + "AND a.usuarioFk = :usuario "
+                  + "AND c.usuarioCalificadorFk = :usuario");
+          query.setParameter("usuario", usuario);
+          query.setParameter("alquiler", alquiler);
+          Calificacion calificacion;
+          try {
+               calificacion = (Calificacion)query.getSingleResult();
+          }
+          catch (javax.persistence.NoResultException e) {
+               calificacion = null;
+          }
+          return calificacion;
+     }
+     
+     public Calificacion getCalificacionPorAlquilerUsuarioOfrece(Alquiler alquiler, Usuario usuario) {
+          Query query = em.createQuery("SELECT c "
+                  + "FROM Alquiler a, Calificacion c, Publicacion p "
+                  + "WHERE a.publicacionFk = p "
+                  + "AND c.alquilerFk = a "
+                  + "AND a = :alquiler "
+                  + "AND p.usuarioFk = :usuario "
+                  + "AND c.usuarioCalificadorFk = :usuario");
+          query.setParameter("usuario", usuario);
+          query.setParameter("alquiler", alquiler);
+          Calificacion calificacion;
+          try {
+               calificacion = (Calificacion)query.getSingleResult();
+          }
+          catch (javax.persistence.NoResultException e) {
+               calificacion = null;
+          }
+          return calificacion;
+     }
 }
