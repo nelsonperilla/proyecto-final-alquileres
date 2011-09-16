@@ -6,13 +6,11 @@ package com.alquilacosas.mbean;
 
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.AlquilerDTO;
-import com.alquilacosas.ejb.entity.Alquiler;
-import com.alquilacosas.ejb.entity.Calificacion;
+import com.alquilacosas.dto.CalificacionDTO;
 import com.alquilacosas.ejb.entity.Puntuacion;
-import com.alquilacosas.ejb.entity.Usuario;
 import com.alquilacosas.ejb.session.AlquileresTomadosBeanLocal;
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -30,7 +28,7 @@ import javax.faces.model.SelectItem;
  */
 @ManagedBean(name = "alquileresTomados")
 @ViewScoped
-public class AlquileresTomadosMBean {
+public class AlquileresTomadosMBean implements Serializable {
 
      @EJB
      private AlquileresTomadosBeanLocal alquileresTomadosBean;
@@ -45,6 +43,13 @@ public class AlquileresTomadosMBean {
      private List<SelectItem> puntuaciones;
      private SelectItem puntuacion;
      private String comentario;
+     private Boolean ofrece;
+     private Boolean toma;
+     private CalificacionDTO calificacionOfrece;
+     private CalificacionDTO calificacionToma;
+     
+     //unicamente para la prueba
+     private Integer puntuacionId = 1;
      
      /** Creates a new instance of AlquileresTomadosMBean */
      public AlquileresTomadosMBean() {
@@ -54,7 +59,7 @@ public class AlquileresTomadosMBean {
      public void init(){
           usuarioId = usuarioMBean.getUsuarioId();
           filtros = new ArrayList<SelectItem>();
-          filtros.add(new SelectItem(0, "ACTIVO"));
+          filtros.add(new SelectItem(0, "Confirmados Y Activos"));
           filtros.add(new SelectItem(1, "Finalizado SIN Calificación"));
           filtros.add(new SelectItem(2, "Finalizado CON Calificación"));
           filtroSeleccionado = 1;
@@ -69,19 +74,40 @@ public class AlquileresTomadosMBean {
      }
      
      public void actualizarAlquileres() {
-          switch(filtroSeleccionado){
-               case 0:
-                    
-               case 1: /* Alquileres Finalizados Sin Calificación */
+          switch(filtroSeleccionado) {
+               /* Alquileres Activos y Confirmados */
+               case 0: {
+                    try {
+                         alquileres = alquileresTomadosBean.getAlquileresActivosPorUsuario(usuarioId);
+                    }
+                    catch(AlquilaCosasException e) {
+                         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error  al recuperar los Alquileres" + e.toString(), "");  
+                         FacesContext.getCurrentInstance().addMessage(null, message);
+                    }
+                    break;
+               }
+               /* Alquileres Finalizados, cancelados, cancelados por alquilador  Sin Calificación */
+               case 1: {
                     try {
                          alquileres = alquileresTomadosBean.getAlquileresSinCalificarPorUsuario(usuarioId);
                     }
                     catch(AlquilaCosasException e) {
                          FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error  al recuperar los Alquileres" + e.toString(), "");  
                          FacesContext.getCurrentInstance().addMessage(null, message);
-                    }        
-               case 2:
-                    
+                    }
+                    break;
+               }
+               /* Alquileres Finalizados, cancelados, cancelados por alquilador CON Clasificación */
+               case 2: {
+                    try {
+                         alquileres = alquileresTomadosBean.getAlquileresConCalificarPorUsuario(usuarioId);
+                    }
+                    catch(AlquilaCosasException e) {
+                         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error  al recuperar los Alquileres" + e.toString(), "");  
+                         FacesContext.getCurrentInstance().addMessage(null, message);
+                    }
+                    break;
+               }
           }
      }   
      
@@ -93,32 +119,48 @@ public class AlquileresTomadosMBean {
           return "";
      }
      
-     public void tomarAlquilerACalificar(ActionEvent event) {
+     public void prepararCalificar(ActionEvent event) {
           alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
      }
      
-     public void verCalificacion(ActionEvent event) {
+     public void prepararVerCalificacion(ActionEvent event) {
           alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
-          // llama al bea y obtiene las calificaciones para este alquiler
-          
+          try {
+               calificacionOfrece = alquileresTomadosBean.getCalificacionOfrece(alquilerId, usuarioId);
+               calificacionToma = alquileresTomadosBean.getCalificacionToma(alquilerId, usuarioId);
+               // Lo siguiente sirve para mostrar los campos permitidos
+               if (calificacionOfrece.getIdUsuarioCalidicador() != null)
+                    ofrece = calificacionOfrece.getIdUsuarioCalidicador() == usuarioId;
+               if (calificacionToma.getIdUsuarioCalidicador() != null)
+                    toma = calificacionToma.getIdUsuarioCalidicador() == usuarioId;
+          }
+          catch (AlquilaCosasException e){
+               FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error  al recuperar las Calificaciones" + e.toString(), "");  
+               FacesContext.getCurrentInstance().addMessage(null, message);
+          }          
+     }
+     
+     public void prepararCancelarAlquiler(ActionEvent event) {
+          alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
+     }
+     
+     public void prepararPedirCambioAlquiler(ActionEvent event) {
+          alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
      }
      
      public void registrarCalificacion() {
           System.out.println("algo");
-          Alquiler alquiler = alquileresTomadosBean.getAlquilerPorId(alquilerId);
-          Usuario usuario = alquileresTomadosBean.getUsuarioPorId(usuarioId);
-          Puntuacion nuevaPuntuacion = alquileresTomadosBean.getPuntuacionesPorId((Integer)puntuacion.getValue());
+          //alquileresTomadosBean.registrarCalificacion((Integer)puntuacion.getValue(), alquilerId, comentario, usuarioId);
           
-          Calificacion nuevaCalificacion = new Calificacion();
-          nuevaCalificacion.setFechaCalificacion(new Date());
-          nuevaCalificacion.setPuntuacionFk(nuevaPuntuacion);
-          nuevaCalificacion.setComentarioCalificador(comentario);          
-          nuevaCalificacion.setAlquilerFk(alquiler);
-          nuevaCalificacion.setUsuarioCalificadorFk(usuario);
-          
-          alquileresTomadosBean.registrarCalificacion(nuevaCalificacion);
+          //unicamente prueba
+          alquileresTomadosBean.registrarCalificacion(1, 1, "lalalalala", 1);
      }
-
+     
+     public void registrarReplica() {
+          //replicar
+          System.out.println("algo");
+     }
+     
      public int getFiltroSeleccionado() {
           return filtroSeleccionado;
      }
@@ -197,6 +239,38 @@ public class AlquileresTomadosMBean {
 
      public void setPuntuaciones(List<SelectItem> puntuaciones) {
           this.puntuaciones = puntuaciones;
+     }
+
+     public Boolean getOfrece() {
+          return ofrece;
+     }
+
+     public void setOfrece(Boolean ofrece) {
+          this.ofrece = ofrece;
+     }
+
+     public Boolean getToma() {
+          return toma;
+     }
+
+     public void setToma(Boolean toma) {
+          this.toma = toma;
+     }
+
+     public CalificacionDTO getCalificacionOfrece() {
+          return calificacionOfrece;
+     }
+
+     public void setCalificacionOfrece(CalificacionDTO calificacionOfrece) {
+          this.calificacionOfrece = calificacionOfrece;
+     }
+
+     public CalificacionDTO getCalificacionToma() {
+          return calificacionToma;
+     }
+
+     public void setCalificacionToma(CalificacionDTO calificacionToma) {
+          this.calificacionToma = calificacionToma;
      }
 
 }

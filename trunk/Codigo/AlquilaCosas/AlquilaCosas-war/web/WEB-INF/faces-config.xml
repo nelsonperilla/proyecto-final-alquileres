@@ -174,5 +174,10 @@
             <to-view-id>/vistas/usuario/misPedidosRealizados.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>misAlquileresTomados</from-outcome>
+            <to-view-id>/vistas/usuario/misAlquileresTomados.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
     </navigation-rule>
 </faces-config>
