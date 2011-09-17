@@ -48,7 +48,7 @@ import javax.jms.Session;
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-@DeclareRoles({"USER", "ADMIN"})
+@DeclareRoles({"USUARIO", "ADMIN"})
 public class AlquilerBean implements AlquilerBeanLocal {
 
     @Resource(name = "emailConnectionFactory")

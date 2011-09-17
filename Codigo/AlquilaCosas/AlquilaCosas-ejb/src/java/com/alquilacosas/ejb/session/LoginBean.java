@@ -95,16 +95,10 @@ public class LoginBean implements LoginBeanLocal {
         
         Login login = loginFacade.findByUsername(username);
         if(login == null) {
-            throw new AlquilaCosasException("Username no valido");
+            throw new AlquilaCosasException("Nombre de usuario inexistente");
         }
-//        Query buscarLogin = entityManager.createNamedQuery("Login.findByUsername");
-//        buscarLogin.setParameter("username", username);
-//        try {
-//            login = (Login) buscarLogin.getSingleResult();
-//        } catch (Exception e) {
-//            throw new AlquilaCosasException("Username no valido");
-//        }
-        
+        login.setFechaUltimoIngreso(new Date());
+        loginFacade.edit(login);
         Usuario usuario = login.getUsuarioFk();
         if(usuario == null)
             throw new AlquilaCosasException("Usuario no asociado a la cuenta.");

@@ -13,8 +13,6 @@ import com.alquilacosas.dto.PrecioDTO;
 import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.dto.UsuarioDTO;
 import com.alquilacosas.ejb.entity.Alquiler;
-import com.alquilacosas.ejb.entity.AlquilerXEstado;
-import com.alquilacosas.ejb.entity.Alquiler_;
 import com.alquilacosas.ejb.entity.Categoria;
 import com.alquilacosas.ejb.entity.Comentario;
 import com.alquilacosas.ejb.entity.Domicilio;
@@ -74,7 +72,7 @@ import javax.persistence.Query;
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-@DeclareRoles({"USER", "ADMIN"})
+@DeclareRoles({"USUARIO", "ADMIN"})
 public class PublicacionBean implements PublicacionBeanLocal {
 
     @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
@@ -142,7 +140,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
             throw new AlquilaCosasException("No se encontro el Usuario en la "
                     + "base de datos.");
         }
-
+        // Registrar categoria
         try {
             Categoria c = categoriaFacade.find(categoria);
             publicacion.setCategoriaFk(c);
@@ -161,25 +159,21 @@ public class PublicacionBean implements PublicacionBeanLocal {
                     + " en la base de datos.");
         }
         
-        Periodo periodo1 = null;
-        Periodo periodo2 = null;
-        try {
-            periodo1 = periodoFacade.find(periodoMinimoFk);
-            publicacion.setMinPeriodoAlquilerFk(periodo1);
-            publicacion.setMinValor(periodoMinimo);
-            
-            periodo2 = periodoFacade.find(periodoMaximoFk);
-            publicacion.setMaxPeriodoAlquilerFk(periodo2);
-            publicacion.setMaxValor(periodoMaximo);
-        } catch (NoResultException e) {
-            context.setRollbackOnly();
-            throw new AlquilaCosasException("No se encontro el estado de la publicacion"
-                    + " en la base de datos.");
-        }
+        // registrar periodos de alquiler
+        Periodo periodo1 = periodoFacade.find(periodoMinimoFk);;
+        publicacion.setMinPeriodoAlquilerFk(periodo1);
+        publicacion.setMinValor(periodoMinimo);
+        
+        Periodo periodo2 = periodoFacade.find(periodoMaximoFk);;
+        publicacion.setMaxPeriodoAlquilerFk(periodo2);
+        publicacion.setMaxValor(periodoMaximo);
+        
 
+        // Fijar estado de publicacion
         PublicacionXEstado pxe = new PublicacionXEstado(publicacion, estadoPublicacion);
         publicacion.agregarPublicacionXEstado(pxe);
 
+        // Registrar precios
         Precio precio = null;
         Periodo periodo = null;
         double precioDiario = precios.get(1).getPrecio();
@@ -207,13 +201,13 @@ public class PublicacionBean implements PublicacionBeanLocal {
             publicacion.agregarPrecio(precio);
         }
 
-
+        // Agregar imagenes
         for (byte[] bytes : imagenes) {
             ImagenPublicacion ip = new ImagenPublicacion();
             ip.setImagen(bytes);
             publicacion.agregarImagen(ip);
         }
-
+        
         usuario.agregarPublicacion(publicacion);
         publicacion = publicacionFacade.create(publicacion);
         return publicacion.getPublicacionId();
@@ -269,17 +263,12 @@ public class PublicacionBean implements PublicacionBeanLocal {
     @Override
     @RolesAllowed({"USUARIO", "ADMIN"})
     public void actualizarPublicacion(int publicacionId, String titulo, String descripcion,
-            Date fecha_desde, Date fecha_hasta, boolean destacada, int cantidad,
+            Date fechaDesde, Date fechaHasta, boolean destacada, int cantidad,
             int usuarioId, int categoria, List<PrecioDTO> precios,
-            List<byte[]> imagenesAgregar, List<Integer> imagenesABorrar,
+            List<byte[]> imagenesAgregar, List<Integer> imagenesABorrar, 
+            int periodoMinimo, int periodoMinimoFk, int periodoMaximo, int periodoMaximoFk,
             NombreEstadoPublicacion estadoPublicacion) throws AlquilaCosasException {
 
-//        Usuario usuario = usuarioFacade.find(usuarioId);
-//        Publicacion publicacion = usuario.getPublicacion(publicacionId);
-//        
-//        if(publicacion == null) {
-//            throw new AlquilaCosasException("No se encontro la Publicacion seleccionada");
-//        }
         Publicacion publicacion = null;
         try {
             publicacion = publicacionFacade.find(publicacionId);
@@ -291,7 +280,8 @@ public class PublicacionBean implements PublicacionBeanLocal {
         publicacion.setDescripcion(descripcion);
         publicacion.setDestacada(destacada);
         publicacion.setCantidad(cantidad);
-
+        
+        // Actualizar categoria
         try {
             Categoria c = categoriaFacade.find(categoria);
             publicacion.setCategoriaFk(c);
@@ -299,9 +289,9 @@ public class PublicacionBean implements PublicacionBeanLocal {
             throw new AlquilaCosasException("No se encontro la Categoria en la "
                     + "base de datos." + e.getMessage());
         }
-
+        
+        // Actualizar estado
         PublicacionXEstado pxe = publicacionXEstadoFacade.getPublicacionEstado(publicacion);
-
         if (pxe.getEstadoPublicacion().getNombre() != estadoPublicacion) {
      
             Calendar hoy = Calendar.getInstance();
@@ -321,7 +311,8 @@ public class PublicacionBean implements PublicacionBeanLocal {
             PublicacionXEstado pxeNuevo = new PublicacionXEstado(publicacion, ep);
             publicacion.agregarPublicacionXEstado(pxeNuevo);
         }
-
+        
+        // Actualizar precios
         double precioDiario = precios.get(1).getPrecio();
         DecimalFormat formatter = new DecimalFormat();
         formatter.applyPattern("0.0#");
@@ -342,15 +333,26 @@ public class PublicacionBean implements PublicacionBeanLocal {
             Periodo periodo = periodoBean.getPeriodo(precioDto.getPeriodoNombre());
             publicacion.actualizarPrecio(precioDto.getPrecioId(), precioDto.getPrecio(), periodo);
         }
+        
+        // Actualizar periodos minimos y maximos de alquiler
+        Periodo periodo1 = periodoFacade.find(periodoMinimoFk);;
+        publicacion.setMinPeriodoAlquilerFk(periodo1);
+        publicacion.setMinValor(periodoMinimo);
+        
+        Periodo periodo2 = periodoFacade.find(periodoMaximoFk);;
+        if(periodo2 != null && periodoMaximo > 0) {
+            publicacion.setMaxPeriodoAlquilerFk(periodo2);  
+            publicacion.setMaxValor(periodoMaximo);
+        }
 
-
+        // Borrar imagenes removidas
         if (imagenesABorrar != null) {
             for (Integer i : imagenesABorrar) {
                 ImagenPublicacion ip = imagenPublicacionFacade.find(i);
                 publicacion.removerImagen(ip);
             }
         }
-
+        // agregar imagenes nuevas
         for (byte[] imagen : imagenesAgregar) {
             ImagenPublicacion ip = new ImagenPublicacion();
             ip.setImagen(imagen);

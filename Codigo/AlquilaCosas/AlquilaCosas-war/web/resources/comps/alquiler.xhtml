@@ -49,7 +49,7 @@
                         <f:setPropertyActionListener value="#{cc.attrs.var.idPublicacion}" 
                                                      target="#{cc.attrs.bean[cc.attrs.propPublicacion]}" />
                     </h:commandLink>
-                    <h:commandLink value="De: #{cc.attrs.var.usuario}" action="#{cc.attrs.bean[cc.attrs.metodoVerUsuario]}" >
+                    <h:commandLink value="#{cc.attrs.var.usuario}" action="#{cc.attrs.bean[cc.attrs.metodoVerUsuario]}" >
                         <f:setPropertyActionListener value="#{cc.attrs.var.idUsuario}" 
                                                      target="#{cc.attrs.bean[cc.attrs.propUsuario]}" />
                     </h:commandLink>
@@ -60,10 +60,9 @@
                     <h:outputLabel value="Comienza: #{cc.attrs.var.fechaDesde}" />
                     <h:outputLabel value="Finaliza: #{cc.attrs.var.fechaHasta}" />
                 </h:panelGrid>
-                 <!--cc.attrs.var.calificable and -->
                 <h:panelGrid columns="1" >
                      <p:commandButton value="Ver calificacion" 
-                                     rendered="#{cc.attrs.var.calificado}"
+                                     rendered="#{cc.attrs.var.calificable and cc.attrs.var.calificado}"
                                      actionListener="#{cc.attrs.bean[cc.attrs.metodoVerCalif]}"
                                      update="#{cc.attrs.panelDialogos}"
                                      oncomplete="#{cc.attrs.dlgVerCalificacion}.show();" >

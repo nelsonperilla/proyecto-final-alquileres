@@ -47,6 +47,7 @@ public interface PublicacionBeanLocal {
             Date fecha_desde, Date fecha_hasta, boolean destacada, int cantidad,
             int usuarioId, int categoria, List<PrecioDTO> precios, 
             List<byte[]> imagenesAgregar, List<Integer> imagenesABorrar, 
+            int periodoMinimo, int periodoMinimoFk, int periodoMaximo, int periodoMaximoFk,
             NombreEstadoPublicacion estadoPublicacion  ) throws AlquilaCosasException;
     
 

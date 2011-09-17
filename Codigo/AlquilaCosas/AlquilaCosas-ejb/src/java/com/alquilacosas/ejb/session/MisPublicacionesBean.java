@@ -23,15 +23,13 @@ import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 /**
  *
  * @author ignaciogiagante
  */
 @Stateless
-@DeclareRoles({"USER", "ADMIN"})
+@DeclareRoles({"USUARIO", "ADMIN"})
 public class MisPublicacionesBean implements MisPublicacionesBeanLocal {
     
     @EJB
@@ -74,6 +72,7 @@ public class MisPublicacionesBean implements MisPublicacionesBeanLocal {
     }
     
     @Override
+    @RolesAllowed({"USUARIO", "ADMIN"})
     public void borrarPublicacion( Integer publicacionId ) throws AlquilaCosasException{
         Publicacion p = publicacionFacade.find(publicacionId);
         Usuario usuario = p.getUsuarioFk();

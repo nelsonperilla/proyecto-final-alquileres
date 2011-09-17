@@ -2,17 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
-function handleAgregarDomicilio(xhr, status, args) {
-    if(args.validationFailed) {
-        jQuery('#dialogo').effect("shake", {
-            times:3
-        }, 100);
-    } else {
-        dialogoDom.hide();
-    }
-}
-
 function handleModificarCategoria(xhr, status, args) {
     if(args.validationFailed) {
         jQuery('#dialogo').effect("shake", {
@@ -86,5 +75,11 @@ function revisarDisponibilidad(xhr, status, args){
             else
                 loginDlg.show();
         }
+    }
+}
+
+function handleModificarAlquiler(xhr, status, args) {
+    if(!args.validationFailed && args.modificado) {
+        modificarDlg.hide();
     }
 }

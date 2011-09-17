@@ -35,12 +35,13 @@ import javax.persistence.metamodel.Metamodel;
 @Stateless
 public class AlquilerFacade extends AbstractFacade<Alquiler> {
 
-     @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
-     private EntityManager em;
-
-     protected EntityManager getEntityManager() {
-          return em;
-     }
+    @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
+    private EntityManager em;
+    
+    @Override
+    protected EntityManager getEntityManager() {
+        return em;
+    }
 
      public AlquilerFacade(){
           super(Alquiler.class);
@@ -202,24 +203,6 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
      }
 
      /*
-      * Trae los alquileres confirmados, activos o finalizados en los cuales el usuario es
-      * el dueño del producto alquilado
-      */
-     public List<Alquiler> getAlquileresOfrecidos(Usuario usuario) {
-          Query query = em.createQuery("SELECT a FROM Alquiler a, AlquilerXEstado axe, EstadoAlquiler ea "
-                  + "WHERE a.publicacionFk.usuarioFk = :usuario AND"
-                  + " a.alquilerId = axe.alquilerFk.alquilerId "
-                  + "AND axe.estadoAlquilerFk.estadoAlquilerId = ea.estadoAlquilerId "
-                  + "AND axe.fechaHasta IS NULL "
-                  + "AND (ea.nombre = :estadoConf OR ea.nombre = :estadoAct OR ea.nombre = :estadoFin)");
-          query.setParameter("usuario", usuario);
-          query.setParameter("estadoConf", EstadoAlquiler.NombreEstadoAlquiler.CONFIRMADO);
-          query.setParameter("estadoAct", EstadoAlquiler.NombreEstadoAlquiler.ACTIVO);
-          query.setParameter("estadoFin", EstadoAlquiler.NombreEstadoAlquiler.FINALIZADO);
-          return query.getResultList();
-     }
-
-     /*
       * Wilson:
       * Trae todos aquellos alquileres TOMADOS que esten en estado FINALIZADO 
       * y que no tengan CALIFICACION por parte del usuario.
@@ -270,4 +253,66 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
           query.setParameter("estadoFin", EstadoAlquiler.NombreEstadoAlquiler.FINALIZADO);
           return query.getResultList();
      }
+     
+     /**
+     * Autor: Damian
+     * Trae los alquileres confirmados o activos  en los cuales el usuario es
+     * el dueño del producto alquilado
+     * @param usuario El usuario dueño del producto
+     * @return 
+     */
+    public List<Alquiler> getAlquileresOfrecidosVigentes(Usuario usuario) {
+        Query query = em.createQuery("SELECT a FROM Alquiler a, AlquilerXEstado axe, EstadoAlquiler ea "
+                + "WHERE a.publicacionFk.usuarioFk = :usuario AND"
+                + " a.alquilerId = axe.alquilerFk.alquilerId "
+                + "AND axe.estadoAlquilerFk.estadoAlquilerId = ea.estadoAlquilerId "
+                + "AND axe.fechaHasta IS NULL "
+                + "AND (ea.nombre = :estadoConf OR ea.nombre = :estadoAct)");
+        query.setParameter("usuario", usuario);
+        query.setParameter("estadoConf", EstadoAlquiler.NombreEstadoAlquiler.CONFIRMADO);
+        query.setParameter("estadoAct", EstadoAlquiler.NombreEstadoAlquiler.ACTIVO);
+        return query.getResultList();
+    }
+    
+    /**
+     * Autor: Damian
+     * Trae los alquileres finalizados, cancelados, o cancelados por el alquilados  en los cuales el usuario es
+     * el dueño del producto alquilado, y que aun no han sido calificados por el dueño
+     * @param usuario El usuario dueño del producto alquilado
+     * @return 
+     */
+    public List<Alquiler> getAlquileresOfrecidosSinCalificar(Usuario usuario) {
+        Query query = em.createQuery("SELECT a FROM Alquiler a, AlquilerXEstado axe, EstadoAlquiler ea "
+                + "WHERE a.publicacionFk.usuarioFk = :usuario AND"
+                + " a.alquilerId = axe.alquilerFk.alquilerId "
+                + "AND axe.estadoAlquilerFk.estadoAlquilerId = ea.estadoAlquilerId "
+                + "AND axe.fechaHasta IS NULL "
+                + "AND (ea.nombre = :estadoFin OR ea.nombre = :estadoCancel OR ea.nombre = :estadoCancelAlq)");
+        query.setParameter("usuario", usuario);
+        query.setParameter("estadoFin", EstadoAlquiler.NombreEstadoAlquiler.FINALIZADO);
+        query.setParameter("estadoCancel", EstadoAlquiler.NombreEstadoAlquiler.CANCELADO);
+        query.setParameter("estadoCancelAlq", EstadoAlquiler.NombreEstadoAlquiler.CANCELADO_ALQUILADOR);
+        return query.getResultList();
+    }
+    
+    /**
+     * Autor: Damian
+     * Trae los alquileres finalizados, cancelados, o cancelados por el alquilados  en los cuales el usuario es
+     * el dueño del producto alquilado, y que aun no han sido calificados por el dueño
+     * @param usuario El usuario dueño del producto alquilado
+     * @return 
+     */
+    public List<Alquiler> getAlquileresOfrecidosCalificados(Usuario usuario) {
+        Query query = em.createQuery("SELECT a FROM Alquiler a, AlquilerXEstado axe, EstadoAlquiler ea "
+                + "WHERE a.publicacionFk.usuarioFk = :usuario AND"
+                + " a.alquilerId = axe.alquilerFk.alquilerId "
+                + "AND axe.estadoAlquilerFk.estadoAlquilerId = ea.estadoAlquilerId "
+                + "AND axe.fechaHasta IS NULL "
+                + "AND (ea.nombre = :estadoFin OR ea.nombre = :estadoCancel OR ea.nombre = :estadoCancelAlq)");
+        query.setParameter("usuario", usuario);
+        query.setParameter("estadoFin", EstadoAlquiler.NombreEstadoAlquiler.FINALIZADO);
+        query.setParameter("estadoCancel", EstadoAlquiler.NombreEstadoAlquiler.CANCELADO);
+        query.setParameter("estadoCancelAlq", EstadoAlquiler.NombreEstadoAlquiler.CANCELADO_ALQUILADOR);
+        return query.getResultList();
+    }
 }
