@@ -4,8 +4,8 @@
  */
 package com.alquilacosas.dto;
 
-import com.alquilacosas.ejb.entity.EstadoAlquiler;
 import com.alquilacosas.ejb.entity.EstadoAlquiler.NombreEstadoAlquiler;
+import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -108,6 +108,7 @@ public class AlquilerDTO implements Serializable {
 
     public void setFechaFin(Date fechaFinAlquiler) {
         this.fechaFin = fechaFinAlquiler;
+        fechaHasta = sdf.format(fechaFin);
     }
 
     public Date getFechaInicio() {
@@ -116,6 +117,7 @@ public class AlquilerDTO implements Serializable {
 
     public void setFechaInicio(Date fechaInicioAlquiler) {
         this.fechaInicio = fechaInicioAlquiler;
+        fechaDesde = sdf.format(fechaInicio);
     }
 
     public int getIdAlquiler() {

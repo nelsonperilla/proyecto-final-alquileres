@@ -16,6 +16,7 @@ import com.alquilacosas.facade.ProvinciaFacade;
 import com.alquilacosas.facade.UsuarioFacade;
 import java.util.Date;
 import java.util.List;
+import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -25,6 +26,7 @@ import javax.ejb.Stateless;
  * @author damiancardozo
  */
 @Stateless
+@DeclareRoles({"USUARIO", "ADMIN"})
 public class ModificarUsuarioBean implements ModificarUsuarioBeanLocal {
 
     @EJB

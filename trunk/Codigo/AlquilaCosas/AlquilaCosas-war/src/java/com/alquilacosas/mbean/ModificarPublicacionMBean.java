@@ -225,7 +225,8 @@ public class ModificarPublicacionMBean {
             publicacionBean.actualizarPublicacion(publicacionId, titulo,
                     descripcion, fechaDesde, fechaHasta, destacada, cantidad,
                     login.getUsuarioId(), cat, precios, imagenesAgregar,
-                    imagenesABorrar, selectedEstado);
+                    imagenesABorrar, periodoMinimo, selectedPeriodoMinimo, periodoMaximo, 
+                    selectedPeriodoMaximo, selectedEstado);
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage("Los datos fueron guardados correctamente"));
             return "misPublicaciones";

@@ -35,7 +35,20 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Periodo.findByHoras", query = "SELECT p FROM Periodo p WHERE p.horas = :horas")})
 public class Periodo implements Serializable {
     
-    public enum NombrePeriodo{HORA, DIA, SEMANA, MES};
+    public enum NombrePeriodo{
+        HORA (1), 
+        DIA (24), 
+        SEMANA (168), 
+        MES (720);
+        private final int horas;
+        NombrePeriodo(int horas) {
+            this.horas = horas;
+        }
+        
+        public int getHoras() {
+            return horas;
+        }
+    };
     
     private static final long serialVersionUID = 1L;
     

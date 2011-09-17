@@ -42,9 +42,6 @@ public class ManejadorUsuarioMBean implements Serializable {
     public void init() {
         FacesContext context = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
-        System.out.println(request.getContextPath());
-        System.out.println(request.getPathInfo());
-        System.out.println(request.getRequestURL());
     }
     
     public String login() {
@@ -54,7 +51,7 @@ public class ManejadorUsuarioMBean implements Serializable {
             request.login(this.username, this.password);
         } catch (ServletException e) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Credenciales incorrectas"+e.getMessage(), "Credenciales incorrectas"+e.getMessage()));
+                    "Credenciales incorrectas", ""));
             return null;
         }
         try {
@@ -62,7 +59,7 @@ public class ManejadorUsuarioMBean implements Serializable {
             administrador = context.getExternalContext().isUserInRole("ADMIN");
         } catch (AlquilaCosasException e) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    e.getMessage(), e.getMessage()));
+                    "Error al obtener datos de usuario", e.getMessage()));
             password = "";
             return null;
         }
@@ -77,7 +74,7 @@ public class ManejadorUsuarioMBean implements Serializable {
             request.login(this.username, this.password);
         } catch (Exception e) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Credenciales incorrectas", "Credenciales incorrectas"));
+                    "Credenciales incorrectas", ""));
             return null;
         }
         try {
@@ -85,7 +82,7 @@ public class ManejadorUsuarioMBean implements Serializable {
             administrador = context.getExternalContext().isUserInRole("ADMIN");
         } catch (AlquilaCosasException e) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    e.getMessage(), e.getMessage()));
+                    "Error al obtener datos de usuario", e.getMessage()));
             password = "";
             return null;
         }
