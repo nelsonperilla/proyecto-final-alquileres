@@ -29,10 +29,10 @@ public class EstadoPublicacionFacade extends AbstractFacade<EstadoPublicacion> {
         super(EstadoPublicacion.class);
     }
     
-    public EstadoPublicacion findByNombre( String nombre ){
+    public EstadoPublicacion findByNombre( NombreEstadoPublicacion nombre ){
         EstadoPublicacion estadoPublicacion = null;
         Query query = em.createNamedQuery("EstadoPublicacion.findByNombre");
-        query.setParameter("nombre", NombreEstadoPublicacion.ACTIVA);
+        query.setParameter("nombre", nombre);
         estadoPublicacion = (EstadoPublicacion) query.getSingleResult();
         return estadoPublicacion;
     }

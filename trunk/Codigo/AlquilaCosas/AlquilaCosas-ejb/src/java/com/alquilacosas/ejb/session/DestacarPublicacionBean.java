@@ -90,7 +90,7 @@ public class DestacarPublicacionBean implements DestacarPublicacionBeanLocal {
         if(u.getUsuarioId() != usuarioId) {
             throw new AlquilaCosasException("La publicacion indicada es invalida!");
         }
-        PublicacionXEstado pxe = estadoFacade.getPublicacionEstado(publicacion);
+        PublicacionXEstado pxe = estadoFacade.getPublicacionXEstado(publicacion);
         if(pxe == null) {
             throw new AlquilaCosasException("Imposible determinar el estado de la publicacion!");
         }

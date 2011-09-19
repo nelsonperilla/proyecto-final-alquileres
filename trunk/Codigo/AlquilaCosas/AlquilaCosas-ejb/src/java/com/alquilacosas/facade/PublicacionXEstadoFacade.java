@@ -30,7 +30,7 @@ public class PublicacionXEstadoFacade extends AbstractFacade<PublicacionXEstado>
         super(PublicacionXEstado.class);
     }
     
-    public PublicacionXEstado getPublicacionEstado(Publicacion p) {
+    public PublicacionXEstado getPublicacionXEstado(Publicacion p) {
 
         Query query = em.createQuery(
                 "SELECT pxe FROM PublicacionXEstado pxe "

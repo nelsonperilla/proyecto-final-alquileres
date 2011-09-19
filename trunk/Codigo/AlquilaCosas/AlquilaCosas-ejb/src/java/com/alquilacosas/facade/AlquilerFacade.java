@@ -14,6 +14,7 @@ import com.alquilacosas.ejb.entity.Usuario;
 import java.util.Calendar;
 
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -318,4 +319,52 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
         query.setParameter("estadoCancelAlq", EstadoAlquiler.NombreEstadoAlquiler.CANCELADO_ALQUILADOR);
         return query.getResultList();
     }
+    
+    public List<Alquiler> getAlquileresConfirmados(){
+        List<Alquiler> alquileres = null;
+        Query query = em.createQuery("SELECT a FROM Alquiler a, AlquilerXEstado axe, EstadoAlquiler ea "
+                + "WHERE a = axe.alquilerFk "
+                + "AND axe.estadoAlquilerFk = ea "
+                + "AND ea.nombre = :estado "
+                + "AND axe.fechaHasta IS NULL ");
+        query.setParameter("estado", EstadoAlquiler.NombreEstadoAlquiler.CONFIRMADO);
+        alquileres = query.getResultList();
+        return alquileres;
+    }
+    
+     public List<Alquiler> getAlquileresActivos(){
+        List<Alquiler> alquileres = null;
+        Query query = em.createQuery("SELECT a FROM Alquiler a, AlquilerXEstado axe, EstadoAlquiler ea "
+                + "WHERE a = axe.alquilerFk "
+                + "AND axe.estadoAlquilerFk = ea "
+                + "AND ea.nombre = :estado "
+                + "AND axe.fechaHasta IS NULL ");
+        query.setParameter("estado", EstadoAlquiler.NombreEstadoAlquiler.ACTIVO);
+        alquileres = query.getResultList();
+        return alquileres;
+    }
+     
+     /**
+      * El siguiente método busca los pedidos rechazados o cancelados con una antiguedad
+      * mayor a 30 días desde la fecha actual
+      * @param
+      * @return alqileres - Lista de alquileres rechazados o cancelados
+      */
+     public List<Alquiler> getAlquileresRechazadosOCancelados(){
+        List<Alquiler> alquileres = null;
+        GregorianCalendar cal = new GregorianCalendar();
+        cal.setTime(new Date());
+        cal.add(Calendar.DATE, -30);
+        Query query = em.createQuery("SELECT a FROM Alquiler a, AlquilerXEstado axe, EstadoAlquiler ea "
+                + "WHERE a = axe.alquilerFk "
+                + "AND axe.estadoAlquilerFk = ea "
+                + "AND ( ea.nombre = :estado1 OR ea.nombre = :estado2 )"
+                + "AND axe.fechaHasta <= :fecha");
+        query.setParameter("fecha", cal.getTime());
+        query.setParameter("estado1", EstadoAlquiler.NombreEstadoAlquiler.PEDIDO_RECHAZADO);
+        query.setParameter("estado2", EstadoAlquiler.NombreEstadoAlquiler.PEDIDO_CANCELADO);
+        query.setMaxResults(20);
+        alquileres = query.getResultList();
+        return alquileres;
+     }
 }
