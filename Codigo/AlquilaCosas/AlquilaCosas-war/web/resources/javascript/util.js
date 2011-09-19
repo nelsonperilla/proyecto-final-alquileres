@@ -78,6 +78,14 @@ function revisarDisponibilidad(xhr, status, args){
     }
 }
 
+
+function revisarPeriodoSeleccionado(xhr, status, args){
+    if(args.mostrarHoraInicio)
+        jQuery('#horaInicio').disabled = false;
+    else
+        jQuery('#horaInicio').disabled = true;
+}
+
 function handleModificarAlquiler(xhr, status, args) {
     if(!args.validationFailed && args.modificado) {
         modificarDlg.hide();

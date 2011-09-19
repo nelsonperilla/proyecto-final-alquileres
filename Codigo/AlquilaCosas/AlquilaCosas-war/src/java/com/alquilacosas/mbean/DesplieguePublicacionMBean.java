@@ -58,6 +58,8 @@ public class DesplieguePublicacionMBean {
     private int cantidadProductos;
     private String action;
     private double userRating;
+    private String horaInicioAlquiler;
+
 
     /** Creates a new instance of DesplieguePublicacionMBean */
     public DesplieguePublicacionMBean() {
@@ -70,6 +72,8 @@ public class DesplieguePublicacionMBean {
         effect = "fade";
         today = new Date(); 
         periodos = new ArrayList<SelectItem>();
+        periodoAlquiler = 1;
+        horaInicioAlquiler = "00:00";
         List<Periodo> listaPeriodos = publicationBean.getPeriodos();
         periodoSeleccionado = 2; //alto hardCode, para que por defecto este seleccionado dia y no hora (Jorge)
         for(Periodo periodo: listaPeriodos)
@@ -166,6 +170,21 @@ public class DesplieguePublicacionMBean {
             switch (periodoSeleccionado)
             {
                 case 1: //horas
+                    
+                    try{
+                        String[] composicionHoraInicio = horaInicioAlquiler.split(":");
+                        int hora = Integer.parseInt(composicionHoraInicio[0]);
+                        int minuto = Integer.parseInt(composicionHoraInicio[1]);
+                        beginDate.add(Calendar.HOUR_OF_DAY, hora);
+                        beginDate.add(Calendar.MINUTE, minuto); 
+                        endDate.add(Calendar.HOUR_OF_DAY, hora);
+                        endDate.add(Calendar.MINUTE, minuto); 
+                        
+                    }catch(Exception e){
+                         FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                            "Ingrese una hora de inicio valida", ""));                        
+                    }
                     endDate.add(Calendar.HOUR_OF_DAY, periodoAlquiler);
                     break;
                 case 2: //dias
@@ -182,7 +201,7 @@ public class DesplieguePublicacionMBean {
                     publicacion.getPeriodoMinimo().getPeriodoId(),
                     publicacion.getPeriodoMinimoValor());
             long maxDuration = calcularDuracion(
-                    publicacion.getPeriodoMinimo().getPeriodoId(),
+                    publicacion.getPeriodoMaximo().getPeriodoId(),
                     publicacion.getPeriodoMaximoValor());
 
 
@@ -250,6 +269,7 @@ public class DesplieguePublicacionMBean {
         temp.setTime(beginDate.getTime());
         temp.add(Calendar.MONTH, 1);
         endDate.add(Calendar.SECOND, 1);
+        int second = endDate.get(Calendar.SECOND);
         while(endDate.after(temp)){
             //hardCode muy duro, se el orden porque hice la consulta con orderby
             //si se agregan periodos nuevos corregir esto
@@ -494,6 +514,8 @@ public class DesplieguePublicacionMBean {
      */
     public void setPeriodoSeleccionado(int periodoSeleccionado) {
         this.periodoSeleccionado = periodoSeleccionado;
+        RequestContext context = RequestContext.getCurrentInstance();
+        context.addCallbackParam("mostrarHoraInicio", (periodoSeleccionado == 1));
     }
 
     /**
@@ -565,4 +587,20 @@ public class DesplieguePublicacionMBean {
     public void setUserRating(double userRating) {
         this.userRating = userRating;
     }
+
+    /**
+     * @return the horaInicioAlquiler
+     */
+    public String getHoraInicioAlquiler() {
+        return horaInicioAlquiler;
+    }
+
+    /**
+     * @param horaInicioAlquiler the horaInicioAlquiler to set
+     */
+    public void setHoraInicioAlquiler(String horaInicioAlquiler) {
+        this.horaInicioAlquiler = horaInicioAlquiler;
+    }
+
+
 }
