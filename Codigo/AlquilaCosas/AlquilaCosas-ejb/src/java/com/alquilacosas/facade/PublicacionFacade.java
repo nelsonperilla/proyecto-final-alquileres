@@ -47,10 +47,11 @@ public class PublicacionFacade extends AbstractFacade<Publicacion> {
     }
     
     public List<Publicacion> getPublicacionesInicio() {
-        String q = "SELECT p FROM Publicacion p, PublicacionXEstado pxe, EstadoPublicacion e"
-                + " WHERE pxe.publicacion.publicacionId = p.publicacionId AND "
-                + "pxe.estadoPublicacion.estadoPublicacionId = e.estadoPublicacionId "
-                + "AND e.nombre = :estado ORDER BY p.destacada DESC, p.fechaDesde DESC";
+        String q = "SELECT p FROM Publicacion p, PublicacionXEstado pxe, EstadoPublicacion e "
+                + "WHERE pxe.publicacion.publicacionId = p.publicacionId "
+                + "AND pxe.estadoPublicacion.estadoPublicacionId = e.estadoPublicacionId "
+                + "AND pxe.fechaHasta IS NULL "
+                + "AND e.nombre = :estado ORDER BY p.destacada DESC, p.fechaDesde DESC ";
         TypedQuery<Publicacion> query = em.createQuery(q, Publicacion.class);
         query.setParameter("estado", NombreEstadoPublicacion.ACTIVA);
         query.setMaxResults(10);
@@ -306,6 +307,4 @@ public class PublicacionFacade extends AbstractFacade<Publicacion> {
         cq.select(criteriaBuilder.count(root));
         return em.createQuery(cq).getSingleResult();
     }
-    
-    
 }

@@ -150,7 +150,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
         // Fijar estado de publicacion
         EstadoPublicacion estadoPublicacion = null;
         try {
-            estadoPublicacion = estadoPublicacionFacade.findByNombre(NombreEstadoPublicacion.ACTIVA.name());
+            estadoPublicacion = estadoPublicacionFacade.findByNombre(NombreEstadoPublicacion.ACTIVA);
         } catch (NoResultException e) {
             context.setRollbackOnly();
             throw new AlquilaCosasException("No se encontro el estado de la publicacion"
@@ -160,11 +160,11 @@ public class PublicacionBean implements PublicacionBeanLocal {
         publicacion.agregarPublicacionXEstado(pxe);
 
         // registrar periodos de alquiler
-        Periodo periodo1 = periodoFacade.find(periodoMinimoFk);;
+        Periodo periodo1 = periodoFacade.find(periodoMinimoFk);
         publicacion.setMinPeriodoAlquilerFk(periodo1);
         publicacion.setMinValor(periodoMinimo);
         
-        Periodo periodo2 = periodoFacade.find(periodoMaximoFk);;
+        Periodo periodo2 = periodoFacade.find(periodoMaximoFk);
         publicacion.setMaxPeriodoAlquilerFk(periodo2);
         publicacion.setMaxValor(periodoMaximo);
         
@@ -213,7 +213,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
     public PublicacionDTO getDatosPublicacion(int publicacionId) throws AlquilaCosasException {
 
         Publicacion p = publicacionFacade.find(publicacionId);
-        PublicacionXEstado pxe = publicacionXEstadoFacade.getPublicacionEstado(p);
+        PublicacionXEstado pxe = publicacionXEstadoFacade.getPublicacionXEstado(p);
 
         if (pxe == null) {
             throw new AlquilaCosasException("PublicacionXEstado no encontrado para la publicacion seleccionada.");
@@ -286,7 +286,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
         }
         
         // Actualizar estado
-        PublicacionXEstado pxe = publicacionXEstadoFacade.getPublicacionEstado(publicacion);
+        PublicacionXEstado pxe = publicacionXEstadoFacade.getPublicacionXEstado(publicacion);
         if (pxe.getEstadoPublicacion().getNombre() != estadoPublicacion) {
      
             Calendar hoy = Calendar.getInstance();
@@ -296,7 +296,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
             
             try {
                 
-                ep = estadoPublicacionFacade.findByNombre(estadoPublicacion.name());
+                ep = estadoPublicacionFacade.findByNombre(estadoPublicacion);
                     
             } catch (NoResultException e) {
                 throw new AlquilaCosasException("No se encontro el Estado en la "

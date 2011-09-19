@@ -34,7 +34,9 @@ public class AlquilerXEstadoFacade extends AbstractFacade<AlquilerXEstado> {
     
     public AlquilerXEstado findByAlquiler( int alquilerId ){
         AlquilerXEstado axe = new AlquilerXEstado();
-        Query query = em.createNamedQuery("AlquilerXEstado.findByAlquiler");
+        Query query = em.createQuery("SELECT axe FROM AlquilerXEstado axe "
+                + "WHERE axe.alquilerFk.alquilerId = :alquilerId "
+                + "AND axe.fechaHasta IS NULL");
         query.setParameter("alquilerId", alquilerId);
         axe = (AlquilerXEstado) query.getSingleResult();
         return axe;
