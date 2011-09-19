@@ -51,14 +51,12 @@ public class CalificacionFacade extends AbstractFacade<Calificacion> {
 
      }
 
-     public Calificacion getCalificacionPorAlquilerUsuarioToma(Alquiler alquiler, Usuario usuario) {
+     public Calificacion getCalificacionPorAlquilerUsuarioToma(Alquiler alquiler) {
           Query query = em.createQuery("SELECT c "
                   + "FROM Alquiler a, Calificacion c "
                   + "WHERE c.alquilerFk = a "
                   + "AND a = :alquiler "
-                  + "AND a.usuarioFk = :usuario "
-                  + "AND c.usuarioCalificadorFk = :usuario");
-          query.setParameter("usuario", usuario);
+                  + "AND a.usuarioFk = c.usuarioCalificadorFk");
           query.setParameter("alquiler", alquiler);
           Calificacion calificacion;
           try {
@@ -70,15 +68,13 @@ public class CalificacionFacade extends AbstractFacade<Calificacion> {
           return calificacion;
      }
      
-     public Calificacion getCalificacionPorAlquilerUsuarioOfrece(Alquiler alquiler, Usuario usuario) {
+     public Calificacion getCalificacionPorAlquilerUsuarioOfrece(Alquiler alquiler) {
           Query query = em.createQuery("SELECT c "
                   + "FROM Alquiler a, Calificacion c, Publicacion p "
                   + "WHERE a.publicacionFk = p "
                   + "AND c.alquilerFk = a "
                   + "AND a = :alquiler "
-                  + "AND p.usuarioFk = :usuario "
-                  + "AND c.usuarioCalificadorFk = :usuario");
-          query.setParameter("usuario", usuario);
+                  + "AND p.usuarioFk = c.usuarioCalificadorFk");
           query.setParameter("alquiler", alquiler);
           Calificacion calificacion;
           try {

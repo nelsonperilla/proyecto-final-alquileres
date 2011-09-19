@@ -208,7 +208,7 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
       * Trae todos aquellos alquileres TOMADOS que esten en estado FINALIZADO 
       * y que no tengan CALIFICACION por parte del usuario.
       */
-     public List<Alquiler> getAlquileresTomadosFinalizadosSinClasificar(Usuario usuario) {
+     public List<Alquiler> getAlquileresTomadosFinalizadosSinCalificar(Usuario usuario) {
           Query query = em.createQuery("SELECT a "
                   + "FROM Alquiler a, AlquilerXEstado axe, EstadoAlquiler e "
                   + "WHERE axe.alquilerFk = a "
@@ -245,13 +245,15 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
                   + "FROM Alquiler a, AlquilerXEstado axe, EstadoAlquiler e, Calificacion c "
                   + "WHERE axe.alquilerFk = a "
                   + "AND axe.estadoAlquilerFk = e "
-                  + "AND e.nombre = :estadoFin "
+                  + "AND (e.nombre = :estadoFin OR e.nombre = :estadoCan OR e.nombre = :estadoCanA) "
                   + "AND axe.fechaHasta IS NULL "
                   + "AND a.usuarioFk = :usuario "
                   + "AND c.alquilerFk = a "
                   + "AND c.usuarioCalificadorFk = :usuario");
           query.setParameter("usuario", usuario);
           query.setParameter("estadoFin", EstadoAlquiler.NombreEstadoAlquiler.FINALIZADO);
+          query.setParameter("estadoCan", EstadoAlquiler.NombreEstadoAlquiler.CANCELADO);
+          query.setParameter("estadoCanA", EstadoAlquiler.NombreEstadoAlquiler.CANCELADO_ALQUILADOR);
           return query.getResultList();
      }
      

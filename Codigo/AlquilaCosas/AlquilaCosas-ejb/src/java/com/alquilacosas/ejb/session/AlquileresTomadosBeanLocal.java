@@ -20,7 +20,7 @@ public interface AlquileresTomadosBeanLocal {
 
      List<AlquilerDTO> getAlquileresSinCalificarPorUsuario(int usuarioId) throws AlquilaCosasException;
 
-     void registrarCalificacion(Integer puntuacion, Integer alquilerId, String comentario, Integer usuarioId);
+     void registrarCalificacion(Integer puntuacion, Integer alquilerId, String comentario, Integer usuarioId) throws AlquilaCosasException;
 
      List<Puntuacion> getPuntuaciones();
 
@@ -28,7 +28,11 @@ public interface AlquileresTomadosBeanLocal {
 
      List<AlquilerDTO> getAlquileresConCalificarPorUsuario(int usuarioId) throws AlquilaCosasException;
      
-     CalificacionDTO getCalificacionOfrece(Integer alquilerId, Integer usuarioId) throws AlquilaCosasException;
+     CalificacionDTO getCalificacionOfrece(Integer alquilerId) throws AlquilaCosasException;
      
-     CalificacionDTO getCalificacionToma(Integer alquilerId, Integer usuarioId) throws AlquilaCosasException;
+     CalificacionDTO getCalificacionToma(Integer alquilerId) throws AlquilaCosasException;
+
+     void registrarReplica(int calificacionId, String comentarioReplica, int usuarioId) throws AlquilaCosasException;
+
+     boolean cancelarAlquiler(int alquilerId) throws AlquilaCosasException;
 }
