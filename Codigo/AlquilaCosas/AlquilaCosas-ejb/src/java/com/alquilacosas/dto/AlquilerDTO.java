@@ -19,6 +19,7 @@ public class AlquilerDTO implements Serializable {
     private int idPublicacion;
     private int idUsuario;
     private int idAlquiler;
+    private int idPedidoCambio;
     private String titulo, usuario;
     private Date fechaInicio;
     private Date fechaFin;
@@ -198,6 +199,14 @@ public class AlquilerDTO implements Serializable {
 
     public void setUsuario(String usuario) {
         this.usuario = usuario;
+    }
+
+    public int getIdPedidoCambio() {
+        return idPedidoCambio;
+    }
+
+    public void setIdPedidoCambio(int idPedidoCambio) {
+        this.idPedidoCambio = idPedidoCambio;
     }
     
     public boolean isCancelable() {

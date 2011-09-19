@@ -8,7 +8,6 @@ import com.alquilacosas.dto.ComentarioDTO;
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.CategoriaDTO;
 import com.alquilacosas.common.NotificacionEmail;
-import com.alquilacosas.common.Util;
 import com.alquilacosas.dto.PrecioDTO;
 import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.dto.UsuarioDTO;
@@ -108,8 +107,6 @@ public class PublicacionBean implements PublicacionBeanLocal {
     private AlquilerFacade alquilerFacade;
     @EJB
     private AlquilerXEstadoFacade estadoAlquiler;
-    
-    
 
     @Override
     @RolesAllowed({"USUARIO", "ADMIN"})
@@ -150,6 +147,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
                     + "base de datos.");
         }
 
+        // Fijar estado de publicacion
         EstadoPublicacion estadoPublicacion = null;
         try {
             estadoPublicacion = estadoPublicacionFacade.findByNombre(NombreEstadoPublicacion.ACTIVA.name());
@@ -157,8 +155,10 @@ public class PublicacionBean implements PublicacionBeanLocal {
             context.setRollbackOnly();
             throw new AlquilaCosasException("No se encontro el estado de la publicacion"
                     + " en la base de datos.");
-        }
-        
+        }       
+        PublicacionXEstado pxe = new PublicacionXEstado(publicacion, estadoPublicacion);
+        publicacion.agregarPublicacionXEstado(pxe);
+
         // registrar periodos de alquiler
         Periodo periodo1 = periodoFacade.find(periodoMinimoFk);;
         publicacion.setMinPeriodoAlquilerFk(periodo1);
@@ -168,11 +168,6 @@ public class PublicacionBean implements PublicacionBeanLocal {
         publicacion.setMaxPeriodoAlquilerFk(periodo2);
         publicacion.setMaxValor(periodoMaximo);
         
-
-        // Fijar estado de publicacion
-        PublicacionXEstado pxe = new PublicacionXEstado(publicacion, estadoPublicacion);
-        publicacion.agregarPublicacionXEstado(pxe);
-
         // Registrar precios
         Precio precio = null;
         Periodo periodo = null;
@@ -185,7 +180,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
             
             if (p.getPrecio() == 0) {
                 if (p.getPeriodoNombre() == NombrePeriodo.HORA) {
-                    precio.setPrecio( Util.roundToDecimals( precioDiario / 24.0, 2) );
+                    precio.setPrecio( redondearDecimal( precioDiario / 24.0, 2) );
                 } else if (p.getPeriodoNombre() == NombrePeriodo.SEMANA) {
                     precio.setPrecio(precioDiario * 7.0);
                 } else if (p.getPeriodoNombre()  == NombrePeriodo.MES) {
@@ -696,6 +691,11 @@ public class PublicacionBean implements PublicacionBeanLocal {
     public double getUserRate(UsuarioDTO propietario) {
         double rating = 7;
         return rating;//hacer el metodo!!
+    }
+    
+    private double redondearDecimal(double d, double c) {
+        int temp = (int)( (d*Math.pow(10,c) ));
+        return ( ( (double)temp ) / Math.pow(10,c) );
     }
     
 }

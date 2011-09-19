@@ -6,6 +6,7 @@ package com.alquilacosas.mbean;
 
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.AlquilerDTO;
+import com.alquilacosas.dto.PedidoCambioDTO;
 import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
 import com.alquilacosas.ejb.entity.Puntuacion;
 import com.alquilacosas.ejb.session.AlquileresOfrecidosBeanLocal;
@@ -13,6 +14,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -24,6 +26,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import org.primefaces.context.RequestContext;
+import org.primefaces.json.JSONObject;
 
 /**
  *
@@ -43,10 +46,12 @@ public class AlquileresOfrecidosMBean implements Serializable {
     private Integer filtroSeleccionado, duracion, duracionAnterior;
     private NombrePeriodo periodo;
     private List<AlquilerDTO> alquileres;
-    private Integer alquilerId, publicacionId, usuarioId, puntuacionId, usuarioLogueado;
+    private Integer alquilerId, publicacionId, usuarioId, puntuacionId, pedidoCambioId, usuarioLogueado;
     private String comentario;
-    private Date hoy;
+    private Date fechaInicio;
     private AlquilerDTO alquilerSeleccionado;
+    private List<Date> fechas;
+    private String myJson;
     
     /** Creates a new instance of MisAlquileresOfrecidosMBean */
     public AlquileresOfrecidosMBean() {
@@ -68,7 +73,6 @@ public class AlquileresOfrecidosMBean implements Serializable {
         filtros.add(new SelectItem(3, "Alquileres calificados"));
         filtroSeleccionado = 1;
         
-        hoy = new Date();
     }
 
     public void cambioFiltro() {
@@ -102,6 +106,14 @@ public class AlquileresOfrecidosMBean implements Serializable {
 
     public void prepararVerCalificacion(ActionEvent event) {
         alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
+    }
+    
+    public void prepararVerPedido(ActionEvent event) {
+        alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
+        pedidoCambioId = (Integer) event.getComponent().getAttributes().get("ped");
+        PedidoCambioDTO pedido = alquileresBean.getPedidoCambio(pedidoCambioId);
+        duracion = pedido.getDuracion();
+        periodo = pedido.getPeriodo();
     }
     
     public void prepararCancelarAlquiler(ActionEvent event) {
@@ -140,25 +152,61 @@ public class AlquileresOfrecidosMBean implements Serializable {
             duracion = dia2 - dia1;
         }
         duracionAnterior = duracion;
+        fechaInicio = alquilerSeleccionado.getFechaInicio();
+        fechas = alquileresBean.getFechasSinStock(alquilerId);
+        createDictionary();
     }
     
     public void modificarAlquiler() {
         FacesMessage msg = null;
         FacesContext context = FacesContext.getCurrentInstance();
         RequestContext reqContext = RequestContext.getCurrentInstance(); 
-        if(duracion == duracionAnterior) {
+        // Si la duracion ingresada es 0, no permitir
+        if(duracion == 0) {
+            msg = new FacesMessage(FacesMessage.SEVERITY_WARN, 
+                    "La duracion del alquiler no puede ser 0", "");
+            context.addMessage(null, msg); 
+            reqContext.addCallbackParam("modificado", false);
+            return;
+        } // si la duracion no se modifico, no hay que modificar nada
+        else if(duracion == duracionAnterior) {
             msg = new FacesMessage(FacesMessage.SEVERITY_WARN, 
                     "No ha modificado la duracion del alquiler", "");
             context.addMessage(null, msg); 
             reqContext.addCallbackParam("modificado", false);
             return;
         }
+        // revisar si la nueva duracion no hace que el alquiler se solape
+        Calendar beginDate = Calendar.getInstance();
+        beginDate.setTime(fechaInicio);
+        Calendar endDate = Calendar.getInstance();
+        endDate.setTime(fechaInicio);
+        if(periodo == NombrePeriodo.HORA)
+            endDate.add(Calendar.HOUR_OF_DAY, duracion);
+        else 
+            endDate.add(Calendar.DATE, duracion);
+        
+        Iterator<Date> itFechasSinStock = fechas.iterator();
+        boolean noStockFlag = false;
+        Calendar temp = Calendar.getInstance();
+        //Recorro la lista de fechas sin stock fijandome si alguna cae en el periodo seleccionado
+        while(!noStockFlag && itFechasSinStock.hasNext()){
+            temp.setTime(itFechasSinStock.next());
+            if(beginDate.before(temp) && endDate.after(temp))//la fecha sin stock cae en el periodo
+                noStockFlag = true;
+        }
+        if(noStockFlag) {
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al modificar alquiler", "Hay fechas sin stock en el periodo seleccionado");
+            context.addMessage(null, msg);
+            reqContext.addCallbackParam("modificado", false);
+            return;
+        }
+        
         try{
             alquilerSeleccionado = alquileresBean.modificarAlquiler(alquilerSeleccionado, periodo, duracion);
         } catch(AlquilaCosasException e) {
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al modificar alquiler", e.getMessage());
             context.addMessage(null, msg);
-            System.out.println(e.getMessage());
             return;
         }
         msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Alquiler modificado", "");
@@ -193,8 +241,74 @@ public class AlquileresOfrecidosMBean implements Serializable {
         }
     }
     
+    public void responderPedidoCambio(boolean aceptado) {        
+        alquilerSeleccionado = null;
+        for(AlquilerDTO alq: alquileres) {
+            if(alq.getIdAlquiler() == alquilerId) {
+                alquilerSeleccionado = alq;
+                break;
+            }
+        }
+        if(alquilerSeleccionado == null) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                    "Error aceptando pedido de cambio", "Alquiler no encontrado");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
+        try {
+            alquileresBean.responderPedidoCambio(pedidoCambioId, alquilerSeleccionado, aceptado);
+        } catch(AlquilaCosasException e) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                    "Error aceptando pedido de cambio", e.getMessage());
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
+        for(AlquilerDTO alq: alquileres) {
+            if(alq.getIdAlquiler() == alquilerSeleccionado.getIdAlquiler()) {
+                alq.setMonto(alquilerSeleccionado.getMonto());
+                alq.setFechaFin(alquilerSeleccionado.getFechaFin());
+                break;
+            }
+        }
+    }
+    
     public void registrarCalificacion() {
         alquileresBean.registrarCalificacion(usuarioLogueado, alquilerId, puntuacionId, comentario);  
+        alquileres = alquileresBean.getAlquileresSinCalificar(usuarioLogueado);
+    }
+    
+    private void createDictionary() {
+        try {      
+            int month = -1;
+            JSONObject yearJson = new JSONObject();
+            JSONObject monthJson = new JSONObject();
+            JSONObject dayJson = null;
+            Calendar cal = Calendar.getInstance();
+            for(Date d: fechas) {
+                cal.setTime(d);
+                if(cal.get(Calendar.MONTH) + 1 != month) {
+                    if(dayJson != null) {
+                        monthJson.putOpt(Integer.toString(month), dayJson);
+                    }
+                    dayJson = new JSONObject();
+                    month = cal.get(Calendar.MONTH) + 1;
+                    int day = cal.get(Calendar.DAY_OF_MONTH);
+                    dayJson.putOpt(Integer.toString(day), true);
+                }
+                else {
+                    int day = cal.get(Calendar.DAY_OF_MONTH);
+                    dayJson.putOpt(Integer.toString(day), true);
+                }
+            }
+            if(dayJson != null) {
+                monthJson.putOpt(Integer.toString(month), dayJson);
+            }
+            int y = cal.get(Calendar.YEAR);
+            yearJson.putOpt(Integer.toString(y), monthJson);
+            myJson = yearJson.toString();
+        } catch (Exception e) {
+            //Logger.getLogger(this).error("Exception creating JSON dictionary: " + e);
+        }
     }
     
     /*
@@ -304,12 +418,16 @@ public class AlquileresOfrecidosMBean implements Serializable {
     public void setDuracion(Integer duracion) {
         this.duracion = duracion;
     }
-
-    public Date getHoy() {
-        return hoy;
+    
+    public String getFechas() {
+        return myJson;
     }
 
-    public void setHoy(Date hoy) {
-        this.hoy = hoy;
+    public Date getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public void setFechaInicio(Date fechaInicio) {
+        this.fechaInicio = fechaInicio;
     }
 }

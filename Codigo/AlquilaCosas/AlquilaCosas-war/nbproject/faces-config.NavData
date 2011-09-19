@@ -18,9 +18,9 @@
         <Node id="vistas/usuarioCreado.xhtml" x="400" y="600" zoom="true"/>
         <Node id="vistas/usuario/modificarUsuario.xhtml" x="900" y="300" zoom="true"/>
         <Node id="vistas/resultados.xhtml" x="1400" y="150" zoom="true"/>
-        <Node id="vistas/admin/periodosAlquiler.xhtml" x="1150" y="600" zoom="true"/>
-        <Node id="vistas/usuario/nuevaPublicacion.xhtml" x="1150" y="150" zoom="true"/>
         <Node id="vistas/mostrarPublicacion.xhtml?id=#{resultadosBean.publicacionSeleccionada}" x="1400" y="450" zoom="true"/>
+        <Node id="vistas/usuario/nuevaPublicacion.xhtml" x="1150" y="150" zoom="true"/>
+        <Node id="vistas/admin/periodosAlquiler.xhtml" x="1150" y="600" zoom="true"/>
         <Node id="vistas/verCategoria.xhtml" x="400" y="900" zoom="true"/>
         <Node id="vistas/activarCuenta.xhtml" x="650" y="450" zoom="true"/>
         <Node id="vistas/usuarioCreado.xhtml?email=#{regUsuario.email}" x="1400" y="600" zoom="true"/>
@@ -55,8 +55,8 @@
         <Node id="resources/comps/loginBox.xhtml" x="1650" y="450" zoom="true"/>
         <Node id="vistas/usuario/misAlquileresOfrecidos.xhtml" x="1650" y="600" zoom="true"/>
         <Node id="vistas/noEncontrado.xhtml" x="650" y="900" zoom="true"/>
-        <Node id="resources/comps/categoriesMenu.xhtml" x="650" y="150" zoom="true"/>
         <Node id="vistas/verCategoria.xhtml?id=#{verCategoriaBean.subcategoriaSeleccionada}" x="1900" y="150" zoom="true"/>
+        <Node id="resources/comps/categoriesMenu.xhtml" x="650" y="150" zoom="true"/>
     </Scope>
     <Scope Scope="All Faces Configurations">
         <Node id="vistas/usuario/cuentaUsuario.xhtml" x="900" y="300" zoom="true"/>

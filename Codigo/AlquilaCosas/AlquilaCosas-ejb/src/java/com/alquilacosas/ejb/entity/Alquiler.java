@@ -75,6 +75,9 @@ public class Alquiler implements Serializable {
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "alquilerFk")
     private List<Calificacion> calificacionList;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "alquilerFk")
+    private List<PedidoCambio> pedidoCambioList;
 
     public Alquiler() {
         alquilerXEstadoList = new ArrayList<AlquilerXEstado>();
@@ -163,6 +166,15 @@ public class Alquiler implements Serializable {
 
     public void setUsuarioFk(Usuario usuarioFk) {
         this.usuarioFk = usuarioFk;
+    }
+
+    @XmlTransient
+    public List<PedidoCambio> getPedidoCambioList() {
+        return pedidoCambioList;
+    }
+
+    public void setPedidoCambioList(List<PedidoCambio> pedidoCambioList) {
+        this.pedidoCambioList = pedidoCambioList;
     }
 
     @XmlTransient

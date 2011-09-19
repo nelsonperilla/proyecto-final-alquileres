@@ -9,6 +9,7 @@ import com.alquilacosas.ejb.entity.Calificacion;
 import com.alquilacosas.ejb.entity.Usuario;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -37,10 +38,10 @@ public class CalificacionFacade extends AbstractFacade<Calificacion> {
                   + "c.usuarioCalificadorFk = :usuario");
           query.setParameter("usuario", usuario);
           query.setParameter("alquiler", alquiler);
-          Integer resultado = 0;
+          Long resultado = -1L;
           try {
-               resultado = (Integer) query.getSingleResult();
-          } catch (Exception e) {
+               resultado = (Long) query.getSingleResult();
+          } catch (NoResultException e) {
           }
           if (resultado > 0) {
                return true;
