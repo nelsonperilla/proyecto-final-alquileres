@@ -23,7 +23,10 @@
 
             <ui:define name="principal">
                 <h:outputScript library="javascript" name="util.js" />
-
+                <h:outputScript library="javascript" name="jquery-1.6.2.min" />
+                <h:outputScript library="javascript" name="jquery-ui-1.8.16.custom.min.js" />
+                <h:outputScript library="javascript" name="timePicker.js" />
+  
                 <table id="simpleItem">
                     <tr>
                         <td colspan="2">
@@ -97,7 +100,9 @@
                                 <p:growl id="growl" showDetail="true" globalOnly="true" />
                                 
                             </h:form>
-                            <h:form id="rent">
+                            <p:dialog  header="Confirmacion de alquiler" widgetVar="confirmRent" modal="true"
+                                  showEffect="fade" width="450" >
+                            <h:form id="rent" prependId="false">
                                  <script type="text/javascript" >
                                      jQuery(function () {
                                              window.setTimeout('bindEventsHighlights()',500);
@@ -108,18 +113,38 @@
                                              jQuery(".hasDatepicker").datepicker("option", "beforeShowDay", function (date) {
                                                        return highlightCalendar(specialDays, date, 'highlight-calendar');
                                              });
-                                    }
-                                </script>
-                                <p:dialog header="Confirmacion de alquiler" widgetVar="confirmRent" modal="true"
-                                      showEffect="fade" width="450" >
+                                     };
+                                     
+
+                                  </script>
+
                                 
-                                    <h:panelGrid columns="3" cellpadding="2" >
+                                    <h:panelGrid  columns="3" cellpadding="2" cellspacing="4" >
                                         <h:outputLabel  value="Tiempo solicitado:" />
-                                        <p:inputText value="#{publicacionDesplegada.periodoAlquiler}" required="true"
-                                                     style="width:100px" />
-                                        <h:selectOneMenu value="#{publicacionDesplegada.periodoSeleccionado}">
-                                            <f:selectItems value="#{publicacionDesplegada.periodos}" />
-                                        </h:selectOneMenu>
+                                        <h:panelGroup>
+                                            <p:inputText id="tiempoSolicitado" value="#{publicacionDesplegada.periodoAlquiler}" 
+                                                         required="true"  style="width:40px; text-align: right" 
+                                                         requiredMessage="Valor requerido"/>
+                                            
+
+                                            <h:selectOneMenu value="#{publicacionDesplegada.periodoSeleccionado}"
+                                                             style="width: 150px; margin-left: 40px" 
+                                                             >
+                                                <f:selectItems value="#{publicacionDesplegada.periodos}" />
+                                                <f:ajax event="change" render="rent" />
+                                            </h:selectOneMenu>                                            
+                                        </h:panelGroup>    
+                                        <p:message for="tiempoSolicitado" />
+                                        <h:outputLabel id="horaInicioLabel" value="Hora de inicio" 
+                                            rendered ="#{publicacionDesplegada.periodoSeleccionado == 1}"/>
+                                        <p:inputText id="horaInicio" required="true"  
+                                                value="#{publicacionDesplegada.horaInicioAlquiler}" 
+                                                style="width:50px; text-align: right" 
+                                                requiredMessage="Valor requerido" 
+                                                rendered ="#{publicacionDesplegada.periodoSeleccionado == 1}"
+                                                onfocus="jQuery('#horaInicio').timepicker({});" />
+                                        <p:message id="horaInicioMessage" for="horaInicio" 
+                                            rendered ="#{publicacionDesplegada.periodoSeleccionado == 1}"/>
                                         <h:outputLabel value="Fecha de inicio: "/>
                                         <p:calendar id="rentCalendar" mode="inline" navigator="false" value="#{publicacionDesplegada.fechaInicio}" 
                                                     pattern="dd/MM/yyyy" mindate="#{publicacionDesplegada.today}" >
@@ -129,10 +154,11 @@
                                     </h:panelGrid>
                                     <p:commandButton value="Confirmar" action="#{publicacionDesplegada.confirmarPedido}" 
                                                      onclick ="confirmRent.hide()" update="grow"/>
+
                                     <p:growl id="grow" showDetail="true" globalOnly="true" />
-                                
+                              </h:form>                              
                             </p:dialog>
-                            </h:form>
+
                             <h:form>
                                 <comps:loginOnPage 
                                     bean="#{publicacionDesplegada}"
