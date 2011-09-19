@@ -42,6 +42,7 @@
                             <comps:alquiler bean="#{alquileresOfrecidos}" var="#{alq}"
                                             dlgCalificar="calificarDlg" 
                                             dlgVerCalificacion="verCalificacionDlg" 
+                                            dlgCambio="verCambioDlg"
                                             dlgModificar="modificarDlg"
                                             dlgCancelar="cancelarDlg"
                                             panelDialogos="dialogos"
@@ -54,7 +55,8 @@
                                             metodoCalificar="prepararCalificar" 
                                             metodoVerCalif="prepararVerCalificacion"
                                             metodoCancelar="prepararCancelarAlquiler" 
-                                            metodoModificar="prepararModificar" />                                            
+                                            metodoModificar="prepararModificar"
+                                            metodoCambio="prepararVerPedido"/>                                            
 
                         </p:column>
                     </p:dataTable>
@@ -82,13 +84,43 @@
 
                     <p:dialog widgetVar="verCalificacionDlg" header="Ver Calificaciones" >
                         <h:form >
-                            
+
                         </h:form>
                     </p:dialog>
-                    
+
+                    <p:dialog widgetVar="verCambioDlg" header="Pedio de Cambio recibido" 
+                              width="250" modal="true" resizable="false" >
+                        <h:form>
+                            <h:outputText value="El alquilador del producto solicita cambiar el periodo de alquiler a:" />
+                            <h:panelGrid columns="2" >
+                                <h:outputLabel value="Periodo" />
+                                <h:outputText value="#{alquileresOfrecidos.periodo}" />
+                                <h:outputLabel value="Duracion" />
+                                <h:outputText value="#{alquileresOfrecidos.duracion}" />
+                                <p:commandButton value="Aceptar" actionListener="#{alquileresOfrecidos.responderPedidoCambio(true)}"
+                                                 oncomplete="verCambioDlg.hide()" update=":alquileresForm"/>
+                                <p:commandButton value="Rechazar" actionListener="#{alquileresOfrecidos.responderPedidoCambio(false)}"
+                                                 oncomplete="verCambioDlg.hide()" update="tabla" />
+                            </h:panelGrid>
+                        </h:form>
+                    </p:dialog>
+
                     <p:dialog widgetVar="modificarDlg" header="Modificar Alquiler"
                               width="280" modal="true" resizable="false" >
-                        <h:form >
+                        <h:form>
+                            <script type="text/javascript" >
+                                         jQuery(function () {
+                                                 window.setTimeout('bindEventsHighlights()',500);
+                                         });
+
+                                         function bindEventsHighlights() {
+                                                 var specialDays = <h:outputText value="#{alquileresOfrecidos.fechas}" /> ;
+                                                 jQuery(".hasDatepicker").datepicker("option", "beforeShowDay", function (date) {
+                                                           return highlightCalendar(specialDays, date, 'highlight-calendar');
+                                                 });
+                                        }
+                            </script>
+
                             <h:panelGrid columns="3" >
                                 <h:outputLabel value="Periodo" />
                                 <h:outputText value="#{alquileresOfrecidos.periodo}" />
@@ -100,16 +132,16 @@
                                 <p:message for="duracion" showDetail="false" display="icon" />
                             </h:panelGrid>
                             <h:outputLabel value="Disponibilidad:" />
-                            <p:calendar mode="inline" mindate="#{alquileresOfrecidos.hoy}" 
+                            <p:calendar mode="inline" mindate="#{alquileresOfrecidos.fechaInicio}" 
                                         readonly="true" />
                             <p:separator />
                             <p:commandButton value="Aceptar" actionListener="#{alquileresOfrecidos.modificarAlquiler}"
                                              update="@form :alquileresForm" oncomplete="handleModificarAlquiler(xhr, status, args)" />
                             <p:commandButton value="Cancelar" oncomplete="modificarDlg.hide();" />
-                            
+
                         </h:form>
                     </p:dialog>
-                    
+
                     <p:dialog widgetVar="cancelarDlg" header="Cancelar Alquiler"
                               modal="true" resizable="false" >
                         <h:form >
@@ -121,9 +153,9 @@
                             </h:panelGrid>
                         </h:form>
                     </p:dialog>
-                    
+
                 </p:outputPanel>
-                
+
             </ui:define>
 
             <ui:define name="right">

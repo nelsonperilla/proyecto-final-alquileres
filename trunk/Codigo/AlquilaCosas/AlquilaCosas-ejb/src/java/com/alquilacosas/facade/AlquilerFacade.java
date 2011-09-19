@@ -287,7 +287,9 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
                 + " a.alquilerId = axe.alquilerFk.alquilerId "
                 + "AND axe.estadoAlquilerFk.estadoAlquilerId = ea.estadoAlquilerId "
                 + "AND axe.fechaHasta IS NULL "
-                + "AND (ea.nombre = :estadoFin OR ea.nombre = :estadoCancel OR ea.nombre = :estadoCancelAlq)");
+                + "AND (ea.nombre = :estadoFin OR ea.nombre = :estadoCancel OR ea.nombre = :estadoCancelAlq) "
+                + "AND NOT EXISTS (SELECT c FROM Calificacion c WHERE c.alquilerFk = a "
+                + "AND c.usuarioCalificadorFk = :usuario)");
         query.setParameter("usuario", usuario);
         query.setParameter("estadoFin", EstadoAlquiler.NombreEstadoAlquiler.FINALIZADO);
         query.setParameter("estadoCancel", EstadoAlquiler.NombreEstadoAlquiler.CANCELADO);
@@ -303,12 +305,13 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
      * @return 
      */
     public List<Alquiler> getAlquileresOfrecidosCalificados(Usuario usuario) {
-        Query query = em.createQuery("SELECT a FROM Alquiler a, AlquilerXEstado axe, EstadoAlquiler ea "
+        Query query = em.createQuery("SELECT a FROM Alquiler a, AlquilerXEstado axe, EstadoAlquiler ea, Calificacion c "
                 + "WHERE a.publicacionFk.usuarioFk = :usuario AND"
                 + " a.alquilerId = axe.alquilerFk.alquilerId "
                 + "AND axe.estadoAlquilerFk.estadoAlquilerId = ea.estadoAlquilerId "
                 + "AND axe.fechaHasta IS NULL "
-                + "AND (ea.nombre = :estadoFin OR ea.nombre = :estadoCancel OR ea.nombre = :estadoCancelAlq)");
+                + "AND (ea.nombre = :estadoFin OR ea.nombre = :estadoCancel OR ea.nombre = :estadoCancelAlq) "
+                + "AND c.alquilerFk = a AND c.usuarioCalificadorFk = :usuario");
         query.setParameter("usuario", usuario);
         query.setParameter("estadoFin", EstadoAlquiler.NombreEstadoAlquiler.FINALIZADO);
         query.setParameter("estadoCancel", EstadoAlquiler.NombreEstadoAlquiler.CANCELADO);

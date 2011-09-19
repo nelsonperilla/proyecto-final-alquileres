@@ -6,11 +6,11 @@ package com.alquilacosas.ejb.session;
 
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.common.NotificacionEmail;
-import com.alquilacosas.common.Util;
 import com.alquilacosas.dto.AlquilerDTO;
 import com.alquilacosas.ejb.entity.Alquiler;
 import com.alquilacosas.ejb.entity.AlquilerXEstado;
 import com.alquilacosas.ejb.entity.EstadoAlquiler;
+import com.alquilacosas.ejb.entity.EstadoAlquiler.NombreEstadoAlquiler;
 import com.alquilacosas.ejb.entity.ImagenPublicacion;
 import com.alquilacosas.ejb.entity.Publicacion;
 import com.alquilacosas.ejb.entity.Usuario;
@@ -257,14 +257,14 @@ public class AlquilerBean implements AlquilerBeanLocal {
     private void rechazarAlquiler( Alquiler alquiler) throws AlquilaCosasException{
         
         this.crearNuevoEstadoDeAlquiler(alquiler, EstadoAlquiler.NombreEstadoAlquiler.PEDIDO_RECHAZADO);
-        String estado = Util.convertNombreEstadoAlquilerToString(EstadoAlquiler.NombreEstadoAlquiler.PEDIDO_RECHAZADO);
+        String estado = NombreEstadoAlquiler.PEDIDO_RECHAZADO.toString();
         this.enviarMail(alquiler, estado);
     }
     
     private void cancelarAlquiler( Alquiler alquiler) throws AlquilaCosasException{
         
         this.crearNuevoEstadoDeAlquiler(alquiler, EstadoAlquiler.NombreEstadoAlquiler.CANCELADO_ALQUILADOR);
-        String estado = Util.convertNombreEstadoAlquilerToString(EstadoAlquiler.NombreEstadoAlquiler.CANCELADO_ALQUILADOR);
+        String estado = NombreEstadoAlquiler.CANCELADO_ALQUILADOR.toString();
         this.enviarMail(alquiler, estado);
     }
     

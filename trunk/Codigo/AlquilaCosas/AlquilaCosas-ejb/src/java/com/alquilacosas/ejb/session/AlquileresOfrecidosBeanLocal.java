@@ -6,6 +6,7 @@ package com.alquilacosas.ejb.session;
 
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.AlquilerDTO;
+import com.alquilacosas.dto.PedidoCambioDTO;
 import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
 import com.alquilacosas.ejb.entity.Puntuacion;
 import javax.ejb.Local;
@@ -27,9 +28,15 @@ public interface AlquileresOfrecidosBeanLocal {
 
     public java.util.List<AlquilerDTO> getAlquileresCalificados(int usuarioId);
 
-    public AlquilerDTO modificarAlquiler(AlquilerDTO alquilerDTO, NombrePeriodo periodo, 
+    public AlquilerDTO modificarAlquiler(AlquilerDTO alquiler, NombrePeriodo periodo, 
             int duracion) throws AlquilaCosasException;
 
     public boolean cancelarAlquiler(int alquilerId) throws AlquilaCosasException;
+
+    public PedidoCambioDTO getPedidoCambio(int pedidoCambioId);
+
+    public AlquilerDTO responderPedidoCambio(int pedidoCambioId, AlquilerDTO dto, boolean aceptado) throws AlquilaCosasException;
+
+    public java.util.List<java.util.Date> getFechasSinStock(int alquilerId);
     
 }

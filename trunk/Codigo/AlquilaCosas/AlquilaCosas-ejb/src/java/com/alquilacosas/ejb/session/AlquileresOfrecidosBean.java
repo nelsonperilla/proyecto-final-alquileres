@@ -6,12 +6,17 @@ package com.alquilacosas.ejb.session;
 
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.AlquilerDTO;
+import com.alquilacosas.dto.PedidoCambioDTO;
 import com.alquilacosas.ejb.entity.Alquiler;
 import com.alquilacosas.ejb.entity.AlquilerXEstado;
 import com.alquilacosas.ejb.entity.Calificacion;
 import com.alquilacosas.ejb.entity.EstadoAlquiler;
+import com.alquilacosas.ejb.entity.EstadoPedidoCambio;
+import com.alquilacosas.ejb.entity.EstadoPedidoCambio.NombreEstadoPedidoCambio;
 import com.alquilacosas.ejb.entity.ImagenPublicacion;
 import com.alquilacosas.ejb.entity.Login;
+import com.alquilacosas.ejb.entity.PedidoCambio;
+import com.alquilacosas.ejb.entity.PedidoCambioXEstado;
 import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
 import com.alquilacosas.ejb.entity.Precio;
 import com.alquilacosas.ejb.entity.Publicacion;
@@ -21,12 +26,17 @@ import com.alquilacosas.facade.AlquilerFacade;
 import com.alquilacosas.facade.AlquilerXEstadoFacade;
 import com.alquilacosas.facade.CalificacionFacade;
 import com.alquilacosas.facade.EstadoAlquilerFacade;
+import com.alquilacosas.facade.EstadoPedidoCambioFacade;
+import com.alquilacosas.facade.PedidoCambioFacade;
+import com.alquilacosas.facade.PedidoCambioXEstadoFacade;
 import com.alquilacosas.facade.PrecioFacade;
 import com.alquilacosas.facade.PuntuacionFacade;
 import com.alquilacosas.facade.UsuarioFacade;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
@@ -55,6 +65,12 @@ public class AlquileresOfrecidosBean implements AlquileresOfrecidosBeanLocal {
     private PrecioFacade precioFacade;
     @EJB
     private AlquilerXEstadoFacade axeFacade;
+    @EJB
+    private PedidoCambioFacade pedidoFacade;
+    @EJB
+    private PedidoCambioXEstadoFacade pcxeFacade;
+    @EJB
+    private EstadoPedidoCambioFacade estadoPedidoFacade;
 
     @Override
     @RolesAllowed({"USUARIO", "ADMIN"})
@@ -110,6 +126,7 @@ public class AlquileresOfrecidosBean implements AlquileresOfrecidosBeanLocal {
         if(alquiler == null) {
             throw new AlquilaCosasException("Alquiler no encontrado");
         }
+        
         Publicacion publicacion = alquiler.getPublicacionFk();
         
         Calendar cal = Calendar.getInstance();
@@ -149,6 +166,7 @@ public class AlquileresOfrecidosBean implements AlquileresOfrecidosBeanLocal {
         List<Precio> precios = precioFacade.findByPublicacion(publicacion);
         double monto = calcularMonto(fechaInicio, fechaFin, precios);
         alquiler.setMonto(monto);
+        
         alquilerFacade.edit(alquiler);
 
         dto.setMonto(monto);
@@ -167,10 +185,129 @@ public class AlquileresOfrecidosBean implements AlquileresOfrecidosBeanLocal {
         
         EstadoAlquiler estado = estadoFacade.findByNombre(EstadoAlquiler.NombreEstadoAlquiler.CANCELADO);
         AlquilerXEstado axeCancelado = new AlquilerXEstado();
+        axeCancelado.setFechaDesde(new Date());
         axeCancelado.setEstadoAlquilerFk(estado);
         alquiler.agregarAlquilerXEstado(axeCancelado);
         alquilerFacade.edit(alquiler);
         return true;
+    }
+    
+    @Override
+    public PedidoCambioDTO getPedidoCambio(int pedidoCambioId) {
+        PedidoCambio pedido = pedidoFacade.find(pedidoCambioId);
+        return new PedidoCambioDTO(pedido.getPedidoCambioId(), pedido.getPeriodoFk().getNombre(), pedido.getDuracion());
+    }
+    
+    @Override
+    public AlquilerDTO responderPedidoCambio(int pedidoCambioId, AlquilerDTO alquilerDTO, boolean aceptado) throws AlquilaCosasException {
+        PedidoCambio pedido = pedidoFacade.find(pedidoCambioId);
+        
+        PedidoCambioXEstado pcxe = pcxeFacade.getPedidoCambioXEstadoActual(pedido);
+        pcxe.setFechaHasta(new Date());
+        
+        PedidoCambioXEstado pcxeNuevo = new PedidoCambioXEstado();
+        pcxeNuevo.setPedidoCambioFk(pedido);
+        
+        EstadoPedidoCambio estado = null;
+        if(aceptado) {
+            estado = estadoPedidoFacade.findByNombre(NombreEstadoPedidoCambio.ACEPTADO);
+            alquilerDTO = modificarAlquiler(alquilerDTO, pedido.getPeriodoFk().getNombre(), pedido.getDuracion());
+        } else {
+            estado = estadoPedidoFacade.findByNombre(NombreEstadoPedidoCambio.RECHAZADO);
+        }
+        pcxeNuevo.setEstadoPedidoCambioFk(estado);
+        pcxeNuevo.setFechaDesde(new Date());
+        pcxeFacade.edit(pcxe);
+        pcxeFacade.create(pcxeNuevo);
+        return alquilerDTO;
+    }
+    
+    @Override
+    public List<Date> getFechasSinStock(int alquilerId) {
+        Alquiler alquiler = alquilerFacade.find(alquilerId);
+        Publicacion publicacion = alquiler.getPublicacionFk();
+        List<Date> respuesta = new ArrayList<Date>();
+        List<Alquiler> alquileres = alquilerFacade.getAlquileresByPublicacionFromToday(publicacion);
+        alquileres.remove(alquiler);
+        Iterator<Alquiler> itAlquiler =  alquileres.iterator();
+        
+        Calendar today = Calendar.getInstance();
+        today.setTime(new Date());
+        today.set(Calendar.HOUR_OF_DAY, 0);
+        today.set(Calendar.MINUTE, 0);
+        today.set(Calendar.SECOND, 0);
+        
+        int disponibles = publicacion.getCantidad();
+        
+        HashMap<String, Integer> dataCounter = new HashMap(60);//probablemente no existan pedidos mas haya de 60 dias desde hoy
+        Calendar lastDate = Calendar.getInstance();
+        lastDate.setTime(new Date());
+       
+        while (itAlquiler.hasNext()) {
+            
+            Alquiler temp = itAlquiler.next();
+            Calendar date = Calendar.getInstance();
+            date.setTime(temp.getFechaInicio());
+            date.set(Calendar.HOUR_OF_DAY, 0);
+            date.set(Calendar.MINUTE, 0);
+            date.set(Calendar.SECOND, 0);
+            Calendar fechaFin = Calendar.getInstance();
+            fechaFin.setTime(temp.getFechaFin());
+            if(fechaFin.get(Calendar.HOUR_OF_DAY) == 0 && fechaFin.get(Calendar.MINUTE)  == 0 
+                    && fechaFin.get(Calendar.SECOND)  == 0 )
+                //fechaFin.add(Calendar.SECOND, 1); 
+            //No me importan las fechas anteriores a hoy, no son seleccionables
+            if(date.before(today))
+                date.setTime(today.getTime());
+            //Me fijo si en los dias que dura el alquiler analizado hay disponibilidad de
+            //productos para el pedido que estoy creando
+            if(alquiler.getCantidad() <= disponibles - temp.getCantidad())
+                //Si alcanzan los dias guardo en el hashmap el dia y la cantidad de
+                //productos del alquiler, para ir acumulando esta cantidad para cada fecha
+                //al final me fijo por cada fecha si alcanza, porque ya tengo todos los 
+                //alquileres analizados
+                while(date.before(fechaFin)) {
+                    Integer acumulado = dataCounter.get(date.getTime().toString());
+                    if(acumulado != null)
+                        dataCounter.put(date.getTime().toString(),new Integer(acumulado + temp.getCantidad()));
+                    else
+                        dataCounter.put(date.getTime().toString(),new Integer(temp.getCantidad()));
+                    date.add(Calendar.DATE, 1);
+                }
+            else
+                //si no alcanza, marco a todos los dias de este alquiler en el hasmap con el valor
+                //de la disponibilidad total de la publicacion, lo cual significa que no va a alcanzar
+                //ese dia para hacer el pedido ni siquiera de 1 producto
+                
+                while(date.before(fechaFin)){
+                    dataCounter.put(date.getTime().toString(),new Integer(disponibles));
+                    date.add(Calendar.DATE, 1);
+                }
+                
+                if(date.after(lastDate))
+                    lastDate = date;
+
+        }
+        //Reviso el hashmap y voy llenando la lista de respuesta con las fechas que 
+        //no me alcanza el stock disponible
+        Calendar date = Calendar.getInstance();
+        date.setTime(new Date());
+        date.set(Calendar.HOUR_OF_DAY, 0);
+        date.set(Calendar.MINUTE, 0);
+        date.set(Calendar.SECOND, 0);
+        
+        if(lastDate.get(Calendar.HOUR_OF_DAY) == 0 && lastDate.get(Calendar.MINUTE)  == 0 
+                && lastDate.get(Calendar.SECOND)  == 0 )
+            lastDate.add(Calendar.SECOND, 1); 
+        while(date.before(lastDate)){
+            Integer acumulado = dataCounter.get(date.getTime().toString());
+            if(acumulado != null)
+                if(alquiler.getCantidad() > (disponibles - acumulado))
+                    respuesta.add(date.getTime());
+            date.add(Calendar.DATE, 1);
+        }
+        
+        return respuesta;
     }
 
     private List<AlquilerDTO> convertirAlquileres(List<Alquiler> alquileres, Usuario usuario) {
@@ -189,6 +326,15 @@ public class AlquileresOfrecidosBean implements AlquileresOfrecidosBeanLocal {
                     a.getAlquilerId(), imagenId, a.getFechaInicio(), a.getFechaFin(),
                     estado.getNombre(), pub.getTitulo(),
                     alquilador.getUsername(), a.getCantidad(), a.getMonto(), calificado);
+            // si el alquiler esta activo o confirmado; revisar si existe un pedido de cambio, y setearle su id al dto
+            if(estado.getNombre() == EstadoAlquiler.NombreEstadoAlquiler.CONFIRMADO || 
+                    estado.getNombre() == EstadoAlquiler.NombreEstadoAlquiler.ACTIVO) {
+                PedidoCambio pedido = pedidoFacade.getPedidoEnviado(a);
+                int id = -1;
+                if(pedido != null)
+                    id = pedido.getPedidoCambioId();
+                dto.setIdPedidoCambio(id);
+            }
             listaAlquileres.add(dto);
         }
         return listaAlquileres;
@@ -240,41 +386,6 @@ public class AlquileresOfrecidosBean implements AlquileresOfrecidosBeanLocal {
         }
         return monto;
     }
-    
-    /**
-     * 
-     * @param periodo1
-     * @param duracion1
-     * @param periodo2
-     * @param duracion2
-     * @return Devuelve un entero mayor a 0 si el periodo1/duracion1 es mayor al
-     * periodo2/duracion2; devuelve 0 si ambos periodos/duraciones son iguales;
-     * y devuelve un entero menor a 0 si el periodo1/duracion1 es menos al 
-     * periodo2/duracion2
-     */
-//    private int isMayor(NombrePeriodo periodo1, int duracion1, NombrePeriodo periodo2, int duracion2) {
-//        if(periodo1 == NombrePeriodo.HORA) {
-//            if(periodo2 == NombrePeriodo.HORA) {
-//                return duracion1 - duracion2;
-//            } else {
-//                return -1;
-//            }
-//        } else if(periodo1 == NombrePeriodo.DIA) {
-//            if(periodo2 == NombrePeriodo.HORA) {
-//                return 1;
-//            } else if(periodo2 == NombrePeriodo.DIA) {
-//                return duracion1 - duracion2;
-//            } else {
-//                return -1;
-//            }
-//        } else if(periodo1 == NombrePeriodo.SEMANA) {
-//            if(periodo2 == NombrePeriodo.HORA) {
-//                return 1;
-//            } else if(periodo2 == NombrePeriodo.DIA) {
-//                return duracion1 - (duracion2 / 7);
-//            } else if(periodo2 == NombrePeriodo.SEMANA)
-//        }
-//    }
     
     private long calcularDuracion(NombrePeriodo nombrePeriodo, long periodo) {
         
