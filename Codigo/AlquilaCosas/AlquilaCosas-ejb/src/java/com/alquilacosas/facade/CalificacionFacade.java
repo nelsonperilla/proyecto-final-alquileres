@@ -7,6 +7,7 @@ package com.alquilacosas.facade;
 import com.alquilacosas.ejb.entity.Alquiler;
 import com.alquilacosas.ejb.entity.Calificacion;
 import com.alquilacosas.ejb.entity.Usuario;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -84,5 +85,35 @@ public class CalificacionFacade extends AbstractFacade<Calificacion> {
                calificacion = null;
           }
           return calificacion;
+     }
+     
+     /**
+      * Devuelve el valor obtenido al promediar todas las calificaciones recibidas
+      * por un usuario en particular
+      * @param usuarioId
+      * @return el valor esta en el rango de calificacion negativa (-10)
+      * y calificacion positiva (10)
+      */
+     public double getCalificacionByUsuario(int usuarioId)
+     {
+        List<Calificacion> calificaciones;
+        Usuario filter = em.find(Usuario.class, usuarioId);
+        Query query = em.createNamedQuery("Calificacion.findByUsuarioCalificado");
+        query.setParameter("usuario", filter);
+        calificaciones = query.getResultList();         
+        double resultado = 0;
+        int contadorDeCalificaciones = 0;
+        for(Calificacion calificacion:calificaciones ){
+            resultado+=calificacion.getPuntuacionFk().getPuntaje().doubleValue();
+            ++contadorDeCalificaciones;
+        }
+        
+        //Si el usuario todavia no tiene calificaciones, se le da el valor neutral de 0
+        if(contadorDeCalificaciones == 0){
+            resultado = 0;
+            contadorDeCalificaciones = 1;
+        }
+        
+        return resultado / contadorDeCalificaciones;
      }
 }

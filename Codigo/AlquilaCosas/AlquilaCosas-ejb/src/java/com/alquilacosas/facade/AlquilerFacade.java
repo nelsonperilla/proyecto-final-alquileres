@@ -47,11 +47,14 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
      public AlquilerFacade(){
           super(Alquiler.class);
      }
-     /** Trae todos los alquileres que han sido confirmados o estan activos
+
+     /**
+     * Autor: Jorge
+     * Trae todos los alquileres que han sido confirmados o estan activos
      * para una publicacion en paricular, eliminando de la lista aquellos que
      * han finalizado antes de la fecha actual.
-     * @param publicacionId
-     * @return 
+     * @param publicacionId : el id de la publicacion
+     * 
      */
     public List<Alquiler> getAlquileresByPublicacionFromToday(Publicacion publicacion)
     {
@@ -93,53 +96,7 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
         
     }
     
-    /*
-    public List<Alquiler> getAlquilerPorPeriodo( Date fechaInicio, Date fechaFin, Integer idAlqConfirmado ){
-        
-        List<Alquiler> alquileres = null;
-        String id = String.valueOf(idAlqConfirmado);
-        Alquiler alquiler = em.find(Alquiler.class, idAlqConfirmado);
-        String idUsuario = String.valueOf(alquiler.getUsuarioFk().getUsuarioId());
-        java.sql.Date fechaDesde = new java.sql.Date(fechaInicio.getTime());
-        java.sql.Date fechaHasta = new java.sql.Date(fechaFin.getTime());
-        
-        Query query = em.createNativeQuery(" SELECT * FROM Alquiler a, "
-                + "Alquiler_X_Estado axe, Estado_Alquiler ea "
-                + "WHERE ((a.fecha_Inicio <= '"+ fechaDesde +"' AND a.fecha_Fin >= '"+ fechaHasta +"') "
-                + "OR ( a.fecha_Inicio <=  '"+ fechaHasta +"'  AND a.fecha_Fin >= '"+ fechaHasta +"' ) "
-                + "OR ( a.fecha_Inicio >= '"+ fechaDesde +"' AND a.fecha_Fin <= '"+ fechaHasta +"' )) "
-                + "AND a.alquiler_Id = axe.alquiler_FK "
-                + "AND axe.estado_Alquiler_FK = ea.estado_Alquiler_Id " 
-                + "AND axe.fecha_hasta IS NULL AND ea.nombre = 'PEDIDO' "
-                + "AND a.usuario_Fk <> " + idUsuario + " "
-                + "AND a.alquiler_id <> " + id +" ", Alquiler.class);
 
-          Join<Alquiler, AlquilerXEstado> join = root.join("alquilerXEstadoList");
-          Path endDate = ((Path) join.as(AlquilerXEstado.class)).get("fechaHasta");
-          Predicate lastState = criteriaBuilder.isNull(endDate);
-
-          Join<AlquilerXEstado, EstadoAlquiler> join2 = join.join("estadoAlquilerFk");
-          Path stateName = ((Path) join2.as(EstadoAlquiler.class)).get("nombre");
-          Predicate confirmState = criteriaBuilder.equal(stateName, NombreEstadoAlquiler.CONFIRMADO);
-          Predicate activeState = criteriaBuilder.equal(stateName, NombreEstadoAlquiler.ACTIVO);
-          Predicate orStates = criteriaBuilder.or(confirmState, activeState);
-
-          Calendar date = Calendar.getInstance();
-          date.setTime(new Date());
-          date.set(Calendar.HOUR_OF_DAY, 0);
-          date.set(Calendar.MINUTE, 0);
-          date.set(Calendar.SECOND, 0);
-
-          Predicate endAlquiler = criteriaBuilder.greaterThanOrEqualTo(root.get(Alquiler_.fechaFin), date.getTime());
-
-          queryBuilder.where(endAlquiler, orStates);
-          Query query = em.createQuery(queryBuilder);
-
-
-          return query.getResultList();
-
- 
-    } */
 
      public List<Alquiler> getAlquilerPorPeriodo(Date fechaInicio, Date fechaFin, Integer idAlqConfirmado) {
           

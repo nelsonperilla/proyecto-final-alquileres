@@ -27,6 +27,7 @@ import com.alquilacosas.ejb.entity.PublicacionXEstado;
 import com.alquilacosas.ejb.entity.Usuario;
 import com.alquilacosas.facade.AlquilerFacade;
 import com.alquilacosas.facade.AlquilerXEstadoFacade;
+import com.alquilacosas.facade.CalificacionFacade;
 import com.alquilacosas.facade.CategoriaFacade;
 import com.alquilacosas.facade.EstadoPublicacionFacade;
 import com.alquilacosas.facade.ImagenPublicacionFacade;
@@ -107,6 +108,10 @@ public class PublicacionBean implements PublicacionBeanLocal {
     private AlquilerFacade alquilerFacade;
     @EJB
     private AlquilerXEstadoFacade estadoAlquiler;
+    
+    @EJB
+    private CalificacionFacade calificacionFacade;
+    
 
     @Override
     @RolesAllowed({"USUARIO", "ADMIN"})
@@ -689,13 +694,15 @@ public class PublicacionBean implements PublicacionBeanLocal {
     @Override
     @PermitAll
     public double getUserRate(UsuarioDTO propietario) {
-        double rating = 7;
+        double rating =  calificacionFacade.getCalificacionByUsuario(propietario.getId());
+        rating*=0.5;
+        rating+=5;
         return rating;//hacer el metodo!!
     }
     
     private double redondearDecimal(double d, double c) {
         int temp = (int)( (d*Math.pow(10,c) ));
-        return ( ( (double)temp ) / Math.pow(10,c) );
+        return ( ( (double)temp ) * Math.pow(10,-c) );
     }
     
 }
