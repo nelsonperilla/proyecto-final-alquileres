@@ -200,10 +200,16 @@ public class DesplieguePublicacionMBean {
             long minDuration = calcularDuracion(
                     publicacion.getPeriodoMinimo().getPeriodoId(),
                     publicacion.getPeriodoMinimoValor());
-            long maxDuration = calcularDuracion(
-                    publicacion.getPeriodoMaximo().getPeriodoId(),
-                    publicacion.getPeriodoMaximoValor());
-
+            
+            long maxDuration;
+            try{
+                maxDuration = calcularDuracion(
+                        publicacion.getPeriodoMaximo().getPeriodoId(),
+                        publicacion.getPeriodoMaximoValor());
+            }catch(NullPointerException e){
+                //si no hay un periodo maximo, le pongo el mayor valor posible.
+                maxDuration = Long.MAX_VALUE;
+            }
 
             long periodoAlquilerEnMillis = endDate.getTimeInMillis() - beginDate.getTimeInMillis();
             if(periodoAlquilerEnMillis < minDuration || periodoAlquilerEnMillis > maxDuration )

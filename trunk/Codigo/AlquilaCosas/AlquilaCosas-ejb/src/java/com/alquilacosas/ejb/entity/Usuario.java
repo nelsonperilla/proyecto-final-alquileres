@@ -102,7 +102,7 @@ public class Usuario implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
     private List<Alquiler> alquilerList;
     
-    @OneToMany(mappedBy = "usuarioReplicadorFk")
+        @OneToMany(mappedBy = "usuarioCalificadoFk")
     private List<Calificacion> calificacionList;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioCalificadorFk")

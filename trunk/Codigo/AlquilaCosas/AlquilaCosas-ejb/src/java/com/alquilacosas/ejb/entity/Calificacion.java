@@ -31,6 +31,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Calificacion.findAll", query = "SELECT c FROM Calificacion c"),
     @NamedQuery(name = "Calificacion.findByCalificacionId", query = "SELECT c FROM Calificacion c WHERE c.calificacionId = :calificacionId"),
+    @NamedQuery(name = "Calificacion.findByUsuarioCalificado", query = "SELECT c FROM Calificacion c WHERE c.usuarioCalificadoFk = :usuario"),
     @NamedQuery(name = "Calificacion.findByFechaCalificacion", query = "SELECT c FROM Calificacion c WHERE c.fechaCalificacion = :fechaCalificacion"),
     @NamedQuery(name = "Calificacion.findByComentarioCalificador", query = "SELECT c FROM Calificacion c WHERE c.comentarioCalificador = :comentarioCalificador"),
     @NamedQuery(name = "Calificacion.findByFechaReplica", query = "SELECT c FROM Calificacion c WHERE c.fechaReplica = :fechaReplica"),
@@ -68,9 +69,9 @@ public class Calificacion implements Serializable {
     @ManyToOne(optional = false)
     private Alquiler alquilerFk;
     
-    @JoinColumn(name = "USUARIO_REPLICADOR_FK", referencedColumnName = "USUARIO_ID")
+    @JoinColumn(name = "USUARIO_CALIFICADO_FK", referencedColumnName = "USUARIO_ID")
     @ManyToOne
-    private Usuario usuarioReplicadorFk;
+    private Usuario usuarioCalificadoFk;
     
     @JoinColumn(name = "USUARIO_CALIFICADOR_FK", referencedColumnName = "USUARIO_ID")
     @ManyToOne(optional = false)
@@ -145,11 +146,11 @@ public class Calificacion implements Serializable {
     }
 
     public Usuario getUsuarioReplicadorFk() {
-        return usuarioReplicadorFk;
+        return usuarioCalificadoFk;
     }
 
     public void setUsuarioReplicadorFk(Usuario usuarioReplicadorFk) {
-        this.usuarioReplicadorFk = usuarioReplicadorFk;
+        this.usuarioCalificadoFk = usuarioReplicadorFk;
     }
 
     public Usuario getUsuarioCalificadorFk() {
