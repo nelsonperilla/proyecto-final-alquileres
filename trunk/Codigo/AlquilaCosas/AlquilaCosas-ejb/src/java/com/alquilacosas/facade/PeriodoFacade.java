@@ -5,9 +5,11 @@
 package com.alquilacosas.facade;
 
 import com.alquilacosas.ejb.entity.Periodo;
+import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -47,6 +49,17 @@ public class PeriodoFacade extends AbstractFacade<Periodo> {
     public List<Periodo> getPeriodosOrderByHoras() {
         Query query = em.createNamedQuery("Periodo.findAll");
         return query.getResultList();   
+    }
+    
+    public Periodo findByNombre(NombrePeriodo nombre) {
+        Query query = em.createQuery("SELECT p FROM Periodo p WHERE p.nombre = :nombre");
+        query.setParameter("nombre", nombre);
+        Periodo periodo = null;
+        try {
+            periodo = (Periodo) query.getSingleResult();
+        } catch (NoResultException e) {
+        }
+        return periodo;
     }
     
 }

@@ -48,7 +48,6 @@
                                             panelDialogos="dialogos"
                                             propPublicacion="publicacionId" 
                                             propUsuario="usuarioId"
-                                            propAlquiler="alquilerId"
                                             editable="true"
                                             metodoVerPub="verPublicacion" 
                                             metodoVerUsuario="verUsuario" 
@@ -63,7 +62,7 @@
 
                 </h:form>
                 <p:outputPanel id="dialogos" >
-                    <p:dialog widgetVar="calificarDlg" header="Calificar" >
+                    <p:dialog widgetVar="calificarDlg" header="Calificar" modal="true" resizable="false" width="240" >
                         <h:form id="calificarForm" >
                             <h:panelGrid columns="1" >  
                                 <h:outputText value="Puntuación:" />
@@ -74,9 +73,11 @@
                                 <p:inputTextarea id="comentario" value="#{alquileresOfrecidos.comentario}" 
                                                  style="width:200px;height:100px;" effectDuration="100" maxHeight="255" />
                                 <f:facet name="footer" >
-                                    <p:commandButton value="Calificar" actionListener="#{alquileresOfrecidos.registrarCalificacion}" 
-                                                     oncomplete="calificarDlg.hide()" update="alquileres tabla" />
-                                    <p:commandButton value="Limpiar" type="reset" />
+                                    <h:panelGrid columns="2" columnClasses="leftCol,rightCol" style="width:100%" >
+                                        <p:commandButton value="Calificar" actionListener="#{alquileresOfrecidos.registrarCalificacion}" 
+                                                         oncomplete="calificarDlg.hide()" update="alquileres tabla" />
+                                        <p:commandButton value="Limpiar" type="reset" />
+                                    </h:panelGrid>
                                 </f:facet>
                             </h:panelGrid>
                         </h:form>
@@ -135,9 +136,11 @@
                             <p:calendar mode="inline" mindate="#{alquileresOfrecidos.fechaInicio}" 
                                         readonly="true" />
                             <p:separator />
-                            <p:commandButton value="Aceptar" actionListener="#{alquileresOfrecidos.modificarAlquiler}"
-                                             update="@form :alquileresForm" oncomplete="handleModificarAlquiler(xhr, status, args)" />
-                            <p:commandButton value="Cancelar" oncomplete="modificarDlg.hide();" />
+                            <h:panelGrid columns="2" columnClasses="leftCol,rightCol" style="width:100%" >
+                                <p:commandButton value="Aceptar" actionListener="#{alquileresOfrecidos.modificarAlquiler}"
+                                                 update="@form :alquileresForm" oncomplete="handleModificarAlquiler(xhr, status, args)" />
+                                <p:commandButton value="Cancelar" oncomplete="modificarDlg.hide();" />
+                            </h:panelGrid>
 
                         </h:form>
                     </p:dialog>
@@ -146,7 +149,8 @@
                               modal="true" resizable="false" >
                         <h:form >
                             <h:outputText value="Esta seguro que desea cancelar el alquiler seleccionado?" />
-                            <h:panelGrid columns="2" >
+                            <p:separator />
+                            <h:panelGrid columns="2" columnClasses="leftCol,rightCol" style="width:100%" >
                                 <p:commandButton value="Si" actionListener="#{alquileresOfrecidos.cancelarAlquiler}" 
                                                  update=":alquileresForm" oncomplete="cancelarDlg.hide()" />
                                 <p:commandButton value="No" oncomplete="cancelarDlg.hide()" />

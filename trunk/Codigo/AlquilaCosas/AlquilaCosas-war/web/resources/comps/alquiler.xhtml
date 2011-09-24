@@ -14,11 +14,11 @@
         <cc:attribute name="dlgVerCalificacion" type="java.lang.String" required="true" />
         <cc:attribute name="dlgModificar" type="java.lang.String" />
         <cc:attribute name="dlgCambio" type="java.lang.String" required="true" />
+        <cc:attribute name="dlgRevisarCambio" type="java.lang.String" />
         <cc:attribute name="dlgCancelar" type="java.lang.String" required="true" />
         <cc:attribute name="panelDialogos" type="java.lang.String" required="true" />
         <cc:attribute name="propPublicacion" type="java.lang.String" required="true" />
         <cc:attribute name="propUsuario" type="java.lang.String" required="true" />
-        <cc:attribute name="propAlquiler" type="java.lang.String" />
         <cc:attribute name="editable" type="java.lang.Boolean" default="false" />
         <cc:attribute name="metodoVerPub" type="java.lang.String" required="true" />
         <cc:attribute name="metodoVerUsuario" type="java.lang.String" required="true" />
@@ -27,6 +27,7 @@
         <cc:attribute name="metodoCancelar" type="java.lang.String" required="true" />
         <cc:attribute name="metodoModificar" type="java.lang.String" />
         <cc:attribute name="metodoCambio" type="java.lang.String" required="true" />
+        <cc:attribute name="metodoCancelarPedido" type="java.lang.String" />
     </cc:interface>
 
     <!-- IMPLEMENTATION -->
@@ -57,43 +58,56 @@
 
                 <h:panelGrid columns="1" >
                     <h:outputText value="cantidad: #{cc.attrs.var.cantidad}, $ #{cc.attrs.var.monto}" />
-                    <h:outputLabel value="Comienza: #{cc.attrs.var.fechaDesde}" />
-                    <h:outputLabel value="Finaliza: #{cc.attrs.var.fechaHasta}" />
+                    <h:outputLabel value="Comienza: #{cc.attrs.var.alquilerPorHora ? cc.attrs.var.fechaInicioConHora: cc.attrs.var.fechaDesde}" />
+                    <h:outputLabel value="Finaliza: #{cc.attrs.var.alquilerPorHora ? cc.attrs.var.fechaFinConHora: cc.attrs.var.fechaHasta}" />
+                    <h:outputText value="Estado: #{cc.attrs.var.estadoAlquiler}" />
                 </h:panelGrid>
                 <h:panelGrid columns="1" >
-                     <p:commandButton value="Ver calificacion" 
+                    <p:commandButton id="verCalificacion" title="Ver calificacion" image="ui-icon ui-icon-search"
                                      rendered="#{cc.attrs.var.calificable and cc.attrs.var.calificado}"
                                      actionListener="#{cc.attrs.bean[cc.attrs.metodoVerCalif]}"
                                      update="#{cc.attrs.panelDialogos}"
                                      oncomplete="#{cc.attrs.dlgVerCalificacion}.show();" >
                         <f:attribute name="alq" value="#{cc.attrs.var.idAlquiler}" />
                     </p:commandButton>
-                    <p:commandButton value="Calificar" update="#{cc.attrs.panelDialogos}"
+                    <p:commandButton id="calificar" title="Calificar" image="ui-icon ui-icon-star"
+                                     update="#{cc.attrs.panelDialogos}"
                                      actionListener="#{cc.attrs.bean[cc.attrs.metodoCalificar]}"
                                      rendered="#{cc.attrs.var.calificable and not cc.attrs.var.calificado}"
                                      oncomplete="#{cc.attrs.dlgCalificar}.show();" >
                         <f:attribute name="alq" value="#{cc.attrs.var.idAlquiler}" />
                     </p:commandButton>
-                    <p:commandButton value="Pedido de cambio" rendered="#{cc.attrs.var.idPedidoCambio != -1}"
+                    <p:commandButton image="ui-icon ui-icon-pencil" title="Solicitar cambio"
+                                     rendered="#{cc.attrs.var.idPedidoCambio == -1 and cc.attrs.var.cancelable and not cc.attrs.editable}"
+                                     actionListener="#{cc.attrs.bean[cc.attrs.metodoCambio]}"
+                                     update="#{cc.attrs.panelDialogos}"
+                                     oncomplete="#{cc.attrs.dlgCambio}.show();" >
+                        <f:attribute name="alq" value="#{cc.attrs.var.idAlquiler}" />
+                    </p:commandButton>
+                    <p:commandButton image="ui-icon ui-icon-search" title="Revisar pedido de cambio"
+                                     rendered="#{cc.attrs.var.idPedidoCambio != -1 and cc.attrs.var.cancelable and not cc.attrs.editable}"
+                                     actionListener="#{cc.attrs.bean[cc.attrs.metodoCancelarPedido]}"
+                                     update="#{cc.attrs.panelDialogos}"
+                                     oncomplete="#{cc.attrs.dlgRevisarCambio}.show();" >
+                        <f:attribute name="ped" value="#{cc.attrs.var.idPedidoCambio}" />
+                    </p:commandButton>
+                    <p:commandButton image="ui-icon ui-icon-alert" title="Pedido de cambio recibido"
+                                     rendered="#{cc.attrs.var.idPedidoCambio != -1 and cc.attrs.editable and cc.attrs.var.cancelable}"
                                      actionListener="#{cc.attrs.bean[cc.attrs.metodoCambio]}"
                                      update="#{cc.attrs.panelDialogos}"
                                      oncomplete="#{cc.attrs.dlgCambio}.show();">
                         <f:attribute name="alq" value="#{cc.attrs.var.idAlquiler}" />
                         <f:attribute name="ped" value="#{cc.attrs.var.idPedidoCambio}" />
                     </p:commandButton>
-                    <p:commandButton value="Modificar" rendered="#{cc.attrs.editable and cc.attrs.var.cancelable}"
+                    <p:commandButton image="ui-icon ui-icon-pencil" title="Modificar alquiler"
+                                     rendered="#{cc.attrs.editable and cc.attrs.var.cancelable}"
                                      actionListener="#{cc.attrs.bean[cc.attrs.metodoModificar]}"
                                      update="#{cc.attrs.panelDialogos}"
                                      oncomplete="#{cc.attrs.dlgModificar}.show();">
                         <f:attribute name="alq" value="#{cc.attrs.var.idAlquiler}" />
                     </p:commandButton>
-                    <p:commandButton value="Solicitar cambio" rendered="#{not cc.attrs.editable and cc.attrs.var.cancelable}"
-                                     actionListener="#{cc.attrs.bean[cc.attrs.metodoCambio]}"
-                                     update="#{cc.attrs.panelDialogos}"
-                                     oncomplete="#{cc.attrs.dlgCambio}.show();" >
-                        <f:attribute name="alq" value="#{cc.attrs.var.idAlquiler}" />
-                    </p:commandButton>
-                    <p:commandButton value="Cancelar" rendered="#{cc.attrs.var.cancelable}"
+                    <p:commandButton image="ui-icon ui-icon-close" title="Cancelar alquiler"
+                                     rendered="#{cc.attrs.var.cancelable}"
                                      actionListener="#{cc.attrs.bean[cc.attrs.metodoCancelar]}"
                                      update="#{cc.attrs.panelDialogos}"
                                      oncomplete="#{cc.attrs.dlgCancelar}.show();">

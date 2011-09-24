@@ -14,6 +14,7 @@
         <cc:attribute name="property" type="java.lang.String" required="true" />
         <cc:attribute name="editable" type="java.lang.Boolean" default="false" />
         <cc:attribute name="editMethod" type="java.lang.String" />
+        <cc:attribute name="destacarMethod" type="java.lang.String" />
         <cc:attribute name="deleteMethod" type="java.lang.String" />
     </cc:interface>
 
@@ -38,16 +39,19 @@
                         <f:setPropertyActionListener value="#{cc.attrs.var.id}" target="#{cc.attrs.bean[cc.attrs.property]}" />
                     </h:commandLink>
 
-                    <h:panelGrid columns="3" columnClasses="editColumn,editColumn" >
+                    <h:panelGrid columns="#{cc.attrs.var.destacada ? 2: 3}" rowClasses="editColumn" style="width:50%" >
                         <h:commandLink value="editar" rendered="#{cc.attrs.editable}"
                                        action="#{cc.attrs.bean[cc.attrs.editMethod]}" >
+                            <f:setPropertyActionListener value="#{cc.attrs.var.id}" target="#{cc.attrs.bean[cc.attrs.property]}" />
+                        </h:commandLink>
+                        <h:commandLink value="destacar" rendered="#{cc.attrs.editable and not cc.attrs.var.destacada}"
+                                       action="#{cc.attrs.bean[cc.attrs.destacarMethod]}" >
                             <f:setPropertyActionListener value="#{cc.attrs.var.id}" target="#{cc.attrs.bean[cc.attrs.property]}" />
                         </h:commandLink>
                         <p:commandLink value="eliminar" rendered="#{cc.attrs.editable}"
                                        onclick="confirmarDlg.show()" >
                             <f:setPropertyActionListener value="#{cc.attrs.var.id}" target="#{cc.attrs.bean[cc.attrs.property]}" />
                         </p:commandLink>
-                        <p/>
                     </h:panelGrid>
 
                     <h:outputText value="(#{cc.attrs.var.ciudad}, #{cc.attrs.var.provincia})" />

@@ -32,7 +32,10 @@ public class EstadoAlquilerFacade extends AbstractFacade<EstadoAlquiler> {
     
     public EstadoAlquiler getEstadoAlquiler( Alquiler alquiler ){
         EstadoAlquiler estado = null;
-        Query query = em.createNamedQuery("EstadoAlquiler.findByAlquiler");
+        Query query = em.createQuery("SELECT ea FROM EstadoAlquiler ea, AlquilerXEstado axe, Alquiler a "
+                + "WHERE a = axe.alquilerFk "
+                + "AND axe.estadoAlquilerFk = ea "
+                + "AND axe.fechaHasta IS NULL AND a = :alquiler");
         query.setParameter("alquiler", alquiler);
         try {
             estado = (EstadoAlquiler) query.getSingleResult();

@@ -82,6 +82,7 @@ public class Alquiler implements Serializable {
     public Alquiler() {
         alquilerXEstadoList = new ArrayList<AlquilerXEstado>();
         calificacionList = new ArrayList<Calificacion>();
+        pedidoCambioList = new ArrayList<PedidoCambio>();
     }
 
     public Alquiler(Integer alquilerId) {
@@ -110,6 +111,11 @@ public class Alquiler implements Serializable {
     public void agregarCalificacion(Calificacion calificacion) {
         calificacionList.add(calificacion);
         calificacion.setAlquilerFk(this);
+    }
+    
+    public void agregarPedidoCambio(PedidoCambio pedido) {
+        pedidoCambioList.add(pedido);
+        pedido.setAlquilerFk(this);
     }
 
     public Integer getAlquilerId() {

@@ -66,7 +66,7 @@ public class ModificarPublicacionMBean {
     private List<PrecioDTO> precios;
     private PrecioDTO precioFacade;
     private int periodoMinimo;
-    private int periodoMaximo;
+    private Integer periodoMaximo;
     private List<SelectItem> periodoMinimos;
     private int selectedPeriodoMinimo;
     private List<SelectItem> periodoMaximos;
@@ -597,11 +597,11 @@ public class ModificarPublicacionMBean {
         this.selectedPeriodoMinimo = selectedPeriodoMinimo;
     }
 
-    public int getPeriodoMaximo() {
+    public Integer getPeriodoMaximo() {
         return periodoMaximo;
     }
 
-    public void setPeriodoMaximo(int periodoMaximo) {
+    public void setPeriodoMaximo(Integer periodoMaximo) {
         this.periodoMaximo = periodoMaximo;
     }
 

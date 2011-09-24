@@ -709,3 +709,16 @@ h1, h2, h3 {
     width: 600px;
     height: 600px;
 }
+
+.fieldset {
+    margin: 10px 20px 0px 20px;
+    width: 550px;
+}
+
+.leftCol {
+    text-align: right;
+}
+
+.rightCol {
+    text-align: left;
+}

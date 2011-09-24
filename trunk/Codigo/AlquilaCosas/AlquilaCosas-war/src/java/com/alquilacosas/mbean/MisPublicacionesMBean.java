@@ -67,6 +67,10 @@ public class MisPublicacionesMBean {
         return "modificarPublicacion";
     }
     
+    public String destacarPublicacion() {
+        return "destacarPublicacion";
+    }
+    
     public String mostrarPublicacion(){
        
         return "mostrarPublicacion";

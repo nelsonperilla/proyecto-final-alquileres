@@ -127,7 +127,7 @@ public class NuevaPublicacionMBean implements Serializable {
             hoy.add(Calendar.DATE, 60);
              if( selectedPeriodoMaximo == null )
                 selectedPeriodoMaximo = 0;
-            publicacionBean.registrarPublicacion( titulo, descripcion,
+            publicacionId = publicacionBean.registrarPublicacion( titulo, descripcion,
                     new Date(), hoy.getTime(), destacada, cantidad,
                     login.getUsuarioId(), cat, precios, imagenes,
                     periodoMinimo, selectedPeriodoMinimo, periodoMaximo,

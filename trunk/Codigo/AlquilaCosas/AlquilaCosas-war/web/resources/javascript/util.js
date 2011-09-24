@@ -91,3 +91,9 @@ function handleModificarAlquiler(xhr, status, args) {
         modificarDlg.hide();
     }
 }
+
+function handlePedirCambioAlquiler(xhr, status, args) {
+    if(!args.validationFailed && args.enviado) {
+        pedirCambioDlg.hide();
+    }
+}

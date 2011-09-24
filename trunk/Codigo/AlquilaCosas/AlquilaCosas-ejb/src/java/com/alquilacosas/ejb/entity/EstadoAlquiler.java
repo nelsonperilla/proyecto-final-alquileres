@@ -28,12 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "EstadoAlquiler.findAll", query = "SELECT e FROM EstadoAlquiler e"),
     @NamedQuery(name = "EstadoAlquiler.findByEstadoAlquilerId", query = "SELECT e FROM EstadoAlquiler e WHERE e.estadoAlquilerId = :estadoAlquilerId"),
-    @NamedQuery(name = "EstadoAlquiler.findByNombre", query = "SELECT e FROM EstadoAlquiler e WHERE e.nombre = :nombre"),
-    @NamedQuery(name = "EstadoAlquiler.findByDescripcion", query = "SELECT e FROM EstadoAlquiler e WHERE e.descripcion = :descripcion"),
-    @NamedQuery(name = "EstadoAlquiler.findByAlquiler", query = "SELECT ea FROM EstadoAlquiler ea, AlquilerXEstado axe, Alquiler a "
-                + "WHERE a = axe.alquilerFk "
-                + "AND axe.estadoAlquilerFk = ea "
-                + "AND axe.fechaHasta IS NULL AND a = :alquiler")})
+    @NamedQuery(name = "EstadoAlquiler.findByNombre", query = "SELECT e FROM EstadoAlquiler e WHERE e.nombre = :nombre")})
 public class EstadoAlquiler implements Serializable {
     
     public enum NombreEstadoAlquiler {PEDIDO, CONFIRMADO, ACTIVO, FINALIZADO, 

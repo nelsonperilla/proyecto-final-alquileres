@@ -26,6 +26,7 @@
                 <h:form id="formPublicacion">
 
                     <h1>Publicar</h1>
+                    <p:fieldset legend="Datos del producto" styleClass="fieldset" >
                     <h:panelGrid columns="3" columnClasses="labelColumn" >                       
 
                         <h:outputLabel value="Titulo: "/>
@@ -89,16 +90,15 @@
 
                         </h:panelGrid>
                     </p:outputPanel>
-
                     <br/>
-                    <br/>
-
                     <p:editor id="desc" value="#{publicacion.descripcion}" widgetVar="editor" 
-                              width="600" required="true"/>
+                              width="540" required="true"/>
                     <p:message id="descVal" for="desc" />
+                    </p:fieldset>
 
-                    <h2>Cargar imagenes</h2>
-                    <p:panel header="Cargar Imagenes">
+                    <!-- <h2>Cargar imagenes</h2> -->
+                    <p:fieldset legend="Imagenes" styleClass="fieldset" >
+                    <!-- <p:panel header="Cargar Imagenes"> -->
                         
                         <br/>
 
@@ -113,10 +113,11 @@
                                       style="font-weight:bold;color:#616D7E">
                             Agregar Imagen
                         </h:outputLink>
-                    </p:panel>
+                    <!-- </p:panel> -->
+                    </p:fieldset>
                     
-                    <h2>Elije un periodo minimo y maximo de alquiler</h2>
-                    
+                    <!-- <h2>Elije un periodo minimo y maximo de alquiler</h2> -->
+                    <p:fieldset legend="Periodo minimo y maximo de alquiler" styleClass="fieldset" >
                     <h:panelGrid columns="4">
                         
                         <h:outputLabel value="Minimo: " /> 
@@ -139,11 +140,12 @@
                         <p/>
                         
                     </h:panelGrid>
+                    </p:fieldset>
 
-                    <h2>Determina el precio del alquiler del producto</h2>
-
-                    <p:panel id="panelPrecios" styleClass="formPanel">
-
+                    <!-- <h2>Determina el precio del alquiler del producto</h2> -->
+                    <p:fieldset id="panelPrecios" legend="Precios" styleClass="fieldset" >
+                    <!-- <p:panel id="panelPrecios" styleClass="formPanel"> -->
+                        
                         <ui:repeat value="#{publicacion.precios}" var="precio">
 
                             <h:outputText value="#{precio.periodoNombre}"/>
@@ -153,13 +155,14 @@
 
                         </ui:repeat>
 
-                    </p:panel>
+                    <!-- </p:panel> -->
+                    </p:fieldset>
 
-                    <br/>
-
-                    <p:commandButton value="Crear" action="#{publicacion.crearPublicacion}" 
-                                     ajax="false" />
-                    <p:commandButton  type="reset" value="Limpiar" action="misPublicaciones"/>
+                    <h:panelGrid columns="2" columnClasses="labelColumn,null" style="margin-left: 20px; margin-top: 10px" >
+                        <p:commandButton value="Crear" action="#{publicacion.crearPublicacion}" 
+                                         ajax="false" />
+                        <p:commandButton  type="reset" value="Limpiar" action="misPublicaciones"/>
+                    </h:panelGrid>
                     <p:growl id="growl" showDetail="true" globalOnly="true" />
                 </h:form>
             </ui:define>
