@@ -35,7 +35,7 @@
                              columns="1"   >
                     <h:commandLink value="#{cc.attrs.var.titulo}"
                                    action="#{cc.attrs.bean[cc.attrs.method]}" 
-                                   styleClass="itemTitle" >
+                                   styleClass="#{cc.attrs.var.destacada ? 'itemTitleDestacado':'itemTitle'}" >
                         <f:setPropertyActionListener value="#{cc.attrs.var.id}" target="#{cc.attrs.bean[cc.attrs.property]}" />
                     </h:commandLink>
 
