@@ -5,9 +5,9 @@
 package com.alquilacosas.dto;
 
 import com.alquilacosas.ejb.entity.EstadoAlquiler.NombreEstadoAlquiler;
-import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -19,7 +19,7 @@ public class AlquilerDTO implements Serializable {
     private int idPublicacion;
     private int idUsuario;
     private int idAlquiler;
-    private int idPedidoCambio;
+    private int idPedidoCambio = -1;
     private String titulo, usuario;
     private Date fechaInicio;
     private Date fechaFin;
@@ -30,7 +30,8 @@ public class AlquilerDTO implements Serializable {
     private double monto;
     private boolean calificado;
     private NombreEstadoAlquiler estadoAlquiler;
-    private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    private SimpleDateFormat formatoDia = new SimpleDateFormat("dd/MM/yyyy");
+    private SimpleDateFormat formatoCompleto = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
     public AlquilerDTO() {
     }
@@ -49,8 +50,8 @@ public class AlquilerDTO implements Serializable {
         this.imagenId = imagenId;
         this.titulo = titulo;
 
-        fechaDesde = sdf.format(fechaInicio);
-        fechaHasta = sdf.format(fechaFin);
+        fechaDesde = formatoDia.format(fechaInicio);
+        fechaHasta = formatoDia.format(fechaFin);
     }
 
     public AlquilerDTO(int idPublicacion, int idUsuario, int idAlquiler, int imagenId,
@@ -69,8 +70,8 @@ public class AlquilerDTO implements Serializable {
         this.calificado = calificado;
         this.estadoAlquiler = estado;
         this.imagenId = imagenId;
-        fechaDesde = sdf.format(fechaInicio);
-        fechaHasta = sdf.format(fechaFin);
+        fechaDesde = formatoDia.format(fechaInicio);
+        fechaHasta = formatoDia.format(fechaFin);
     }
     
     public AlquilerDTO(int idPublicacion, int idUsuario, int idAlquiler, Date fechaInicioAlquiler,
@@ -83,8 +84,8 @@ public class AlquilerDTO implements Serializable {
         this.monto = monto;
         this.calificado = calificado;
 
-        fechaDesde = sdf.format(fechaInicio);
-        fechaHasta = sdf.format(fechaFin);
+        fechaDesde = formatoDia.format(fechaInicio);
+        fechaHasta = formatoDia.format(fechaFin);
     }
 
     public int getCantidad() {
@@ -109,7 +110,7 @@ public class AlquilerDTO implements Serializable {
 
     public void setFechaFin(Date fechaFinAlquiler) {
         this.fechaFin = fechaFinAlquiler;
-        fechaHasta = sdf.format(fechaFin);
+        fechaHasta = formatoDia.format(fechaFin);
     }
 
     public Date getFechaInicio() {
@@ -118,7 +119,7 @@ public class AlquilerDTO implements Serializable {
 
     public void setFechaInicio(Date fechaInicioAlquiler) {
         this.fechaInicio = fechaInicioAlquiler;
-        fechaDesde = sdf.format(fechaInicio);
+        fechaDesde = formatoDia.format(fechaInicio);
     }
 
     public int getIdAlquiler() {
@@ -176,6 +177,14 @@ public class AlquilerDTO implements Serializable {
     public void setFechaHasta(String fechaHasta) {
         this.fechaHasta = fechaHasta;
     }
+    
+    public String getFechaInicioConHora() {
+        return formatoCompleto.format(fechaInicio);
+    }
+    
+    public String getFechaFinConHora() {
+        return formatoCompleto.format(fechaFin);
+    }
 
     public String getTitulo() {
         return titulo;
@@ -226,5 +235,17 @@ public class AlquilerDTO implements Serializable {
         }
         else
             return false;
+    }
+    
+    public boolean isAlquilerPorHora() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(fechaInicio);
+        int n1 = cal.get(Calendar.HOUR_OF_DAY) + cal.get(Calendar.MINUTE);
+        cal.setTime(fechaFin);
+        int n2 = cal.get(Calendar.HOUR_OF_DAY) + cal.get(Calendar.MINUTE);
+        if(n1 + n2 == 0) 
+            return false;
+        else
+            return true;
     }
 }

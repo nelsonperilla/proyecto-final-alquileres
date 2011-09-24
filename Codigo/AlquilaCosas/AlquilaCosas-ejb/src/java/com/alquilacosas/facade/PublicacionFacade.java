@@ -48,8 +48,8 @@ public class PublicacionFacade extends AbstractFacade<Publicacion> {
     
     public List<Publicacion> getPublicacionesInicio() {
         String q = "SELECT p FROM Publicacion p, PublicacionXEstado pxe, EstadoPublicacion e "
-                + "WHERE pxe.publicacion.publicacionId = p.publicacionId "
-                + "AND pxe.estadoPublicacion.estadoPublicacionId = e.estadoPublicacionId "
+                + "WHERE pxe.publicacion = p "
+                + "AND pxe.estadoPublicacion = e "
                 + "AND pxe.fechaHasta IS NULL "
                 + "AND e.nombre = :estado ORDER BY p.destacada DESC, p.fechaDesde DESC ";
         TypedQuery<Publicacion> query = em.createQuery(q, Publicacion.class);

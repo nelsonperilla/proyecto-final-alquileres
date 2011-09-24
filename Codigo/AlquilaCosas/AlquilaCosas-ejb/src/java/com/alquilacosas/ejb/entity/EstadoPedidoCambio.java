@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class EstadoPedidoCambio implements Serializable {
     
-    public enum NombreEstadoPedidoCambio {ENVIADO, ACEPTADO, RECHAZADO};
+    public enum NombreEstadoPedidoCambio {ENVIADO, ACEPTADO, RECHAZADO, CANCELADO};
     
     private static final long serialVersionUID = 1L;
     

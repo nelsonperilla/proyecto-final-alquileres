@@ -64,6 +64,11 @@
             <to-view-id>/vistas/mostrarPublicacion.xhtml?id=#{misPublicaciones.publicacionId}</to-view-id>
             <redirect/>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>destacarPublicacion</from-outcome>
+            <to-view-id>/vistas/usuario/destacarPublicacion.xhtml?id=#{misPublicaciones.publicacionId}</to-view-id>
+            <redirect/>
+        </navigation-case>
     </navigation-rule>
 
     <navigation-rule>

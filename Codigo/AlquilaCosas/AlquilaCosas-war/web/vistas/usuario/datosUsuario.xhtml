@@ -16,7 +16,7 @@
                     <h:commandLink value="Inicio" action="inicio" />
                 </h:form>
             </ui:define>
-            
+
             <ui:define name="left" >
                 <comps:categoriesMenu />
             </ui:define>
@@ -24,8 +24,8 @@
             <ui:define name="principal">
                 <h1>Mis Datos</h1>
                 <h:form id="datos">
-                    <p:outputPanel rendered="#{not modUsuario.editando}" >
-                        <h3>Datos Personales</h3>
+                    <p:outputPanel >
+                        <p:fieldset legend="Datos Personales" styleClass="fieldset" >
                             <h:panelGrid columns="2" cellpadding="2" columnClasses="labelColumn" >
 
                                 <h:outputLabel value="Nombre" />
@@ -45,143 +45,87 @@
                                              disabled="true" />
 
                                 <h:outputLabel value="Telefono" />
-                                <p:inputText value="#{modUsuario.usuario.telefono}"
-                                             disabled="true" />
-
-                                <h:outputLabel value="Fecha de nacimiento" />
-                                <p:calendar value="#{modUsuario.usuario.fechaNacimiento}"
-                                            pattern="dd/MM/yyyy" disabled="true" />
-                            </h:panelGrid>
-                        <p:separator />
-
-                        <h3>Domicilio</h3>
-                            <h:panelGrid columns="2" cellpadding="2" columnClasses="labelColumn" >
-
-                                <h:outputLabel value="Pais" />
-                                <p:inputText value="#{modUsuario.domicilio.pais}"
-                                             disabled="true" />
-
-                                <h:outputLabel value="Provincia" />
-                                <p:inputText value="#{modUsuario.domicilio.provincia}"
-                                              disabled="true" />
-
-                                <h:outputLabel value="Ciudad" />
-                                <p:inputText value="#{modUsuario.domicilio.ciudad}"
-                                             disabled="true" />
-
-                                <h:outputLabel value="Barrio" />
-                                <p:inputText value="#{modUsuario.domicilio.barrio}"
-                                             disabled="true" />
-
-                                <h:outputLabel value="Calle" />
-                                <p:inputText value="#{modUsuario.domicilio.calle}"
-                                             disabled="true"/>
-
-                                <h:outputLabel value="Numero" />
-                                <p:inputText value="#{modUsuario.domicilio.numero}"
-                                             disabled="true"/>
-
-                                <h:outputLabel value="Piso" />
-                                <p:inputText value="#{modUsuario.domicilio.piso}"
-                                             disabled="true"/>
-
-                                <h:outputLabel value="Depto" />
-                                <p:inputText value="#{modUsuario.domicilio.depto}" 
-                                             disabled="true" />
-                                
-                                <p:commandButton value="Editar" actionListener="#{modUsuario.editar}"
-                                         update=":datos :editor"/>
-
-                            </h:panelGrid>
-
-                    </p:outputPanel>
-                    
-                </h:form>
-                <h:form id="editor" >
-                    <p:outputPanel rendered="#{modUsuario.editando}" >
-                        <h3>Datos Personales</h3>
-                            <h:panelGrid columns="2" cellpadding="2" columnClasses="labelColumn" >
-
-                                <h:outputLabel value="Nombre" />
-                                <p:inputText value="#{modUsuario.usuario.nombre}" 
-                                             disabled="true" />
-
-                                <h:outputLabel value="Apellido" />
-                                <p:inputText value="#{modUsuario.usuario.apellido}" 
-                                             disabled="true" />
-
-                                <h:outputLabel value="DNI" />
-                                <p:inputText value="#{modUsuario.usuario.dni}" 
-                                             disabled="true" />
-
-                                <h:outputLabel value="Email" />
-                                <p:inputText value="#{modUsuario.usuario.email}" 
-                                             disabled="true" />
-
-                                <h:outputLabel value="Telefono" />
-                                <p:inputText value="#{modUsuario.telefono}" />
+                                <p:inputText value="#{modUsuario.telefono}"
+                                             disabled="#{not modUsuario.editando}" />
 
                                 <h:outputLabel value="Fecha de nacimiento" />
                                 <p:calendar value="#{modUsuario.fechaNacimiento}"
-                                            required="true" pattern="dd/MM/yyyy" />
+                                            pattern="dd/MM/yyyy" disabled="#{not modUsuario.editando}"
+                                            locale="es" />
                             </h:panelGrid>
+                        </p:fieldset>
 
-                        <h3>Domicilio</h3>    
+                        <p:fieldset legend="Domicilio" styleClass="fieldset" >
                         <h:panelGrid columns="3" cellpadding="2" columnClasses="labelColumn" >
 
-                                <h:outputLabel value="Pais" />
-                                <h:selectOneMenu id="pais" value="#{modUsuario.domicilio.paisId}" required="true"
-                                                 requiredMessage="Valor requerido" >                                
-                                    <f:selectItem itemLabel="Seleccione un pais" itemValue="" />
-                                    <f:selectItems value="#{modUsuario.paises}" />
-                                    <p:ajax event="change" update="provincia growl" process="@this"
-                                            listener="#{modUsuario.actualizarProvincias}" />
-                                </h:selectOneMenu>
-                                <p:message for="pais" />
+                            <h:outputLabel value="Pais" />
+                            <h:selectOneMenu id="pais" value="#{modUsuario.domicilio.paisId}" required="true"
+                                             requiredMessage="Valor requerido" 
+                                             disabled="#{not modUsuario.editando}" >                                
+                                <f:selectItem itemLabel="Seleccione un pais" itemValue="" />
+                                <f:selectItems value="#{modUsuario.paises}" />
+                                <p:ajax event="change" update="provincia growl" process="@this"
+                                        listener="#{modUsuario.actualizarProvincias}" />
+                            </h:selectOneMenu>
+                            <p:message for="pais" />
 
-                                <h:outputLabel value="Provincia" />
-                                <h:selectOneMenu id="provincia" value="#{modUsuario.domicilio.provinciaId}" 
-                                                 required="true" requiredMessage="Valor requerido" >
-                                    <f:selectItem itemLabel="Seleccione una provincia" itemValue="" />
-                                    <f:selectItems value="#{modUsuario.provincias}" />
-                                    <p:ajax event="change" process="@this" />
-                                </h:selectOneMenu>
-                                <p:message for="provincia" />
+                            <h:outputLabel value="Provincia" />
+                            <h:selectOneMenu id="provincia" value="#{modUsuario.domicilio.provinciaId}" 
+                                             required="true" requiredMessage="Valor requerido"
+                                             disabled="#{not modUsuario.editando}" >
+                                <f:selectItem itemLabel="Seleccione una provincia" itemValue="" />
+                                <f:selectItems value="#{modUsuario.provincias}" />
+                                <p:ajax event="change" process="@this" />
+                            </h:selectOneMenu>
+                            <p:message for="provincia" />
 
-                                <h:outputLabel value="Ciudad" />
-                                <p:inputText id="ciudad" value="#{modUsuario.domicilio.ciudad}" />
-                                <p:message for="ciudad" />
+                            <h:outputLabel value="Ciudad" />
+                            <p:inputText id="ciudad" value="#{modUsuario.domicilio.ciudad}"
+                                         disabled="#{not modUsuario.editando}" />
+                            <p:message for="ciudad" />
 
-                                <h:outputLabel value="Barrio" />
-                                <p:inputText id="barrio" value="#{modUsuario.domicilio.barrio}" />
-                                <p:message for="barrio" />
+                            <h:outputLabel value="Barrio" />
+                            <p:inputText id="barrio" value="#{modUsuario.domicilio.barrio}"
+                                         disabled="#{not modUsuario.editando}" />
+                            <p:message for="barrio" />
 
-                                <h:outputLabel value="Calle" />
-                                <p:inputText id="calle" value="#{modUsuario.domicilio.calle}" />
-                                <p:message for="calle" />
+                            <h:outputLabel value="Calle" />
+                            <p:inputText id="calle" value="#{modUsuario.domicilio.calle}"
+                                         disabled="#{not modUsuario.editando}"/>
+                            <p:message for="calle" />
 
-                                <h:outputLabel value="Numero" />
-                                <p:inputText id="numero" value="#{modUsuario.domicilio.numero}" />
-                                <p:message for="numero" />
+                            <h:outputLabel value="Numero" />
+                            <p:inputText id="numero" value="#{modUsuario.domicilio.numero}"
+                                         disabled="#{not modUsuario.editando}"/>
+                            <p:message for="numero" />
 
-                                <h:outputLabel value="Piso" />
-                                <p:inputText id="piso" value="#{modUsuario.domicilio.piso}" />
-                                <p:message for="piso" />
+                            <h:outputLabel value="Piso" />
+                            <p:inputText id="piso" value="#{modUsuario.domicilio.piso}"
+                                         disabled="#{not modUsuario.editando}"/>
+                            <p:message for="piso" />
 
-                                <h:outputLabel value="Depto" />
-                                <p:inputText id="depto" value="#{modUsuario.domicilio.depto}" />
-                                <p:message for="depto" />
+                            <h:outputLabel value="Depto" />
+                            <p:inputText id="depto" value="#{modUsuario.domicilio.depto}" 
+                                         disabled="#{not modUsuario.editando}" />
+                            <p:message for="depto" />
 
-                                <p:commandButton value="Aceptar" actionListener="#{modUsuario.actualizarUsuario}"
-                                                 update=":datos :editor" />
-                                <p:commandButton value="Cancelar" actionListener="#{modUsuario.cancelarEdicion}"
-                                                 update=":datos :editor" />
-                            </h:panelGrid>
-                            <p:growl id="growl" globalOnly="true" />    
-
-                        <!-- </p:panel> -->
-
+                            <p:commandButton value="Editar" actionListener="#{modUsuario.editar}"
+                                             update=":datos :editor"
+                                             rendered="#{not modUsuario.editando}" />
+                            <h:outputText rendered="#{not modUsuario.editando}" />
+                            <h:outputText rendered="#{not modUsuario.editando}" />
+                            
+                            <p:commandButton value="Aceptar" actionListener="#{modUsuario.actualizarUsuario}"
+                                             rendered="#{modUsuario.editando}" update=":datos :editor" />
+                            <p:commandButton value="Cancelar" actionListener="#{modUsuario.cancelarEdicion}"
+                                             rendered="#{modUsuario.editando}" update=":datos :editor" />
+                            <h:outputText rendered="#{modUsuario.editando}" />
+                            
+                        </h:panelGrid>
+                        </p:fieldset>
                     </p:outputPanel>
+
+                
                 </h:form>
             </ui:define>
 

@@ -24,17 +24,17 @@
             <ui:define name="principal">
                 <p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide();"/>
                 <p:dialog modal="true" widgetVar="statusDialog" header="Espere por favor..." 
-                          draggable="false" closable="false">
+                          draggable="false" closable="false" resizable="false" >
                     <p:graphicImage value="#{resource['images:ajaxLoadingBar.gif']}" />
                 </p:dialog>
 
-                <h:form>
+                <h:form style="text-align: center">
                     <h1>Destacar Publicacion</h1>
                     <p>
                         De hacerlo, la misma aparecera antes que otras publicaciones no destacadas, y de
                         esta forma esta incrementando las posibilidades de que su producto sea alquilado.
                     </p>
-                    <h:panelGrid columns="3" cellpadding="5" style="text-align: center; border: 1px solid black" >
+                        <h:panelGrid columns="3" border="1" rules="none" cellpadding="5" style="text-align: center; margin-left: 80px" >
                         <h:outputLabel value="Titulo" />
                         <h:outputLabel value="Fecha de publicacion" />
                         <h:outputLabel value="Fecha de finalizacion" />
@@ -50,7 +50,7 @@
                     <p>
                         El servicio tiene un costo de $<h:outputText value="#{destacarBean.precio}" />
                     </p>
-                    <h:panelGrid columns="2" rowClasses="titleRow,dataRow" >
+                    <h:panelGrid columns="2" columnClasses="leftCol,rightCol" style="width: 100%" >
                         <p:commandLink actionListener="#{destacarBean.destacar}" >
                             <h:graphicImage value="#{resource['images:paypalCheckout.gif']}" />
                         </p:commandLink>

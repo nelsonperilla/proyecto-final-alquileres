@@ -5,6 +5,7 @@
 package com.alquilacosas.ejb.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -49,6 +50,18 @@ public class PedidoCambio implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pedidoCambioFk")
     private List<PedidoCambioXEstado> pedidoCambioXEstadoList;
 
+    public PedidoCambio() {
+        pedidoCambioXEstadoList = new ArrayList<PedidoCambioXEstado>();
+    }
+    
+    public void agregarPedidoCambioXEstado(PedidoCambioXEstado pcxe) {
+        pedidoCambioXEstadoList.add(pcxe);
+    }
+    
+    /*
+     * Getters & Setters
+     */
+    
     public Alquiler getAlquilerFk() {
         return alquilerFk;
     }

@@ -86,8 +86,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
     @EJB
     private PeriodoAlquilerBeanLocal periodoBean;
     @EJB
-    private PrecioBeanLocal precioBean;
-    
+    private PrecioBeanLocal precioBean;    
     @EJB
     private UsuarioFacade usuarioFacade;
     @EJB 
@@ -119,7 +118,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
             Date fechaDesde, Date fechaHasta, boolean destacada, int cantidad,
             int usuarioId, int categoria, List<PrecioDTO> precios,
             List<byte[]> imagenes, int periodoMinimo, int periodoMinimoFk, 
-            int periodoMaximo, int periodoMaximoFk) throws AlquilaCosasException {
+            Integer periodoMaximo, Integer periodoMaximoFk) throws AlquilaCosasException {
 
         Publicacion publicacion = new Publicacion();
         publicacion.setTitulo(titulo);
@@ -169,10 +168,11 @@ public class PublicacionBean implements PublicacionBeanLocal {
         publicacion.setMinPeriodoAlquilerFk(periodo1);
         publicacion.setMinValor(periodoMinimo);
         
-        Periodo periodo2 = periodoFacade.find(periodoMaximoFk);
-        publicacion.setMaxPeriodoAlquilerFk(periodo2);
-        publicacion.setMaxValor(periodoMaximo);
-        
+        if(periodoMaximoFk != null && periodoMaximoFk > 0) {
+            Periodo periodo2 = periodoFacade.find(periodoMaximoFk);;
+            publicacion.setMaxPeriodoAlquilerFk(periodo2);
+            publicacion.setMaxValor(periodoMaximo);
+        }
         // Registrar precios
         Precio precio = null;
         Periodo periodo = null;
@@ -266,7 +266,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
             Date fechaDesde, Date fechaHasta, boolean destacada, int cantidad,
             int usuarioId, int categoria, List<PrecioDTO> precios,
             List<byte[]> imagenesAgregar, List<Integer> imagenesABorrar, 
-            int periodoMinimo, int periodoMinimoFk, int periodoMaximo, int periodoMaximoFk,
+            int periodoMinimo, int periodoMinimoFk, Integer periodoMaximo, Integer periodoMaximoFk,
             NombreEstadoPublicacion estadoPublicacion) throws AlquilaCosasException {
 
         Publicacion publicacion = null;
@@ -339,8 +339,8 @@ public class PublicacionBean implements PublicacionBeanLocal {
         publicacion.setMinPeriodoAlquilerFk(periodo1);
         publicacion.setMinValor(periodoMinimo);
         
-        Periodo periodo2 = periodoFacade.find(periodoMaximoFk);;
-        if(periodo2 != null && periodoMaximo > 0) {
+        if(periodoMaximoFk != null && periodoMaximoFk > 0) {
+            Periodo periodo2 = periodoFacade.find(periodoMaximoFk);;
             publicacion.setMaxPeriodoAlquilerFk(periodo2);  
             publicacion.setMaxValor(periodoMaximo);
         }
@@ -611,7 +611,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
                 //de la disponibilidad total de la publicacion, lo cual significa que no va a alcanzar
                 //ese dia para hacer el pedido ni siquiera de 1 producto
                 
-                while(date.before(fechaFin)){//temp.getFechaFin())){
+                while(date.before(fechaFin)){ //temp.getFechaFin())){
                     dataCounter.put(date.getTime().toString(),new Integer(disponibles));
                     date.add(Calendar.DATE, 1);
                 }
