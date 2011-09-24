@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.prime.com.tr/ui" >
+
+     <!-- INTERFACE -->
+     <cc:interface>
+          <cc:attribute name="var" type="java.lang.Object" required="true" />
+          <cc:attribute name="bean" type="java.lang.Object" required="true"  />    
+          <cc:attribute name="panelDialogo" type="java.lang.String" required="true" />
+          <cc:attribute name="dlgVerReplica" type="java.lang.String" required="true" />
+          <cc:attribute name="metodoVerReplica" type="java.lang.String" required="true" />
+     </cc:interface>
+
+     <!-- IMPLEMENTATION -->
+     <cc:implementation>
+          <div class="itemAlquiler">
+               <h:panelGrid columns="1" >
+                    <h:panelGrid columns="4" >
+                         <h:outputText value="Usuario: "/>
+                         <h:outputText value="#{cc.attrs.var.nombreUsuarioCalificador}"/>
+                         <h:outputText value="Calificación: "/>
+                         <h:outputText value="#{cc.attrs.var.nombrePuntuacion}"/>
+                    </h:panelGrid>
+                    <h:panelGrid columns="1" >
+                         <h:outputText value="#{cc.attrs.var.comentarioCalificacion}" style="font-style:oblique"/>
+                    </h:panelGrid> 
+                    <h:panelGrid columns="1" >
+                         <p:commandButton value="Ver Replica" 
+                                          rendered="#{cc.attrs.var.yaReplico}"
+                                          actionListener="#{cc.attrs.bean[cc.attrs.metodoVerReplica]}"
+                                          update="#{cc.attrs.panelDialogo}"
+                                          oncomplete="#{cc.attrs.dlgVerReplica}.show();" >
+                              <f:attribute name="replica" value="#{cc.attrs.var.comentarioReplica}" />
+                         </p:commandButton>
+                    </h:panelGrid>
+               </h:panelGrid>
+          </div>
+     </cc:implementation>
+</html>

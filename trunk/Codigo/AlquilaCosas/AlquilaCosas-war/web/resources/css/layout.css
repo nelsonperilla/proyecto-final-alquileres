@@ -722,3 +722,23 @@ h1, h2, h3 {
 .rightCol {
     text-align: left;
 }
+
+
+/* --------------------- Reputación -------------------- */
+
+.repPuntLabel {
+     width: 100px;
+     text-align: left;
+}
+.repPuntCant {
+     width: 60px;
+}
+.repPuntPorc {
+     width: 60px;
+}
+.repTable {
+     width: 620px;
+}
+.repTableColumn {
+     vertical-align: top;
+}

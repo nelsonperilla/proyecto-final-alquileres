@@ -57,7 +57,8 @@ public class CalificacionFacade extends AbstractFacade<Calificacion> {
                   + "FROM Alquiler a, Calificacion c "
                   + "WHERE c.alquilerFk = a "
                   + "AND a = :alquiler "
-                  + "AND a.usuarioFk = c.usuarioCalificadorFk");
+                  + "AND a.usuarioFk = c.usuarioCalificadorFk "
+                  + "ORDER BY c.fechaCalificacion DESC");
           query.setParameter("alquiler", alquiler);
           Calificacion calificacion;
           try {
@@ -75,7 +76,8 @@ public class CalificacionFacade extends AbstractFacade<Calificacion> {
                   + "WHERE a.publicacionFk = p "
                   + "AND c.alquilerFk = a "
                   + "AND a = :alquiler "
-                  + "AND p.usuarioFk = c.usuarioCalificadorFk");
+                  + "AND p.usuarioFk = c.usuarioCalificadorFk "
+                  + "ORDER BY c.fechaCalificacion DESC");
           query.setParameter("alquiler", alquiler);
           Calificacion calificacion;
           try {
@@ -115,5 +117,42 @@ public class CalificacionFacade extends AbstractFacade<Calificacion> {
         }
         
         return resultado / contadorDeCalificaciones;
+     }
+
+     public List<Calificacion> getCalificacionAlquilerOfrecidoPorUsuario(Usuario usuario) {
+          Query query = em.createQuery("SELECT c "
+                  + "FROM Alquiler a, Calificacion c, Publicacion p "
+                  + "WHERE a.publicacionFk = p "
+                  + "AND c.alquilerFk = a "
+                  + "AND p.usuarioFk = :usuario "
+                  + "AND c.usuarioCalificadorFk <> :usuario "
+                  + "ORDER BY c.fechaCalificacion DESC");
+          query.setParameter("usuario", usuario);
+          List<Calificacion> calificaciones;
+          try {
+               calificaciones = query.getResultList();
+          }
+          catch (javax.persistence.NoResultException e) {
+               calificaciones = null;
+          }
+          return calificaciones;
+     }
+
+     public List<Calificacion> getCalificacionAlquilerTomadoPorUsuario(Usuario usuario) {
+          Query query = em.createQuery("SELECT c "
+                  + "FROM Alquiler a, Calificacion c "
+                  + "WHERE c.alquilerFk = a "
+                  + "AND a.usuarioFk = :usuario "
+                  + "AND c.usuarioCalificadorFk <> :usuario "
+                  + "ORDER BY c.fechaCalificacion DESC");
+          query.setParameter("usuario", usuario);
+          List<Calificacion> calificaciones;
+          try {
+               calificaciones = query.getResultList();
+          }
+          catch (javax.persistence.NoResultException e) {
+               calificaciones = null;
+          }
+          return calificaciones;
      }
 }

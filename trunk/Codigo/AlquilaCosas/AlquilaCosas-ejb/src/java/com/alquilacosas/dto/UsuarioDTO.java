@@ -13,177 +13,318 @@ import java.util.Date;
  * @author damiancardozo
  */
 public class UsuarioDTO implements Serializable {
-    
-    private Integer id;
-    private String nombre, apellido, email, telefono, dni;
-    private Date fechaNacimiento;
-    private DomicilioDTO domicilio;
-    private String username;
-    private Date fechaDeRegistro;
-    private Long numRoles;
-    private String tipoUsuario;
-    private boolean usuarioRol;
-    private boolean adminRol;
 
-    public UsuarioDTO(Integer id, String nombre, String apellido, String email, 
-            String telefono, String dni, Date fechaNacimiento) {
-        this.id = id;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.email = email;
-        this.telefono = telefono;
-        this.dni = dni;
-        this.fechaNacimiento = fechaNacimiento;
-    }
+     private Integer id;
+     private String nombre, apellido, email, telefono, dni;
+     private Date fechaNacimiento;
+     private DomicilioDTO domicilio;
+     private String username;
+     private Date fechaDeRegistro;
+     private Long numRoles;
+     private String tipoUsuario;
+     private boolean usuarioRol;
+     private boolean adminRol;
+     private double userRating;
+     private double userOfrecePositivas;
+     private double userOfrecePositivasPorcentaje;
+     private double userOfreceNeutrales;
+     private double userOfreceNeutralesPorcentaje;
+     private double userOfreceNegativas;
+     private double userOfreceNegativasPorcentaje;
+     private double userTomaPositivas;
+     private double userTomaPositivasPorcentaje;
+     private double userTomaNeutrales;
+     private double userTomaNeutralesPorcentaje;
+     private double userTomaNegativas;
+     private double userTomaNegativasPorcentaje;
 
-    public UsuarioDTO(Usuario usuario) {
-        this.id = usuario.getUsuarioId();
-        this.nombre = usuario.getNombre();
-        this.apellido = usuario.getApellido();
-        this.email = usuario.getEmail();
-        this.telefono = usuario.getTelefono();
-        this.dni = usuario.getDni();
-        this.fechaNacimiento = usuario.getFechaNac();
-        
-    }
-    
-    
-    public UsuarioDTO( Integer id, String username, String email, String nombre, String apellido,
-            Date fechaDeRegistro, Long numRoles, String tipoUsuario){
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.fechaDeRegistro = fechaDeRegistro;
-        this.numRoles = numRoles;
-        this.tipoUsuario = tipoUsuario;
-        
-        if( numRoles == 1 && tipoUsuario.equalsIgnoreCase("usuario")){
-            usuarioRol = true;
-        } else if( numRoles == 1 && tipoUsuario.equalsIgnoreCase("admin")){
-            adminRol = true;
-        }
-        else if( numRoles == 2 ){
-            usuarioRol = true;
-            adminRol = true;
-        }
-    }
+     public UsuarioDTO(Integer id, String nombre, String apellido, String email,
+             String telefono, String dni, Date fechaNacimiento) {
+          this.id = id;
+          this.nombre = nombre;
+          this.apellido = apellido;
+          this.email = email;
+          this.telefono = telefono;
+          this.dni = dni;
+          this.fechaNacimiento = fechaNacimiento;
+     }
 
-    public UsuarioDTO(){}
-    
-    public String getDni() {
-        return dni;
-    }
+     public UsuarioDTO(Usuario usuario) {
+          this.id = usuario.getUsuarioId();
+          this.nombre = usuario.getNombre();
+          this.apellido = usuario.getApellido();
+          this.email = usuario.getEmail();
+          this.telefono = usuario.getTelefono();
+          this.dni = usuario.getDni();
+          this.fechaNacimiento = usuario.getFechaNac();
 
-    public void setDni(String dni) {
-        this.dni = dni;
-    }
+     }
 
-    public DomicilioDTO getDomicilio() {
-        return domicilio;
-    }
+     public UsuarioDTO(Integer id, String username, String email, String nombre, String apellido,
+             Date fechaDeRegistro, Long numRoles, String tipoUsuario) {
+          this.id = id;
+          this.username = username;
+          this.email = email;
+          this.nombre = nombre;
+          this.apellido = apellido;
+          this.fechaDeRegistro = fechaDeRegistro;
+          this.numRoles = numRoles;
+          this.tipoUsuario = tipoUsuario;
 
-    public void setDomicilio(DomicilioDTO domicilio) {
-        this.domicilio = domicilio;
-    }
+          if (numRoles == 1 && tipoUsuario.equalsIgnoreCase("usuario")) {
+               usuarioRol = true;
+          } else if (numRoles == 1 && tipoUsuario.equalsIgnoreCase("admin")) {
+               adminRol = true;
+          } else if (numRoles == 2) {
+               usuarioRol = true;
+               adminRol = true;
+          }
+     }
 
-    public Date getFechaNacimiento() {
-        return fechaNacimiento;
-    }
+     public UsuarioDTO() {
+     }
+     
+     public String getAntiguedad () {
+          Date actual = new Date();
+          long antiguedad;
+          String unidad;
+          antiguedad = (actual.getTime() - fechaDeRegistro.getTime()) / 86400000L;
+          if (antiguedad > 730) {
+               unidad = " Años";
+               antiguedad = Math.round(antiguedad / 365);
+          }
+          else {
+               if (antiguedad > 365) {
+                    unidad = " Año";
+                    antiguedad = Math.round(antiguedad / 365);
+               }
+               else {
+                    if (antiguedad > 30) {
+                         unidad = " Meses";
+                         antiguedad = Math.round(antiguedad / 30);
+                    }
+                    else {
+                         unidad = " Dias";
+                         antiguedad = Math.round(antiguedad);
+                    }
+               }
+          }
+          return "+" + String.valueOf(antiguedad) + unidad;
+     }
 
-    public void setFechaNacimiento(Date fechaNacimiento) {
-        this.fechaNacimiento = fechaNacimiento;
-    }
+     public String getDni() {
+          return dni;
+     }
 
-    public String getTelefono() {
-        return telefono;
-    }
+     public void setDni(String dni) {
+          this.dni = dni;
+     }
 
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
+     public DomicilioDTO getDomicilio() {
+          return domicilio;
+     }
 
-    public String getApellido() {
-        return apellido;
-    }
+     public void setDomicilio(DomicilioDTO domicilio) {
+          this.domicilio = domicilio;
+     }
 
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
+     public Date getFechaNacimiento() {
+          return fechaNacimiento;
+     }
 
-    public String getEmail() {
-        return email;
-    }
+     public void setFechaNacimiento(Date fechaNacimiento) {
+          this.fechaNacimiento = fechaNacimiento;
+     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+     public String getTelefono() {
+          return telefono;
+     }
 
-    public Integer getId() {
-        return id;
-    }
+     public void setTelefono(String telefono) {
+          this.telefono = telefono;
+     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+     public String getApellido() {
+          return apellido;
+     }
 
-    public String getNombre() {
-        return nombre;
-    }
+     public void setApellido(String apellido) {
+          this.apellido = apellido;
+     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+     public String getEmail() {
+          return email;
+     }
 
-    public Date getFechaDeRegistro() {
-        return fechaDeRegistro;
-    }
+     public void setEmail(String email) {
+          this.email = email;
+     }
 
-    public void setFechaDeRegistro(Date fechaDeRegistro) {
-        this.fechaDeRegistro = fechaDeRegistro;
-    }
+     public Integer getId() {
+          return id;
+     }
 
-    public String getUsername() {
-        return username;
-    }
+     public void setId(Integer id) {
+          this.id = id;
+     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+     public String getNombre() {
+          return nombre;
+     }
 
-    public Long getNumRoles() {
-        return numRoles;
-    }
+     public void setNombre(String nombre) {
+          this.nombre = nombre;
+     }
 
-    public void setNumRoles(Long numRoles) {
-        this.numRoles = numRoles;
-    }
+     public Date getFechaDeRegistro() {
+          return fechaDeRegistro;
+     }
 
-    public String getTipoUsuario() {
-        return tipoUsuario;
-    }
+     public void setFechaDeRegistro(Date fechaDeRegistro) {
+          this.fechaDeRegistro = fechaDeRegistro;
+     }
 
-    public void setTipoUsuario(String tipoUsuario) {
-        this.tipoUsuario = tipoUsuario;
-    }
+     public String getUsername() {
+          return username;
+     }
 
-    public boolean isAdminRol() {
-        return adminRol;
-    }
+     public void setUsername(String username) {
+          this.username = username;
+     }
 
-    public void setAdminRol(boolean adminRol) {
-        this.adminRol = adminRol;
-    }
+     public Long getNumRoles() {
+          return numRoles;
+     }
 
-    public boolean isUsuarioRol() {
-        return usuarioRol;
-    }
+     public void setNumRoles(Long numRoles) {
+          this.numRoles = numRoles;
+     }
 
-    public void setUsuarioRol(boolean usuarioRol) {
-        this.usuarioRol = usuarioRol;
-    }
-    
-    
-    
+     public String getTipoUsuario() {
+          return tipoUsuario;
+     }
+
+     public void setTipoUsuario(String tipoUsuario) {
+          this.tipoUsuario = tipoUsuario;
+     }
+
+     public boolean isAdminRol() {
+          return adminRol;
+     }
+
+     public void setAdminRol(boolean adminRol) {
+          this.adminRol = adminRol;
+     }
+
+     public boolean isUsuarioRol() {
+          return usuarioRol;
+     }
+
+     public void setUsuarioRol(boolean usuarioRol) {
+          this.usuarioRol = usuarioRol;
+     }
+
+     public double getUserOfreceNegativas() {
+          return userOfreceNegativas;
+     }
+
+     public void setUserOfreceNegativas(double userOfreceNegativas) {
+          this.userOfreceNegativas = userOfreceNegativas;
+     }
+
+     public double getUserOfreceNegativasPorcentaje() {
+          return userOfreceNegativasPorcentaje;
+     }
+
+     public void setUserOfreceNegativasPorcentaje(double userOfreceNegativasPorcentaje) {
+          this.userOfreceNegativasPorcentaje = userOfreceNegativasPorcentaje;
+     }
+
+     public double getUserOfreceNeutrales() {
+          return userOfreceNeutrales;
+     }
+
+     public void setUserOfreceNeutrales(double userOfreceNeutrales) {
+          this.userOfreceNeutrales = userOfreceNeutrales;
+     }
+
+     public double getUserOfreceNeutralesPorcentaje() {
+          return userOfreceNeutralesPorcentaje;
+     }
+
+     public void setUserOfreceNeutralesPorcentaje(double userOfreceNeutralesPorcentaje) {
+          this.userOfreceNeutralesPorcentaje = userOfreceNeutralesPorcentaje;
+     }
+
+     public double getUserOfrecePositivas() {
+          return userOfrecePositivas;
+     }
+
+     public void setUserOfrecePositivas(double userOfrecePositivas) {
+          this.userOfrecePositivas = userOfrecePositivas;
+     }
+
+     public double getUserOfrecePositivasPorcentaje() {
+          return userOfrecePositivasPorcentaje;
+     }
+
+     public void setUserOfrecePositivasPorcentaje(double userOfrecePositivasPorcentaje) {
+          this.userOfrecePositivasPorcentaje = userOfrecePositivasPorcentaje;
+     }
+
+     public double getUserRating() {
+          return userRating;
+     }
+
+     public void setUserRating(double userRating) {
+          this.userRating = userRating;
+     }
+
+     public double getUserTomaNegativas() {
+          return userTomaNegativas;
+     }
+
+     public void setUserTomaNegativas(double userTomaNegativas) {
+          this.userTomaNegativas = userTomaNegativas;
+     }
+
+     public double getUserTomaNegativasPorcentaje() {
+          return userTomaNegativasPorcentaje;
+     }
+
+     public void setUserTomaNegativasPorcentaje(double userTomaNegativasPorcentaje) {
+          this.userTomaNegativasPorcentaje = userTomaNegativasPorcentaje;
+     }
+
+     public double getUserTomaNeutrales() {
+          return userTomaNeutrales;
+     }
+
+     public void setUserTomaNeutrales(double userTomaNeutrales) {
+          this.userTomaNeutrales = userTomaNeutrales;
+     }
+
+     public double getUserTomaNeutralesPorcentaje() {
+          return userTomaNeutralesPorcentaje;
+     }
+
+     public void setUserTomaNeutralesPorcentaje(double userTomaNeutralesPorcentaje) {
+          this.userTomaNeutralesPorcentaje = userTomaNeutralesPorcentaje;
+     }
+
+     public double getUserTomaPositivas() {
+          return userTomaPositivas;
+     }
+
+     public void setUserTomaPositivas(double userTomaPositivas) {
+          this.userTomaPositivas = userTomaPositivas;
+     }
+
+     public double getUserTomaPositivasPorcentaje() {
+          return userTomaPositivasPorcentaje;
+     }
+
+     public void setUserTomaPositivasPorcentaje(double userTomaPositivasPorcentaje) {
+          this.userTomaPositivasPorcentaje = userTomaPositivasPorcentaje;
+     }
 }

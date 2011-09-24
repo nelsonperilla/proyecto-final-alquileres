@@ -46,6 +46,11 @@
             <to-view-id>/vistas/mostrarPublicacion.xhtml?id=#{alquileresTomados.publicacionId}</to-view-id>
             <redirect/>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>verReputacion</from-outcome>
+            <to-view-id>/vistas/verReputacion.xhtml?id=#{alquileresTomados.usuarioId}</to-view-id>
+            <redirect/>
+        </navigation-case>
     </navigation-rule>
     
     <navigation-rule>
@@ -53,6 +58,11 @@
         <navigation-case>
             <from-outcome>mostrarPublicacion</from-outcome>
             <to-view-id>/vistas/mostrarPublicacion.xhtml?id=#{alquileresOfrecidos.publicacionId}</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>verReputacion</from-outcome>
+            <to-view-id>/vistas/verReputacion.xhtml?id=#{alquileresTomados.usuarioId}</to-view-id>
             <redirect/>
         </navigation-case>
     </navigation-rule>

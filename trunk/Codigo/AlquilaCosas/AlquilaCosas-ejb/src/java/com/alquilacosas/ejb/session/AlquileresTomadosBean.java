@@ -80,40 +80,25 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
         Usuario usuario = usuarioFacade.find(usuarioId);
         List<Alquiler> alquileres = alquilerFacade.getAlquileresTomadosFinalizadosSinCalificar(usuario);
         return convertirAlquileres(alquileres, usuario);
-//        List<AlquilerDTO> alquileresDTO = new ArrayList<AlquilerDTO>();
-//        for (Alquiler a : alquileres) {
-//            boolean calificado = false;
-//            Publicacion pub = a.getPublicacionFk();
-//            Usuario dueno = pub.getUsuarioFk();
-//            EstadoAlquiler estado = estadoFacade.getEstadoAlquiler(a);
-//            List<ImagenPublicacion> imagenes = pub.getImagenPublicacionList();
-//            int imagenId = -1;
-//            if (!imagenes.isEmpty()) {
-//                imagenId = imagenes.get(0).getImagenPublicacionId();
-//            }
-//            alquileresDTO.add(new AlquilerDTO(pub.getPublicacionId(), usuarioId,
-//                    a.getAlquilerId(), imagenId, a.getFechaInicio(), a.getFechaFin(),
-//                    estado.getNombre(), pub.getTitulo(),
-//                    dueno.getNombre(), a.getCantidad(), a.getMonto(), calificado));
-//        }
-//        return alquileresDTO;
     }
 
     @Override
-    public void registrarCalificacion(Integer puntuacion, Integer alquilerId, String comentario, Integer usuarioId) {
-        Alquiler alquiler = alquilerFacade.find(alquilerId);
-        Usuario usuario = usuarioFacade.find(usuarioId);
-        Puntuacion nuevaPuntuacion = puntuacionFacade.find(puntuacion);
-
-        Calificacion nuevaCalificacion = new Calificacion();
-        nuevaCalificacion.setFechaCalificacion(new Date());
-        nuevaCalificacion.setPuntuacionFk(nuevaPuntuacion);
-        nuevaCalificacion.setComentarioCalificador(comentario);
-        nuevaCalificacion.setUsuarioCalificadorFk(usuario);
-
-        alquiler.agregarCalificacion(nuevaCalificacion);
-        alquilerFacade.edit(alquiler);
-    }
+     public void registrarCalificacion(Integer puntuacion, Integer alquilerId, String comentario, Integer usuarioId) {
+          Alquiler alquiler = alquilerFacade.find(alquilerId);
+          Usuario usuarioCalificado = alquiler.getPublicacionFk().getUsuarioFk();
+          Usuario usuario = usuarioFacade.find(usuarioId);
+          Puntuacion nuevaPuntuacion = puntuacionFacade.find(puntuacion);
+          
+          Calificacion nuevaCalificacion = new Calificacion();
+          nuevaCalificacion.setUsuarioReplicadorFk(usuarioCalificado);
+          nuevaCalificacion.setFechaCalificacion(new Date());
+          nuevaCalificacion.setPuntuacionFk(nuevaPuntuacion);
+          nuevaCalificacion.setComentarioCalificador(comentario);          
+          nuevaCalificacion.setUsuarioCalificadorFk(usuario);
+          
+          alquiler.agregarCalificacion(nuevaCalificacion);
+          alquilerFacade.edit(alquiler);
+     }
 
     @Override
     public List<Puntuacion> getPuntuaciones() {
@@ -126,30 +111,7 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
     public List<AlquilerDTO> getAlquileresActivosPorUsuario(int usuarioId) {
         Usuario usuario = entityManager.find(Usuario.class, usuarioId);
         List<Alquiler> alquileres = alquilerFacade.getAlquileresTomadosActivos(usuario);
-//        List<AlquilerDTO> alquileresDTO = new ArrayList<AlquilerDTO>();
         return convertirAlquileres(alquileres, usuario);
-//        for (Alquiler a : alquileres) {
-//            AlquilerDTO alquilerDTO = new AlquilerDTO();
-//            alquilerDTO.setIdPublicacion(a.getPublicacionFk().getPublicacionId());
-//            alquilerDTO.setIdUsuario(a.getUsuarioFk().getUsuarioId());
-//            alquilerDTO.setIdAlquiler(a.getAlquilerId());
-//            alquilerDTO.setFechaInicio(a.getFechaInicio());
-//            alquilerDTO.setFechaFin(a.getFechaFin());
-//            alquilerDTO.setCantidad(a.getCantidad());
-//            alquilerDTO.setMonto(a.getMonto());
-//            alquilerDTO.setCalificado(false);
-//            AlquilerXEstado alquilerXEstado = alquilerXEstadoFacade.findByAlquiler(a.getAlquilerId());
-//            alquilerDTO.setEstadoAlquiler(alquilerXEstado.getEstadoAlquilerFk().getNombre());
-//            int imagenId = -1;
-//            if (!a.getPublicacionFk().getImagenPublicacionList().isEmpty()) {
-//                imagenId = a.getPublicacionFk().getImagenPublicacionList().get(0).getImagenPublicacionId();
-//            }
-//            alquilerDTO.setImagenId(imagenId);
-//            alquilerDTO.setTitulo(a.getPublicacionFk().getTitulo());
-//
-//            alquileresDTO.add(alquilerDTO);
-//        }
-//        return alquileresDTO;
     }
 
     @Override
@@ -157,29 +119,6 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
         Usuario usuario = entityManager.find(Usuario.class, usuarioId);
         List<Alquiler> alquileres = alquilerFacade.getAlquileresTomadosFinalizadosConCalificacion(usuario);
         return convertirAlquileres(alquileres, usuario);
-//        List<AlquilerDTO> alquileresDTO = new ArrayList<AlquilerDTO>();
-//        for (Alquiler a : alquileres) {
-//            AlquilerDTO alquilerDTO = new AlquilerDTO();
-//            alquilerDTO.setIdPublicacion(a.getPublicacionFk().getPublicacionId());
-//            alquilerDTO.setIdUsuario(a.getUsuarioFk().getUsuarioId());
-//            alquilerDTO.setIdAlquiler(a.getAlquilerId());
-//            alquilerDTO.setFechaInicio(a.getFechaInicio());
-//            alquilerDTO.setFechaFin(a.getFechaFin());
-//            alquilerDTO.setCantidad(a.getCantidad());
-//            alquilerDTO.setMonto(a.getMonto());
-//            alquilerDTO.setCalificado(true);
-//            AlquilerXEstado alquilerXEstado = alquilerXEstadoFacade.findByAlquiler(a.getAlquilerId());
-//            alquilerDTO.setEstadoAlquiler(alquilerXEstado.getEstadoAlquilerFk().getNombre());
-//            int imagenId = -1;
-//            if (!a.getPublicacionFk().getImagenPublicacionList().isEmpty()) {
-//                imagenId = a.getPublicacionFk().getImagenPublicacionList().get(0).getImagenPublicacionId();
-//            }
-//            alquilerDTO.setImagenId(imagenId);
-//            alquilerDTO.setTitulo(a.getPublicacionFk().getTitulo());
-//
-//            alquileresDTO.add(alquilerDTO);
-//        }
-//        return alquileresDTO;
     }
 
     @Override
