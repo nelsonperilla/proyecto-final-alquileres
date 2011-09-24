@@ -119,6 +119,19 @@
 
                                 
                                     <h:panelGrid  columns="3" cellpadding="2" cellspacing="4" >
+                                        <h:outputLabel value="Periodo minimo:"/>
+                                        <h:panelGroup>
+                                            <h:outputLabel value="#{publicacionDesplegada.publicacion.periodoMinimoValor} "/>
+                                            <h:outputLabel value="#{publicacionDesplegada.publicacion.periodoMinimo.nombre}"/>
+                                        </h:panelGroup>
+                                        <p:separator style="width: 10px"/>
+                                        <h:outputLabel value="Periodo maximo:"/>
+                                        <h:panelGroup>
+                                            <h:outputLabel value="#{publicacionDesplegada.publicacion.periodoMaximoValor} "/>
+                                            <h:outputLabel value="#{publicacionDesplegada.publicacion.periodoMaximo.nombre}"/>
+                                        </h:panelGroup>
+                                        <p:separator style="width: 10px"/>
+
                                         <h:outputLabel  value="Tiempo solicitado:" />
                                         <h:panelGroup>
                                             <p:inputText id="tiempoSolicitado" value="#{publicacionDesplegada.periodoAlquiler}" 
@@ -138,7 +151,7 @@
                                             rendered ="#{publicacionDesplegada.periodoSeleccionado == 1}"/>
                                         <p:inputText id="horaInicio" required="true"  
                                                 value="#{publicacionDesplegada.horaInicioAlquiler}" 
-                                                style="width:50px; text-align: right" 
+                                                style="width:50px; text-align: right"
                                                 requiredMessage="Valor requerido" 
                                                 rendered ="#{publicacionDesplegada.periodoSeleccionado == 1}"
                                                 onfocus="jQuery('#horaInicio').timepicker({stepMinute: 15});" />
