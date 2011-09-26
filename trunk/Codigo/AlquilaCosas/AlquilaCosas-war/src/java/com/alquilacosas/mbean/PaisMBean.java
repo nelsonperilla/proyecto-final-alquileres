@@ -7,6 +7,7 @@ package com.alquilacosas.mbean;
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.ejb.entity.Pais;
 import com.alquilacosas.ejb.session.PaisBeanLocal;
+import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -22,7 +23,7 @@ import org.primefaces.event.RowEditEvent;
  */
 @ManagedBean(name="pais")
 @ViewScoped
-public class PaisMBean {
+public class PaisMBean implements Serializable {
      
      @EJB
      private PaisBeanLocal paisBean;

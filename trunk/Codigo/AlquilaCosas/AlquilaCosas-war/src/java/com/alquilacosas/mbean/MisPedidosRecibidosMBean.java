@@ -7,6 +7,7 @@ package com.alquilacosas.mbean;
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.AlquilerDTO;
 import com.alquilacosas.ejb.session.AlquilerBeanLocal;
+import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -23,7 +24,7 @@ import javax.faces.event.ActionEvent;
  */
 @ManagedBean (name = "misPedidosRecibidos")
 @ViewScoped
-public class MisPedidosRecibidosMBean {
+public class MisPedidosRecibidosMBean implements Serializable {
     
     @EJB
     private AlquilerBeanLocal alquilerBean;
@@ -90,7 +91,7 @@ public class MisPedidosRecibidosMBean {
     }
     
     public String mostrarUsuario(){
-        return "mostrarUsuario";    
+        return "verReputacionUsuario";    
     }
     
     /**

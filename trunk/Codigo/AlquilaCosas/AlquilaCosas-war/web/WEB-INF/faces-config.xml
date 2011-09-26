@@ -29,7 +29,7 @@
             <redirect/>
         </navigation-case>
         <navigation-case>
-            <from-outcome>verReputacion</from-outcome>
+            <from-outcome>verReputacionUsuario</from-outcome>
             <to-view-id>/vistas/verReputacion.xhtml?id=#{misPedidosRecibidos.usuarioId}</to-view-id>
             <redirect/>
         </navigation-case>
@@ -43,7 +43,7 @@
             <redirect/>
         </navigation-case>
         <navigation-case>
-            <from-outcome>verReputacion</from-outcome>
+            <from-outcome>verReputacionUsuario</from-outcome>
             <to-view-id>/vistas/verReputacion.xhtml?id=#{misPedidosRealizados.usuarioId}</to-view-id>
             <redirect/>
         </navigation-case>
@@ -57,7 +57,7 @@
             <redirect/>
         </navigation-case>
         <navigation-case>
-            <from-outcome>verReputacion</from-outcome>
+            <from-outcome>verReputacionUsuario</from-outcome>
             <to-view-id>/vistas/verReputacion.xhtml?id=#{alquileresTomados.usuarioId}</to-view-id>
             <redirect/>
         </navigation-case>
@@ -71,7 +71,7 @@
             <redirect/>
         </navigation-case>
         <navigation-case>
-            <from-outcome>verReputacion</from-outcome>
+            <from-outcome>verReputacionUsuario</from-outcome>
             <to-view-id>/vistas/verReputacion.xhtml?id=#{alquileresOfrecidos.usuarioId}</to-view-id>
             <redirect/>
         </navigation-case>

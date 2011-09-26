@@ -77,9 +77,9 @@ public class AlquileresTomadosMBean implements Serializable {
           if(usuarioLogueadoId == null)
               return;
           filtros = new ArrayList<SelectItem>();
-          filtros.add(new SelectItem(0, "Confirmados Y Activos"));
-          filtros.add(new SelectItem(1, "Finalizado SIN Calificación"));
-          filtros.add(new SelectItem(2, "Finalizado CON Calificación"));
+          filtros.add(new SelectItem(0, "Alquileres vigentes"));
+          filtros.add(new SelectItem(1, "Alquileres finalizados sin calificar"));
+          filtros.add(new SelectItem(2, "Alquileres finalizados calificados"));
           filtroSeleccionado = 1;
           puntuaciones = new ArrayList<SelectItem>();
           List<Puntuacion> listaPuntuacion = alquileresTomadosBean.getPuntuaciones();
@@ -116,7 +116,7 @@ public class AlquileresTomadosMBean implements Serializable {
     }
 
      public String verUsuario() {
-          return "verReputacion";
+          return "verReputacionUsuario";
      }
 
     public void prepararCalificar(ActionEvent event) {

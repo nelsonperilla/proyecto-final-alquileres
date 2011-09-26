@@ -9,6 +9,7 @@ import com.alquilacosas.dto.CategoriaDTO;
 import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.session.BuscarPublicacionBeanLocal;
 import com.alquilacosas.ejb.session.CategoriaBeanLocal;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
@@ -24,7 +25,7 @@ import org.primefaces.model.LazyDataModel;
  */
 @ManagedBean(name = "verCategoriaBean")
 @ViewScoped
-public class VerCategoriaMBean {
+public class VerCategoriaMBean implements Serializable {
 
     @EJB
     private CategoriaBeanLocal categoriaBean;

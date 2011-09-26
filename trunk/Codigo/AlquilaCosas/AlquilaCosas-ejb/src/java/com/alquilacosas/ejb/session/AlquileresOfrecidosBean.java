@@ -408,7 +408,7 @@ public class AlquileresOfrecidosBean implements AlquileresOfrecidosBeanLocal {
             if (!imagenes.isEmpty()) {
                 imagenId = imagenes.get(0).getImagenPublicacionId();
             }
-            AlquilerDTO dto = new AlquilerDTO(pub.getPublicacionId(), usuario.getUsuarioId(),
+            AlquilerDTO dto = new AlquilerDTO(pub.getPublicacionId(), a.getUsuarioFk().getUsuarioId(),
                     a.getAlquilerId(), imagenId, a.getFechaInicio(), a.getFechaFin(),
                     estado.getNombre(), pub.getTitulo(),
                     alquilador.getUsername(), a.getCantidad(), a.getMonto(), calificado);

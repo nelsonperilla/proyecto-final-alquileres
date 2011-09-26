@@ -77,8 +77,8 @@ public class AlquileresOfrecidosMBean implements Serializable {
 
         filtros = new ArrayList<SelectItem>();
         filtros.add(new SelectItem(1, "Alquileres vigentes"));
-        filtros.add(new SelectItem(2, "Alquileres sin calificar"));
-        filtros.add(new SelectItem(3, "Alquileres calificados"));
+        filtros.add(new SelectItem(2, "Alquileres finalizados sin calificar"));
+        filtros.add(new SelectItem(3, "Alquileres finalizados calificados"));
         filtroSeleccionado = 1;
 
     }
@@ -105,7 +105,7 @@ public class AlquileresOfrecidosMBean implements Serializable {
     }
 
     public String verUsuario() {
-        return "";
+        return "verReputacionUsuario";
     }
 
     public void prepararCalificar(ActionEvent event) {

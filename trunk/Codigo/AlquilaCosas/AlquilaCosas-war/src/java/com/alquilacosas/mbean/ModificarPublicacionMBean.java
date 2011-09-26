@@ -15,6 +15,7 @@ import com.alquilacosas.ejb.entity.ImagenPublicacion;
 import com.alquilacosas.ejb.session.CategoriaBeanLocal;
 import com.alquilacosas.ejb.session.PeriodoAlquilerBeanLocal;
 import com.alquilacosas.ejb.session.PublicacionBeanLocal;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -35,7 +36,7 @@ import org.primefaces.event.FileUploadEvent;
  */
 @ManagedBean(name = "modPublicacion")
 @ViewScoped
-public class ModificarPublicacionMBean {
+public class ModificarPublicacionMBean implements Serializable {
 
     @EJB
     private PublicacionBeanLocal publicacionBean;

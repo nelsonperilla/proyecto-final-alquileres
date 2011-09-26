@@ -8,6 +8,7 @@ import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.ComentarioDTO;
 import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.session.PublicacionBeanLocal;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -24,7 +25,7 @@ import javax.faces.context.FacesContext;
  */
 @ManagedBean (name = "desplieguePreguntas")
 @ViewScoped
-public class ResponderPreguntasMBean {
+public class ResponderPreguntasMBean implements Serializable {
 
     @EJB
     private PublicacionBeanLocal publicationBean;

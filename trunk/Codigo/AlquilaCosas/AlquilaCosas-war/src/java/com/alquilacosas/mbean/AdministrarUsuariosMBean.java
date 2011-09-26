@@ -6,6 +6,7 @@ package com.alquilacosas.mbean;
 
 import com.alquilacosas.dto.UsuarioDTO;
 import com.alquilacosas.ejb.session.AdministrarUsuariosBeanLocal;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -22,7 +23,7 @@ import org.primefaces.event.RowEditEvent;
  */
 @ManagedBean (name = "administrarUsuarios")
 @ViewScoped
-public class AdministrarUsuariosMBean {
+public class AdministrarUsuariosMBean implements Serializable {
     
     @EJB
     private AdministrarUsuariosBeanLocal usuarioBean;
