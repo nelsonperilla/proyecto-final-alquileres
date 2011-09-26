@@ -6,6 +6,7 @@ package com.alquilacosas.mbean;
 
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.ejb.session.LoginBeanLocal;
+import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -20,7 +21,7 @@ import javax.faces.context.FacesContext;
  */
 @ManagedBean(name="passwordBean")
 @ViewScoped
-public class CambiarPasswordMBean {
+public class CambiarPasswordMBean implements Serializable {
 
     @EJB
     private LoginBeanLocal loginBean;

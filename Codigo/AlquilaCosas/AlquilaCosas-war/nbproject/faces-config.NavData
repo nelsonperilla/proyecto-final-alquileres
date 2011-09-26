@@ -17,9 +17,9 @@
         <Node id="vistas/usuarioCreado.xhtml" x="400" y="600" zoom="true"/>
         <Node id="vistas/usuario/modificarUsuario.xhtml" x="900" y="300" zoom="true"/>
         <Node id="vistas/resultados.xhtml" x="1400" y="150" zoom="true"/>
+        <Node id="vistas/admin/periodosAlquiler.xhtml" x="1150" y="600" zoom="true"/>
         <Node id="vistas/mostrarPublicacion.xhtml?id=#{resultadosBean.publicacionSeleccionada}" x="1400" y="450" zoom="true"/>
         <Node id="vistas/usuario/nuevaPublicacion.xhtml" x="1150" y="150" zoom="true"/>
-        <Node id="vistas/admin/periodosAlquiler.xhtml" x="1150" y="600" zoom="true"/>
         <Node id="vistas/verCategoria.xhtml" x="400" y="900" zoom="true"/>
         <Node id="vistas/usuarioCreado.xhtml?email=#{regUsuario.email}" x="1400" y="600" zoom="true"/>
         <Node id="vistas/activarCuenta.xhtml" x="650" y="450" zoom="true"/>
@@ -31,27 +31,28 @@
         <Node id="resources/comps/adminPanel.xhtml" x="900" y="450" zoom="true"/>
         <Node id="vistas/resultados.xhtml?art=#{buscarBean.buscar}" x="1150" y="300" zoom="true"/>
         <Node id="vistas/verCategoria.xhtml?id=#{menuCatBean.categoriaSeleccionada}" x="150" y="1050" zoom="true"/>
-        <Node id="resources/comps/loginOnPage.xhtml" x="2650" y="150" zoom="true"/>
-        <Node id="vistas/admin/paises.xhtml" x="900" y="150" zoom="true"/>
+        <Node id="resources/comps/loginOnPage.xhtml" x="150" y="1500" zoom="true"/>
         <Node id="vistas/usuario/modificarPublicacion.xhtml" x="650" y="750" zoom="true"/>
+        <Node id="vistas/admin/paises.xhtml" x="900" y="150" zoom="true"/>
         <Node id="resources/comps/alquiler.xhtml" x="150" y="1350" zoom="true"/>
         <Node id="vistas/mostrarPublicacion.xhtml?id=#{misPedidosRecibidos.publicacionId}" x="1900" y="450" zoom="true"/>
         <Node id="vistas/pagoConfirmado.xhtml" x="2150" y="300" zoom="true"/>
-        <Node id="vistas/usuario/misPedidosRealizados.xhtml" x="150" y="1500" zoom="true"/>
+        <Node id="vistas/usuario/misPedidosRealizados.xhtml" x="1150" y="900" zoom="true"/>
         <Node id="vistas/usuario/misAlquileresTomados.xhtml" x="650" y="1050" zoom="true"/>
         <Node id="vistas/admin/categorias.xhtml" x="400" y="750" zoom="true"/>
         <Node id="resources/comps/itemPedido.xhtml" x="1150" y="750" zoom="true"/>
         <Node id="vistas/terminos.html" x="150" y="1200" zoom="true"/>
-        <Node id="vistas/mostrarPublicacion.xhtml?id=#{alquileresOfrecidos.publicacionId}" x="900" y="1050" zoom="true"/>
+        <Node id="vistas/mostrarPublicacion.xhtml?id=#{alquileresTomados.publicacionId}" x="650" y="1200" zoom="true"/>
+        <Node id="vistas/mostrarPublicacion.xhtml?id=#{alquileresOfrecidos.publicacionId}" x="400" y="1350" zoom="true"/>
         <Node id="vistas/registrarUsuario.xhtml" x="650" y="300" zoom="true"/>
-        <Node id="vistas/usuario/destacarPublicacion.xhtml?id=#{publicacion.publicacionId}" x="650" y="1200" zoom="true"/>
+        <Node id="vistas/usuario/destacarPublicacion.xhtml?id=#{publicacion.publicacionId}" x="2650" y="150" zoom="true"/>
+        <Node id="vistas/mostrarPublicacion.xhtml?id=#{misPedidosRealizados.publicacionId}" x="2400" y="300" zoom="true"/>
         <Node id="vistas/usuario/misPedidosRecibidos.xhtml" x="400" y="1200" zoom="true"/>
-        <Node id="vistas/mostrarPublicacion.xhtml?id=#{misPedidosRealizados.publicacionId}" x="400" y="1350" zoom="true"/>
         <Node id="vistas/usuario/modificarPublicacion.xhtml?id=#{misPublicaciones.publicacionId}" x="1150" y="450" zoom="true"/>
         <Node id="resources/comps/highlightItems.xhtml" x="400" y="150" zoom="true"/>
         <Node id="resources/templates/masterPage.xhtml" x="400" y="450" zoom="true"/>
         <Node id="vistas/inicio.xhtml" x="150" y="150" zoom="true"/>
-        <Node id="vistas/usuario/pruebaCalificar.xhtml" x="1150" y="900" zoom="true"/>
+        <Node id="vistas/usuario/pruebaCalificar.xhtml" x="900" y="1050" zoom="true"/>
         <Node id="vistas/usuario/destacarPublicacion.xhtml" x="1400" y="750" zoom="true"/>
         <Node id="vistas/admin/provincias.xhtml" x="1900" y="300" zoom="true"/>
         <Node id="resources/comps/userPanel.xhtml" x="150" y="600" zoom="true"/>

@@ -9,6 +9,7 @@ import com.alquilacosas.ejb.entity.Pais;
 import com.alquilacosas.ejb.entity.Provincia;
 import com.alquilacosas.ejb.session.PaisBeanLocal;
 import com.alquilacosas.ejb.session.ProvinciaBeanLocal;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -26,7 +27,7 @@ import org.primefaces.event.RowEditEvent;
  */
 @ManagedBean(name = "provincia")
 @ViewScoped
-public class ProvinciaMBean {
+public class ProvinciaMBean implements Serializable {
 
      @EJB
      private PaisBeanLocal paisBean;

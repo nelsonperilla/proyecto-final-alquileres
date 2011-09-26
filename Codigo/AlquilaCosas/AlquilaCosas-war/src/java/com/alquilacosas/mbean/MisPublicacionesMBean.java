@@ -7,6 +7,7 @@ package com.alquilacosas.mbean;
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.session.MisPublicacionesBeanLocal;
+import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -22,7 +23,7 @@ import javax.faces.context.FacesContext;
  */
 @ManagedBean(name = "misPublicaciones")
 @ViewScoped
-public class MisPublicacionesMBean {
+public class MisPublicacionesMBean implements Serializable {
 
     @EJB
     private MisPublicacionesBeanLocal misPublicacionesBean;

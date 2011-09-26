@@ -8,6 +8,7 @@ import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.PeriodoDTO;
 import com.alquilacosas.ejb.entity.Periodo;
 import com.alquilacosas.ejb.session.PeriodoAlquilerBeanLocal;
+import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -23,7 +24,7 @@ import org.primefaces.event.RowEditEvent;
  */
 @ManagedBean(name = "periodo")
 @ViewScoped
-public class PeriodoAlquilerMBean{
+public class PeriodoAlquilerMBean implements Serializable {
 
      /** Creates a new instance of PeriodoAlquilerMBean */
      public PeriodoAlquilerMBean() {

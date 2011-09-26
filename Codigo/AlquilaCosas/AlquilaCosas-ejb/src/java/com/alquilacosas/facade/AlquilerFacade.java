@@ -210,7 +210,8 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
                   + "AND a.usuarioFk = :usuario "
                   + "AND NOT EXISTS (SELECT c FROM Calificacion c "
                   + "WHERE c.alquilerFk = a "
-                  + "AND c.usuarioCalificadorFk = :usuario)");
+                  + "AND c.usuarioCalificadorFk = :usuario) "
+                  + "ORDER BY a.fechaInicio DESC");
           query.setParameter("usuario", usuario);
           query.setParameter("estadoFin", EstadoAlquiler.NombreEstadoAlquiler.FINALIZADO);
           query.setParameter("estadoCancelado", EstadoAlquiler.NombreEstadoAlquiler.CANCELADO);
@@ -225,7 +226,8 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
                   + "AND axe.estadoAlquilerFk = e "
                   + "AND (e.nombre = :estadoAct OR e.nombre = :estadoConf)"
                   + "AND axe.fechaHasta IS NULL "
-                  + "AND a.usuarioFk = :usuario ");
+                  + "AND a.usuarioFk = :usuario "
+                  + "ORDER BY a.fechaInicio DESC");
           query.setParameter("usuario", usuario);
           query.setParameter("estadoAct", EstadoAlquiler.NombreEstadoAlquiler.ACTIVO);
           query.setParameter("estadoConf", EstadoAlquiler.NombreEstadoAlquiler.CONFIRMADO);
@@ -241,7 +243,8 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
                   + "AND axe.fechaHasta IS NULL "
                   + "AND a.usuarioFk = :usuario "
                   + "AND c.alquilerFk = a "
-                  + "AND c.usuarioCalificadorFk = :usuario");
+                  + "AND c.usuarioCalificadorFk = :usuario "
+                  + "ORDER BY a.fechaInicio DESC");
           query.setParameter("usuario", usuario);
           query.setParameter("estadoFin", EstadoAlquiler.NombreEstadoAlquiler.FINALIZADO);
           query.setParameter("estadoCan", EstadoAlquiler.NombreEstadoAlquiler.CANCELADO);
@@ -262,7 +265,8 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
                 + " a.alquilerId = axe.alquilerFk.alquilerId "
                 + "AND axe.estadoAlquilerFk.estadoAlquilerId = ea.estadoAlquilerId "
                 + "AND axe.fechaHasta IS NULL "
-                + "AND (ea.nombre = :estadoConf OR ea.nombre = :estadoAct)");
+                + "AND (ea.nombre = :estadoConf OR ea.nombre = :estadoAct) "
+                + "ORDER BY a.fechaInicio DESC");
         query.setParameter("usuario", usuario);
         query.setParameter("estadoConf", EstadoAlquiler.NombreEstadoAlquiler.CONFIRMADO);
         query.setParameter("estadoAct", EstadoAlquiler.NombreEstadoAlquiler.ACTIVO);
@@ -284,7 +288,8 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
                 + "AND axe.fechaHasta IS NULL "
                 + "AND (ea.nombre = :estadoFin OR ea.nombre = :estadoCancel OR ea.nombre = :estadoCancelAlq) "
                 + "AND NOT EXISTS (SELECT c FROM Calificacion c WHERE c.alquilerFk = a "
-                + "AND c.usuarioCalificadorFk = :usuario)");
+                + "AND c.usuarioCalificadorFk = :usuario) "
+                + "ORDER BY a.fechaInicio DESC");
         query.setParameter("usuario", usuario);
         query.setParameter("estadoFin", EstadoAlquiler.NombreEstadoAlquiler.FINALIZADO);
         query.setParameter("estadoCancel", EstadoAlquiler.NombreEstadoAlquiler.CANCELADO);
@@ -295,7 +300,8 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
     /**
      * Autor: Damian
      * Trae los alquileres finalizados, cancelados, o cancelados por el alquilados  en los cuales el usuario es
-     * el dueño del producto alquilado, y que aun no han sido calificados por el dueño
+     * el dueño del producto alquilado, y que ya han sido calificados por el dueño.
+     * Metodo utilizado en la pagina 'Mis Alquileres Ofrecidos', filtro 'Alquileres calificados'
      * @param usuario El usuario dueño del producto alquilado
      * @return 
      */
@@ -306,7 +312,8 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
                 + "AND axe.estadoAlquilerFk.estadoAlquilerId = ea.estadoAlquilerId "
                 + "AND axe.fechaHasta IS NULL "
                 + "AND (ea.nombre = :estadoFin OR ea.nombre = :estadoCancel OR ea.nombre = :estadoCancelAlq) "
-                + "AND c.alquilerFk = a AND c.usuarioCalificadorFk = :usuario");
+                + "AND c.alquilerFk = a AND c.usuarioCalificadorFk = :usuario "
+                + "ORDER BY a.fechaInicio DESC");
         query.setParameter("usuario", usuario);
         query.setParameter("estadoFin", EstadoAlquiler.NombreEstadoAlquiler.FINALIZADO);
         query.setParameter("estadoCancel", EstadoAlquiler.NombreEstadoAlquiler.CANCELADO);

@@ -9,6 +9,7 @@ import com.alquilacosas.dto.ComentarioDTO;
 import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.entity.Periodo;
 import com.alquilacosas.ejb.session.PublicacionBeanLocal;
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;

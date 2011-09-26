@@ -19,16 +19,13 @@ import javax.faces.bean.ViewScoped;
  */
 @ManagedBean
 @ViewScoped
-public class PublicationsGroup implements Serializable
-{
+public class PublicationsGroup implements Serializable {
     @EJB
     private MostrarPublicacionesBeanLocal publicationBean;
     private List<PublicacionDTO> publicacionesRandom;
     private int selectedPublicationId;
 
-    public PublicationsGroup() 
-    {
-
+    public PublicationsGroup() {
     }
 
     @PostConstruct
