@@ -105,7 +105,7 @@ public class AlquilerTimerBean implements AlquilerTimerBeanLocal{
         
         List<Alquiler> alquileresActivos = null;
         try {
-            alquileresActivos = alquilerFacade.getAlquileresConfirmados();
+            alquileresActivos = alquilerFacade.getAlquileresActivos();
         } catch (NoResultException e) {
             context.getRollbackOnly();
             System.out.println("No se pudo traer de la BD los alquileres activos" + e.getStackTrace());
@@ -161,6 +161,7 @@ public class AlquilerTimerBean implements AlquilerTimerBeanLocal{
                 EstadoPublicacion ep = estadoPublicacionFacade.findByNombre(NombreEstadoPublicacion.INACTIVA);
                 PublicacionXEstado pxeNuevo = new PublicacionXEstado(p, ep);
                 p.agregarPublicacionXEstado(pxeNuevo);
+                p.setDestacada(false);
                 publicacionFacade.edit(p);
             }       
         }

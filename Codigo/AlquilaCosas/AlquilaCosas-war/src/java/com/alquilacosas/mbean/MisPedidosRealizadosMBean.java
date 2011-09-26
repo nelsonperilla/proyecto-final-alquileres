@@ -23,7 +23,7 @@ import javax.faces.event.ActionEvent;
  */
 @ManagedBean (name = "misPedidosRealizados")
 @ViewScoped
-public class MisPedidosRealizados {
+public class MisPedidosRealizadosMBean {
     
     @EJB
     private AlquilerBeanLocal alquilerBean;
@@ -35,8 +35,8 @@ public class MisPedidosRealizados {
     private Integer usuarioId;
     private Integer alquilerId;
 
-    /** Creates a new instance of MisPedidosRealizados */
-    public MisPedidosRealizados() {
+    /** Creates a new instance of MisPedidosRealizadosMBean */
+    public MisPedidosRealizadosMBean() {
     }
     
     @PostConstruct

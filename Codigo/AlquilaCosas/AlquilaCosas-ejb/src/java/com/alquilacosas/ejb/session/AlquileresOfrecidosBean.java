@@ -564,8 +564,8 @@ public class AlquileresOfrecidosBean implements AlquileresOfrecidosBeanLocal {
     private void revisarPedidos(Date fechaDesde, Date fechaHasta, int publicacionId) throws AlquilaCosasException {
 
         List<Date> fechas = getIntervaloFechas(fechaDesde, fechaHasta);
-        List<Alquiler> alquileresPedidos = alquilerFacade.getAlquilerPorPeriodo(fechaDesde, fechaHasta, -1);
-        List<Alquiler> alquileresConfirmadosActivos = alquilerFacade.getAlquileresConfirmadosActivos();
+        List<Alquiler> alquileresPedidos = alquilerFacade.getAlquilerPorPeriodo(fechaDesde, fechaHasta, -1, publicacionId);
+        List<Alquiler> alquileresConfirmadosActivos = alquilerFacade.getAlquileresConfirmadosActivos(publicacionId);
 
         if (alquileresPedidos.isEmpty() || alquileresConfirmadosActivos.isEmpty()) {
             return;

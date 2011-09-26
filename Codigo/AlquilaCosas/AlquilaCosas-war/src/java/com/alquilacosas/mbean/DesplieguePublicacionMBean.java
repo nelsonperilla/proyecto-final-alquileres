@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.annotation.security.DeclareRoles;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.application.FacesMessage.Severity;
@@ -36,6 +38,7 @@ import org.primefaces.json.JSONObject;
  */
 @ManagedBean(name = "publicacionDesplegada")
 @ViewScoped
+@DeclareRoles({"USUARIO", "ADMIN"})
 public class DesplieguePublicacionMBean {
 
     @EJB
@@ -62,6 +65,7 @@ public class DesplieguePublicacionMBean {
 
 
     /** Creates a new instance of DesplieguePublicacionMBean */
+    
     public DesplieguePublicacionMBean() {
     }
 
