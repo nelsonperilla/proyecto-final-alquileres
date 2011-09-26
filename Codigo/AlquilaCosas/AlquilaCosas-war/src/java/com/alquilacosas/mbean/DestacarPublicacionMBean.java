@@ -47,6 +47,7 @@ public class DestacarPublicacionMBean implements Serializable {
     private PaymentActionCodeType paymentAction = PaymentActionCodeType.Sale;
     private String paypalUrl = "https://www.sandbox.paypal.com/webscr?cmd=_express-checkout&useraction=commit&token=";
     
+    private PublicacionDTO publicacion;
     private Integer publicacionId;
     private String tituloPublicacion;
     private Date fechaPublicacion, fechaFinalizacion;
@@ -66,7 +67,7 @@ public class DestacarPublicacionMBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return;
         }
-        PublicacionDTO publicacion = null;
+        publicacion = null;
         try {
             publicacion = destacarBean.getPublicacion(Integer.valueOf(id), login.getUsuarioId());
         } catch(AlquilaCosasException e) {
@@ -77,7 +78,7 @@ public class DestacarPublicacionMBean implements Serializable {
         
         if(publicacion == null)
             return;
-        
+        publicacion.setDestacada(true);
         publicacionId = publicacion.getId();
         tituloPublicacion = publicacion.getTitulo();
         fechaPublicacion = publicacion.getFecha_desde();
@@ -88,6 +89,10 @@ public class DestacarPublicacionMBean implements Serializable {
                     "No se encontro el precio del servicio", "");
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
+    }
+    
+    public String verPublicacion() {
+        return "";
     }
     
     public void destacar() {
@@ -196,6 +201,14 @@ public class DestacarPublicacionMBean implements Serializable {
 
     public void setFechaPublicacion(Date fechaPublicacion) {
         this.fechaPublicacion = fechaPublicacion;
+    }
+
+    public PublicacionDTO getPublicacion() {
+        return publicacion;
+    }
+
+    public void setPublicacion(PublicacionDTO publicacion) {
+        this.publicacion = publicacion;
     }
     
     

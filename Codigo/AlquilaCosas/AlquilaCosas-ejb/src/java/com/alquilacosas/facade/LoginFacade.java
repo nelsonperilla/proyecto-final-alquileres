@@ -47,4 +47,10 @@ public class LoginFacade extends AbstractFacade<Login> {
        return (Login) query.getSingleResult();
     }
     
+    public Login findByUsuarioId(int usuarioId) {
+        Query query = em.createQuery("SELECT l FROM Login l WHERE l.usuarioFk.usuarioId = :usuario");
+        query.setParameter("usuario", usuarioId);
+        return (Login) query.getSingleResult();
+    }
+    
 }

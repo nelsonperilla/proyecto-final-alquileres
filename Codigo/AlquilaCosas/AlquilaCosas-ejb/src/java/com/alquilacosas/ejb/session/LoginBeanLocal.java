@@ -17,5 +17,7 @@ public interface LoginBeanLocal {
     boolean activarCuenta(String usuario, String codigo) throws AlquilaCosasException;
     
     Integer loginUsuario(String username) throws AlquilaCosasException;
+
+    public void cambiarPassword(int usuarioId, java.lang.String password, java.lang.String passwordNuevo) throws com.alquilacosas.common.AlquilaCosasException;
     
 }

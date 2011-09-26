@@ -5,9 +5,13 @@
 package com.alquilacosas.ejb.session;
 
 import com.alquilacosas.common.AlquilaCosasException;
+import com.alquilacosas.dto.PrecioDTO;
 import com.alquilacosas.dto.PublicacionDTO;
+import com.alquilacosas.ejb.entity.Domicilio;
 import com.alquilacosas.ejb.entity.EstadoPublicacion;
+import com.alquilacosas.ejb.entity.ImagenPublicacion;
 import com.alquilacosas.ejb.entity.Pago;
+import com.alquilacosas.ejb.entity.Precio;
 import com.alquilacosas.ejb.entity.PrecioServicio;
 import com.alquilacosas.ejb.entity.Publicacion;
 import com.alquilacosas.ejb.entity.PublicacionXEstado;
@@ -16,13 +20,17 @@ import com.alquilacosas.ejb.entity.TipoPago;
 import com.alquilacosas.ejb.entity.TipoServicio;
 import com.alquilacosas.ejb.entity.TipoServicio.NombreTipoServicio;
 import com.alquilacosas.ejb.entity.Usuario;
+import com.alquilacosas.facade.PrecioFacade;
 import com.alquilacosas.facade.PrecioServicioFacade;
 import com.alquilacosas.facade.PublicacionFacade;
 import com.alquilacosas.facade.PublicacionXEstadoFacade;
 import com.alquilacosas.facade.ServicioDestacacionFacade;
 import com.alquilacosas.facade.TipoPagoFacade;
 import com.alquilacosas.facade.TipoServicioFacade;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -46,6 +54,8 @@ public class DestacarPublicacionBean implements DestacarPublicacionBeanLocal {
     private ServicioDestacacionFacade servicioFacade;
     @EJB
     private TipoPagoFacade tipoPagoFacade;
+    @EJB
+    private PrecioFacade precioPublicacionFacade;
     
     @Override
     @RolesAllowed({"USUARIO", "ADMIN"})
@@ -75,6 +85,11 @@ public class DestacarPublicacionBean implements DestacarPublicacionBeanLocal {
         
         publicacion.setDestacada(true);
         
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.MONTH, 2);
+        publicacion.setFechaHasta(cal.getTime());
+        
         publicacionFacade.edit(publicacion);
         servicioFacade.edit(servicio);
     }
@@ -103,6 +118,22 @@ public class DestacarPublicacionBean implements DestacarPublicacionBeanLocal {
         PublicacionDTO dto = new PublicacionDTO(publicacion.getPublicacionId(), publicacion.getTitulo(), "",
                 publicacion.getFechaDesde(), publicacion.getFechaHasta(), publicacion.getDestacada(),
                 publicacion.getCantidad());
+        List<Integer> imagenes = new ArrayList<Integer>();
+        for (ImagenPublicacion ip : publicacion.getImagenPublicacionList()) {
+            imagenes.add(ip.getImagenPublicacionId());
+        }
+        dto.setImagenIds(imagenes);
+
+        Domicilio d = publicacion.getUsuarioFk().getDomicilioList().get(0);
+        dto.setProvincia(d.getProvinciaFk().getNombre());
+        dto.setCiudad(d.getCiudad());
+        
+        List<PrecioDTO> precios = new ArrayList<PrecioDTO>();
+        for (Precio precio : precioPublicacionFacade.getUltimoPrecios(publicacion)) {
+            precios.add(new PrecioDTO(precio.getPrecio(), precio.getPeriodoFk().getNombre()));
+        }
+        dto.setPrecios(precios);
+        
         return dto;
     }
     

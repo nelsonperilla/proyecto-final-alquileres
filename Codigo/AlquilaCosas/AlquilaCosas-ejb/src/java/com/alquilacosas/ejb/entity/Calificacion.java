@@ -145,11 +145,11 @@ public class Calificacion implements Serializable {
         this.alquilerFk = alquilerFk;
     }
 
-    public Usuario getUsuarioReplicadorFk() {
+    public Usuario getUsuarioCalificadoFk() {
         return usuarioCalificadoFk;
     }
 
-    public void setUsuarioReplicadorFk(Usuario usuarioReplicadorFk) {
+    public void setUsuarioCalificadoFk(Usuario usuarioReplicadorFk) {
         this.usuarioCalificadoFk = usuarioReplicadorFk;
     }
 

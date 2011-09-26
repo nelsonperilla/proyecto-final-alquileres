@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.prime.com.tr/ui" 
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:comps="http://java.sun.com/jsf/composite/comps" >
+
+    <body>
+
+        <ui:composition template="./../../resources/templates/masterPage.xhtml">
+
+            <ui:define name="logInfo">
+                <h:form>
+                    <h:commandLink value="Inicio" action="inicio" />
+                </h:form>
+            </ui:define>
+
+            <ui:define name="left">
+                <comps:categoriesMenu />
+            </ui:define>
+
+            <ui:define name="principal">
+                
+                <h:form>
+                    <h1>Cambiar Contraseña</h1>
+                    <h:panelGrid columns="3" columnClasses="labelColumn,null,null" >
+                        <h:outputLabel value="Contraseña actual:" />
+                        <p:password id="passViejo" value="#{passwordBean.password}"
+                                    minLength="4" feedback="false" required="true"
+                                    requiredMessage="Campo requerido" />
+                        <p:message for="passViejo" />
+                        <h:outputLabel value="Contraseña nueva:" />
+                        <p:password id="passNuevo" value="#{passwordBean.passwordNuevo}"
+                                    minLength="6" feedback="true" required="true"
+                                    requiredMessage="Campo requerido"/>
+                        <p:message for="passNuevo" />
+                        <h:outputLabel value="Repita contraseña nueva:" />
+                        <p:password id="passNuevo2" value="#{passwordBean.passwordNuevo2}"
+                                    minLength="6" feedback="false" required="true"
+                                    requiredMessage="Campo requerido"/>
+                        <p:message for="passNuevo2" />
+                        <p:commandButton value="Cambiar" action="#{passwordBean.cambiarPassword}" 
+                                         ajax="false" />
+                    </h:panelGrid>
+                    <p:growl id="growl" globalOnly="true" showDetail="true" />
+                </h:form>
+                
+            </ui:define>
+
+            <ui:define name="right">
+                <comps:adminPanel />
+                <comps:userPanel />
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

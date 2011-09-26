@@ -37,491 +37,503 @@ import org.primefaces.json.JSONObject;
 @ViewScoped
 public class AlquileresOfrecidosMBean implements Serializable {
 
-     @EJB
-     private AlquileresOfrecidosBeanLocal alquileresBean;
-     @ManagedProperty(value = "#{login}")
-     private ManejadorUsuarioMBean loginBean;
-     private List<SelectItem> filtros, puntuaciones;
-     private Integer filtroSeleccionado, duracion, duracionAnterior;
-     private NombrePeriodo periodo;
-     private List<AlquilerDTO> alquileres;
-     private Integer alquilerId, publicacionId, usuarioId, puntuacionId, pedidoCambioId, usuarioLogueado;
-     private String comentario;
-     private Date fechaInicio;
-     private AlquilerDTO alquilerSeleccionado;
-     private List<Date> fechas;
-     private String myJson;
-     
-     private Boolean ofrece;
-     private Boolean toma;
-     private CalificacionDTO calificacionOfrece;
-     private CalificacionDTO calificacionToma;
-     private Boolean ofreceCalifico;
-     private Boolean tomaCalifico;
+    @EJB
+    private AlquileresOfrecidosBeanLocal alquileresBean;
+    @ManagedProperty(value = "#{login}")
+    private ManejadorUsuarioMBean loginBean;
+    private List<SelectItem> filtros, puntuaciones;
+    private Integer filtroSeleccionado, duracion, duracionAnterior;
+    private NombrePeriodo periodo;
+    private List<AlquilerDTO> alquileres;
+    private Integer alquilerId, publicacionId, usuarioId, puntuacionId, pedidoCambioId, usuarioLogueado;
+    private String comentario;
+    private Date fechaInicio;
+    private AlquilerDTO alquilerSeleccionado;
+    private List<Date> fechas;
+    private String myJson;
+    private Boolean ofrece;
+    private Boolean toma;
+    private CalificacionDTO calificacionOfrece;
+    private CalificacionDTO calificacionToma;
+    private Boolean ofreceCalifico;
+    private Boolean tomaCalifico;
 
-     /** Creates a new instance of MisAlquileresOfrecidosMBean */
-     public AlquileresOfrecidosMBean() {
-     }
+    /** Creates a new instance of MisAlquileresOfrecidosMBean */
+    public AlquileresOfrecidosMBean() {
+    }
 
-     @PostConstruct
-     public void init() {
-          usuarioLogueado = loginBean.getUsuarioId();
-          alquileres = alquileresBean.getAlquileresVigentes(usuarioLogueado);
-          puntuaciones = new ArrayList<SelectItem>();
-          List<Puntuacion> listaPuntuacion = alquileresBean.getPuntuaciones();
-          for (Puntuacion p : listaPuntuacion) {
-               puntuaciones.add(new SelectItem(p.getPuntuacionId(), p.getNombre()));
-          }
+    @PostConstruct
+    public void init() {
+        usuarioLogueado = loginBean.getUsuarioId();
+        if (usuarioLogueado == null) {
+            return;
+        }
+        alquileres = alquileresBean.getAlquileresVigentes(usuarioLogueado);
+        puntuaciones = new ArrayList<SelectItem>();
+        List<Puntuacion> listaPuntuacion = alquileresBean.getPuntuaciones();
+        for (Puntuacion p : listaPuntuacion) {
+            puntuaciones.add(new SelectItem(p.getPuntuacionId(), p.getNombre()));
+        }
 
-          filtros = new ArrayList<SelectItem>();
-          filtros.add(new SelectItem(1, "Alquileres vigentes"));
-          filtros.add(new SelectItem(2, "Alquileres sin calificar"));
-          filtros.add(new SelectItem(3, "Alquileres calificados"));
-          filtroSeleccionado = 1;
+        filtros = new ArrayList<SelectItem>();
+        filtros.add(new SelectItem(1, "Alquileres vigentes"));
+        filtros.add(new SelectItem(2, "Alquileres sin calificar"));
+        filtros.add(new SelectItem(3, "Alquileres calificados"));
+        filtroSeleccionado = 1;
 
-     }
+    }
 
-     public void cambioFiltro() {
-          switch (filtroSeleccionado) {
-               case 1: {
-                    alquileres = alquileresBean.getAlquileresVigentes(usuarioLogueado);
-                    break;
-               }
-               case 2: {
-                    alquileres = alquileresBean.getAlquileresSinCalificar(usuarioLogueado);
-                    break;
-               }
-               case 3: {
-                    alquileres = alquileresBean.getAlquileresCalificados(usuarioLogueado);
-                    break;
-               }
-          }
-     }
+    public void cambioFiltro() {
+        switch (filtroSeleccionado) {
+            case 1: {
+                alquileres = alquileresBean.getAlquileresVigentes(usuarioLogueado);
+                break;
+            }
+            case 2: {
+                alquileres = alquileresBean.getAlquileresSinCalificar(usuarioLogueado);
+                break;
+            }
+            case 3: {
+                alquileres = alquileresBean.getAlquileresCalificados(usuarioLogueado);
+                break;
+            }
+        }
+    }
 
-     public String verPublicacion() {
-          return "mostrarPublicacion";
-     }
+    public String verPublicacion() {
+        return "mostrarPublicacion";
+    }
 
-     public String verUsuario() {
-          return "";
-     }
+    public String verUsuario() {
+        return "";
+    }
 
-     public void prepararCalificar(ActionEvent event) {
-          alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
-     }
+    public void prepararCalificar(ActionEvent event) {
+        alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
+    }
 
-     public void prepararVerCalificacion(ActionEvent event) {
-          alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
-          ofreceCalifico = true;
-          tomaCalifico = true;
-          try {
-               calificacionOfrece = alquileresBean.getCalificacionOfrece(alquilerId);
-               calificacionToma = alquileresBean.getCalificacionToma(alquilerId);
-               // Lo siguiente sirve para mostrar los campos permitidos
-               if (calificacionOfrece.getIdUsuarioCalidicador() != null) {
-                    ofrece = calificacionOfrece.getIdUsuarioCalidicador() == usuarioLogueado;
-               } else {
-                    ofreceCalifico = false;
-               }
-               if (calificacionToma.getIdUsuarioCalidicador() != null) {
-                    toma = calificacionToma.getIdUsuarioCalidicador() == usuarioLogueado;
-               } else {
-                    tomaCalifico = false;
-               }
-          } catch (AlquilaCosasException e) {
-               FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error  al recuperar las Calificaciones" + e.toString(), "");
-               FacesContext.getCurrentInstance().addMessage(null, message);
-          }
-     }
+    public void prepararVerCalificacion(ActionEvent event) {
+        alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
+        ofreceCalifico = true;
+        tomaCalifico = true;
+        try {
+            calificacionOfrece = alquileresBean.getCalificacionOfrece(alquilerId);
+            calificacionToma = alquileresBean.getCalificacionToma(alquilerId);
+            // Lo siguiente sirve para mostrar los campos permitidos
+            if (calificacionOfrece.getIdUsuarioCalidicador() != null) {
+                ofrece = calificacionOfrece.getIdUsuarioCalidicador() == usuarioLogueado;
+            } else {
+                ofreceCalifico = false;
+            }
+            if (calificacionToma.getIdUsuarioCalidicador() != null) {
+                toma = calificacionToma.getIdUsuarioCalidicador() == usuarioLogueado;
+            } else {
+                tomaCalifico = false;
+            }
+        } catch (AlquilaCosasException e) {
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error  al recuperar las Calificaciones" + e.toString(), "");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        }
+    }
 
-     public void prepararVerPedido(ActionEvent event) {
-          alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
-          pedidoCambioId = (Integer) event.getComponent().getAttributes().get("ped");
-          PedidoCambioDTO pedido = alquileresBean.getPedidoCambio(pedidoCambioId);
-          duracion = pedido.getDuracion();
-          periodo = pedido.getPeriodo();
-     }
+    public void prepararVerPedido(ActionEvent event) {
+        alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
+        pedidoCambioId = (Integer) event.getComponent().getAttributes().get("ped");
+        PedidoCambioDTO pedido = alquileresBean.getPedidoCambio(pedidoCambioId);
+        duracion = pedido.getDuracion();
+        periodo = pedido.getPeriodo();
+    }
 
-     public void prepararCancelarAlquiler(ActionEvent event) {
-          alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
-     }
+    public void prepararCancelarAlquiler(ActionEvent event) {
+        alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
+    }
 
-     public void prepararModificar(ActionEvent event) {
-          alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
-          alquilerSeleccionado = null;
-          for (AlquilerDTO alq : alquileres) {
-               if (alq.getIdAlquiler() == alquilerId) {
-                    alquilerSeleccionado = alq;
-                    break;
-               }
-          }
-          if (alquilerSeleccionado == null) {
-               FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                       "Error preparando alquiler", "Alquiler no encontrado");
-               FacesContext.getCurrentInstance().addMessage(null, msg);
-          }
-          Calendar calendar = Calendar.getInstance();
-          calendar.setTime(alquilerSeleccionado.getFechaInicio());
-          int dia1 = calendar.get(Calendar.DAY_OF_YEAR);
-          int hora1 = calendar.get(Calendar.HOUR_OF_DAY);
-          int minuto1 = calendar.get(Calendar.MINUTE);
-          calendar.setTime(alquilerSeleccionado.getFechaFin());
-          int dia2 = calendar.get(Calendar.DAY_OF_YEAR);
-          int hora2 = calendar.get(Calendar.HOUR_OF_DAY);
-          int minuto2 = calendar.get(Calendar.MINUTE);
-          if ((hora1 + minuto1 + hora2 + minuto2) != 0) {
-               periodo = NombrePeriodo.HORA;
-               duracion = hora2 - hora1;
-          } else {
-               periodo = NombrePeriodo.DIA;
-               duracion = dia2 - dia1;
-          }
-          duracionAnterior = duracion;
-          fechaInicio = alquilerSeleccionado.getFechaInicio();
-          fechas = alquileresBean.getFechasSinStock(alquilerId);
-          createDictionary();
-     }
+    public void prepararModificar(ActionEvent event) {
+        alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
+        alquilerSeleccionado = null;
+        for (AlquilerDTO alq : alquileres) {
+            if (alq.getIdAlquiler() == alquilerId) {
+                alquilerSeleccionado = alq;
+                break;
+            }
+        }
+        if (alquilerSeleccionado == null) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Error preparando alquiler", "Alquiler no encontrado");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(alquilerSeleccionado.getFechaInicio());
+        int dia1 = calendar.get(Calendar.DAY_OF_YEAR);
+        int hora1 = calendar.get(Calendar.HOUR_OF_DAY);
+        int minuto1 = calendar.get(Calendar.MINUTE);
+        calendar.setTime(alquilerSeleccionado.getFechaFin());
+        int dia2 = calendar.get(Calendar.DAY_OF_YEAR);
+        int hora2 = calendar.get(Calendar.HOUR_OF_DAY);
+        int minuto2 = calendar.get(Calendar.MINUTE);
+        if ((hora1 + minuto1 + hora2 + minuto2) != 0) {
+            periodo = NombrePeriodo.HORA;
+            duracion = hora2 - hora1;
+        } else {
+            periodo = NombrePeriodo.DIA;
+            duracion = dia2 - dia1;
+        }
+        duracionAnterior = duracion;
+        fechaInicio = alquilerSeleccionado.getFechaInicio();
+        fechas = alquileresBean.getFechasSinStock(alquilerId);
+        createDictionary();
+    }
 
-     public void modificarAlquiler() {
-          FacesMessage msg = null;
-          FacesContext context = FacesContext.getCurrentInstance();
-          RequestContext reqContext = RequestContext.getCurrentInstance();
-          // Si la duracion ingresada es 0, no permitir
-          if (duracion == 0) {
-               msg = new FacesMessage(FacesMessage.SEVERITY_WARN,
-                       "La duracion del alquiler no puede ser 0", "");
-               context.addMessage(null, msg);
-               reqContext.addCallbackParam("modificado", false);
-               return;
-          } // si la duracion no se modifico, no hay que modificar nada
-          else if (duracion == duracionAnterior) {
-               msg = new FacesMessage(FacesMessage.SEVERITY_WARN,
-                       "No ha modificado la duracion del alquiler", "");
-               context.addMessage(null, msg);
-               reqContext.addCallbackParam("modificado", false);
-               return;
-          }
-          // revisar si la nueva duracion no hace que el alquiler se solape
-          Calendar beginDate = Calendar.getInstance();
-          beginDate.setTime(fechaInicio);
-          Calendar endDate = Calendar.getInstance();
-          endDate.setTime(fechaInicio);
-          if (periodo == NombrePeriodo.HORA) {
-               endDate.add(Calendar.HOUR_OF_DAY, duracion);
-          } else {
-               endDate.add(Calendar.DATE, duracion);
-          }
+    public void modificarAlquiler() {
+        FacesMessage msg = null;
+        FacesContext context = FacesContext.getCurrentInstance();
+        RequestContext reqContext = RequestContext.getCurrentInstance();
+        // Si la duracion ingresada es 0, no permitir
+        if (duracion == 0) {
+            msg = new FacesMessage(FacesMessage.SEVERITY_WARN,
+                    "La duracion del alquiler no puede ser 0", "");
+            context.addMessage(null, msg);
+            reqContext.addCallbackParam("modificado", false);
+            return;
+        } // si la duracion no se modifico, no hay que modificar nada
+        else if (duracion == duracionAnterior) {
+            msg = new FacesMessage(FacesMessage.SEVERITY_WARN,
+                    "No ha modificado la duracion del alquiler", "");
+            context.addMessage(null, msg);
+            reqContext.addCallbackParam("modificado", false);
+            return;
+        } else if (periodo == NombrePeriodo.HORA && duracion >= 24) {
+            msg = new FacesMessage(FacesMessage.SEVERITY_WARN,
+                    "Los alquileres por hora no pueden superar las 24 horas.", "");
+            context.addMessage(null, msg);
+            reqContext.addCallbackParam("modificado", false);
+            return;
+        }
+        // revisar si la nueva duracion no hace que el alquiler se solape
+        Calendar beginDate = Calendar.getInstance();
+        beginDate.setTime(fechaInicio);
+        Calendar endDate = Calendar.getInstance();
+        endDate.setTime(fechaInicio);
+        if (periodo == NombrePeriodo.HORA) {
+            endDate.add(Calendar.HOUR_OF_DAY, duracion);
+        } else {
+            endDate.add(Calendar.DATE, duracion);
+        }
 
-          Iterator<Date> itFechasSinStock = fechas.iterator();
-          boolean noStockFlag = false;
-          Calendar temp = Calendar.getInstance();
-          //Recorro la lista de fechas sin stock fijandome si alguna cae en el periodo seleccionado
-          while (!noStockFlag && itFechasSinStock.hasNext()) {
-               temp.setTime(itFechasSinStock.next());
-               if (beginDate.before(temp) && endDate.after(temp))//la fecha sin stock cae en el periodo
-               {
-                    noStockFlag = true;
-               }
-          }
-          if (noStockFlag) {
-               msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al modificar alquiler", "Hay fechas sin stock en el periodo seleccionado");
-               context.addMessage(null, msg);
-               reqContext.addCallbackParam("modificado", false);
-               return;
-          }
+        Iterator<Date> itFechasSinStock = fechas.iterator();
+        boolean noStockFlag = false;
+        Calendar temp = Calendar.getInstance();
+        //Recorro la lista de fechas sin stock fijandome si alguna cae en el periodo seleccionado
+        while (!noStockFlag && itFechasSinStock.hasNext()) {
+            temp.setTime(itFechasSinStock.next());
+            if (beginDate.before(temp) && endDate.after(temp))//la fecha sin stock cae en el periodo
+            {
+                noStockFlag = true;
+            }
+        }
+        if (noStockFlag) {
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al modificar alquiler", "Hay fechas sin stock en el periodo seleccionado");
+            context.addMessage(null, msg);
+            reqContext.addCallbackParam("modificado", false);
+            return;
+        }
 
-          try {
-               alquilerSeleccionado = alquileresBean.modificarAlquiler(alquilerSeleccionado, periodo, duracion);
-          } catch (AlquilaCosasException e) {
-               msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al modificar alquiler", e.getMessage());
-               context.addMessage(null, msg);
-               return;
-          }
-          msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Alquiler modificado", "");
-          context.addMessage(null, msg);
-          for (AlquilerDTO alq : alquileres) {
-               if (alq.getIdAlquiler() == alquilerSeleccionado.getIdAlquiler()) {
-                    alq.setMonto(alquilerSeleccionado.getMonto());
-                    alq.setFechaFin(alquilerSeleccionado.getFechaFin());
-                    break;
-               }
-          }
-          reqContext.addCallbackParam("modificado", true);
-     }
+        try {
+            alquilerSeleccionado = alquileresBean.modificarAlquiler(alquilerSeleccionado, periodo, duracion);
+        } catch (AlquilaCosasException e) {
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al modificar alquiler", e.getMessage());
+            context.addMessage(null, msg);
+            return;
+        }
+        msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Alquiler modificado", "");
+        context.addMessage(null, msg);
+        for (AlquilerDTO alq : alquileres) {
+            if (alq.getIdAlquiler() == alquilerSeleccionado.getIdAlquiler()) {
+                alq.setMonto(alquilerSeleccionado.getMonto());
+                alq.setFechaFin(alquilerSeleccionado.getFechaFin());
+                break;
+            }
+        }
+        reqContext.addCallbackParam("modificado", true);
+    }
 
-     public void cancelarAlquiler() {
-          boolean borrado = false;
-          try {
-               borrado = alquileresBean.cancelarAlquiler(alquilerId);
-          } catch (AlquilaCosasException e) {
-               FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                       "Error al cancelar alquiler", e.getMessage());
-               FacesContext.getCurrentInstance().addMessage(null, msg);
-          }
-          if (borrado) {
-               for (int i = 0; i < alquileres.size(); i++) {
-                    AlquilerDTO alq = alquileres.get(i);
-                    if (alq.getIdAlquiler() == alquilerId) {
-                         alquileres.remove(alq);
-                         return;
+    public void cancelarAlquiler() {
+        boolean borrado = false;
+        try {
+            borrado = alquileresBean.cancelarAlquiler(alquilerId);
+        } catch (AlquilaCosasException e) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Error al cancelar alquiler", e.getMessage());
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+        if (borrado) {
+            for (int i = 0; i < alquileres.size(); i++) {
+                AlquilerDTO alq = alquileres.get(i);
+                if (alq.getIdAlquiler() == alquilerId) {
+                    alquileres.remove(alq);
+                    return;
+                }
+            }
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
+                    "Alquiler cancelado.", "");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+    }
+
+    public void responderPedidoCambio(boolean aceptado) {
+        alquilerSeleccionado = null;
+        for (AlquilerDTO alq : alquileres) {
+            if (alq.getIdAlquiler() == alquilerId) {
+                alquilerSeleccionado = alq;
+                break;
+            }
+        }
+        if (alquilerSeleccionado == null) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Error aceptando pedido de cambio", "Alquiler no encontrado");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
+        try {
+            alquileresBean.responderPedidoCambio(pedidoCambioId, alquilerSeleccionado, aceptado);
+        } catch (AlquilaCosasException e) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Error aceptando pedido de cambio", e.getMessage());
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
+        for (AlquilerDTO alq : alquileres) {
+            if (alq.getIdAlquiler() == alquilerSeleccionado.getIdAlquiler()) {
+                alq.setMonto(alquilerSeleccionado.getMonto());
+                alq.setFechaFin(alquilerSeleccionado.getFechaFin());
+                alq.setIdPedidoCambio(-1);
+                break;
+            }
+        }
+        String accion = aceptado ? "aceptado" : "rechazado";
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
+                "Pedido de cambio " + accion, "");
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+
+    public void registrarCalificacion() {
+        alquileresBean.registrarCalificacion(usuarioLogueado, alquilerId, puntuacionId, comentario);
+        alquileres = alquileresBean.getAlquileresSinCalificar(usuarioLogueado);
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
+                "Calificacion registrada.", "");
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+
+    private void createDictionary() {
+        try {
+            int month = -1;
+            JSONObject yearJson = new JSONObject();
+            JSONObject monthJson = new JSONObject();
+            JSONObject dayJson = null;
+            Calendar cal = Calendar.getInstance();
+            for (Date d : fechas) {
+                cal.setTime(d);
+                if (cal.get(Calendar.MONTH) + 1 != month) {
+                    if (dayJson != null) {
+                        monthJson.putOpt(Integer.toString(month), dayJson);
                     }
-               }
-          }
-     }
+                    dayJson = new JSONObject();
+                    month = cal.get(Calendar.MONTH) + 1;
+                    int day = cal.get(Calendar.DAY_OF_MONTH);
+                    dayJson.putOpt(Integer.toString(day), true);
+                } else {
+                    int day = cal.get(Calendar.DAY_OF_MONTH);
+                    dayJson.putOpt(Integer.toString(day), true);
+                }
+            }
+            if (dayJson != null) {
+                monthJson.putOpt(Integer.toString(month), dayJson);
+            }
+            int y = cal.get(Calendar.YEAR);
+            yearJson.putOpt(Integer.toString(y), monthJson);
+            myJson = yearJson.toString();
+        } catch (Exception e) {
+            //Logger.getLogger(this).error("Exception creating JSON dictionary: " + e);
+        }
+    }
 
-     public void responderPedidoCambio(boolean aceptado) {
-          alquilerSeleccionado = null;
-          for (AlquilerDTO alq : alquileres) {
-               if (alq.getIdAlquiler() == alquilerId) {
-                    alquilerSeleccionado = alq;
-                    break;
-               }
-          }
-          if (alquilerSeleccionado == null) {
-               FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                       "Error aceptando pedido de cambio", "Alquiler no encontrado");
-               FacesContext.getCurrentInstance().addMessage(null, msg);
-               return;
-          }
-          try {
-               alquileresBean.responderPedidoCambio(pedidoCambioId, alquilerSeleccionado, aceptado);
-          } catch (AlquilaCosasException e) {
-               FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                       "Error aceptando pedido de cambio", e.getMessage());
-               FacesContext.getCurrentInstance().addMessage(null, msg);
-               return;
-          }
-          for (AlquilerDTO alq : alquileres) {
-               if (alq.getIdAlquiler() == alquilerSeleccionado.getIdAlquiler()) {
-                    alq.setMonto(alquilerSeleccionado.getMonto());
-                    alq.setFechaFin(alquilerSeleccionado.getFechaFin());
-                    break;
-               }
-          }
-     }
+    public void registrarReplicaOfrece() {
+        try {
+            alquileresBean.registrarReplica(calificacionToma.getIdCalificacion(), calificacionToma.getComentarioReplica(), usuarioLogueado);
+            calificacionToma.setYaReplico(true);
+        } catch (AlquilaCosasException e) {
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error Registrar Replica " + e.toString(), "");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        }
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
+                "Replica registrada.", "");
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
 
-     public void registrarCalificacion() {
-          alquileresBean.registrarCalificacion(usuarioLogueado, alquilerId, puntuacionId, comentario);
-          alquileres = alquileresBean.getAlquileresSinCalificar(usuarioLogueado);
-     }
+    /*
+     * Getters & Setters
+     */
+    public Integer getAlquilerId() {
+        return alquilerId;
+    }
 
-     private void createDictionary() {
-          try {
-               int month = -1;
-               JSONObject yearJson = new JSONObject();
-               JSONObject monthJson = new JSONObject();
-               JSONObject dayJson = null;
-               Calendar cal = Calendar.getInstance();
-               for (Date d : fechas) {
-                    cal.setTime(d);
-                    if (cal.get(Calendar.MONTH) + 1 != month) {
-                         if (dayJson != null) {
-                              monthJson.putOpt(Integer.toString(month), dayJson);
-                         }
-                         dayJson = new JSONObject();
-                         month = cal.get(Calendar.MONTH) + 1;
-                         int day = cal.get(Calendar.DAY_OF_MONTH);
-                         dayJson.putOpt(Integer.toString(day), true);
-                    } else {
-                         int day = cal.get(Calendar.DAY_OF_MONTH);
-                         dayJson.putOpt(Integer.toString(day), true);
-                    }
-               }
-               if (dayJson != null) {
-                    monthJson.putOpt(Integer.toString(month), dayJson);
-               }
-               int y = cal.get(Calendar.YEAR);
-               yearJson.putOpt(Integer.toString(y), monthJson);
-               myJson = yearJson.toString();
-          } catch (Exception e) {
-               //Logger.getLogger(this).error("Exception creating JSON dictionary: " + e);
-          }
-     }
-     
-     public void registrarReplicaToma() {
-          try {
-               alquileresBean.registrarReplica(calificacionOfrece.getIdCalificacion(), calificacionOfrece.getComentarioReplica(), usuarioLogueado);
-               calificacionOfrece.setYaReplico(true);
-          } catch (AlquilaCosasException e) {
-               FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error Registrar Replica " + e.toString(), "");
-               FacesContext.getCurrentInstance().addMessage(null, message);
-          }
-     }
+    public void setAlquilerId(Integer alquilerId) {
+        this.alquilerId = alquilerId;
+    }
 
-     public void registrarReplicaOfrece() {
-          try {
-               alquileresBean.registrarReplica(calificacionToma.getIdCalificacion(), calificacionToma.getComentarioReplica(), usuarioLogueado);
-               calificacionToma.setYaReplico(true);
-          } catch (AlquilaCosasException e) {
-               FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error Registrar Replica " + e.toString(), "");
-               FacesContext.getCurrentInstance().addMessage(null, message);
-          }
-     }
+    public List<AlquilerDTO> getAlquileres() {
+        return alquileres;
+    }
 
-     /*
-      * Getters & Setters
-      */
-     public Integer getAlquilerId() {
-          return alquilerId;
-     }
+    public void setAlquileres(List<AlquilerDTO> alquileres) {
+        this.alquileres = alquileres;
+    }
 
-     public void setAlquilerId(Integer alquilerId) {
-          this.alquilerId = alquilerId;
-     }
+    public Integer getPublicacionId() {
+        return publicacionId;
+    }
 
-     public List<AlquilerDTO> getAlquileres() {
-          return alquileres;
-     }
+    public void setPublicacionId(Integer publicacionId) {
+        this.publicacionId = publicacionId;
+    }
 
-     public void setAlquileres(List<AlquilerDTO> alquileres) {
-          this.alquileres = alquileres;
-     }
+    public Integer getUsuarioId() {
+        return usuarioId;
+    }
 
-     public Integer getPublicacionId() {
-          return publicacionId;
-     }
+    public void setUsuarioId(Integer usuarioId) {
+        this.usuarioId = usuarioId;
+    }
 
-     public void setPublicacionId(Integer publicacionId) {
-          this.publicacionId = publicacionId;
-     }
+    public ManejadorUsuarioMBean getLoginBean() {
+        return loginBean;
+    }
 
-     public Integer getUsuarioId() {
-          return usuarioId;
-     }
+    public void setLoginBean(ManejadorUsuarioMBean loginBean) {
+        this.loginBean = loginBean;
+    }
 
-     public void setUsuarioId(Integer usuarioId) {
-          this.usuarioId = usuarioId;
-     }
+    public String getComentario() {
+        return comentario;
+    }
 
-     public ManejadorUsuarioMBean getLoginBean() {
-          return loginBean;
-     }
+    public void setComentario(String comentario) {
+        this.comentario = comentario;
+    }
 
-     public void setLoginBean(ManejadorUsuarioMBean loginBean) {
-          this.loginBean = loginBean;
-     }
+    public List<SelectItem> getPuntuaciones() {
+        return puntuaciones;
+    }
 
-     public String getComentario() {
-          return comentario;
-     }
+    public void setPuntuaciones(List<SelectItem> puntuaciones) {
+        this.puntuaciones = puntuaciones;
+    }
 
-     public void setComentario(String comentario) {
-          this.comentario = comentario;
-     }
+    public Integer getPuntuacionId() {
+        return puntuacionId;
+    }
 
-     public List<SelectItem> getPuntuaciones() {
-          return puntuaciones;
-     }
+    public void setPuntuacionId(Integer puntuacionId) {
+        this.puntuacionId = puntuacionId;
+    }
 
-     public void setPuntuaciones(List<SelectItem> puntuaciones) {
-          this.puntuaciones = puntuaciones;
-     }
+    public Integer getUsuarioLogueado() {
+        return usuarioLogueado;
+    }
 
-     public Integer getPuntuacionId() {
-          return puntuacionId;
-     }
+    public void setUsuarioLogueado(Integer usuarioLogueado) {
+        this.usuarioLogueado = usuarioLogueado;
+    }
 
-     public void setPuntuacionId(Integer puntuacionId) {
-          this.puntuacionId = puntuacionId;
-     }
+    public Integer getFiltroSeleccionado() {
+        return filtroSeleccionado;
+    }
 
-     public Integer getUsuarioLogueado() {
-          return usuarioLogueado;
-     }
+    public void setFiltroSeleccionado(Integer filtroSeleccionado) {
+        this.filtroSeleccionado = filtroSeleccionado;
+    }
 
-     public void setUsuarioLogueado(Integer usuarioLogueado) {
-          this.usuarioLogueado = usuarioLogueado;
-     }
+    public List<SelectItem> getFiltros() {
+        return filtros;
+    }
 
-     public Integer getFiltroSeleccionado() {
-          return filtroSeleccionado;
-     }
+    public void setFiltros(List<SelectItem> filtros) {
+        this.filtros = filtros;
+    }
 
-     public void setFiltroSeleccionado(Integer filtroSeleccionado) {
-          this.filtroSeleccionado = filtroSeleccionado;
-     }
+    public NombrePeriodo getPeriodo() {
+        return periodo;
+    }
 
-     public List<SelectItem> getFiltros() {
-          return filtros;
-     }
+    public void setPeriodo(NombrePeriodo periodo) {
+        this.periodo = periodo;
+    }
 
-     public void setFiltros(List<SelectItem> filtros) {
-          this.filtros = filtros;
-     }
+    public Integer getDuracion() {
+        return duracion;
+    }
 
-     public NombrePeriodo getPeriodo() {
-          return periodo;
-     }
+    public void setDuracion(Integer duracion) {
+        this.duracion = duracion;
+    }
 
-     public void setPeriodo(NombrePeriodo periodo) {
-          this.periodo = periodo;
-     }
+    public String getFechas() {
+        return myJson;
+    }
 
-     public Integer getDuracion() {
-          return duracion;
-     }
+    public Date getFechaInicio() {
+        return fechaInicio;
+    }
 
-     public void setDuracion(Integer duracion) {
-          this.duracion = duracion;
-     }
+    public void setFechaInicio(Date fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
 
-     public String getFechas() {
-          return myJson;
-     }
+    public CalificacionDTO getCalificacionOfrece() {
+        return calificacionOfrece;
+    }
 
-     public Date getFechaInicio() {
-          return fechaInicio;
-     }
+    public void setCalificacionOfrece(CalificacionDTO calificacionOfrece) {
+        this.calificacionOfrece = calificacionOfrece;
+    }
 
-     public void setFechaInicio(Date fechaInicio) {
-          this.fechaInicio = fechaInicio;
-     }
+    public CalificacionDTO getCalificacionToma() {
+        return calificacionToma;
+    }
 
-     public CalificacionDTO getCalificacionOfrece() {
-          return calificacionOfrece;
-     }
+    public void setCalificacionToma(CalificacionDTO calificacionToma) {
+        this.calificacionToma = calificacionToma;
+    }
 
-     public void setCalificacionOfrece(CalificacionDTO calificacionOfrece) {
-          this.calificacionOfrece = calificacionOfrece;
-     }
+    public Boolean getOfrece() {
+        return ofrece;
+    }
 
-     public CalificacionDTO getCalificacionToma() {
-          return calificacionToma;
-     }
+    public void setOfrece(Boolean ofrece) {
+        this.ofrece = ofrece;
+    }
 
-     public void setCalificacionToma(CalificacionDTO calificacionToma) {
-          this.calificacionToma = calificacionToma;
-     }
+    public Boolean getOfreceCalifico() {
+        return ofreceCalifico;
+    }
 
-     public Boolean getOfrece() {
-          return ofrece;
-     }
+    public void setOfreceCalifico(Boolean ofreceCalifico) {
+        this.ofreceCalifico = ofreceCalifico;
+    }
 
-     public void setOfrece(Boolean ofrece) {
-          this.ofrece = ofrece;
-     }
+    public Boolean getToma() {
+        return toma;
+    }
 
-     public Boolean getOfreceCalifico() {
-          return ofreceCalifico;
-     }
+    public void setToma(Boolean toma) {
+        this.toma = toma;
+    }
 
-     public void setOfreceCalifico(Boolean ofreceCalifico) {
-          this.ofreceCalifico = ofreceCalifico;
-     }
+    public Boolean getTomaCalifico() {
+        return tomaCalifico;
+    }
 
-     public Boolean getToma() {
-          return toma;
-     }
-
-     public void setToma(Boolean toma) {
-          this.toma = toma;
-     }
-
-     public Boolean getTomaCalifico() {
-          return tomaCalifico;
-     }
-
-     public void setTomaCalifico(Boolean tomaCalifico) {
-          this.tomaCalifico = tomaCalifico;
-     }
+    public void setTomaCalifico(Boolean tomaCalifico) {
+        this.tomaCalifico = tomaCalifico;
+    }
 }

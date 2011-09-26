@@ -50,13 +50,6 @@ public class LoginBean implements LoginBeanLocal {
             Usuario usuario = login.getUsuarioFk();
             
             UsuarioXEstado ultimoUxe = uxeFacade.findCurrent(usuario.getUsuarioId());
-//            try {
-//                Query uxeQuery = entityManager.createNamedQuery("UsuarioXEstado.findCurrentByUsuarioFk");
-//                uxeQuery.setParameter("usuario", usuario);
-//                ultimoUxe = (UsuarioXEstado) uxeQuery.getSingleResult();
-//            } catch(NoResultException e) {
-//                 throw new AlquilaCosasException("No se encontro el usuario.");
-//            }
             if(ultimoUxe == null || ultimoUxe.getEstadoUsuario().getNombre()
                     != NombreEstadoUsuario.REGISTRADO) {
                 throw new AlquilaCosasException("El estado del usuario no requiere activación.");
@@ -67,14 +60,6 @@ public class LoginBean implements LoginBeanLocal {
                 throw new AlquilaCosasException("No se encontro el estado " + 
                         NombreEstadoUsuario.ACTIVO.toString() + " en la base de datos.");
             }
-//            try {
-//                Query estadoActivoQuery = entityManager.createNamedQuery("EstadoUsuario.findByNombre");
-//                estadoActivoQuery.setParameter("nombre", NombreEstado.ACTIVO);
-//                estado = (EstadoUsuario) estadoActivoQuery.getSingleResult();
-//            } catch(Exception e) {
-//                throw new AlquilaCosasException("No se encontro el estado " + 
-//                        NombreEstado.ACTIVO.toString() + " en la base de datos.");
-//            }
 
             ultimoUxe.setFechaHasta(new Date());          
             
@@ -106,6 +91,15 @@ public class LoginBean implements LoginBeanLocal {
         return usuario.getUsuarioId();
     }
 
-    
+    @Override
+    public void cambiarPassword(int usuarioId, String password, String passwordNuevo) throws AlquilaCosasException {
+        Login login = loginFacade.findByUsuarioId(usuarioId);
+        if(!login.getPassword().equals(password)) {
+            throw new AlquilaCosasException("La contraseña no coincide.");
+        }
+        
+        login.setPassword(passwordNuevo);
+        loginFacade.edit(login);
+    }
     
 }

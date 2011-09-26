@@ -102,11 +102,7 @@
                                                                           or not alquileresOfrecidos.ofreceCalifico}" 
                                                           rendered="#{alquileresOfrecidos.calificacionOfrece.yaReplico}"
                                                           style="max-width:200px; width:200px"/>
-                                         <p:commandButton value="Enviar Replica" actionListener="#{alquileresOfrecidos.registrarReplicaToma}" 
-                                                          rendered="#{alquileresOfrecidos.toma 
-                                                                          and (not alquileresOfrecidos.calificacionOfrece.yaReplico) 
-                                                                          and alquileresOfrecidos.ofreceCalifico}" 
-                                                          update="formVer" />
+                                         
                                     </h:panelGrid>
                                     <h:panelGrid columns="1">
                                          <h:outputText value="TOMA el Alquiler: #{alquileresOfrecidos.calificacionToma.nombreUsuarioCalificador}" />
@@ -132,13 +128,13 @@
                      </p:dialog>
 
                     <p:dialog widgetVar="verCambioDlg" header="Pedio de Cambio recibido" 
-                              width="250" modal="true" resizable="false" >
+                              width="320" modal="true" resizable="false" >
                         <h:form>
-                            <h:outputText value="El alquilador del producto solicita cambiar el periodo de alquiler a:" />
-                            <h:panelGrid columns="2" >
-                                <h:outputLabel value="Periodo" />
+                            <h:outputText value="El alquilador del producto solicita cambiar el periodo de alquiler:" />
+                            <h:panelGrid columns="2" columnClasses="leftCol,rightCol" style="width:100%; margin-top: 5px" >
+                                <h:outputLabel value="Periodo:" />
                                 <h:outputText value="#{alquileresOfrecidos.periodo}" />
-                                <h:outputLabel value="Duracion" />
+                                <h:outputLabel value="Nueva duracion:" />
                                 <h:outputText value="#{alquileresOfrecidos.duracion}" />
                                 <p:commandButton value="Aceptar" actionListener="#{alquileresOfrecidos.responderPedidoCambio(true)}"
                                                  oncomplete="verCambioDlg.hide()" update=":alquileresForm"/>

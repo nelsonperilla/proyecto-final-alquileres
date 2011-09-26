@@ -33,9 +33,9 @@ public class EstadoUsuarioFacade extends AbstractFacade<EstadoUsuario> {
     public EstadoUsuario findByNombre(NombreEstadoUsuario nombre) {
         EstadoUsuario estado = null;
         Query getEstadoQuery = em.createNamedQuery("EstadoUsuario.findByNombre");
-        getEstadoQuery.setParameter("nombre", NombreEstadoUsuario.REGISTRADO);
+        getEstadoQuery.setParameter("nombre", nombre);
         try {
-        estado = (EstadoUsuario) getEstadoQuery.getSingleResult();
+            estado = (EstadoUsuario) getEstadoQuery.getSingleResult();
         } catch(NoResultException e) {
             
         }

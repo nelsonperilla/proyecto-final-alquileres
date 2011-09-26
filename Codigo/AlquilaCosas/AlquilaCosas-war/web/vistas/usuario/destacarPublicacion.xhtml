@@ -34,21 +34,14 @@
                         De hacerlo, la misma aparecera antes que otras publicaciones no destacadas, y de
                         esta forma esta incrementando las posibilidades de que su producto sea alquilado.
                     </p>
-                        <h:panelGrid columns="3" border="1" rules="none" cellpadding="5" style="text-align: center; margin-left: 80px" >
-                        <h:outputLabel value="Titulo" />
-                        <h:outputLabel value="Fecha de publicacion" />
-                        <h:outputLabel value="Fecha de finalizacion" />
-
-                        <h:outputText value="#{destacarBean.tituloPublicacion}" />
-                        <h:outputText value="#{destacarBean.fechaPublicacion}" >
-                            <f:convertDateTime pattern="dd/MM/yyyy" />
-                        </h:outputText>
-                        <h:outputText value="#{destacarBean.fechaFinalizacion}" >
-                            <f:convertDateTime pattern="dd/MM/yyyy" />
-                        </h:outputText>
-                    </h:panelGrid>
+                    
+                    <div id="items" >
+                        <comps:itemInfo bean="#{destacarBean}" property="publicacionId" 
+                                method="verPublicacion" var="#{destacarBean.publicacion}" />
+                    </div>
+                    
                     <p>
-                        El servicio tiene un costo de $<h:outputText value="#{destacarBean.precio}" />
+                        El servicio tiene un costo de U$D <h:outputText value="#{destacarBean.precio}" />
                     </p>
                     <h:panelGrid columns="2" columnClasses="leftCol,rightCol" style="width: 100%" >
                         <p:commandLink actionListener="#{destacarBean.destacar}" >

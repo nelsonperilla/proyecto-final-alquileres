@@ -45,7 +45,7 @@ public class AlquileresTomadosMBean implements Serializable {
     private List<SelectItem> filtros;
     private int filtroSeleccionado;
     private List<AlquilerDTO> alquileres;
-    private int usuarioLogueadoId;
+    private Integer usuarioLogueadoId;
     private int usuarioId;
     private int publicacionId;
     private Integer alquilerId;
@@ -74,6 +74,8 @@ public class AlquileresTomadosMBean implements Serializable {
      @PostConstruct
      public void init() {
           usuarioLogueadoId = usuarioMBean.getUsuarioId();
+          if(usuarioLogueadoId == null)
+              return;
           filtros = new ArrayList<SelectItem>();
           filtros.add(new SelectItem(0, "Confirmados Y Activos"));
           filtros.add(new SelectItem(1, "Finalizado SIN Calificación"));
@@ -237,6 +239,12 @@ public class AlquileresTomadosMBean implements Serializable {
         else if(duracion == duracionAnterior) {
             msg = new FacesMessage(FacesMessage.SEVERITY_WARN, 
                     "No ha modificado la duracion del alquiler", "");
+            context.addMessage(null, msg); 
+            reqContext.addCallbackParam("enviado", false);
+            return;
+        } else if(periodo == NombrePeriodo.HORA && duracion >= 24) {
+            msg = new FacesMessage(FacesMessage.SEVERITY_WARN, 
+                    "Los alquileres por hora no pueden superar las 24 horas.", "");
             context.addMessage(null, msg); 
             reqContext.addCallbackParam("enviado", false);
             return;
@@ -507,11 +515,11 @@ public class AlquileresTomadosMBean implements Serializable {
         return myJson;
     }
 
-     public int getUsuarioLogueadoId() {
+     public Integer getUsuarioLogueadoId() {
           return usuarioLogueadoId;
      }
 
-     public void setUsuarioLogueadoId(int usuarioLogueadoId) {
+     public void setUsuarioLogueadoId(Integer usuarioLogueadoId) {
           this.usuarioLogueadoId = usuarioLogueadoId;
      }
 }
