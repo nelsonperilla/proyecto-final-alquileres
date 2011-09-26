@@ -46,10 +46,10 @@ public class VerReputacionBean implements VerReputacionBeanLocal {
           rating*=0.5;
           rating+=5;
           usuarioDTO.setUserRating(rating);
-          double cantOfrece = 0;
-          double cantOfreceNegativas = 0;
-          double cantOfreceNeutrales = 0;
-          double cantOfrecePositivas = 0;
+          Integer cantOfrece = 0;
+          Integer cantOfreceNegativas = 0;
+          Integer cantOfreceNeutrales = 0;
+          Integer cantOfrecePositivas = 0;
           for (Calificacion c : calificacionFacade.getCalificacionAlquilerOfrecidoPorUsuario(usuario)) {
                if ("POSITIVO".equals(c.getPuntuacionFk().getNombre())) 
                     cantOfrecePositivas ++;
@@ -73,10 +73,10 @@ public class VerReputacionBean implements VerReputacionBeanLocal {
                usuarioDTO.setUserOfreceNegativasPorcentaje(0);
                usuarioDTO.setUserOfreceNeutralesPorcentaje(0);
           }
-          double cantToma = 0;
-          double cantTomaNegativas = 0;
-          double cantTomaNeutrales = 0;
-          double cantTomaPositivas = 0;
+          Integer cantToma = 0;
+          Integer cantTomaNegativas = 0;
+          Integer cantTomaNeutrales = 0;
+          Integer cantTomaPositivas = 0;
           for (Calificacion c : calificacionFacade.getCalificacionAlquilerTomadoPorUsuario(usuario)) {
                if ("POSITIVO".equals(c.getPuntuacionFk().getNombre())) 
                     cantTomaPositivas ++;
@@ -87,6 +87,9 @@ public class VerReputacionBean implements VerReputacionBeanLocal {
                          cantTomaNegativas ++;
                cantToma ++;
           }
+          usuarioDTO.setUserTomaPositivas(cantTomaPositivas);
+          usuarioDTO.setUserTomaNegativas(cantTomaNegativas);
+          usuarioDTO.setUserTomaNeutrales(cantTomaNeutrales);
           if (cantToma > 0) {               
                usuarioDTO.setUserTomaPositivasPorcentaje((cantTomaPositivas / cantToma) * 100);
                usuarioDTO.setUserTomaNegativasPorcentaje((cantTomaNegativas / cantToma) * 100);

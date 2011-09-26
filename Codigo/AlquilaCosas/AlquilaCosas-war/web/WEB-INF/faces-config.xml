@@ -28,6 +28,11 @@
             <to-view-id>/vistas/mostrarPublicacion.xhtml?id=#{misPedidosRecibidos.publicacionId}</to-view-id>
             <redirect/>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>verReputacion</from-outcome>
+            <to-view-id>/vistas/verReputacion.xhtml?id=#{misPedidosRecibidos.usuarioId}</to-view-id>
+            <redirect/>
+        </navigation-case>
     </navigation-rule>
     
     <navigation-rule>
@@ -35,6 +40,11 @@
         <navigation-case>
             <from-outcome>mostrarPublicacion</from-outcome>
             <to-view-id>/vistas/mostrarPublicacion.xhtml?id=#{misPedidosRealizados.publicacionId}</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>verReputacion</from-outcome>
+            <to-view-id>/vistas/verReputacion.xhtml?id=#{misPedidosRealizados.usuarioId}</to-view-id>
             <redirect/>
         </navigation-case>
     </navigation-rule>
@@ -62,7 +72,7 @@
         </navigation-case>
         <navigation-case>
             <from-outcome>verReputacion</from-outcome>
-            <to-view-id>/vistas/verReputacion.xhtml?id=#{alquileresTomados.usuarioId}</to-view-id>
+            <to-view-id>/vistas/verReputacion.xhtml?id=#{alquileresOfrecidos.usuarioId}</to-view-id>
             <redirect/>
         </navigation-case>
     </navigation-rule>
@@ -201,6 +211,11 @@
         <navigation-case>
             <from-outcome>misAlquileresTomados</from-outcome>
             <to-view-id>/vistas/usuario/misAlquileresTomados.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>verReputacion</from-outcome>
+            <to-view-id>/vistas/verReputacion.xhtml?id=#{login.usuarioId}</to-view-id>
             <redirect/>
         </navigation-case>
     </navigation-rule>

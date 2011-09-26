@@ -369,17 +369,17 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
         for (Alquiler a : alquileres) {
             boolean calificado = calificacionFacade.isCalificacionExistente(usuario, a);
             Publicacion pub = a.getPublicacionFk();
-            Login alquilador = pub.getUsuarioFk().getLoginList().get(0);
+            Login duenio = pub.getUsuarioFk().getLoginList().get(0);
             EstadoAlquiler estado = estadoFacade.getEstadoAlquiler(a);
             List<ImagenPublicacion> imagenes = pub.getImagenPublicacionList();
             int imagenId = -1;
             if (!imagenes.isEmpty()) {
                 imagenId = imagenes.get(0).getImagenPublicacionId();
             }
-            AlquilerDTO dto = new AlquilerDTO(pub.getPublicacionId(), usuario.getUsuarioId(),
+            AlquilerDTO dto = new AlquilerDTO(pub.getPublicacionId(), pub.getUsuarioFk().getUsuarioId(),
                     a.getAlquilerId(), imagenId, a.getFechaInicio(), a.getFechaFin(),
                     estado.getNombre(), pub.getTitulo(),
-                    alquilador.getUsername(), a.getCantidad(), a.getMonto(), calificado);
+                    duenio.getUsername(), a.getCantidad(), a.getMonto(), calificado);
             // si el alquiler esta activo o confirmado; revisar si existe un pedido de cambio, y setearle su id al dto
             if(estado.getNombre() == EstadoAlquiler.NombreEstadoAlquiler.CONFIRMADO || 
                     estado.getNombre() == EstadoAlquiler.NombreEstadoAlquiler.ACTIVO) {

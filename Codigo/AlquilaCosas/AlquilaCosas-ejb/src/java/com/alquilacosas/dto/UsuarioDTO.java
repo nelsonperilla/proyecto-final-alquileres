@@ -25,17 +25,17 @@ public class UsuarioDTO implements Serializable {
      private boolean usuarioRol;
      private boolean adminRol;
      private double userRating;
-     private double userOfrecePositivas;
+     private Integer userOfrecePositivas;
      private double userOfrecePositivasPorcentaje;
-     private double userOfreceNeutrales;
+     private Integer userOfreceNeutrales;
      private double userOfreceNeutralesPorcentaje;
-     private double userOfreceNegativas;
+     private Integer userOfreceNegativas;
      private double userOfreceNegativasPorcentaje;
-     private double userTomaPositivas;
+     private Integer userTomaPositivas;
      private double userTomaPositivasPorcentaje;
-     private double userTomaNeutrales;
+     private Integer userTomaNeutrales;
      private double userTomaNeutralesPorcentaje;
-     private double userTomaNegativas;
+     private Integer userTomaNegativas;
      private double userTomaNegativasPorcentaje;
 
      public UsuarioDTO(Integer id, String nombre, String apellido, String email,
@@ -224,11 +224,11 @@ public class UsuarioDTO implements Serializable {
           this.usuarioRol = usuarioRol;
      }
 
-     public double getUserOfreceNegativas() {
+     public Integer getUserOfreceNegativas() {
           return userOfreceNegativas;
      }
 
-     public void setUserOfreceNegativas(double userOfreceNegativas) {
+     public void setUserOfreceNegativas(Integer userOfreceNegativas) {
           this.userOfreceNegativas = userOfreceNegativas;
      }
 
@@ -240,11 +240,11 @@ public class UsuarioDTO implements Serializable {
           this.userOfreceNegativasPorcentaje = userOfreceNegativasPorcentaje;
      }
 
-     public double getUserOfreceNeutrales() {
+     public Integer getUserOfreceNeutrales() {
           return userOfreceNeutrales;
      }
 
-     public void setUserOfreceNeutrales(double userOfreceNeutrales) {
+     public void setUserOfreceNeutrales(Integer userOfreceNeutrales) {
           this.userOfreceNeutrales = userOfreceNeutrales;
      }
 
@@ -256,11 +256,11 @@ public class UsuarioDTO implements Serializable {
           this.userOfreceNeutralesPorcentaje = userOfreceNeutralesPorcentaje;
      }
 
-     public double getUserOfrecePositivas() {
+     public Integer getUserOfrecePositivas() {
           return userOfrecePositivas;
      }
 
-     public void setUserOfrecePositivas(double userOfrecePositivas) {
+     public void setUserOfrecePositivas(Integer userOfrecePositivas) {
           this.userOfrecePositivas = userOfrecePositivas;
      }
 
@@ -280,11 +280,11 @@ public class UsuarioDTO implements Serializable {
           this.userRating = userRating;
      }
 
-     public double getUserTomaNegativas() {
+     public Integer getUserTomaNegativas() {
           return userTomaNegativas;
      }
 
-     public void setUserTomaNegativas(double userTomaNegativas) {
+     public void setUserTomaNegativas(Integer userTomaNegativas) {
           this.userTomaNegativas = userTomaNegativas;
      }
 
@@ -296,11 +296,11 @@ public class UsuarioDTO implements Serializable {
           this.userTomaNegativasPorcentaje = userTomaNegativasPorcentaje;
      }
 
-     public double getUserTomaNeutrales() {
+     public Integer getUserTomaNeutrales() {
           return userTomaNeutrales;
      }
 
-     public void setUserTomaNeutrales(double userTomaNeutrales) {
+     public void setUserTomaNeutrales(Integer userTomaNeutrales) {
           this.userTomaNeutrales = userTomaNeutrales;
      }
 
@@ -312,11 +312,11 @@ public class UsuarioDTO implements Serializable {
           this.userTomaNeutralesPorcentaje = userTomaNeutralesPorcentaje;
      }
 
-     public double getUserTomaPositivas() {
+     public Integer getUserTomaPositivas() {
           return userTomaPositivas;
      }
 
-     public void setUserTomaPositivas(double userTomaPositivas) {
+     public void setUserTomaPositivas(Integer userTomaPositivas) {
           this.userTomaPositivas = userTomaPositivas;
      }
 

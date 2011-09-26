@@ -26,7 +26,7 @@
                <ui:define name="principal">
                     <h:form>
                          <p:outputPanel rendered="#{not reputacion.usuarioCorrecto}">No se encontro el Usuario.</p:outputPanel>
-                         <h:panelGrid columns="1" rendered="#{reputacion.usuarioCorrecto}" styleClass="repTable">
+                         <h:panelGrid columns="1" rendered="#{reputacion.usuarioCorrecto}" styleClass="repTable" >
                               <h1>Reputación</h1>
                               <p:outputPanel>Usuario: #{reputacion.usuarioDTO.username}</p:outputPanel>
                               <p:outputPanel>Antiguedad: #{reputacion.usuarioDTO.antiguedad}</p:outputPanel>
@@ -35,7 +35,7 @@
                                    <p:outputPanel>Reputación: </p:outputPanel>
                                    <p:rating value="#{reputacion.usuarioDTO.userRating}" stars="10" disabled="true"/>
                               </h:panelGrid>
-                              <h:panelGrid columns="2" columnClasses="repTableColumn" styleClass="repTable">
+                              <h:panelGrid columns="2" columnClasses="repTableColumn,repTableColumn" styleClass="repTable">
                                    <p:outputPanel>Ofreciendo Alquileres:</p:outputPanel>
                                    <p:outputPanel>Tomando Alquileres:</p:outputPanel>
                                    <h:panelGrid columns="3" columnClasses="repPuntLabel,repPuntCant,repPuntPorc">
