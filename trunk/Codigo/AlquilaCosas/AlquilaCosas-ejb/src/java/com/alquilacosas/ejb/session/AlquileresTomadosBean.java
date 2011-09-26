@@ -5,6 +5,7 @@
 package com.alquilacosas.ejb.session;
 
 import com.alquilacosas.common.AlquilaCosasException;
+import com.alquilacosas.common.NotificacionEmail;
 import com.alquilacosas.dto.AlquilerDTO;
 import com.alquilacosas.dto.CalificacionDTO;
 import com.alquilacosas.dto.PedidoCambioDTO;
@@ -39,21 +40,30 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import javax.annotation.Resource;
+import javax.annotation.security.DeclareRoles;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
+import javax.jms.MessageProducer;
+import javax.jms.ObjectMessage;
+import javax.jms.Session;
 
 /**
  *
  * @author wilson
  */
 @Stateless
+@DeclareRoles({"USUARIO", "ADMIN"})
 public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
 
-    @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
-    private EntityManager entityManager;
+    @Resource(name = "emailConnectionFactory")
+    private ConnectionFactory connectionFactory;
+    @Resource(name = "jms/notificacionEmailQueue")
+    private Destination destination;
     @EJB
     private AlquilerFacade alquilerFacade;
     @EJB
@@ -76,6 +86,7 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
     private PedidoCambioXEstadoFacade pedidoXEstadoFacade;
 
     @Override
+    @RolesAllowed({"USUARIO", "ADMIN"})
     public List<AlquilerDTO> getAlquileresSinCalificarPorUsuario(int usuarioId) {
         Usuario usuario = usuarioFacade.find(usuarioId);
         List<Alquiler> alquileres = alquilerFacade.getAlquileresTomadosFinalizadosSinCalificar(usuario);
@@ -83,45 +94,59 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
     }
 
     @Override
-     public void registrarCalificacion(Integer puntuacion, Integer alquilerId, String comentario, Integer usuarioId) {
-          Alquiler alquiler = alquilerFacade.find(alquilerId);
-          Usuario usuarioCalificado = alquiler.getPublicacionFk().getUsuarioFk();
-          Usuario usuario = usuarioFacade.find(usuarioId);
-          Puntuacion nuevaPuntuacion = puntuacionFacade.find(puntuacion);
-          
-          Calificacion nuevaCalificacion = new Calificacion();
-          nuevaCalificacion.setUsuarioReplicadorFk(usuarioCalificado);
-          nuevaCalificacion.setFechaCalificacion(new Date());
-          nuevaCalificacion.setPuntuacionFk(nuevaPuntuacion);
-          nuevaCalificacion.setComentarioCalificador(comentario);          
-          nuevaCalificacion.setUsuarioCalificadorFk(usuario);
-          
-          alquiler.agregarCalificacion(nuevaCalificacion);
-          alquilerFacade.edit(alquiler);
-     }
+    @RolesAllowed({"USUARIO", "ADMIN"})
+    public void registrarCalificacion(Integer puntuacion, Integer alquilerId, String comentario, Integer usuarioId) {
+        Alquiler alquiler = alquilerFacade.find(alquilerId);
+        Usuario usuarioCalificado = alquiler.getPublicacionFk().getUsuarioFk();
+        Usuario usuario = usuarioFacade.find(usuarioId);
+        Puntuacion nuevaPuntuacion = puntuacionFacade.find(puntuacion);
+
+        Calificacion nuevaCalificacion = new Calificacion();
+        nuevaCalificacion.setUsuarioCalificadoFk(usuarioCalificado);
+        nuevaCalificacion.setFechaCalificacion(new Date());
+        nuevaCalificacion.setPuntuacionFk(nuevaPuntuacion);
+        nuevaCalificacion.setComentarioCalificador(comentario);
+        nuevaCalificacion.setUsuarioCalificadorFk(usuario);
+
+        alquiler.agregarCalificacion(nuevaCalificacion);
+        alquilerFacade.edit(alquiler);
+
+        // enviar email
+        String asunto = "Has sido calificado por uno de tus alquileres";
+        String mensaje = "<html>Hola " + usuarioCalificado.getNombre() + ",<br/><br/>"
+                + "Has sido calificado por tu alquiler del producto " + alquiler.getPublicacionFk().getTitulo() + ". "
+                + "Para ver tu calificacion ingresa a tu panel de usuario, y dirigete a 'Mis alquileres ofrecidos.'<br/><br/>"
+                + "Atentamente,<br/>"
+                + "<b>AlquilaCosas</b>";
+        NotificacionEmail email = new NotificacionEmail(usuarioCalificado.getEmail(), asunto, mensaje);
+        enviarEmail(email);
+    }
 
     @Override
+    @RolesAllowed({"USUARIO", "ADMIN"})
     public List<Puntuacion> getPuntuaciones() {
-        Query query = entityManager.createNamedQuery("Puntuacion.findAll");
-        List<Puntuacion> puntuaciones = query.getResultList();
+        List<Puntuacion> puntuaciones = puntuacionFacade.findAll();
         return puntuaciones;
     }
 
     @Override
+    @RolesAllowed({"USUARIO", "ADMIN"})
     public List<AlquilerDTO> getAlquileresActivosPorUsuario(int usuarioId) {
-        Usuario usuario = entityManager.find(Usuario.class, usuarioId);
+        Usuario usuario = usuarioFacade.find(usuarioId);
         List<Alquiler> alquileres = alquilerFacade.getAlquileresTomadosActivos(usuario);
         return convertirAlquileres(alquileres, usuario);
     }
 
     @Override
+    @RolesAllowed({"USUARIO", "ADMIN"})
     public List<AlquilerDTO> getAlquileresConCalificarPorUsuario(int usuarioId) {
-        Usuario usuario = entityManager.find(Usuario.class, usuarioId);
+        Usuario usuario = usuarioFacade.find(usuarioId);
         List<Alquiler> alquileres = alquilerFacade.getAlquileresTomadosFinalizadosConCalificacion(usuario);
         return convertirAlquileres(alquileres, usuario);
     }
 
     @Override
+    @RolesAllowed({"USUARIO", "ADMIN"})
     public CalificacionDTO getCalificacionOfrece(Integer alquilerId) throws AlquilaCosasException {
         CalificacionDTO calificacionDTO = new CalificacionDTO();
         Alquiler alquiler = alquilerFacade.find(alquilerId);
@@ -135,14 +160,15 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
             calificacionDTO.setNombrePuntuacion(calificacion.getPuntuacionFk().getNombre());
             calificacionDTO.setNombreUsuarioCalificador(calificacion.getUsuarioCalificadorFk().getNombre() + " " + calificacion.getUsuarioCalificadorFk().getApellido());
             calificacionDTO.setIdUsuarioCalidicador(calificacion.getUsuarioCalificadorFk().getUsuarioId());
-            calificacionDTO.setNombreUsuarioReplica(calificacion.getUsuarioReplicadorFk() != null ? calificacion.getUsuarioReplicadorFk().getNombre() + " " + calificacion.getUsuarioReplicadorFk().getApellido() : null);
-            calificacionDTO.setIdUsuarioReplicador(calificacion.getUsuarioReplicadorFk() != null ? calificacion.getUsuarioReplicadorFk().getUsuarioId() : null);
+            calificacionDTO.setNombreUsuarioReplica(calificacion.getUsuarioCalificadoFk() != null ? calificacion.getUsuarioCalificadoFk().getNombre() + " " + calificacion.getUsuarioCalificadoFk().getApellido() : null);
+            calificacionDTO.setIdUsuarioReplicador(calificacion.getUsuarioCalificadoFk() != null ? calificacion.getUsuarioCalificadoFk().getUsuarioId() : null);
             calificacionDTO.setYaReplico(calificacion.getFechaReplica() != null);
         }
         return calificacionDTO;
     }
 
     @Override
+    @RolesAllowed({"USUARIO", "ADMIN"})
     public CalificacionDTO getCalificacionToma(Integer alquilerId) throws AlquilaCosasException {
         CalificacionDTO calificacionDTO = new CalificacionDTO();
         Alquiler alquiler = alquilerFacade.find(alquilerId);
@@ -156,24 +182,41 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
             calificacionDTO.setNombrePuntuacion(calificacion.getPuntuacionFk().getNombre());
             calificacionDTO.setNombreUsuarioCalificador(calificacion.getUsuarioCalificadorFk().getNombre() + " " + calificacion.getUsuarioCalificadorFk().getApellido());
             calificacionDTO.setIdUsuarioCalidicador(calificacion.getUsuarioCalificadorFk().getUsuarioId());
-            calificacionDTO.setNombreUsuarioReplica(calificacion.getUsuarioReplicadorFk() != null ? calificacion.getUsuarioReplicadorFk().getNombre() + " " + calificacion.getUsuarioReplicadorFk().getApellido() : null);
-            calificacionDTO.setIdUsuarioReplicador(calificacion.getUsuarioReplicadorFk() != null ? calificacion.getUsuarioReplicadorFk().getUsuarioId() : null);
+            calificacionDTO.setNombreUsuarioReplica(calificacion.getUsuarioCalificadoFk() != null ? calificacion.getUsuarioCalificadoFk().getNombre() + " " + calificacion.getUsuarioCalificadoFk().getApellido() : null);
+            calificacionDTO.setIdUsuarioReplicador(calificacion.getUsuarioCalificadoFk() != null ? calificacion.getUsuarioCalificadoFk().getUsuarioId() : null);
             calificacionDTO.setYaReplico(calificacion.getFechaReplica() != null);
         }
         return calificacionDTO;
     }
 
     @Override
+    @RolesAllowed({"USUARIO", "ADMIN"})
     public void registrarReplica(int calificacionId, String comentarioReplica, int usuarioId) throws AlquilaCosasException {
         Usuario usuario = usuarioFacade.find(usuarioId);
         Calificacion calificacionAReplicar = calificacionFacade.find(calificacionId);
+        if(calificacionAReplicar.getUsuarioCalificadoFk().getUsuarioId() != usuarioId) {
+            throw new AlquilaCosasException("No se puede replicar una calificacion que no ha sido otorgada a usted.");
+        }
         calificacionAReplicar.setFechaReplica(new Date());
         calificacionAReplicar.setComentarioReplica(comentarioReplica);
-        calificacionAReplicar.setUsuarioReplicadorFk(usuario);
         calificacionFacade.edit(calificacionAReplicar);
+        // enviar email
+        // enviar email
+        Usuario usuarioReplicado = calificacionAReplicar.getUsuarioCalificadorFk();
+        String asunto = "Han replicado tu calificacion";
+        String mensaje = "<html>Hola " + usuarioReplicado.getNombre() + ",<br/><br/>"
+                + "Tu calificacion por el alquiler del producto " + 
+                  calificacionAReplicar.getAlquilerFk().getPublicacionFk().getTitulo()
+                + " ha sido replicada por la contraparte. Para ver la replica recibida"
+                + " ingresa a tu panel de usuario, y dirigete a 'Mis alquileres ofrecidos.'<br/><br/>"
+                + "Atentamente,<br/>"
+                + "<b>AlquilaCosas</b>";
+        NotificacionEmail email = new NotificacionEmail(usuarioReplicado.getEmail(), asunto, mensaje);
+        enviarEmail(email);
     }
 
     @Override
+    @RolesAllowed({"USUARIO", "ADMIN"})
     public boolean cancelarAlquiler(int alquilerId) throws AlquilaCosasException {
         Alquiler alquiler = alquilerFacade.find(alquilerId);
         if (alquiler == null) {
@@ -189,10 +232,24 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
         axeCancelado.setEstadoAlquilerFk(estado);
         alquiler.agregarAlquilerXEstado(axeCancelado);
         alquilerFacade.edit(alquiler);
+        
+        // enviar email
+        Publicacion pub = alquiler.getPublicacionFk();
+        Usuario dueno = pub.getUsuarioFk();
+        String asunto = "Han cancelado uno de tus alquileres";
+        String mensaje = "<html>Hola " + dueno.getNombre() + ",<br/><br/>"
+                + "El alquilador del producto <b>" + alquiler.getPublicacionFk().getTitulo() + "</b> ha cancelado "
+                + "tu alquiler.<br/><br/> "
+                + "Atentamente,<br/>"
+                + "<b>AlquilaCosas</b>";
+        NotificacionEmail email = new NotificacionEmail(dueno.getEmail(), asunto, mensaje);
+        enviarEmail(email);
+        
         return true;
     }
 
     @Override
+    @RolesAllowed({"USUARIO", "ADMIN"})
     public List<Date> getFechasSinStock(int alquilerId) {
         Alquiler alquiler = alquilerFacade.find(alquilerId);
         Publicacion publicacion = alquiler.getPublicacionFk();
@@ -286,22 +343,24 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
 
         return respuesta;
     }
-    
+
     @Override
+    @RolesAllowed({"USUARIO", "ADMIN"})
     public PedidoCambioDTO getPedidoCambio(int pedidoCambioId) {
         PedidoCambio pedido = pedidoFacade.find(pedidoCambioId);
-        PedidoCambioDTO dto = new PedidoCambioDTO(pedidoCambioId, 
+        PedidoCambioDTO dto = new PedidoCambioDTO(pedidoCambioId,
                 pedido.getPeriodoFk().getNombre(), pedido.getDuracion());
         return dto;
     }
-    
+
     @Override
+    @RolesAllowed({"USUARIO", "ADMIN"})
     public void solicitarCambioAlquiler(int alquilerId, NombrePeriodo periodo, int duracion)
             throws AlquilaCosasException {
-        
+
         Alquiler alquiler = alquilerFacade.find(alquilerId);
         Publicacion publicacion = alquiler.getPublicacionFk();
-        
+
         Calendar cal = Calendar.getInstance();
         Date fechaInicio = alquiler.getFechaInicio();
         cal.setTime(fechaInicio);
@@ -311,36 +370,36 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
             cal.add(Calendar.DAY_OF_YEAR, duracion);
         }
         Date fechaFin = cal.getTime();
-        if(fechaFin.before(new Date())) {
+        if (fechaFin.before(new Date())) {
             throw new AlquilaCosasException("La fecha de fin del periodo seleccionado ya paso.");
         }
-        
+
         long periodoAlquilerEnMillis = fechaFin.getTime() - fechaInicio.getTime();
-        
-        long minimaDuracion = calcularDuracion(publicacion.getMinPeriodoAlquilerFk().getNombre(), 
+
+        long minimaDuracion = calcularDuracion(publicacion.getMinPeriodoAlquilerFk().getNombre(),
                 publicacion.getMinValor());
-        
-        if(periodoAlquilerEnMillis < minimaDuracion) {
+
+        if (periodoAlquilerEnMillis < minimaDuracion) {
             throw new AlquilaCosasException("El periodo seleccionado no alcanza "
                     + "el minimo periodo de alquiler seleccionado para ese producto:"
-                    + publicacion.getMinValor() + " " +
-                    publicacion.getMinPeriodoAlquilerFk().getNombre().toString());
+                    + publicacion.getMinValor() + " "
+                    + publicacion.getMinPeriodoAlquilerFk().getNombre().toString());
         }
-        if(publicacion.getMaxPeriodoAlquilerFk() != null && publicacion.getMaxValor() != null) {
-            long maximaDuracion = calcularDuracion(publicacion.getMaxPeriodoAlquilerFk().getNombre(), 
+        if (publicacion.getMaxPeriodoAlquilerFk() != null && publicacion.getMaxValor() != null) {
+            long maximaDuracion = calcularDuracion(publicacion.getMaxPeriodoAlquilerFk().getNombre(),
                     publicacion.getMaxValor());
-            if(periodoAlquilerEnMillis > maximaDuracion) {
+            if (periodoAlquilerEnMillis > maximaDuracion) {
                 throw new AlquilaCosasException("El periodo seleccionado supera "
                         + "el maximo periodo de alquiler seleccionado para ese producto."
-                        + publicacion.getMaxValor() + " " + 
-                        publicacion.getMaxPeriodoAlquilerFk().getNombre().toString());
+                        + publicacion.getMaxValor() + " "
+                        + publicacion.getMaxPeriodoAlquilerFk().getNombre().toString());
             }
         }
         Periodo period = periodoFacade.findByNombre(periodo);
         PedidoCambio pedido = new PedidoCambio();
         pedido.setDuracion(duracion);
         pedido.setPeriodoFk(period);
-        
+
         EstadoPedidoCambio estado = estadPedidoFacade.findByNombre(NombreEstadoPedidoCambio.ENVIADO);
         PedidoCambioXEstado pcxe = new PedidoCambioXEstado(pedido, estado);
         pcxe.setFechaDesde(new Date());
@@ -348,22 +407,49 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
         pedido.agregarPedidoCambioXEstado(pcxe);
         alquiler.agregarPedidoCambio(pedido);
         alquilerFacade.edit(alquiler);
+        
+        // enviar email
+        Usuario dueno = publicacion.getUsuarioFk();
+        String asunto = "Has recibido un pedido de cambio";
+        String mensaje = "<html>Hola " + dueno.getNombre() + ",<br/><br/>"
+                + "El alquilador del producto <b>" + publicacion.getTitulo() + "</b> ha "
+                + " solicitado modificar la duracion del alquiler. <br/>"
+                + "La nueva duracion propuesta es de " + duracion + " " + periodo.toString() + ".<br/>"
+                + "Te recomendamos que antes de responder el pedido, contactes al alquilador "
+                + "para ponerse de acuerdo con el pago. <br/><br/>"
+                + "Atentamente,<br/>"
+                + "<b>AlquilaCosas</b>";
+        NotificacionEmail email = new NotificacionEmail(dueno.getEmail(), asunto, mensaje);
+        enviarEmail(email);
     }
-    
+
     @Override
+    @RolesAllowed({"USUARIO", "ADMIN"})
     public void cancelarPedidoCambio(int pedidoCambioId) {
         PedidoCambio pedido = pedidoFacade.find(pedidoCambioId);
-        
+
         PedidoCambioXEstado pcxe = pedidoXEstadoFacade.getPedidoCambioXEstadoActual(pedido);
         pcxe.setFechaHasta(new Date());
-        
+
         EstadoPedidoCambio estado = estadPedidoFacade.findByNombre(NombreEstadoPedidoCambio.CANCELADO);
         PedidoCambioXEstado pcxeNuevo = new PedidoCambioXEstado(pedido, estado);
         pcxeNuevo.setFechaDesde(new Date());
         pedido.agregarPedidoCambioXEstado(pcxeNuevo);
         pedidoFacade.edit(pedido);
+        
+        // enviar email
+        Publicacion publicacion = pedido.getAlquilerFk().getPublicacionFk();
+        Usuario dueno = publicacion.getUsuarioFk();
+        String asunto = "Han cancelado uno de tus alquileres";
+        String mensaje = "<html>Hola " + dueno.getNombre() + ",<br/><br/>"
+                + "El alquilador del producto <b>" + publicacion.getTitulo() + "</b> ha "
+                + " cancelado el alquiler. Ya puedes otorgar una calificacion por el mismo. <br/><br/>"
+                + "Atentamente,<br/>"
+                + "<b>AlquilaCosas</b>";
+        NotificacionEmail email = new NotificacionEmail(dueno.getEmail(), asunto, mensaje);
+        enviarEmail(email);
     }
-    
+
     private List<AlquilerDTO> convertirAlquileres(List<Alquiler> alquileres, Usuario usuario) {
         List<AlquilerDTO> listaAlquileres = new ArrayList<AlquilerDTO>();
         for (Alquiler a : alquileres) {
@@ -381,34 +467,50 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
                     estado.getNombre(), pub.getTitulo(),
                     duenio.getUsername(), a.getCantidad(), a.getMonto(), calificado);
             // si el alquiler esta activo o confirmado; revisar si existe un pedido de cambio, y setearle su id al dto
-            if(estado.getNombre() == EstadoAlquiler.NombreEstadoAlquiler.CONFIRMADO || 
-                    estado.getNombre() == EstadoAlquiler.NombreEstadoAlquiler.ACTIVO) {
+            if (estado.getNombre() == EstadoAlquiler.NombreEstadoAlquiler.CONFIRMADO
+                    || estado.getNombre() == EstadoAlquiler.NombreEstadoAlquiler.ACTIVO) {
                 PedidoCambio pedido = pedidoFacade.getPedidoEnviado(a);
                 int id = -1;
-                if(pedido != null)
+                if (pedido != null) {
                     id = pedido.getPedidoCambioId();
+                }
                 dto.setIdPedidoCambio(id);
             }
             listaAlquileres.add(dto);
         }
         return listaAlquileres;
     }
-    
+
     private long calcularDuracion(NombrePeriodo nombrePeriodo, long periodo) {
-        
-        if(nombrePeriodo == NombrePeriodo.HORA) {
+
+        if (nombrePeriodo == NombrePeriodo.HORA) {
             periodo *= 60 * 60 * 1000;
-        } else if(nombrePeriodo == NombrePeriodo.DIA) {
+        } else if (nombrePeriodo == NombrePeriodo.DIA) {
             periodo *= 24 * 60 * 60 * 1000;
-        } else if(nombrePeriodo == NombrePeriodo.SEMANA) {
+        } else if (nombrePeriodo == NombrePeriodo.SEMANA) {
             periodo *= 7 * 24 * 60 * 60 * 1000;
-        } else if(nombrePeriodo == NombrePeriodo.MES) {
+        } else if (nombrePeriodo == NombrePeriodo.MES) {
             Date now = new Date();
-                Calendar temp = Calendar.getInstance();
-                temp.setTime(now);
-                temp.add(Calendar.MONTH,(int)periodo);
-                periodo = temp.getTimeInMillis() - now.getTime();
+            Calendar temp = Calendar.getInstance();
+            temp.setTime(now);
+            temp.add(Calendar.MONTH, (int) periodo);
+            periodo = temp.getTimeInMillis() - now.getTime();
         }
         return periodo;
+    }
+
+    private void enviarEmail(NotificacionEmail email) {
+        try {
+            Connection connection = connectionFactory.createConnection();
+            Session session = connection.createSession(true,
+                    Session.AUTO_ACKNOWLEDGE);
+            MessageProducer producer = session.createProducer(destination);
+            ObjectMessage message = session.createObjectMessage();
+            message.setObject(email);
+            producer.send(message);
+            session.close();
+            connection.close();
+        } catch (Exception e) {
+        }
     }
 }

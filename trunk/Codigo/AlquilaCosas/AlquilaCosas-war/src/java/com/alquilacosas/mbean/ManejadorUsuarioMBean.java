@@ -107,6 +107,7 @@ public class ManejadorUsuarioMBean implements Serializable {
         password = "";
         logueado = false;
         administrador = false;
+        request.getSession().invalidate();
         return "inicio";
     }
 

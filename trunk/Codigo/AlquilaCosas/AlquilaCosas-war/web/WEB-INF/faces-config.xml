@@ -214,6 +214,11 @@
             <redirect/>
         </navigation-case>
         <navigation-case>
+            <from-outcome>cambiarContrasena</from-outcome>
+            <to-view-id>/vistas/usuario/cambiarContrasena.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
             <from-outcome>verReputacion</from-outcome>
             <to-view-id>/vistas/verReputacion.xhtml?id=#{login.usuarioId}</to-view-id>
             <redirect/>

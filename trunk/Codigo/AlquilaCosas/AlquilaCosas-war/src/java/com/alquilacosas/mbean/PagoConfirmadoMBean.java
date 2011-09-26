@@ -77,9 +77,12 @@ public class PagoConfirmadoMBean implements Serializable {
         CallerServices caller = new CallerServices();
         try {
             APIProfile profile = ProfileFactory.createSignatureAPIProfile();
-            profile.setAPIUsername("seller_1314645851_biz_api1.gmail.com");
-            profile.setAPIPassword("1314645889");
-            profile.setSignature("AdO-w7F17-IlSqAHGUzyrxYC7d8AAi-Mr9mYpAidn5Robg7h5He8Ize1");
+//            profile.setAPIUsername("seller_1314645851_biz_api1.gmail.com");
+//            profile.setAPIPassword("1314645889");
+//            profile.setSignature("AdO-w7F17-IlSqAHGUzyrxYC7d8AAi-Mr9mYpAidn5Robg7h5He8Ize1");
+            profile.setAPIUsername("cardozo.damian_api1.gmail.com");
+            profile.setAPIPassword("EYGPM2859PNBMSHM");
+            profile.setSignature("AAE24aY3lpsWe.zrr2Px0axspt29ABZlMNWmQdQaipmLr0OvBcfQeSOb");
             profile.setEnvironment("sandbox");
             caller.setAPIProfile(profile);
 
@@ -102,9 +105,12 @@ public class PagoConfirmadoMBean implements Serializable {
         Integer publicacionId = null;
         try {
             APIProfile profile = ProfileFactory.createSignatureAPIProfile();
-            profile.setAPIUsername("seller_1314645851_biz_api1.gmail.com");
-            profile.setAPIPassword("1314645889");
-            profile.setSignature("AdO-w7F17-IlSqAHGUzyrxYC7d8AAi-Mr9mYpAidn5Robg7h5He8Ize1");
+//            profile.setAPIUsername("seller_1314645851_biz_api1.gmail.com");
+//            profile.setAPIPassword("1314645889");
+//            profile.setSignature("AdO-w7F17-IlSqAHGUzyrxYC7d8AAi-Mr9mYpAidn5Robg7h5He8Ize1");
+            profile.setAPIUsername("cardozo.damian_api1.gmail.com");
+            profile.setAPIPassword("EYGPM2859PNBMSHM");
+            profile.setSignature("AAE24aY3lpsWe.zrr2Px0axspt29ABZlMNWmQdQaipmLr0OvBcfQeSOb");
             profile.setEnvironment("sandbox");
             caller.setAPIProfile(profile);
 
@@ -130,6 +136,7 @@ public class PagoConfirmadoMBean implements Serializable {
 
         } catch (PayPalException e) {
             System.out.println("exception in doExpresCheckoutService(): " + e);
+            return null;
         }
         if (type != null) {
             PaymentInfoType paymentInfo = null;
@@ -137,7 +144,8 @@ public class PagoConfirmadoMBean implements Serializable {
                 paymentInfo = type.getPaymentInfo(0);
                 publicacionId = Integer.valueOf(response.getCustom());
             } catch(Exception ex) {
-                System.out.println("error");
+                System.out.println("error: " + ex);
+                return null;
             }
             if (paymentInfo != null && paymentInfo.getPaymentStatus().equals(PaymentStatusCodeType.fromString("Completed"))) {
                 System.out.println("Payment completed.");

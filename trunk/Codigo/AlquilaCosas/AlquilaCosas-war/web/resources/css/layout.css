@@ -391,7 +391,7 @@ h1, h2, h3 {
 }
 
 .labelColumn {
-    width: 120px;
+    width: 180px;
     text-align: right;
 }
 
@@ -646,7 +646,7 @@ h1, h2, h3 {
 
 .itemImgCol {
     width: 50px;
-    padding: 2px 2px 2px 5px;
+/*    padding: 2px 2px 2px 5px;*/
 }
 
 .itemContentCol {
