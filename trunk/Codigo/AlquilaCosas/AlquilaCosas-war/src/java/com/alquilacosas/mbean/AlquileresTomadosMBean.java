@@ -188,7 +188,7 @@ public class AlquileresTomadosMBean implements Serializable {
     }
 
     public void registrarCalificacion() {
-        alquileresTomadosBean.registrarCalificacion(puntuacion, alquilerId, comentario, usuarioId);
+        alquileresTomadosBean.registrarCalificacion(puntuacion, alquilerId, comentario, usuarioLogueadoId);
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, 
                 "Calificacion registrada", "");
         FacesContext.getCurrentInstance().addMessage(null, message);
