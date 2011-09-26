@@ -35,7 +35,8 @@ public class MisPedidosRealizadosMBean {
     private Integer usuarioId;
     private Integer alquilerId;
 
-    /** Creates a new instance of MisPedidosRealizadosMBean */
+    /** Creates a new instance of MisPedidosRealizadosMBean    */
+    
     public MisPedidosRealizadosMBean() {
     }
     
