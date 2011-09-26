@@ -87,6 +87,8 @@ public class AlquilerDTO implements Serializable {
         fechaDesde = formatoDia.format(fechaInicio);
         fechaHasta = formatoDia.format(fechaFin);
     }
+    
+    
 
     public int getCantidad() {
         return cantidad;

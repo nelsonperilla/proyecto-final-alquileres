@@ -17,7 +17,7 @@
         <cc:attribute name="userMethod" type="java.lang.String" required="true"/>
         <cc:attribute name="metodoAceptar" type="java.lang.String" required="true"/>
         <cc:attribute name="metodoRechazar" type="java.lang.String" required="true"/>
-        <cc:attribute name="metodoCancelarPedido" type="java.lang.String" required="false"/>
+        <cc:attribute name="metodoCancelarPedido" type="java.lang.String" />
         <cc:attribute name="lista" type="java.lang.String" required="true"/>
         <cc:attribute name="confirmable" type="java.lang.Boolean" default="false" />
         <cc:attribute name="cancelable" type="java.lang.Boolean" default="false" />
@@ -42,7 +42,7 @@
                         <f:setPropertyActionListener value="#{cc.attrs.var.idPublicacion}" 
                                                      target="#{cc.attrs.bean[cc.attrs.propertyPub]}" />
                     </h:commandLink>
-                    <h:commandLink value="De: #{cc.attrs.var.usuario}" action="#{cc.attrs.bean[cc.attrs.userMethod]}" >
+                    <h:commandLink value="#{cc.attrs.var.usuario}" action="#{cc.attrs.bean[cc.attrs.userMethod]}" >
                         <f:setPropertyActionListener value="#{cc.attrs.var.idUsuario}" 
                                                      target="#{cc.attrs.bean[cc.attrs.propertyUser]}" />
                     </h:commandLink>

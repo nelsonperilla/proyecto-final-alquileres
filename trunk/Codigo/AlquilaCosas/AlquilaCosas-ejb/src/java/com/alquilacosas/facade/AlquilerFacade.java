@@ -4,6 +4,7 @@
  */
 package com.alquilacosas.facade;
 
+import com.alquilacosas.common.ObjetoTemporal;
 import com.alquilacosas.ejb.entity.Alquiler;
 import com.alquilacosas.ejb.entity.AlquilerXEstado;
 import com.alquilacosas.ejb.entity.Alquiler_;
@@ -11,6 +12,7 @@ import com.alquilacosas.ejb.entity.EstadoAlquiler;
 import com.alquilacosas.ejb.entity.EstadoAlquiler.NombreEstadoAlquiler;
 import com.alquilacosas.ejb.entity.Publicacion;
 import com.alquilacosas.ejb.entity.Usuario;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import java.util.Date;
@@ -98,13 +100,13 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
     
 
 
-     public List<Alquiler> getAlquilerPorPeriodo(Date fechaInicio, Date fechaFin, Integer idAlqConfirmado) {
+     public List<Alquiler> getAlquilerPorPeriodo(Date fechaInicio, Date fechaFin, Integer alquilerId, Integer idPublicacion) {
           
           List<Alquiler> alquileres = null;
-          String id = String.valueOf(idAlqConfirmado);
+          String id = String.valueOf(alquilerId);
           java.sql.Date fechaDesde = new java.sql.Date(fechaInicio.getTime());
           java.sql.Date fechaHasta = new java.sql.Date(fechaFin.getTime());
-
+          String publicacionId = String.valueOf(idPublicacion);
           Query query = em.createNativeQuery(" SELECT * FROM Alquiler a, "
                   + "Alquiler_X_Estado axe, Estado_Alquiler ea "
                   + "WHERE ((a.fecha_Inicio <= '" + fechaDesde + "' AND a.fecha_Fin >= '" + fechaHasta + "') "
@@ -113,6 +115,7 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
                   + "AND a.alquiler_Id = axe.alquiler_FK "
                   + "AND axe.estado_Alquiler_FK = ea.estado_Alquiler_Id "
                   + "AND axe.fecha_hasta IS NULL AND ea.nombre = 'PEDIDO' "
+                  + "AND a.publicacion_Fk = "+ publicacionId + " "
                   + "AND a.alquiler_id <> " + id + " ", Alquiler.class);
 
           alquileres = query.getResultList();
@@ -134,16 +137,48 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
           return query.getResultList();
      }
 
-     public List<Alquiler> getAlquileresConfirmadosActivos() {
+     public List<Alquiler> getAlquileresConfirmadosActivos( Integer publicacionId ) {
           List<Alquiler> alquileres = null;
           Query query = em.createQuery("SELECT a FROM Alquiler a, AlquilerXEstado axe, EstadoAlquiler ea "
                   + "WHERE a.alquilerId = axe.alquilerFk.alquilerId "
                   + "AND axe.estadoAlquilerFk.estadoAlquilerId = ea.estadoAlquilerId "
+                  + "AND a.publicacionFk.publicacionId = :publicacionId "
                   + "AND ( ea.nombre = :estado1 OR ea.nombre = :estado2 ) ");
+          query.setParameter("publicacionId", publicacionId);
           query.setParameter("estado1", EstadoAlquiler.NombreEstadoAlquiler.CONFIRMADO);
           query.setParameter("estado2", EstadoAlquiler.NombreEstadoAlquiler.ACTIVO);
           alquileres = query.getResultList();
           return alquileres;
+     }
+     
+     public List<ObjetoTemporal> getCambiosDeAlquileresRecibidos( Publicacion publicacion ) {
+          
+         List<ObjetoTemporal> pedidosDeCambio = new ArrayList<ObjetoTemporal>();
+          String publicacionId = String.valueOf(publicacion.getPublicacionId());
+          Query query = em.createNativeQuery("SELECT pc.pedido_cambio_id, a.fecha_inicio, a.fecha_fin, a.cantidad, pc.periodo_fk, pc.duracion "
+                  + "FROM alquiler a, pedido_cambio pc, pedido_cambio_x_estado pcxe, estado_pedido_cambio epc "
+                  + "WHERE pc.pedido_cambio_id = pcxe.pedido_cambio_fk "
+                  + "AND pcxe.estado_fk = epc.estado_pedido_cambio_id "
+                  + "AND epc.nombre = 'ENVIADO' "
+                  + "AND pc.alquiler_fk = a.alquiler_id "
+                  + "AND a.publicacion_fk = " + publicacionId);
+        
+          List<Object[]> list = query.getResultList();
+        
+        for( Object[] object : list){
+            
+            Integer id = (Integer) object[0];
+            Date fechaInicio = (Date) object[1];
+            Date fechaFin = (Date) object[2];
+            Integer cantidad = (Integer) object[3];
+            Integer periodo = (Integer) object[4];
+            Integer duracion = (Integer) object[5];
+           
+          ObjetoTemporal temp = new ObjetoTemporal(id, fechaInicio, fechaFin, 
+                  cantidad, periodo, duracion);
+          pedidosDeCambio.add(temp);
+        }
+          return pedidosDeCambio;
      }
 
      public List<Alquiler> getAlquileresPorUsuario(Usuario usuario) {
@@ -304,6 +339,7 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
     }
      
      /**
+      * Autor: Ignacio Giagante
       * El siguiente método busca los pedidos rechazados o cancelados con una antiguedad
       * mayor a 30 días desde la fecha actual
       * @param
