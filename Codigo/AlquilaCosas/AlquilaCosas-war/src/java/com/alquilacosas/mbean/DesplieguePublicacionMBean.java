@@ -20,10 +20,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.security.DeclareRoles;
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
-import javax.faces.application.FacesMessage.Severity;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
@@ -40,7 +38,7 @@ import org.primefaces.json.JSONObject;
 @ManagedBean(name = "publicacionDesplegada")
 @ViewScoped
 @DeclareRoles({"USUARIO", "ADMIN"})
-public class DesplieguePublicacionMBean {
+public class DesplieguePublicacionMBean implements Serializable {
 
     @EJB
     private PublicacionBeanLocal publicationBean;

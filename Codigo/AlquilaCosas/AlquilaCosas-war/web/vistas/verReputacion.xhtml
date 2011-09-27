@@ -7,114 +7,121 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:comps="http://java.sun.com/jsf/composite/comps" >
 
-     <body>
+    <body>
 
-          <ui:composition template="./../resources/templates/masterPage.xhtml">
+        <ui:composition template="./../resources/templates/masterPage.xhtml">
 
-               <ui:define name="logInfo">
-                    <h:form>
-                         <h:commandLink value="inicio" action="inicio" />
-                    </h:form>
-               </ui:define>
+            <ui:define name="logInfo">
+                <h:form>
+                    <h:commandLink value="inicio" action="inicio" />
+                </h:form>
+            </ui:define>
 
-               <ui:define name="left">
-                    <p:outputPanel id="catMenu" >
-                         <comps:categoriesMenu />
+            <ui:define name="left">
+                <p:outputPanel id="catMenu" >
+                    <comps:categoriesMenu />
+                </p:outputPanel>
+            </ui:define>
+
+            <ui:define name="principal">
+                <h1>Reputación</h1>
+                <h:form>
+                    <p:outputPanel rendered="#{not reputacion.usuarioCorrecto}">
+                        No se encontro el Usuario.
                     </p:outputPanel>
-               </ui:define>
+                    <p:fieldset rendered="#{reputacion.usuarioCorrecto}" >
 
-               <ui:define name="principal">
-                    <h:form>
-                         <p:outputPanel rendered="#{not reputacion.usuarioCorrecto}">No se encontro el Usuario.</p:outputPanel>
-                         <h:panelGrid columns="1" rendered="#{reputacion.usuarioCorrecto}" styleClass="repTable" >
-                              <h1>Reputación</h1>
-                              <p:outputPanel>Usuario: #{reputacion.usuarioDTO.username}</p:outputPanel>
-                              <p:outputPanel>Antiguedad: #{reputacion.usuarioDTO.antiguedad}</p:outputPanel>
-                              <p:outputPanel>Ubicación: #{reputacion.usuarioDTO.domicilio.provincia}, #{reputacion.usuarioDTO.domicilio.pais}</p:outputPanel>
-                              <h:panelGrid columns="2">
-                                   <p:outputPanel>Reputación: </p:outputPanel>
-                                   <p:rating value="#{reputacion.usuarioDTO.userRating}" stars="10" disabled="true"/>
-                              </h:panelGrid>
-                              <h:panelGrid columns="2" columnClasses="repTableColumn,repTableColumn" styleClass="repTable">
-                                   <p:outputPanel>Ofreciendo Alquileres:</p:outputPanel>
-                                   <p:outputPanel>Tomando Alquileres:</p:outputPanel>
-                                   <h:panelGrid columns="3" columnClasses="repPuntLabel,repPuntCant,repPuntPorc">
-                                        <h:outputText value="Positivas:" />
-                                        <h:outputText value="#{reputacion.usuarioDTO.userOfrecePositivas}" />
-                                        <h:outputText value="#{reputacion.usuarioDTO.userOfrecePositivasPorcentaje} %" />
-                                        <h:outputText value="Neutrales:" />
-                                        <h:outputText value="#{reputacion.usuarioDTO.userOfreceNeutrales}" />
-                                        <h:outputText value="#{reputacion.usuarioDTO.userOfreceNeutralesPorcentaje} %" />
-                                        <h:outputText value="Negativas:" />
-                                        <h:outputText value="#{reputacion.usuarioDTO.userOfreceNegativas}" />
-                                        <h:outputText value="#{reputacion.usuarioDTO.userOfreceNegativasPorcentaje} %" />
-                                   </h:panelGrid>
-                                   <h:panelGrid columns="3" columnClasses="repPuntLabel,repPuntCant,repPuntPorc">
-                                        <h:outputText value="Positivas:" />
-                                        <h:outputText value="#{reputacion.usuarioDTO.userTomaPositivas}" />
-                                        <h:outputText value="#{reputacion.usuarioDTO.userTomaPositivasPorcentaje} %" />
-                                        <h:outputText value="Neutrales:" />
-                                        <h:outputText value="#{reputacion.usuarioDTO.userTomaNeutrales}" />
-                                        <h:outputText value="#{reputacion.usuarioDTO.userTomaNeutralesPorcentaje} %" />
-                                        <h:outputText value="Negativas:" />
-                                        <h:outputText value="#{reputacion.usuarioDTO.userTomaNegativas}" />
-                                        <h:outputText value="#{reputacion.usuarioDTO.userTomaNegativasPorcentaje} %" />
-                                   </h:panelGrid>
-                                   <p:dataTable id="tablaCalificacionesOfrece" value="#{reputacion.calificacionesOfrece}" 
-                                                var="calOfrece" styleClass="itemsTable" emptyMessage="No hay calificaciones para mostrar."
-                                                rows="10" paginator="true" paginatorPosition="bottom" >
-                                        <f:facet name="header">  
-                                             Calificaciones Recibidas
-                                        </f:facet>
-                                        <p:column>
-                                             <comps:itemCalificacion var="#{calOfrece}" bean="#{reputacion}"
-                                                                     dlgVerReplica="dlgReplica" metodoVerReplica="verReplica"
-                                                                     panelDialogo="dialogo" />
-                                        </p:column>
-                                   </p:dataTable>
-                                   <p:dataTable id="tablaCalificacionesToma" value="#{reputacion.calificacionesToma}" 
-                                                var="calToma" styleClass="itemsTable" emptyMessage="No hay calificaciones para mostrar."
-                                                rows="10" paginator="true" paginatorPosition="bottom" >
-                                        <f:facet name="header">  
-                                             Calificaciones Recibidas
-                                        </f:facet>
-                                        <p:column>
-                                             <comps:itemCalificacion var="#{calToma}" bean="#{reputacion}"
-                                                                     dlgVerReplica="dlgReplica" metodoVerReplica="verReplica"
-                                                                     panelDialogo="dialogo" />
-                                        </p:column>
-                                   </p:dataTable>
-                              </h:panelGrid>
-                         </h:panelGrid>
-                    </h:form>
-                    <p:outputPanel id="dialogo" >
-                         <p:dialog widgetVar="dlgReplica" header="Ver Réplica"
-                                   modal="true" resizable="false" >
-                              <h:form>
-                                   <table width="100%">
-                                        <tr>
-                                             <td align="center">
-                                                  <h:outputText value="#{reputacion.replica}" />
-                                             </td>
-                                        </tr>
-                                        <tr>
-                                             <td align="center">
-                                                  <p:commandButton value="Cerrar" oncomplete="dlgReplica.hide()" />
-                                             </td>
-                                        </tr>
-                                   </table>
-                              </h:form>
-                         </p:dialog>
-                    </p:outputPanel>
-               </ui:define>
+                        <h:panelGrid columns="1" styleClass="repTable" >
+                            <p:outputPanel>Usuario: #{reputacion.usuarioDTO.username}</p:outputPanel>
+                            <p:outputPanel>Antiguedad: #{reputacion.usuarioDTO.antiguedad}</p:outputPanel>
+                            <p:outputPanel>Ubicación: #{reputacion.usuarioDTO.domicilio.provincia}, #{reputacion.usuarioDTO.domicilio.pais}</p:outputPanel>
+                            <h:panelGrid columns="2">
+                                <p:outputPanel>Reputación: </p:outputPanel>
+                                <p:rating value="#{reputacion.usuarioDTO.userRating}" stars="10" disabled="true"/>
+                            </h:panelGrid>
+                            <h:panelGrid columns="2" columnClasses="repTableColumn,repTableColumn" styleClass="repTable">
+                                <h:outputText value="Ofreciendo Alquileres:" style="font-weight: bold" />
+                                <h:outputText value="Tomando Alquileres:" style="font-weight: bold" />
+                                <h:panelGrid columns="3" columnClasses="repPuntLabel,repPuntCant,repPuntPorc">
+                                    <h:outputText value="Positivas:" />
+                                    <h:outputText value="#{reputacion.usuarioDTO.userOfrecePositivas}" />
+                                    <h:outputText value="#{reputacion.usuarioDTO.userOfrecePositivasPorcentaje} %" />
+                                    <h:outputText value="Neutrales:" />
+                                    <h:outputText value="#{reputacion.usuarioDTO.userOfreceNeutrales}" />
+                                    <h:outputText value="#{reputacion.usuarioDTO.userOfreceNeutralesPorcentaje} %" />
+                                    <h:outputText value="Negativas:" />
+                                    <h:outputText value="#{reputacion.usuarioDTO.userOfreceNegativas}" />
+                                    <h:outputText value="#{reputacion.usuarioDTO.userOfreceNegativasPorcentaje} %" />
+                                </h:panelGrid>
+                                <h:panelGrid columns="3" columnClasses="repPuntLabel,repPuntCant,repPuntPorc">
+                                    <h:outputText value="Positivas:" />
+                                    <h:outputText value="#{reputacion.usuarioDTO.userTomaPositivas}" />
+                                    <h:outputText value="#{reputacion.usuarioDTO.userTomaPositivasPorcentaje} %" />
+                                    <h:outputText value="Neutrales:" />
+                                    <h:outputText value="#{reputacion.usuarioDTO.userTomaNeutrales}" />
+                                    <h:outputText value="#{reputacion.usuarioDTO.userTomaNeutralesPorcentaje} %" />
+                                    <h:outputText value="Negativas:" />
+                                    <h:outputText value="#{reputacion.usuarioDTO.userTomaNegativas}" />
+                                    <h:outputText value="#{reputacion.usuarioDTO.userTomaNegativasPorcentaje} %" />
+                                </h:panelGrid>
+                                <p:dataTable id="tablaCalificacionesOfrece" value="#{reputacion.calificacionesOfrece}" 
+                                             var="calOfrece" styleClass="itemsTable" emptyMessage="No hay calificaciones para mostrar."
+                                             rows="10" paginator="true" paginatorPosition="bottom" >
+                                    <f:facet name="header">  
+                                        Calificaciones Recibidas
+                                    </f:facet>
+                                    <p:column>
+                                        <comps:itemCalificacion var="#{calOfrece}" bean="#{reputacion}"
+                                                                dlgVerReplica="dlgReplica" metodoVerReplica="verReplica"
+                                                                panelDialogo="dialogo" />
+                                    </p:column>
+                                </p:dataTable>
+                                <p:dataTable id="tablaCalificacionesToma" value="#{reputacion.calificacionesToma}" 
+                                             var="calToma" styleClass="itemsTable" emptyMessage="No hay calificaciones para mostrar."
+                                             rows="10" paginator="true" paginatorPosition="bottom" >
+                                    <f:facet name="header">  
+                                        Calificaciones Recibidas
+                                    </f:facet>
+                                    <p:column>
+                                        <comps:itemCalificacion var="#{calToma}" bean="#{reputacion}"
+                                                                dlgVerReplica="dlgReplica" metodoVerReplica="verReplica"
+                                                                panelDialogo="dialogo" />
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGrid>
+                        </h:panelGrid>
 
-               <ui:define name="right">
-                    <comps:loginBox />
-                    <comps:adminPanel />
-                    <comps:userPanel />
-               </ui:define>
+                    </p:fieldset> 
 
-          </ui:composition>
+                </h:form>
+                <p:outputPanel id="dialogo" >
+                    <p:dialog widgetVar="dlgReplica" header="Ver Réplica"
+                              modal="true" resizable="false" >
+                        <h:form>
+                            <table width="100%">
+                                <tr>
+                                    <td align="center">
+                                        <h:outputText value="#{reputacion.replica}" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center">
+                                        <p:commandButton value="Cerrar" oncomplete="dlgReplica.hide()" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </h:form>
+                    </p:dialog>
+                </p:outputPanel>
+            </ui:define>
 
-     </body>
+            <ui:define name="right">
+                <comps:loginBox />
+                <comps:adminPanel />
+                <comps:userPanel />
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
 </html>

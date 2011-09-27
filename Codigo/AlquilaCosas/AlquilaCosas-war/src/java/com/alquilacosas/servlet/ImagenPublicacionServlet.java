@@ -55,7 +55,7 @@ public class ImagenPublicacionServlet extends HttpServlet {
         String imagenId = request.getParameter("id");
 
         // Check if ID is supplied to the request.
-        if (imagenId == null) {
+        if (imagenId == null || imagenId.equals("")) {
             // Do your thing if the ID is not supplied to the request.
             // Throw an exception, or send 404, or show default/warning image, or just ignore it.
             response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.

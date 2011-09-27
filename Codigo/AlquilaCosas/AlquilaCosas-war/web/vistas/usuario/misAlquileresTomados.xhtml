@@ -36,7 +36,8 @@
                                       listener="#{alquileresTomados.actualizarAlquileres}" />
                          </h:selectOneMenu>
                          <p:dataTable id="tabla" value="#{alquileresTomados.alquileres}" var="alq"
-                                      styleClass="itemsTable" emptyMessage="No hay alquileres para mostrar.">
+                                      styleClass="itemsTable" paginator="true" rows="10" paginatorPosition="bottom"
+                                      emptyMessage="No hay alquileres para mostrar.">
                               <p:column>
                                    <comps:alquiler var="#{alq}" bean="#{alquileresTomados}"
                                                    dlgCalificar="calificarDlg"
@@ -73,7 +74,7 @@
                                         <f:facet name="footer" >
                                              <h:panelGrid columns="2" columnClasses="leftCol,rightCol" style="width:100%" >
                                                   <p:commandButton value="Calificar" actionListener="#{alquileresTomados.registrarCalificacion}" 
-                                                                   update="alquileres" oncomplete="calificarDlg.hide()"/>
+                                                                   update=":alquileres" oncomplete="calificarDlg.hide()"/>
                                                   <p:commandButton value="Cerrar" oncomplete="calificarDlg.hide()" />
                                              </h:panelGrid>
                                         </f:facet>

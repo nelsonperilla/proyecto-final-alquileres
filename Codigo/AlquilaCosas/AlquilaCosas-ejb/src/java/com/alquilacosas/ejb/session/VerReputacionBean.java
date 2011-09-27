@@ -4,6 +4,7 @@
  */
 package com.alquilacosas.ejb.session;
 
+import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.CalificacionDTO;
 import com.alquilacosas.dto.DomicilioDTO;
 import com.alquilacosas.dto.UsuarioDTO;
@@ -32,8 +33,11 @@ public class VerReputacionBean implements VerReputacionBeanLocal {
      CalificacionFacade calificacionFacade;
 
      @Override
-     public UsuarioDTO getUsuarioReputacionPorId(int usuarioId) {
+     public UsuarioDTO getUsuarioReputacionPorId(int usuarioId) throws AlquilaCosasException {
           Usuario usuario = usuarioFacade.find(usuarioId);
+          if(usuario == null) {
+              throw new AlquilaCosasException("Usuario no encontrado");
+          }
           UsuarioDTO usuarioDTO = new UsuarioDTO();
           usuarioDTO.setUsername(usuario.getLoginList().get(0).getUsername());
           usuarioDTO.setFechaDeRegistro(usuario.getLoginList().get(0).getFechaCreacion());
