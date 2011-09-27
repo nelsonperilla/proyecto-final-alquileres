@@ -107,8 +107,8 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
           java.sql.Date fechaDesde = new java.sql.Date(fechaInicio.getTime());
           java.sql.Date fechaHasta = new java.sql.Date(fechaFin.getTime());
           String publicacionId = String.valueOf(idPublicacion);
-          Query query = em.createNativeQuery(" SELECT * FROM Alquiler a, "
-                  + "Alquiler_X_Estado axe, Estado_Alquiler ea "
+          Query query = em.createNativeQuery(" SELECT * FROM ALQUILER a, "
+                  + "ALQUILER_X_ESTADO axe, ESTADO_ALQUILER ea "
                   + "WHERE ((a.fecha_Inicio <= '" + fechaDesde + "' AND a.fecha_Fin >= '" + fechaHasta + "') "
                   + "OR ( a.fecha_Inicio <=  '" + fechaHasta + "'  AND a.fecha_Fin >= '" + fechaHasta + "' ) "
                   + "OR ( a.fecha_Inicio >= '" + fechaDesde + "' AND a.fecha_Fin <= '" + fechaHasta + "' )) "
@@ -156,7 +156,7 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
          List<ObjetoTemporal> pedidosDeCambio = new ArrayList<ObjetoTemporal>();
           String publicacionId = String.valueOf(publicacion.getPublicacionId());
           Query query = em.createNativeQuery("SELECT pc.pedido_cambio_id, a.fecha_inicio, a.fecha_fin, a.cantidad, pc.periodo_fk, pc.duracion "
-                  + "FROM alquiler a, pedido_cambio pc, pedido_cambio_x_estado pcxe, estado_pedido_cambio epc "
+                  + "FROM ALQUILER a, PEDIDO_CAMBIO pc, PEDIDO_CAMBIO_X_ESTADO pcxe, ESTADO_PEDIDO_CAMBIO epc "
                   + "WHERE pc.pedido_cambio_id = pcxe.pedido_cambio_fk "
                   + "AND pcxe.estado_fk = epc.estado_pedido_cambio_id "
                   + "AND epc.nombre = 'ENVIADO' "

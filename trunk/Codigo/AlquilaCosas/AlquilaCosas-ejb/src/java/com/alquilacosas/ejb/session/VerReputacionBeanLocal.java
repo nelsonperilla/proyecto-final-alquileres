@@ -21,5 +21,6 @@ public interface VerReputacionBeanLocal {
      List<CalificacionDTO> getCalificacionOfrece(int usuarioId);
 
      List<CalificacionDTO> getCalificacionToma(int usuarioId);
-     
+
+     public double redondear(double numero);     
 }

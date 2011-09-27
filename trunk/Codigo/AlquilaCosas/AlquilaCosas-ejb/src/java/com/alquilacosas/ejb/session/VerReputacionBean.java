@@ -64,9 +64,9 @@ public class VerReputacionBean implements VerReputacionBeanLocal {
           usuarioDTO.setUserOfreceNegativas(cantOfreceNegativas);
           usuarioDTO.setUserOfreceNeutrales(cantOfreceNeutrales);
           if (cantOfrece > 0) {               
-               usuarioDTO.setUserOfrecePositivasPorcentaje((cantOfrecePositivas / cantOfrece) * 100);
-               usuarioDTO.setUserOfreceNegativasPorcentaje((cantOfreceNegativas / cantOfrece) * 100);
-               usuarioDTO.setUserOfreceNeutralesPorcentaje((cantOfreceNeutrales / cantOfrece) * 100);
+               usuarioDTO.setUserOfrecePositivasPorcentaje(redondear((cantOfrecePositivas.doubleValue() / cantOfrece.doubleValue()) * 100));
+               usuarioDTO.setUserOfreceNegativasPorcentaje(redondear((cantOfreceNegativas.doubleValue() / cantOfrece.doubleValue()) * 100));
+               usuarioDTO.setUserOfreceNeutralesPorcentaje(redondear((cantOfreceNeutrales.doubleValue() / cantOfrece.doubleValue()) * 100));
           }
           else {
                usuarioDTO.setUserOfrecePositivasPorcentaje(0);
@@ -91,9 +91,9 @@ public class VerReputacionBean implements VerReputacionBeanLocal {
           usuarioDTO.setUserTomaNegativas(cantTomaNegativas);
           usuarioDTO.setUserTomaNeutrales(cantTomaNeutrales);
           if (cantToma > 0) {               
-               usuarioDTO.setUserTomaPositivasPorcentaje((cantTomaPositivas / cantToma) * 100);
-               usuarioDTO.setUserTomaNegativasPorcentaje((cantTomaNegativas / cantToma) * 100);
-               usuarioDTO.setUserTomaNeutralesPorcentaje((cantTomaNeutrales / cantToma) * 100);
+               usuarioDTO.setUserTomaPositivasPorcentaje(redondear((cantTomaPositivas.doubleValue() / cantToma.doubleValue()) * 100));
+               usuarioDTO.setUserTomaNegativasPorcentaje(redondear((cantTomaNegativas.doubleValue() / cantToma.doubleValue()) * 100));
+               usuarioDTO.setUserTomaNeutralesPorcentaje(redondear((cantTomaNeutrales.doubleValue() / cantToma.doubleValue()) * 100));
           }
           else {
                usuarioDTO.setUserTomaPositivasPorcentaje(0);
@@ -141,5 +141,10 @@ public class VerReputacionBean implements VerReputacionBeanLocal {
                calificacionDTO.add(calificacion);
           }
           return calificacionDTO;
+     }
+     
+     @Override
+     public double redondear(double numero) {
+          return Math.rint(numero * 100) / 100;
      }
 }
