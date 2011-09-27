@@ -60,7 +60,7 @@ public class AlquilerTimerBean implements AlquilerTimerBeanLocal{
      * @author ignacio Gigante
      */
 
-    @Schedule(second="0", minute="0", hour="23")
+    @Schedule(second="10", minute="*", hour="*")
     @Override
     public void fromConfirmadoToActivo(Timer timer) {
         
@@ -205,11 +205,13 @@ public class AlquilerTimerBean implements AlquilerTimerBeanLocal{
     }
     
      private boolean compararFecha(Calendar cal1, Calendar cal2) {
+         
       if (cal1 == null || cal2 == null) {
-          throw new IllegalArgumentException("The date must not be null");
+          throw new IllegalArgumentException("La fecha no debería ser nula");
       }
       return (cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA) &&
               cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
-    }
+          
+      }
 }
