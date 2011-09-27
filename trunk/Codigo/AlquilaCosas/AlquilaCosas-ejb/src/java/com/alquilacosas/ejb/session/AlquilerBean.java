@@ -10,6 +10,7 @@ import com.alquilacosas.common.ObjetoTemporal;
 import com.alquilacosas.dto.AlquilerDTO;
 import com.alquilacosas.ejb.entity.Alquiler;
 import com.alquilacosas.ejb.entity.AlquilerXEstado;
+import com.alquilacosas.ejb.entity.Domicilio;
 import com.alquilacosas.ejb.entity.EstadoAlquiler;
 import com.alquilacosas.ejb.entity.EstadoPedidoCambio;
 import com.alquilacosas.ejb.entity.EstadoPedidoCambio.NombreEstadoPedidoCambio;
@@ -93,7 +94,9 @@ public class AlquilerBean implements AlquilerBeanLocal {
             Alquiler alquiler = alquilerFacade.find(alquilerId);
         
             this.crearNuevoEstadoDeAlquiler(alquiler, EstadoAlquiler.NombreEstadoAlquiler.CONFIRMADO);
-            this.enviarMail(alquiler, "CONFIRMADO", false, true); 
+            //this.enviarMail(alquiler, "CONFIRMADO", false, true); 
+            this.enviarMailConfirmacionAlquilador(alquiler, "CONFIRMADO");
+            this.enviarMailConfirmacionDuenio(alquiler, "CONFIRMADO");
             this.revisarPedidos(alquiler); 
         } catch (Exception e) {
             context.getRollbackOnly();
@@ -312,7 +315,7 @@ public class AlquilerBean implements AlquilerBeanLocal {
         
         this.crearNuevoEstadoDeAlquiler(alquiler, EstadoAlquiler.NombreEstadoAlquiler.PEDIDO_RECHAZADO);
         String estado = nota;
-        this.enviarMail(alquiler, estado, false, false);
+        this.enviarMail(alquiler, estado, false);
     }
     
     private void rechazarPedidoDeCambio(int pedidoCambioId){
@@ -339,7 +342,7 @@ public class AlquilerBean implements AlquilerBeanLocal {
         
         this.crearNuevoEstadoDeAlquiler(alquiler, EstadoAlquiler.NombreEstadoAlquiler.CANCELADO_ALQUILADOR);
         String estado = "CANCELADO";
-        this.enviarMail(alquiler, estado, true, false);
+        this.enviarMail(alquiler, estado, true);
     }
     
     private void crearNuevoEstadoDeAlquiler( Alquiler alquiler, EstadoAlquiler.NombreEstadoAlquiler estado){
@@ -354,8 +357,7 @@ public class AlquilerBean implements AlquilerBeanLocal {
         alquilerFacade.edit(alquiler);
     }
     
-    private void enviarMail( Alquiler alquiler, String estadoAlquiler, 
-            boolean canceladoPorElAlquilador, boolean confirmado ) throws AlquilaCosasException{
+    private void enviarMail( Alquiler alquiler, String estadoAlquiler, boolean canceladoPorElAlquilador) throws AlquilaCosasException{
         
         Publicacion publicacion = publicacionFacade.find(alquiler.getPublicacionFk().getPublicacionId());
         Usuario usuario = usuariofacade.find(alquiler.getUsuarioFk().getUsuarioId());
@@ -383,16 +385,7 @@ public class AlquilerBean implements AlquilerBeanLocal {
                 notificacion = new NotificacionEmail(usuarioDuenio.getEmail(), asunto, texto);
                 
             }
-            if( confirmado ){
-                String asunto = "Tu alquiler por el/la " + publicacion.getTitulo() + " ha sido " + estadoAlquiler +" ";
-                String texto = "<html>Hola " + usuario.getNombre() + ", <br/><br/>"
-                        + "El usuario <b>" + usuarioDuenio.getNombre() + "</b> ha <b>"+ estadoAlquiler + "</b> el pedido de alquiler de "
-                        +  alquiler.getCantidad() + " articulos solicitados para la fecha " + fechaIncio + " " 
-                        + "hasta la fecha " + fechaFin + ". <br/><br/>"
-                        + "Atentamente, <br/> <b>AlquilaCosas </b>";
-                notificacion = new NotificacionEmail(usuario.getEmail(), asunto, texto);
-            }
-            if( !(canceladoPorElAlquilador || confirmado) ){
+            else {
                 String asunto = "Tu alquiler por el/la " + publicacion.getTitulo() + " ha sido " + estadoAlquiler +" ";
                 String texto = "<html>Hola " + usuario.getNombre() + ", <br/><br/>"
                         + "El usuario <b>" + usuarioDuenio.getNombre() + "</b> ha <b>"+ estadoAlquiler + "</b> el pedido de alquiler de "
@@ -403,12 +396,116 @@ public class AlquilerBean implements AlquilerBeanLocal {
             }
             
             message.setObject(notificacion);
-          //  producer.send(message);
+            producer.send(message);
             session.close();
             connection.close();
 
         } catch (Exception e) {
             throw new AlquilaCosasException("Excepcion al enviar la notificacion" + e.getMessage());
-        }
+        } 
+    }
+    
+    /**
+     * Se envía un mail a la persona que alquiló el producto con los datos del dueño del producto
+     * @param alquiler
+     * @param estadoAlquiler
+     * @throws AlquilaCosasException 
+     */
+    
+    private void enviarMailConfirmacionAlquilador( Alquiler alquiler, String estadoAlquiler ) throws AlquilaCosasException{
+        
+        Publicacion publicacion = publicacionFacade.find(alquiler.getPublicacionFk().getPublicacionId());
+        Usuario usuario = usuariofacade.find(alquiler.getUsuarioFk().getUsuarioId());
+        Usuario usuarioDuenio = usuariofacade.find(publicacion.getUsuarioFk().getUsuarioId());
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        String fechaIncio = formatter.format(alquiler.getFechaInicio());
+        String fechaFin = formatter.format(alquiler.getFechaFin());
+        
+        try {
+            
+            Connection connection = connectionFactory.createConnection();
+            Session session = connection.createSession(true,
+                    Session.AUTO_ACKNOWLEDGE);
+            MessageProducer producer = session.createProducer(destination);
+            ObjectMessage message = session.createObjectMessage();
+            NotificacionEmail notificacion = null;
+            
+            Domicilio domicilio = usuarioDuenio.getDomicilioList().get(0);
+            
+            String asunto = "Tu alquiler por el producto " + publicacion.getTitulo() + " ha sido " + estadoAlquiler +" ";
+            Integer p = domicilio.getPiso();
+            String piso = p != null ? Integer.toString(p) : "";
+            String depto = domicilio.getDepto() != null ? domicilio.getDepto() : "";
+            String texto = "<html>Hola " + usuario.getNombre() + ", <br/><br/>"
+                    + "El usuario <b>" + usuarioDuenio.getNombre() + "</b> ha <b>"+ estadoAlquiler + "</b> el pedido de alquiler de "
+                    +  alquiler.getCantidad() + " articulo/s solicitado/s para la fecha " + fechaIncio + " " 
+                    + "hasta la fecha " + fechaFin + ". <br/>"
+                    + "Los datos del usuario " + usuarioDuenio.getLoginList().get(0).getUsername() + " son: <br/>"
+                    + "<b>Nombre Completo: </b>" + usuarioDuenio.getApellido() + ", " + usuarioDuenio.getNombre() + "<br/>"
+                    + "<b>Dirección: </b>" + domicilio.getCalle() + " " + domicilio.getNumero() + " " + piso + " " + depto + ", Barrio " + domicilio.getBarrio() + "<br/>"
+                    + "<b>Ciudad: </b>" + domicilio.getCiudad()+ ", " + domicilio.getProvinciaFk().getNombre() + "<br/>"
+                    + "<b>Telefono: </b>" + usuarioDuenio.getTelefono() + "<br/><br/>"
+                    + "Atentamente, <br/> <b>AlquilaCosas </b>";
+            notificacion = new NotificacionEmail(usuario.getEmail(), asunto, texto);
+            message.setObject(notificacion);
+            producer.send(message);
+            session.close();
+            connection.close();
+
+        } catch (Exception e) {
+            throw new AlquilaCosasException("Excepcion al enviar la notificacion" + e.getMessage());
+        } 
+    }
+    
+    /**
+     * Se envía un mail a la persona que confirmo el alquiler con los datos de la persona que tomó el alquiler.
+     * @param alquiler
+     * @param estadoAlquiler
+     * @throws AlquilaCosasException 
+     */
+    
+    private void enviarMailConfirmacionDuenio( Alquiler alquiler, String estadoAlquiler ) throws AlquilaCosasException{
+        
+        Publicacion publicacion = publicacionFacade.find(alquiler.getPublicacionFk().getPublicacionId());
+        Usuario usuario = usuariofacade.find(alquiler.getUsuarioFk().getUsuarioId());
+        Usuario usuarioDuenio = usuariofacade.find(publicacion.getUsuarioFk().getUsuarioId());
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        String fechaIncio = formatter.format(alquiler.getFechaInicio());
+        String fechaFin = formatter.format(alquiler.getFechaFin());
+        
+        try {
+            
+            Connection connection = connectionFactory.createConnection();
+            Session session = connection.createSession(true,
+                    Session.AUTO_ACKNOWLEDGE);
+            MessageProducer producer = session.createProducer(destination);
+            ObjectMessage message = session.createObjectMessage();
+            NotificacionEmail notificacion = null;
+            
+            Domicilio domicilio = usuario.getDomicilioList().get(0);
+            
+            
+            String asunto = "Usted ha " + estadoAlquiler + " el alquiler de " + publicacion.getTitulo();
+            Integer p = domicilio.getPiso();
+            String piso = p != null ? Integer.toString(p) : "";
+            String depto = domicilio.getDepto() != null ? domicilio.getDepto() : "";
+            String texto = "<html>Hola " + usuarioDuenio.getNombre() + ", <br/><br/>"
+                    + "Usted ha <b>" + estadoAlquiler + "</b> el pedido de alquiler de "
+                    +  alquiler.getCantidad() + " articulos solicitados para la fecha " + fechaIncio + " " 
+                    + "hasta la fecha " + fechaFin + ". <br/>"
+                    + "Los datos del usuario <b>" + usuario.getLoginList().get(0).getUsername() + "</b> son: <br/>"
+                    + "<b>Nombre Completo:</b> " + usuario.getApellido() + ", " + usuario.getNombre() + "<br/>"
+                    + "<b>Dirección:</b> " + domicilio.getCalle() + " " + domicilio.getNumero() + " " + piso + " " + depto + ", Barrio " + domicilio.getBarrio() + "<br/>"
+                    + "<b>Ciudad: </b>" + domicilio.getCiudad()+ ", " + domicilio.getProvinciaFk().getNombre() + "<br/>"
+                    + "<b>Telefono: </b>" + usuario.getTelefono() + "<br/><br/>"
+                    + "Atentamente, <br/> <b>AlquilaCosas </b>";
+            notificacion = new NotificacionEmail(usuarioDuenio.getEmail(), asunto, texto);message.setObject(notificacion);
+            producer.send(message);
+            session.close();
+            connection.close();
+
+        } catch (Exception e) {
+            throw new AlquilaCosasException("Excepcion al enviar la notificacion" + e.getMessage());
+        } 
     }
 }
