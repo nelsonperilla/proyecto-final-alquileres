@@ -159,8 +159,9 @@ public class DesplieguePublicacionMBean {
         return null;
     }
     
-    public void confirmarPedido()
+    public String confirmarPedido()
     {
+        String redireccion = null;
         if(usuarioLogueado.getUsuarioId() == publicacion.getPropietario().getId())
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR,
@@ -188,7 +189,8 @@ public class DesplieguePublicacionMBean {
                     }catch(Exception e){
                          FacesContext.getCurrentInstance().addMessage(null,
                             new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                            "Ingrese una hora de inicio valida", ""));                        
+                            "Ingrese una hora de inicio valida", "")); 
+                         return null;
                     }
                     endDate.add(Calendar.HOUR_OF_DAY, periodoAlquiler);
                     break;
@@ -225,11 +227,14 @@ public class DesplieguePublicacionMBean {
                 mensaje.append(" ");
                 mensaje.append(publicacion.getPeriodoMinimo().getNombre());
                 mensaje.append("/s ");
-                mensaje.append("y el maximo de ");
-                mensaje.append(publicacion.getPeriodoMaximoValor());
-                mensaje.append(" ");
-                mensaje.append(publicacion.getPeriodoMaximo().getNombre());
-                mensaje.append("/s ");
+                if(maxDuration != Long.MAX_VALUE)
+                {
+                    mensaje.append("y el maximo de ");
+                    mensaje.append(publicacion.getPeriodoMaximoValor());
+                    mensaje.append(" ");
+                    mensaje.append(publicacion.getPeriodoMaximo().getNombre());
+                    mensaje.append("/s ");
+                }
                 FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     mensaje.toString() , ""));
@@ -254,23 +259,24 @@ public class DesplieguePublicacionMBean {
                     //calculo el monto
                     double monto = calcularMonto(beginDate, endDate);
                     
-                    String mensaje = "El pedido de alquiler ha sido enviado";
-                    Severity icon = FacesMessage.SEVERITY_INFO;
+
                     try {
                         publicationBean.crearPedidoAlquiler(publicacion.getId(), 
                                 usuarioLogueado.getUsuarioId(), beginDate.getTime(), 
                                 endDate.getTime(), monto, cantidadProductos);
+                                redireccion = "misPedidosRealizados";
                     } catch (AlquilaCosasException ex) {
-                        mensaje = "El pedido de alquiler no se ha concretado, por favor intente de nuevo";
-                        icon = FacesMessage.SEVERITY_ERROR;
+                        FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                                "El pedido de alquiler no se ha concretado, por favor intente de nuevo", ""));
                         Logger.getLogger(DesplieguePublicacionMBean.class.getName()).log(Level.SEVERE, null, ex);
+                        redireccion = null;
                     }
-                    FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(icon, mensaje, ""));
+
                 }
             }
         }
-
+        return redireccion;
     }
     
     private double calcularMonto(Calendar beginDate, Calendar endDate)
