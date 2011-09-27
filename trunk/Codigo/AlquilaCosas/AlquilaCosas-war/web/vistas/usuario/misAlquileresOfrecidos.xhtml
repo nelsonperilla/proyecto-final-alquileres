@@ -36,6 +36,7 @@
                     </h:selectOneMenu>
                     <p:dataTable id="tabla" value="#{alquileresOfrecidos.alquileres}" 
                                  var="alq" styleClass="itemsTable" 
+                                 paginator="true" rows="10" paginatorPosition="bottom"
                                  emptyMessage="No hay alquileres para mostrar." >
                         <p:column>
 
@@ -75,7 +76,7 @@
                                 <f:facet name="footer" >
                                     <h:panelGrid columns="2" columnClasses="leftCol,rightCol" style="width:100%" >
                                         <p:commandButton value="Calificar" actionListener="#{alquileresOfrecidos.registrarCalificacion}" 
-                                                         oncomplete="calificarDlg.hide()" update="alquileres tabla" />
+                                                         oncomplete="calificarDlg.hide()" update=":alquileresForm" />
                                         <p:commandButton value="Limpiar" type="reset" />
                                     </h:panelGrid>
                                 </f:facet>

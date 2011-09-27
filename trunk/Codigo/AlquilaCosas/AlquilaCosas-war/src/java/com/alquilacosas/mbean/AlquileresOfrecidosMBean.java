@@ -318,7 +318,14 @@ public class AlquileresOfrecidosMBean implements Serializable {
 
     public void registrarCalificacion() {
         alquileresBean.registrarCalificacion(usuarioLogueado, alquilerId, puntuacionId, comentario);
-        alquileres = alquileresBean.getAlquileresSinCalificar(usuarioLogueado);
+        //alquileres = alquileresBean.getAlquileresSinCalificar(usuarioLogueado);
+        for(int i = 0; i < alquileres.size(); i++) {
+            AlquilerDTO dto = alquileres.get(i);
+            if(dto.getIdAlquiler() == alquilerId) {
+                alquileres.remove(dto);
+                return;
+            }
+        }
         FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
                 "Calificacion registrada.", "");
         FacesContext.getCurrentInstance().addMessage(null, msg);

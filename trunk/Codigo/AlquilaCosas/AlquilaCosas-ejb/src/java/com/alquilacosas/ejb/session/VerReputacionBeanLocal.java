@@ -4,6 +4,7 @@
  */
 package com.alquilacosas.ejb.session;
 
+import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.CalificacionDTO;
 import com.alquilacosas.dto.UsuarioDTO;
 import java.util.List;
@@ -16,11 +17,11 @@ import javax.ejb.Local;
 @Local
 public interface VerReputacionBeanLocal {
 
-     UsuarioDTO getUsuarioReputacionPorId(int usuarioId);
+     public UsuarioDTO getUsuarioReputacionPorId(int usuarioId) throws AlquilaCosasException;
 
-     List<CalificacionDTO> getCalificacionOfrece(int usuarioId);
+     public List<CalificacionDTO> getCalificacionOfrece(int usuarioId);
 
-     List<CalificacionDTO> getCalificacionToma(int usuarioId);
+     public List<CalificacionDTO> getCalificacionToma(int usuarioId);
 
      public double redondear(double numero);     
 }
