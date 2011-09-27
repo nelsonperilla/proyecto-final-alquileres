@@ -30,7 +30,6 @@
                     <br />
                     <h:form id="alquileres">
                          <p:growl id="growl" globalOnly="true" showDetail="true" />
-                         <h:outputLabel value="Ver Alquileres: " />
                          <h:selectOneMenu id="ver" value="#{alquileresTomados.filtroSeleccionado}" >                                
                               <f:selectItems value="#{alquileresTomados.filtros}" />
                               <p:ajax event="change" update="alquileres tabla" process="@this"

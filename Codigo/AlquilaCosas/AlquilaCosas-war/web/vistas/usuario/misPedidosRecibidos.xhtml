@@ -20,12 +20,14 @@
     </ui:define>
 
     <ui:define name="principal">
-
+          <h1>Mis Pedidos Recibidos</h1>
+          <br />
         <div id="items" >
             <h:form prependId="false">
 
                 <p:dataTable id="grid" value="#{misPedidosRecibidos.pedidos}" var="alquiler" 
                              rows="10" paginator="true" paginatorPosition="bottom"
+                             emptyMessage="No existen Pedidos de Alquiler"
                              styleClass="itemsTable" >
 
                     <p:column>
