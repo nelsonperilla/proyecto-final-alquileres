@@ -17,6 +17,7 @@ import javax.persistence.Query;
  */
 @Stateless
 public class EstadoPublicacionFacade extends AbstractFacade<EstadoPublicacion> {
+
     @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
     private EntityManager em;
 
@@ -28,13 +29,12 @@ public class EstadoPublicacionFacade extends AbstractFacade<EstadoPublicacion> {
     public EstadoPublicacionFacade() {
         super(EstadoPublicacion.class);
     }
-    
-    public EstadoPublicacion findByNombre( NombreEstadoPublicacion nombre ){
+
+    public EstadoPublicacion findByNombre(NombreEstadoPublicacion nombre) {
         EstadoPublicacion estadoPublicacion = null;
         Query query = em.createNamedQuery("EstadoPublicacion.findByNombre");
         query.setParameter("nombre", nombre);
         estadoPublicacion = (EstadoPublicacion) query.getSingleResult();
         return estadoPublicacion;
     }
-    
 }

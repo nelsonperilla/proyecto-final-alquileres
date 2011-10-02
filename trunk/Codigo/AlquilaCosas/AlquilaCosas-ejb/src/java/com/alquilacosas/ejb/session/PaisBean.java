@@ -19,46 +19,45 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 public class PaisBean implements PaisBeanLocal {
-     
-     @PersistenceContext(unitName="AlquilaCosas-ejbPU") 
-     private EntityManager entityManager;
-     
-     @EJB
-     private PaisFacade paisFacade;
 
-     @Override
-     public List<Pais> getPaises() {
-          return paisFacade.findAll();
-     }
-     
-     @Override
-     public void modificarPais(Pais paisNuevo) {
-          Pais modifPais = paisFacade.find(paisNuevo.getPaisId());
-          modifPais.setNombre(paisNuevo.getNombre());
-          paisFacade.edit(modifPais);
-     }
+    @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
+    private EntityManager entityManager;
+    @EJB
+    private PaisFacade paisFacade;
 
-     @Override
-     public void borrarPais(Pais Pais) throws AlquilaCosasException {
-          Pais borrarPais = entityManager.find(Pais.class, Pais.getPaisId());
-          if (borrarPais.getProvinciaList().isEmpty())
-              paisFacade.remove(borrarPais); 
-          else
-               throw new AlquilaCosasException("El Pais tiene Precios Asociados");
-     }
+    @Override
+    public List<Pais> getPaises() {
+        return paisFacade.findAll();
+    }
 
-     @Override
-     public void registrarPais(Pais nuevoPais) throws AlquilaCosasException {
-          try{
-              paisFacade.create(nuevoPais); 
-          }
-          catch(Exception e){
-               throw new AlquilaCosasException("Error al insertar el Pais - " + e.getMessage());
-          }
-     }
+    @Override
+    public void modificarPais(Pais paisNuevo) {
+        Pais modifPais = paisFacade.find(paisNuevo.getPaisId());
+        modifPais.setNombre(paisNuevo.getNombre());
+        paisFacade.edit(modifPais);
+    }
 
-     @Override
-     public Pais getPaisById(int paisId) {
-          return paisFacade.find(paisId);
-     }
+    @Override
+    public void borrarPais(Pais Pais) throws AlquilaCosasException {
+        Pais borrarPais = entityManager.find(Pais.class, Pais.getPaisId());
+        if (borrarPais.getProvinciaList().isEmpty()) {
+            paisFacade.remove(borrarPais);
+        } else {
+            throw new AlquilaCosasException("El Pais tiene Precios Asociados");
+        }
+    }
+
+    @Override
+    public void registrarPais(Pais nuevoPais) throws AlquilaCosasException {
+        try {
+            paisFacade.create(nuevoPais);
+        } catch (Exception e) {
+            throw new AlquilaCosasException("Error al insertar el Pais - " + e.getMessage());
+        }
+    }
+
+    @Override
+    public Pais getPaisById(int paisId) {
+        return paisFacade.find(paisId);
+    }
 }

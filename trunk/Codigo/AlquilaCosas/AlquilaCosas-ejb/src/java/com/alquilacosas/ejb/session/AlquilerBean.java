@@ -51,6 +51,7 @@ import javax.jms.ConnectionFactory;
 import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
+import org.apache.log4j.Logger;
 /**
  *
  * @author ignaciogiagante
@@ -94,7 +95,6 @@ public class AlquilerBean implements AlquilerBeanLocal {
             Alquiler alquiler = alquilerFacade.find(alquilerId);
         
             this.crearNuevoEstadoDeAlquiler(alquiler, EstadoAlquiler.NombreEstadoAlquiler.CONFIRMADO);
-            //this.enviarMail(alquiler, "CONFIRMADO", false, true); 
             this.enviarMailConfirmacionAlquilador(alquiler, "CONFIRMADO");
             this.enviarMailConfirmacionDuenio(alquiler, "CONFIRMADO");
             this.revisarPedidos(alquiler); 
@@ -105,11 +105,12 @@ public class AlquilerBean implements AlquilerBeanLocal {
         
     }
     
-    /*
-     * En el siguiente método el duenio del producto rechaza el pedido de alquiler por el 
+    /**
+     * En este método el dueño del producto rechaza el pedido de alquiler por el 
      * alquilador
+     * @param alquilerId
+     * @throws AlquilaCosasException 
      */
-    
     @Override
     @RolesAllowed({"USUARIO", "ADMIN"})
     public void rechazarPedidoDeAlquiler(Integer alquilerId) throws AlquilaCosasException{
@@ -123,11 +124,12 @@ public class AlquilerBean implements AlquilerBeanLocal {
         }
     }
     
-    /*
-     * En el siguiente método el alquilador cancela el pedido de alquiler realizado en 
+    /**
+     * En este método el alquilador cancela el pedido de alquiler realizado en 
      * algún momento
+     * @param alquilerId
+     * @throws AlquilaCosasException 
      */
-    
     @Override
     @RolesAllowed({"USUARIO", "ADMIN"})
     public void cancelarPedidoDeAlquiler(Integer alquilerId) throws AlquilaCosasException{
@@ -401,6 +403,8 @@ public class AlquilerBean implements AlquilerBeanLocal {
             connection.close();
 
         } catch (Exception e) {
+            Logger.getLogger(AlquilerBean.class).error("enviarMail(). "
+                    + "Excepcion al enviar email: " + e + ": " + e.getMessage());
             throw new AlquilaCosasException("Excepcion al enviar la notificacion" + e.getMessage());
         } 
     }
@@ -453,6 +457,8 @@ public class AlquilerBean implements AlquilerBeanLocal {
             connection.close();
 
         } catch (Exception e) {
+            Logger.getLogger(AlquilerBean.class).error("enviarMailConfirmacionAlquilador(). "
+                    + "Excepcion al enviar email: " + e + ": " + e.getMessage());
             throw new AlquilaCosasException("Excepcion al enviar la notificacion" + e.getMessage());
         } 
     }
@@ -505,6 +511,8 @@ public class AlquilerBean implements AlquilerBeanLocal {
             connection.close();
 
         } catch (Exception e) {
+            Logger.getLogger(AlquilerBean.class).error("enviarMailConfirmacionDuenio(). "
+                    + "Excepcion al enviar email: " + e + ": " + e.getMessage());
             throw new AlquilaCosasException("Excepcion al enviar la notificacion" + e.getMessage());
         } 
     }

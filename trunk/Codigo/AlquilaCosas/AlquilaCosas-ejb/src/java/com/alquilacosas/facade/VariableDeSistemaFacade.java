@@ -15,9 +15,11 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 public class VariableDeSistemaFacade extends AbstractFacade<VariableDeSistema> {
+
     @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
     private EntityManager em;
 
+    @Override
     protected EntityManager getEntityManager() {
         return em;
     }
@@ -25,5 +27,4 @@ public class VariableDeSistemaFacade extends AbstractFacade<VariableDeSistema> {
     public VariableDeSistemaFacade() {
         super(VariableDeSistema.class);
     }
-    
 }

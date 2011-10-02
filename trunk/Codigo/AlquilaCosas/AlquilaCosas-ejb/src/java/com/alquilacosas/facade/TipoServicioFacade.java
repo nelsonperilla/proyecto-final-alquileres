@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -17,9 +18,11 @@ import javax.persistence.Query;
  */
 @Stateless
 public class TipoServicioFacade extends AbstractFacade<TipoServicio> {
+
     @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
     private EntityManager em;
 
+    @Override
     protected EntityManager getEntityManager() {
         return em;
     }
@@ -27,7 +30,7 @@ public class TipoServicioFacade extends AbstractFacade<TipoServicio> {
     public TipoServicioFacade() {
         super(TipoServicio.class);
     }
-    
+
     public TipoServicio findByNombre(TipoServicio.NombreTipoServicio nombre) {
         Query query = em.createNamedQuery("TipoServicio.findByNombre");
         query.setParameter("nombre", nombre);
@@ -35,9 +38,10 @@ public class TipoServicioFacade extends AbstractFacade<TipoServicio> {
         try {
             tipoServicio = (TipoServicio) query.getSingleResult();
         } catch (NoResultException e) {
-            
+            Logger.getLogger(TipoServicioFacade.class).
+                    error("findByNombre(). "
+                    + "Excepcion al ejecutar consulta: " + e);
         }
         return tipoServicio;
     }
-    
 }

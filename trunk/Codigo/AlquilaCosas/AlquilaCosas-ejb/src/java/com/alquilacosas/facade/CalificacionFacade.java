@@ -13,6 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -64,6 +65,9 @@ public class CalificacionFacade extends AbstractFacade<Calificacion> {
         try {
             calificacion = (Calificacion) query.getSingleResult();
         } catch (javax.persistence.NoResultException e) {
+            Logger.getLogger(CalificacionFacade.class).
+                    error("getCalificacionPorAlquilerUsuarioToma(). "
+                    + "Excepcion al ejecutar consulta: " + e);
             calificacion = null;
         }
         return calificacion;
@@ -82,6 +86,9 @@ public class CalificacionFacade extends AbstractFacade<Calificacion> {
         try {
             calificacion = (Calificacion) query.getSingleResult();
         } catch (javax.persistence.NoResultException e) {
+            Logger.getLogger(CalificacionFacade.class).
+                    error("getCalificacionPorAlquilerUsuarioOfrece(). "
+                    + "Excepcion al ejecutar consulta: " + e);
             calificacion = null;
         }
         return calificacion;
@@ -129,6 +136,9 @@ public class CalificacionFacade extends AbstractFacade<Calificacion> {
         try {
             calificaciones = query.getResultList();
         } catch (javax.persistence.NoResultException e) {
+            Logger.getLogger(CalificacionFacade.class).
+                    error("getCalificacionAlquilerOfrecidoPorUsuario(). "
+                    + "Excepcion al ejecutar consulta: " + e);
             calificaciones = null;
         }
         return calificaciones;
@@ -146,6 +156,9 @@ public class CalificacionFacade extends AbstractFacade<Calificacion> {
         try {
             calificaciones = query.getResultList();
         } catch (javax.persistence.NoResultException e) {
+            Logger.getLogger(CalificacionFacade.class).
+                    error("getCalificacionAlquilerTomadoPorUsuario(). "
+                    + "Excepcion al ejecutar consulta: " + e);
             calificaciones = null;
         }
         return calificaciones;

@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -18,6 +19,7 @@ import javax.persistence.Query;
  */
 @Stateless
 public class PublicacionXEstadoFacade extends AbstractFacade<PublicacionXEstado> {
+
     @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
     private EntityManager em;
 
@@ -29,7 +31,7 @@ public class PublicacionXEstadoFacade extends AbstractFacade<PublicacionXEstado>
     public PublicacionXEstadoFacade() {
         super(PublicacionXEstado.class);
     }
-    
+
     public PublicacionXEstado getPublicacionXEstado(Publicacion p) {
 
         Query query = em.createQuery(
@@ -42,7 +44,9 @@ public class PublicacionXEstadoFacade extends AbstractFacade<PublicacionXEstado>
         try {
             pxe = (PublicacionXEstado) query.getSingleResult();
         } catch (NoResultException e) {
-            System.out.println("PublicacionXEstado no encontrada");
+            Logger.getLogger(PublicacionXEstadoFacade.class).
+                    error("getPublicacionXEstado(). "
+                    + "Excepcion al ejecutar consulta: " + e);
         }
 
         return pxe;

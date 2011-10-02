@@ -14,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -99,8 +100,8 @@ public class ImagenPublicacionServlet extends HttpServlet {
             try {
                 resource.close();
             } catch (IOException e) {
-                // Do your thing with the exception. Print it, log it or mail it.
-                System.out.println("excepcion cerrando recurso: " + e);
+                Logger.getLogger(ImagenPublicacionServlet.class)
+                        .error("Excepcion cerrando recurso: " + e + ": " + e.getMessage());
             }
         }
     }

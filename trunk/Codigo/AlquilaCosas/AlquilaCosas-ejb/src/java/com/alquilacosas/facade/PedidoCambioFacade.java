@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -19,7 +20,7 @@ import javax.persistence.Query;
  */
 @Stateless
 public class PedidoCambioFacade extends AbstractFacade<PedidoCambio> {
-    
+
     @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
     private EntityManager em;
 
@@ -31,7 +32,7 @@ public class PedidoCambioFacade extends AbstractFacade<PedidoCambio> {
     public PedidoCambioFacade() {
         super(PedidoCambio.class);
     }
-    
+
     /**
      * Autor: Damian
      * Devuelve el pedido de cambio en estado ENVIADO para un alquiler dado.
@@ -50,12 +51,14 @@ public class PedidoCambioFacade extends AbstractFacade<PedidoCambio> {
         PedidoCambio pedido = null;
         try {
             pedido = (PedidoCambio) query.getSingleResult();
-        } catch(NoResultException e) {
-            //
+        } catch (NoResultException e) {
+            Logger.getLogger(PedidoCambioFacade.class).
+                    error("getPedidoEnviado(). "
+                    + "Excepcion al ejecutar consulta: " + e);
         }
         return pedido;
     }
-    
+
     public boolean hayPedidoEnviado(Alquiler alquiler) {
         Query query = em.createQuery("SELECT COUNT(p) FROM PedidoCambio p, PedidoCambioXEstado pcxe, "
                 + "EstadoPedidoCambio e WHERE p = pcxe.pedidoCambioFk AND "
@@ -64,10 +67,10 @@ public class PedidoCambioFacade extends AbstractFacade<PedidoCambio> {
         query.setParameter("estado", NombreEstadoPedidoCambio.ENVIADO);
         query.setParameter("alquiler", alquiler);
         Long count = (Long) query.getSingleResult();
-        if(count > 0)
+        if (count > 0) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
-    
 }

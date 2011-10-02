@@ -15,6 +15,7 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 public class ReputacionFacade extends AbstractFacade<Reputacion> {
+
     @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
     private EntityManager em;
 
@@ -26,5 +27,4 @@ public class ReputacionFacade extends AbstractFacade<Reputacion> {
     public ReputacionFacade() {
         super(Reputacion.class);
     }
-    
 }

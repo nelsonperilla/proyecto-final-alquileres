@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -58,6 +59,9 @@ public class PeriodoFacade extends AbstractFacade<Periodo> {
         try {
             periodo = (Periodo) query.getSingleResult();
         } catch (NoResultException e) {
+            Logger.getLogger(PeriodoFacade.class).
+                    error("findByNombre(). "
+                    + "Excepcion al ejecutar consulta: " + e);
         }
         return periodo;
     }

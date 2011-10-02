@@ -15,9 +15,11 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 public class DomicilioFacade extends AbstractFacade<Domicilio> {
+
     @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
     private EntityManager em;
 
+    @Override
     protected EntityManager getEntityManager() {
         return em;
     }
@@ -25,5 +27,4 @@ public class DomicilioFacade extends AbstractFacade<Domicilio> {
     public DomicilioFacade() {
         super(Domicilio.class);
     }
-    
 }

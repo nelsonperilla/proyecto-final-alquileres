@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -18,9 +19,11 @@ import javax.persistence.Query;
  */
 @Stateless
 public class RolFacade extends AbstractFacade<Rol> {
+
     @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
     private EntityManager em;
 
+    @Override
     protected EntityManager getEntityManager() {
         return em;
     }
@@ -28,17 +31,18 @@ public class RolFacade extends AbstractFacade<Rol> {
     public RolFacade() {
         super(Rol.class);
     }
-    
+
     public Rol findByNombre(NombreRol nombre) {
         Rol rol = null;
         Query getRolQuery = em.createNamedQuery("Rol.findByNombre");
         getRolQuery.setParameter("nombre", NombreRol.USUARIO);
         try {
-        rol = (Rol) getRolQuery.getSingleResult();
-        } catch(NoResultException e) {
-            
+            rol = (Rol) getRolQuery.getSingleResult();
+        } catch (NoResultException e) {
+            Logger.getLogger(RolFacade.class).
+                    error("findByNombre(). "
+                    + "Excepcion al ejecutar consulta: " + e);
         }
         return rol;
     }
-    
 }

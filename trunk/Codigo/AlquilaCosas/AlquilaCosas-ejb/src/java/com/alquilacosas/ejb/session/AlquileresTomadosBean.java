@@ -51,6 +51,7 @@ import javax.jms.Destination;
 import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -194,19 +195,18 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
     public void registrarReplica(int calificacionId, String comentarioReplica, int usuarioId) throws AlquilaCosasException {
         Usuario usuario = usuarioFacade.find(usuarioId);
         Calificacion calificacionAReplicar = calificacionFacade.find(calificacionId);
-        if(calificacionAReplicar.getUsuarioCalificadoFk().getUsuarioId() != usuarioId) {
+        if (calificacionAReplicar.getUsuarioCalificadoFk().getUsuarioId() != usuarioId) {
             throw new AlquilaCosasException("No se puede replicar una calificacion que no ha sido otorgada a usted.");
         }
         calificacionAReplicar.setFechaReplica(new Date());
         calificacionAReplicar.setComentarioReplica(comentarioReplica);
         calificacionFacade.edit(calificacionAReplicar);
         // enviar email
-        // enviar email
         Usuario usuarioReplicado = calificacionAReplicar.getUsuarioCalificadorFk();
         String asunto = "Han replicado tu calificacion";
         String mensaje = "<html>Hola " + usuarioReplicado.getNombre() + ",<br/><br/>"
-                + "Tu calificacion por el alquiler del producto " + 
-                  calificacionAReplicar.getAlquilerFk().getPublicacionFk().getTitulo()
+                + "Tu calificacion por el alquiler del producto "
+                + calificacionAReplicar.getAlquilerFk().getPublicacionFk().getTitulo()
                 + " ha sido replicada por la contraparte. Para ver la replica recibida"
                 + " ingresa a tu panel de usuario, y dirigete a 'Mis alquileres ofrecidos.'<br/><br/>"
                 + "Atentamente,<br/>"
@@ -232,7 +232,7 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
         axeCancelado.setEstadoAlquilerFk(estado);
         alquiler.agregarAlquilerXEstado(axeCancelado);
         alquilerFacade.edit(alquiler);
-        
+
         // enviar email
         Publicacion pub = alquiler.getPublicacionFk();
         Usuario dueno = pub.getUsuarioFk();
@@ -244,7 +244,7 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
                 + "<b>AlquilaCosas</b>";
         NotificacionEmail email = new NotificacionEmail(dueno.getEmail(), asunto, mensaje);
         enviarEmail(email);
-        
+
         return true;
     }
 
@@ -281,20 +281,18 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
             Calendar fechaFin = Calendar.getInstance();
             fechaFin.setTime(temp.getFechaFin());
             if (fechaFin.get(Calendar.HOUR_OF_DAY) == 0 && fechaFin.get(Calendar.MINUTE) == 0
-                    && fechaFin.get(Calendar.SECOND) == 0) //fechaFin.add(Calendar.SECOND, 1); 
+                    && fechaFin.get(Calendar.SECOND) == 0) {
             //No me importan las fechas anteriores a hoy, no son seleccionables
-            {
                 if (date.before(today)) {
                     date.setTime(today.getTime());
                 }
             }
             //Me fijo si en los dias que dura el alquiler analizado hay disponibilidad de
             //productos para el pedido que estoy creando
-            if (alquiler.getCantidad() <= disponibles - temp.getCantidad()) //Si alcanzan los dias guardo en el hashmap el dia y la cantidad de
+            if (alquiler.getCantidad() <= disponibles - temp.getCantidad()) { //Si alcanzan los dias guardo en el hashmap el dia y la cantidad de
             //productos del alquiler, para ir acumulando esta cantidad para cada fecha
             //al final me fijo por cada fecha si alcanza, porque ya tengo todos los 
             //alquileres analizados
-            {
                 while (date.before(fechaFin)) {
                     Integer acumulado = dataCounter.get(date.getTime().toString());
                     if (acumulado != null) {
@@ -304,10 +302,9 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
                     }
                     date.add(Calendar.DATE, 1);
                 }
-            } else //si no alcanza, marco a todos los dias de este alquiler en el hasmap con el valor
+            } else { //si no alcanza, marco a todos los dias de este alquiler en el hasmap con el valor
             //de la disponibilidad total de la publicacion, lo cual significa que no va a alcanzar
             //ese dia para hacer el pedido ni siquiera de 1 producto
-            {
                 while (date.before(fechaFin)) {
                     dataCounter.put(date.getTime().toString(), new Integer(disponibles));
                     date.add(Calendar.DATE, 1);
@@ -407,7 +404,7 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
         pedido.agregarPedidoCambioXEstado(pcxe);
         alquiler.agregarPedidoCambio(pedido);
         alquilerFacade.edit(alquiler);
-        
+
         // enviar email
         Usuario dueno = publicacion.getUsuarioFk();
         String asunto = "Has recibido un pedido de cambio";
@@ -436,7 +433,7 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
         pcxeNuevo.setFechaDesde(new Date());
         pedido.agregarPedidoCambioXEstado(pcxeNuevo);
         pedidoFacade.edit(pedido);
-        
+
         // enviar email
         Publicacion publicacion = pedido.getAlquilerFk().getPublicacionFk();
         Usuario dueno = publicacion.getUsuarioFk();
@@ -511,6 +508,8 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
             session.close();
             connection.close();
         } catch (Exception e) {
+            Logger.getLogger(AlquileresTomadosBean.class).error("enviarEmail(). "
+                    + "Excepcion al enviar email: " + e + ": " + e.getMessage());
         }
     }
 }

@@ -19,6 +19,7 @@ import javax.persistence.criteria.Root;
  */
 @Stateless
 public class ProvinciaFacade extends AbstractFacade<Provincia> {
+
     @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
     private EntityManager em;
 
@@ -30,7 +31,7 @@ public class ProvinciaFacade extends AbstractFacade<Provincia> {
     public ProvinciaFacade() {
         super(Provincia.class);
     }
-    
+
     public List<Provincia> findByPais(int paisId) {
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<Provincia> cq = criteriaBuilder.createQuery(Provincia.class);
@@ -38,5 +39,4 @@ public class ProvinciaFacade extends AbstractFacade<Provincia> {
         cq.where(criteriaBuilder.equal(provinciaRoot.get("paisFk").get("paisId"), paisId));
         return em.createQuery(cq).getResultList();
     }
-    
 }
