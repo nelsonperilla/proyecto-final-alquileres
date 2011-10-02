@@ -86,10 +86,10 @@ public class PublicacionBean implements PublicacionBeanLocal {
     @EJB
     private PeriodoAlquilerBeanLocal periodoBean;
     @EJB
-    private PrecioBeanLocal precioBean;    
+    private PrecioBeanLocal precioBean;
     @EJB
     private UsuarioFacade usuarioFacade;
-    @EJB 
+    @EJB
     private CategoriaFacade categoriaFacade;
     @EJB
     private PublicacionXEstadoFacade publicacionXEstadoFacade;
@@ -107,24 +107,22 @@ public class PublicacionBean implements PublicacionBeanLocal {
     private AlquilerFacade alquilerFacade;
     @EJB
     private AlquilerXEstadoFacade estadoAlquiler;
-    
     @EJB
     private CalificacionFacade calificacionFacade;
-    
 
     @Override
     @RolesAllowed({"USUARIO", "ADMIN"})
     public Integer registrarPublicacion(String titulo, String descripcion,
             Date fechaDesde, Date fechaHasta, boolean destacada, int cantidad,
             int usuarioId, int categoria, List<PrecioDTO> precios,
-            List<byte[]> imagenes, int periodoMinimo, int periodoMinimoFk, 
+            List<byte[]> imagenes, int periodoMinimo, int periodoMinimoFk,
             Integer periodoMaximo, Integer periodoMaximoFk) throws AlquilaCosasException {
 
         Publicacion publicacion = new Publicacion();
         publicacion.setTitulo(titulo);
         publicacion.setDescripcion(descripcion);
         publicacion.setFechaDesde(new Date());
-        
+
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         calendar.add(Calendar.MONTH, 2);
@@ -159,7 +157,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
             context.setRollbackOnly();
             throw new AlquilaCosasException("No se encontro el estado de la publicacion"
                     + " en la base de datos.");
-        }       
+        }
         PublicacionXEstado pxe = new PublicacionXEstado(publicacion, estadoPublicacion);
         publicacion.agregarPublicacionXEstado(pxe);
 
@@ -167,8 +165,8 @@ public class PublicacionBean implements PublicacionBeanLocal {
         Periodo periodo1 = periodoFacade.find(periodoMinimoFk);
         publicacion.setMinPeriodoAlquilerFk(periodo1);
         publicacion.setMinValor(periodoMinimo);
-        
-        if(periodoMaximoFk != null && periodoMaximoFk > 0) {
+
+        if (periodoMaximoFk != null && periodoMaximoFk > 0) {
             Periodo periodo2 = periodoFacade.find(periodoMaximoFk);;
             publicacion.setMaxPeriodoAlquilerFk(periodo2);
             publicacion.setMaxValor(periodoMaximo);
@@ -182,13 +180,13 @@ public class PublicacionBean implements PublicacionBeanLocal {
 
             periodo = periodoBean.getPeriodo(p.getPeriodoNombre());
             precio = new Precio();
-            
+
             if (p.getPrecio() == 0) {
                 if (p.getPeriodoNombre() == NombrePeriodo.HORA) {
-                    precio.setPrecio( redondearDecimal( precioDiario / 24.0, 2) );
+                    precio.setPrecio(redondearDecimal(precioDiario / 24.0, 2));
                 } else if (p.getPeriodoNombre() == NombrePeriodo.SEMANA) {
                     precio.setPrecio(precioDiario * 7.0);
-                } else if (p.getPeriodoNombre()  == NombrePeriodo.MES) {
+                } else if (p.getPeriodoNombre() == NombrePeriodo.MES) {
                     precio.setPrecio(precioDiario * 30.0);
                 }
             } else {
@@ -207,7 +205,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
             ip.setImagen(bytes);
             publicacion.agregarImagen(ip);
         }
-        
+
         usuario.agregarPublicacion(publicacion);
         publicacion = publicacionFacade.create(publicacion);
         return publicacion.getPublicacionId();
@@ -227,13 +225,14 @@ public class PublicacionBean implements PublicacionBeanLocal {
         Periodo periodo2 = null;
         try {
             periodo1 = periodoFacade.getPeriodo(p.getMinPeriodoAlquilerFk().getPeriodoId());
-            if( p.getMaxPeriodoAlquilerFk().getPeriodoId() != null )
+            if (p.getMaxPeriodoAlquilerFk().getPeriodoId() != null) {
                 periodo2 = periodoFacade.getPeriodo(p.getMaxPeriodoAlquilerFk().getPeriodoId());
-            
+            }
+
         } catch (Exception e) {
             System.out.println("el periodo es nulo" + e.getStackTrace());
         }
-          
+
         PublicacionDTO publicacionDto = new PublicacionDTO(
                 p.getPublicacionId(), p.getTitulo(), p.getDescripcion(),
                 p.getFechaDesde(), p.getFechaHasta(), p.getDestacada(),
@@ -265,7 +264,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
     public void actualizarPublicacion(int publicacionId, String titulo, String descripcion,
             Date fechaDesde, Date fechaHasta, boolean destacada, int cantidad,
             int usuarioId, int categoria, List<PrecioDTO> precios,
-            List<byte[]> imagenesAgregar, List<Integer> imagenesABorrar, 
+            List<byte[]> imagenesAgregar, List<Integer> imagenesABorrar,
             int periodoMinimo, int periodoMinimoFk, Integer periodoMaximo, Integer periodoMaximoFk,
             NombreEstadoPublicacion estadoPublicacion) throws AlquilaCosasException {
 
@@ -280,7 +279,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
         publicacion.setDescripcion(descripcion);
         publicacion.setDestacada(destacada);
         publicacion.setCantidad(cantidad);
-        
+
         // Actualizar categoria
         try {
             Categoria c = categoriaFacade.find(categoria);
@@ -289,20 +288,20 @@ public class PublicacionBean implements PublicacionBeanLocal {
             throw new AlquilaCosasException("No se encontro la Categoria en la "
                     + "base de datos." + e.getMessage());
         }
-        
+
         // Actualizar estado
         PublicacionXEstado pxe = publicacionXEstadoFacade.getPublicacionXEstado(publicacion);
         if (pxe.getEstadoPublicacion().getNombre() != estadoPublicacion) {
-     
+
             Calendar hoy = Calendar.getInstance();
             hoy.add(Calendar.DATE, 60);
             pxe.setFechaHasta(hoy.getTime());
             EstadoPublicacion ep = null;
-            
+
             try {
-                
+
                 ep = estadoPublicacionFacade.findByNombre(estadoPublicacion);
-                    
+
             } catch (NoResultException e) {
                 throw new AlquilaCosasException("No se encontro el Estado en la "
                         + "base de datos." + e.getMessage());
@@ -311,7 +310,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
             PublicacionXEstado pxeNuevo = new PublicacionXEstado(publicacion, ep);
             publicacion.agregarPublicacionXEstado(pxeNuevo);
         }
-        
+
         // Actualizar precios
         double precioDiario = precios.get(1).getPrecio();
         DecimalFormat formatter = new DecimalFormat();
@@ -320,7 +319,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
         for (PrecioDTO precioDto : precios) {
 
             if (precioDto.getPrecio() == 0.0) {
-                
+
                 if (precioDto.getPeriodoNombre() == NombrePeriodo.HORA) {
                     precioDto.setPrecio(Double.valueOf(precioHora));
                 } else if (precioDto.getPeriodoNombre() == NombrePeriodo.SEMANA) {
@@ -328,20 +327,20 @@ public class PublicacionBean implements PublicacionBeanLocal {
                 } else if (precioDto.getPeriodoNombre() == NombrePeriodo.MES) {
                     precioDto.setPrecio(precioDiario * 30.0);
                 }
-                
+
             }
             Periodo periodo = periodoBean.getPeriodo(precioDto.getPeriodoNombre());
             publicacion.actualizarPrecio(precioDto.getPrecioId(), precioDto.getPrecio(), periodo);
         }
-        
+
         // Actualizar periodos minimos y maximos de alquiler
         Periodo periodo1 = periodoFacade.find(periodoMinimoFk);;
         publicacion.setMinPeriodoAlquilerFk(periodo1);
         publicacion.setMinValor(periodoMinimo);
-        
-        if(periodoMaximoFk != null && periodoMaximoFk > 0) {
+
+        if (periodoMaximoFk != null && periodoMaximoFk > 0) {
             Periodo periodo2 = periodoFacade.find(periodoMaximoFk);;
-            publicacion.setMaxPeriodoAlquilerFk(periodo2);  
+            publicacion.setMaxPeriodoAlquilerFk(periodo2);
             publicacion.setMaxValor(periodoMaximo);
         }
 
@@ -368,18 +367,25 @@ public class PublicacionBean implements PublicacionBeanLocal {
         PublicacionDTO resultado = null;
         if (publicacion != null) {
             resultado = new PublicacionDTO(publicacion.getPublicacionId(), publicacion.getTitulo(),
-                    publicacion.getDescripcion(), publicacion.getFechaDesde(), publicacion.getFechaHasta(), 
+                    publicacion.getDescripcion(), publicacion.getFechaDesde(), publicacion.getFechaHasta(),
                     publicacion.getDestacada(),
                     publicacion.getCantidad());
 
             resultado.setPeriodoMinimoValor(publicacion.getMinValor());
-            resultado.setPeriodoMaximoValor(publicacion.getMaxValor());
             resultado.setPeriodoMinimo(publicacion.getMinPeriodoAlquilerFk());
-            resultado.setPeriodoMaximo(publicacion.getMaxPeriodoAlquilerFk());
-            
+            if (publicacion.getMaxPeriodoAlquilerFk() != null) {
+                resultado.setPeriodoMaximoValor(publicacion.getMaxValor());
+                resultado.setPeriodoMaximo(publicacion.getMaxPeriodoAlquilerFk());
+            } else {
+                resultado.setPeriodoMaximoValor(100);
+                Periodo temp = new Periodo();
+                temp.setNombre(NombrePeriodo.DIA);
+                resultado.setPeriodoMaximo(temp);
+            }
+
             UsuarioDTO propietario = new UsuarioDTO(publicacion.getUsuarioFk());
             resultado.setPropietario(propietario);
-            
+
             Domicilio domicilio = publicacion.getUsuarioFk().getDomicilioList().get(0);
             resultado.setProvincia(domicilio.getProvinciaFk().getNombre());
             resultado.setCiudad(domicilio.getProvinciaFk().getNombre());
@@ -448,7 +454,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
         pregunta.setUsuarioFk(usuario);
         pregunta.setPublicacionFk(publicacion);
         entityManager.persist(pregunta);
-        
+
         // Enviar email de notificacion
         Usuario usuarioDueno = publicacion.getUsuarioFk();
         try {
@@ -499,19 +505,19 @@ public class PublicacionBean implements PublicacionBeanLocal {
     @RolesAllowed({"USUARIO", "ADMIN"})
     public void setRespuesta(ComentarioDTO preguntaConRespuesta)
             throws AlquilaCosasException {
-        
+
         Comentario pregunta = entityManager.find(Comentario.class, preguntaConRespuesta.getId());
         Publicacion publicacion = pregunta.getPublicacionFk();
-        
+
         Comentario respuesta = new Comentario();
         respuesta.setComentario(preguntaConRespuesta.getRespuesta().getComentario());
         respuesta.setFecha(preguntaConRespuesta.getRespuesta().getFecha());
         respuesta.setPregunta(Boolean.FALSE);
-        
+
         Usuario usuarioResponde = entityManager.find(Usuario.class, preguntaConRespuesta.getRespuesta().getUsuarioId());
         respuesta.setUsuarioFk(usuarioResponde);
         respuesta.setPublicacionFk(publicacion);
-        
+
         pregunta.setRespuesta(respuesta);
         entityManager.persist(respuesta);
 
@@ -541,41 +547,36 @@ public class PublicacionBean implements PublicacionBeanLocal {
         }
 
     }
-    
+
     @Override
     @PermitAll
-    public List<Periodo> getPeriodos()
-    {
-      return periodoFacade.getPeriodosOrderByHoras();
-        
-    }     
-    
-    
-    
+    public List<Periodo> getPeriodos() {
+        return periodoFacade.getPeriodosOrderByHoras();
+
+    }
+
     @Override
     @PermitAll
-    public List<Date> getFechasSinStock(int publicationId, int cantidad)
-    {
+    public List<Date> getFechasSinStock(int publicationId, int cantidad) {
         Publicacion publicacion = entityManager.find(Publicacion.class, publicationId);
         List<Date> respuesta = new ArrayList<Date>();
         List<Alquiler> alquileres = alquilerFacade.getAlquileresByPublicacionFromToday(publicacion);
-        Iterator<Alquiler> itAlquiler =  alquileres.iterator();
-        
+        Iterator<Alquiler> itAlquiler = alquileres.iterator();
+
         Calendar today = Calendar.getInstance();
         today.setTime(new Date());
         today.set(Calendar.HOUR_OF_DAY, 0);
         today.set(Calendar.MINUTE, 0);
         today.set(Calendar.SECOND, 0);
-        
+
         int disponibles = publicacion.getCantidad();
-        
+
         HashMap<String, Integer> dataCounter = new HashMap(60);//probablemente no existan pedidos mas haya de 60 dias desde hoy
         Calendar lastDate = Calendar.getInstance();
         lastDate.setTime(new Date());
-       
-        while (itAlquiler.hasNext())
-        {
-            
+
+        while (itAlquiler.hasNext()) {
+
             Alquiler temp = itAlquiler.next();
             Calendar date = Calendar.getInstance();
             date.setTime(temp.getFechaInicio());
@@ -584,40 +585,43 @@ public class PublicacionBean implements PublicacionBeanLocal {
             date.set(Calendar.SECOND, 0);
             Calendar fechaFin = Calendar.getInstance();
             fechaFin.setTime(temp.getFechaFin());
-            if(fechaFin.get(Calendar.HOUR_OF_DAY) == 0 && fechaFin.get(Calendar.MINUTE)  == 0 
-                    && fechaFin.get(Calendar.SECOND)  == 0 )
-                //fechaFin.add(Calendar.SECOND, 1); 
+            if (fechaFin.get(Calendar.HOUR_OF_DAY) == 0 && fechaFin.get(Calendar.MINUTE) == 0
+                    && fechaFin.get(Calendar.SECOND) == 0) //fechaFin.add(Calendar.SECOND, 1); 
             //No me importan las fechas anteriores a hoy, no son seleccionables
-            if(date.before(today))
-                date.setTime(today.getTime());
+            {
+                if (date.before(today)) {
+                    date.setTime(today.getTime());
+                }
+            }
             //Me fijo si en los dias que dura el alquiler analizado hay disponibilidad de
             //productos para el pedido que estoy creando
-            if(cantidad <= disponibles - temp.getCantidad())
-                //Si alcanzan los dias guardo en el hashmap el dia y la cantidad de
-                //productos del alquiler, para ir acumulando esta cantidad para cada fecha
-                //al final me fijo por cada fecha si alcanza, porque ya tengo todos los 
-                //alquileres analizados
-                while(date.before(fechaFin))
-                {
+            if (cantidad <= disponibles - temp.getCantidad()) //Si alcanzan los dias guardo en el hashmap el dia y la cantidad de
+            //productos del alquiler, para ir acumulando esta cantidad para cada fecha
+            //al final me fijo por cada fecha si alcanza, porque ya tengo todos los 
+            //alquileres analizados
+            {
+                while (date.before(fechaFin)) {
                     Integer acumulado = dataCounter.get(date.getTime().toString());
-                    if(acumulado != null)
-                        dataCounter.put(date.getTime().toString(),new Integer(acumulado + temp.getCantidad()));
-                    else
-                        dataCounter.put(date.getTime().toString(),new Integer(temp.getCantidad()));
+                    if (acumulado != null) {
+                        dataCounter.put(date.getTime().toString(), new Integer(acumulado + temp.getCantidad()));
+                    } else {
+                        dataCounter.put(date.getTime().toString(), new Integer(temp.getCantidad()));
+                    }
                     date.add(Calendar.DATE, 1);
                 }
-            else
-                //si no alcanza, marco a todos los dias de este alquiler en el hasmap con el valor
-                //de la disponibilidad total de la publicacion, lo cual significa que no va a alcanzar
-                //ese dia para hacer el pedido ni siquiera de 1 producto
-                
-                while(date.before(fechaFin)){ //temp.getFechaFin())){
-                    dataCounter.put(date.getTime().toString(),new Integer(disponibles));
+            } else //si no alcanza, marco a todos los dias de este alquiler en el hasmap con el valor
+            //de la disponibilidad total de la publicacion, lo cual significa que no va a alcanzar
+            //ese dia para hacer el pedido ni siquiera de 1 producto
+            {
+                while (date.before(fechaFin)) { //temp.getFechaFin())){
+                    dataCounter.put(date.getTime().toString(), new Integer(disponibles));
                     date.add(Calendar.DATE, 1);
                 }
-                
-                if(date.after(lastDate))
-                    lastDate = date;
+            }
+
+            if (date.after(lastDate)) {
+                lastDate = date;
+            }
 
         }
         //Reviso el hashmap y voy llenando la lista de respuesta con las fechas que 
@@ -627,27 +631,28 @@ public class PublicacionBean implements PublicacionBeanLocal {
         date.set(Calendar.HOUR_OF_DAY, 0);
         date.set(Calendar.MINUTE, 0);
         date.set(Calendar.SECOND, 0);
-        
-        if(lastDate.get(Calendar.HOUR_OF_DAY) == 0 && lastDate.get(Calendar.MINUTE)  == 0 
-                && lastDate.get(Calendar.SECOND)  == 0 )
-            lastDate.add(Calendar.SECOND, 1); 
-        while(date.before(lastDate)){
+
+        if (lastDate.get(Calendar.HOUR_OF_DAY) == 0 && lastDate.get(Calendar.MINUTE) == 0
+                && lastDate.get(Calendar.SECOND) == 0) {
+            lastDate.add(Calendar.SECOND, 1);
+        }
+        while (date.before(lastDate)) {
             Integer acumulado = dataCounter.get(date.getTime().toString());
-            if(acumulado != null)
-                if(cantidad > (disponibles - acumulado))
+            if (acumulado != null) {
+                if (cantidad > (disponibles - acumulado)) {
                     respuesta.add(date.getTime());
+                }
+            }
             date.add(Calendar.DATE, 1);
         }
-        
+
         return respuesta;
     }
-    
-    
+
     @Override
     @RolesAllowed({"USUARIO", "ADMIN"})
-    public void crearPedidoAlquiler(int publicationId, int usuarioId, 
-        Date beginDate, Date endDate, double monto, int cantidad) throws AlquilaCosasException
-    {
+    public void crearPedidoAlquiler(int publicationId, int usuarioId,
+            Date beginDate, Date endDate, double monto, int cantidad) throws AlquilaCosasException {
         Alquiler nuevoPedido = new Alquiler();
         Publicacion publicacion = entityManager.find(Publicacion.class, publicationId);
         Usuario propietario = publicacion.getUsuarioFk();
@@ -657,11 +662,11 @@ public class PublicacionBean implements PublicacionBeanLocal {
         nuevoPedido.setFechaFin(endDate);
         nuevoPedido.setMonto(monto);
         nuevoPedido.setCantidad(cantidad);
-        
+
         entityManager.persist(nuevoPedido);
 
         estadoAlquiler.saveState(nuevoPedido, EstadoAlquiler.NombreEstadoAlquiler.PEDIDO);
-        
+
         try {
             Connection connection = connectionFactory.createConnection();
             Session session = connection.createSession(true,
@@ -678,9 +683,8 @@ public class PublicacionBean implements PublicacionBeanLocal {
             texto.append("</b> <br/><br/>");
             texto.append(" Para aceptarlo, ingresa a tu panel de usuario en alquilaCosas.com.ar ");
             texto.append("<br/><br/><br/> Atentamente, <br/> <b>AlquilaCosas </b>");
-            
-            NotificacionEmail notificacion = new NotificacionEmail
-                    (propietario.getEmail(), asunto, texto.toString());
+
+            NotificacionEmail notificacion = new NotificacionEmail(propietario.getEmail(), asunto, texto.toString());
             message.setObject(notificacion);
             producer.send(message);
             session.close();
@@ -694,15 +698,14 @@ public class PublicacionBean implements PublicacionBeanLocal {
     @Override
     @PermitAll
     public double getUserRate(UsuarioDTO propietario) {
-        double rating =  calificacionFacade.getCalificacionByUsuario(propietario.getId());
-        rating*=0.5;
-        rating+=5;
+        double rating = calificacionFacade.getCalificacionByUsuario(propietario.getId());
+        rating *= 0.5;
+        rating += 5;
         return rating;//hacer el metodo!!
     }
-    
+
     private double redondearDecimal(double d, double c) {
-        int temp = (int)( (d*Math.pow(10,c) ));
-        return ( ( (double)temp ) * Math.pow(10,-c) );
+        int temp = (int) ((d * Math.pow(10, c)));
+        return (((double) temp) * Math.pow(10, -c));
     }
-    
 }
