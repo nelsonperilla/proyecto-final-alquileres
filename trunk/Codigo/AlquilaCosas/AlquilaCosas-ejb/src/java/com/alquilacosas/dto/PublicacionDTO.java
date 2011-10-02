@@ -34,8 +34,8 @@ public class PublicacionDTO implements Serializable  {
     private List<PrecioDTO> precios;
     private EstadoPublicacion estado;
     private List<ImagenPublicacion> imagenes;
-    private int periodoMinimoValor;
-    private int periodoMaximoValor;
+    private Integer periodoMinimoValor;
+    private Integer periodoMaximoValor;
     private Periodo periodoMinimo;
     private Periodo periodoMaximo;
     private String provincia, ciudad, barrio;
@@ -45,8 +45,8 @@ public class PublicacionDTO implements Serializable  {
             Date fecha_desde, Date fecha_hasta, boolean destacada,
             int cantidad, Categoria categoria,
             List<ImagenPublicacion> imagenes, EstadoPublicacion estado, 
-            int periodoMinimoValor, Periodo periodoMinimo, 
-            int periodoMaximoValor, Periodo periodoMaximo)
+            Integer periodoMinimoValor, Periodo periodoMinimo, 
+            Integer periodoMaximoValor, Periodo periodoMaximo)
     {
         this.id = id;
         this.titulo = titulo;
@@ -234,21 +234,21 @@ public class PublicacionDTO implements Serializable  {
         this.categoriaF = categoriaF;
     }
 
-    public int getPeriodoMaximoValor() {
+    public Integer getPeriodoMaximoValor() {
         return periodoMaximoValor;
     }
 
-    public void setPeriodoMaximoValor(int periodoMaximo) {
+    public void setPeriodoMaximoValor(Integer periodoMaximo) {
         this.periodoMaximoValor = periodoMaximo;
     }
 
 
 
-    public int getPeriodoMinimoValor() {
+    public Integer getPeriodoMinimoValor() {
         return periodoMinimoValor;
     }
 
-    public void setPeriodoMinimoValor(int periodoMinimo) {
+    public void setPeriodoMinimoValor(Integer periodoMinimo) {
         this.periodoMinimoValor = periodoMinimo;
     }
 

@@ -158,7 +158,7 @@ public class AlquilerBean implements AlquilerBeanLocal {
             for( Alquiler a : listaAlquiler ){
                 
                 EstadoAlquiler ea = estadoAlquilerFacade.getEstadoAlquiler(a);
-                AlquilerDTO alquilerDto = new AlquilerDTO( p.getPublicacionId(), usuarioDuenioId,
+                AlquilerDTO alquilerDto = new AlquilerDTO( p.getPublicacionId(), a.getUsuarioFk().getUsuarioId(),
                             a.getAlquilerId(), imagenId, a.getFechaInicio(), 
                             a.getFechaFin(), ea.getNombre(), p.getTitulo(), a.getUsuarioFk().getLoginList().get(0).getUsername(),
                             a.getCantidad(), a.getMonto(), false);
@@ -386,10 +386,10 @@ public class AlquilerBean implements AlquilerBeanLocal {
                 
             }
             else {
-                String asunto = "Tu alquiler por el/la " + publicacion.getTitulo() + " ha sido " + estadoAlquiler +" ";
+                String asunto = "Tu alquiler por el producto " + publicacion.getTitulo() + " ha sido " + estadoAlquiler +" ";
                 String texto = "<html>Hola " + usuario.getNombre() + ", <br/><br/>"
                         + "El usuario <b>" + usuarioDuenio.getNombre() + "</b> ha <b>"+ estadoAlquiler + "</b> el pedido de alquiler de "
-                        +  alquiler.getCantidad() + " articulos solicitados para la fecha " + fechaIncio + " " 
+                        +  alquiler.getCantidad() + " articulo/s solicitado/s para la fecha " + fechaIncio + " " 
                         + "hasta la fecha " + fechaFin + ". <br/><br/>"
                         + "Atentamente, <br/> <b>AlquilaCosas </b>";
                 notificacion = new NotificacionEmail(usuario.getEmail(), asunto, texto);

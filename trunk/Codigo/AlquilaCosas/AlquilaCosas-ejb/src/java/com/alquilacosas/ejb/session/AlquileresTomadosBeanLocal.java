@@ -18,23 +18,23 @@ import javax.ejb.Local;
 @Local
 public interface AlquileresTomadosBeanLocal {
 
-     List<AlquilerDTO> getAlquileresSinCalificarPorUsuario(int usuarioId);
+    public List<AlquilerDTO> getAlquileresSinCalificarPorUsuario(int usuarioId);
 
-     void registrarCalificacion(Integer puntuacion, Integer alquilerId, String comentario, Integer usuarioId);
+    public void registrarCalificacion(Integer puntuacion, Integer alquilerId, String comentario, Integer usuarioId);
 
-     List<Puntuacion> getPuntuaciones();
+    public List<Puntuacion> getPuntuaciones();
 
-     List<AlquilerDTO> getAlquileresActivosPorUsuario(int usuarioId);
+    public List<AlquilerDTO> getAlquileresActivosPorUsuario(int usuarioId);
 
-     List<AlquilerDTO> getAlquileresConCalificarPorUsuario(int usuarioId);
-     
-     CalificacionDTO getCalificacionOfrece(Integer alquilerId) throws AlquilaCosasException;
-     
-     CalificacionDTO getCalificacionToma(Integer alquilerId) throws AlquilaCosasException;
+    public List<AlquilerDTO> getAlquileresConCalificarPorUsuario(int usuarioId);
 
-     void registrarReplica(int calificacionId, String comentarioReplica, int usuarioId) throws AlquilaCosasException;
+    public CalificacionDTO getCalificacionOfrece(Integer alquilerId) throws AlquilaCosasException;
 
-     boolean cancelarAlquiler(int alquilerId) throws AlquilaCosasException;
+    public CalificacionDTO getCalificacionToma(Integer alquilerId) throws AlquilaCosasException;
+
+    public void registrarReplica(int calificacionId, String comentarioReplica, int usuarioId) throws AlquilaCosasException;
+
+    public boolean cancelarAlquiler(int alquilerId) throws AlquilaCosasException;
 
     public java.util.List<java.util.Date> getFechasSinStock(int alquilerId);
 

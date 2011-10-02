@@ -29,9 +29,9 @@
                     <p:outputPanel rendered="#{not reputacion.usuarioCorrecto}">
                         No se encontro el Usuario.
                     </p:outputPanel>
-                    <p:fieldset rendered="#{reputacion.usuarioCorrecto}" >
+                    <!-- <p:fieldset  > -->
 
-                        <h:panelGrid columns="1" styleClass="repTable" >
+                        <h:panelGrid columns="1" styleClass="repTable" rendered="#{reputacion.usuarioCorrecto}" >
                             <p:outputPanel>Usuario: #{reputacion.usuarioDTO.username}</p:outputPanel>
                             <p:outputPanel>Antiguedad: #{reputacion.usuarioDTO.antiguedad}</p:outputPanel>
                             <p:outputPanel>Ubicación: #{reputacion.usuarioDTO.domicilio.provincia}, #{reputacion.usuarioDTO.domicilio.pais}</p:outputPanel>
@@ -91,7 +91,7 @@
                             </h:panelGrid>
                         </h:panelGrid>
 
-                    </p:fieldset> 
+                    <!-- </p:fieldset>  -->
 
                 </h:form>
                 <p:outputPanel id="dialogo" >
