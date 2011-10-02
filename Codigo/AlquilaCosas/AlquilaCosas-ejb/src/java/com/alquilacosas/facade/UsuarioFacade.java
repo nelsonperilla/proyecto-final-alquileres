@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -17,6 +18,7 @@ import javax.persistence.Query;
  */
 @Stateless
 public class UsuarioFacade extends AbstractFacade<Usuario> {
+
     @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
     private EntityManager em;
 
@@ -28,17 +30,18 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
     public UsuarioFacade() {
         super(Usuario.class);
     }
-    
+
     public Usuario findByEmail(String email) {
         Usuario usuario = null;
         Query q = em.createNamedQuery("Usuario.findByEmail");
         q.setParameter("email", email);
         try {
             usuario = (Usuario) q.getSingleResult();
-        } catch(NoResultException e) {
-            
+        } catch (NoResultException e) {
+            Logger.getLogger(UsuarioFacade.class).
+                    error("findByEmail(). "
+                    + "Excepcion al ejecutar consulta: " + e);
         }
         return usuario;
     }
-    
 }

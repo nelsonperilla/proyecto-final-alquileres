@@ -45,7 +45,8 @@ public class AlquileresOfrecidosMBean implements Serializable {
     private Integer filtroSeleccionado, duracion, duracionAnterior;
     private NombrePeriodo periodo;
     private List<AlquilerDTO> alquileres;
-    private Integer alquilerId, publicacionId, usuarioId, puntuacionId, pedidoCambioId, usuarioLogueado;
+    private Integer alquilerId, publicacionId, usuarioId, puntuacionId, 
+            pedidoCambioId, usuarioLogueado;
     private String comentario;
     private Date fechaInicio;
     private AlquilerDTO alquilerSeleccionado;
@@ -542,5 +543,13 @@ public class AlquileresOfrecidosMBean implements Serializable {
 
     public void setTomaCalifico(Boolean tomaCalifico) {
         this.tomaCalifico = tomaCalifico;
+    }
+
+    public Integer getDuracionAnterior() {
+        return duracionAnterior;
+    }
+
+    public void setDuracionAnterior(Integer duracionAnterior) {
+        this.duracionAnterior = duracionAnterior;
     }
 }

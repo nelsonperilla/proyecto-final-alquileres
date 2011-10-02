@@ -21,6 +21,7 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 public class AlquilerXEstadoFacade extends AbstractFacade<AlquilerXEstado> {
+
     @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
     private EntityManager em;
 
@@ -31,8 +32,8 @@ public class AlquilerXEstadoFacade extends AbstractFacade<AlquilerXEstado> {
     public AlquilerXEstadoFacade() {
         super(AlquilerXEstado.class);
     }
-    
-    public AlquilerXEstado findByAlquiler( int alquilerId ){
+
+    public AlquilerXEstado findByAlquiler(int alquilerId) {
         AlquilerXEstado axe = new AlquilerXEstado();
         Query query = em.createQuery("SELECT axe FROM AlquilerXEstado axe "
                 + "WHERE axe.alquilerFk.alquilerId = :alquilerId "
@@ -42,22 +43,17 @@ public class AlquilerXEstadoFacade extends AbstractFacade<AlquilerXEstado> {
         return axe;
     }
 
-    public void saveState(Alquiler alquiler, NombreEstadoAlquiler nombreEstadoAlquiler)
-        throws AlquilaCosasException{
+    public void saveState(Alquiler alquiler, NombreEstadoAlquiler nombreEstadoAlquiler) {
         AlquilerXEstado estadoActual = new AlquilerXEstado();
         estadoActual.setAlquilerFk(alquiler);
-        
+
         Query query = em.createNamedQuery("EstadoAlquiler.findByNombre");
         query.setParameter("nombre", nombreEstadoAlquiler);
         EstadoAlquiler estado = (EstadoAlquiler) query.getSingleResult();
         estadoActual.setEstadoAlquilerFk(estado);
         estadoActual.setFechaDesde(new Date());
-        
+
         alquiler.agregarAlquilerXEstado(estadoActual);
-        try {
-            em.persist(estadoActual);
-        }catch (Exception e){
-            throw new AlquilaCosasException(e.getMessage());
-        }
+        em.persist(estadoActual);
     }
 }

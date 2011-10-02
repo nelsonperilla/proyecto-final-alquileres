@@ -15,9 +15,11 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 public class ServicioFacade extends AbstractFacade<Servicio> {
+
     @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
     private EntityManager em;
 
+    @Override
     protected EntityManager getEntityManager() {
         return em;
     }
@@ -25,5 +27,4 @@ public class ServicioFacade extends AbstractFacade<Servicio> {
     public ServicioFacade() {
         super(Servicio.class);
     }
-    
 }

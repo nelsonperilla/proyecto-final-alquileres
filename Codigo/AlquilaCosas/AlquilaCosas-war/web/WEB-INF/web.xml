@@ -25,25 +25,33 @@
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>/faces/*</url-pattern>
+    </servlet-mapping>
     <servlet>
         <servlet-name>ImageServlet</servlet-name>
         <servlet-class>com.alquilacosas.servlet.ImagenPublicacionServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>Faces Servlet</servlet-name>
-        <url-pattern>/faces/*</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>ImageServlet</servlet-name>
         <url-pattern>/image/*</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>log4j-init</servlet-name>
+        <servlet-class>com.alquilacosas.log.Log4jInit</servlet-class>
+        <init-param>
+            <param-name>log4j-init-file</param-name>
+            <param-value>WEB-INF/classes/com/alquilacosas/log/log4j.lcf</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
     <session-config>
         <session-timeout>
             30
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>categorias.xhtml</welcome-file>
         <welcome-file>index.xhtml</welcome-file>
     </welcome-file-list>
     <error-page>

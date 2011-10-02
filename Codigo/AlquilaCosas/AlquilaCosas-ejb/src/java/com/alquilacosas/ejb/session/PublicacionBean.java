@@ -29,6 +29,7 @@ import com.alquilacosas.facade.AlquilerFacade;
 import com.alquilacosas.facade.AlquilerXEstadoFacade;
 import com.alquilacosas.facade.CalificacionFacade;
 import com.alquilacosas.facade.CategoriaFacade;
+import com.alquilacosas.facade.ComentarioFacade;
 import com.alquilacosas.facade.EstadoPublicacionFacade;
 import com.alquilacosas.facade.ImagenPublicacionFacade;
 import com.alquilacosas.facade.PeriodoFacade;
@@ -60,9 +61,7 @@ import javax.jms.Destination;
 import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
-import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 /**
@@ -75,8 +74,6 @@ import javax.persistence.Query;
 @DeclareRoles({"USUARIO", "ADMIN"})
 public class PublicacionBean implements PublicacionBeanLocal {
 
-    @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
-    private EntityManager entityManager;
     @Resource(name = "emailConnectionFactory")
     private ConnectionFactory connectionFactory;
     @Resource(name = "jms/notificacionEmailQueue")
@@ -109,6 +106,8 @@ public class PublicacionBean implements PublicacionBeanLocal {
     private AlquilerXEstadoFacade estadoAlquiler;
     @EJB
     private CalificacionFacade calificacionFacade;
+    @EJB
+    private ComentarioFacade comentarioFacade;
 
     @Override
     @RolesAllowed({"USUARIO", "ADMIN"})
@@ -415,14 +414,11 @@ public class PublicacionBean implements PublicacionBeanLocal {
     @Override
     @PermitAll
     public List<ComentarioDTO> getPreguntas(int publicationId) {
-        List<Comentario> comentarios;
+        Publicacion filter = publicacionFacade.find(publicationId);
+        List<Comentario> comentarios = comentarioFacade.findPreguntasByPublicacion(filter);
         List<ComentarioDTO> resultado = new ArrayList<ComentarioDTO>();
-        Publicacion filter = entityManager.find(Publicacion.class, publicationId);
-        Query query = entityManager.createNamedQuery("Comentario.findPreguntasByPublicacion");
-        query.setParameter("publicacion", filter);
-        comentarios = query.getResultList();
-        Comentario respuestaTemp;
-        ComentarioDTO respuesta;
+        Comentario respuestaTemp = null;
+        ComentarioDTO respuesta = null;
         for (Comentario comentario : comentarios) {
             respuesta = null;
             respuestaTemp = comentario.getRespuesta();
@@ -446,14 +442,14 @@ public class PublicacionBean implements PublicacionBeanLocal {
     public void setPregunta(int publicacionId, ComentarioDTO nuevaPregunta)
             throws AlquilaCosasException {
         Comentario pregunta = new Comentario();
-        Publicacion publicacion = entityManager.find(Publicacion.class, publicacionId);
+        Publicacion publicacion = publicacionFacade.find(publicacionId);
         pregunta.setComentario(nuevaPregunta.getComentario());
         pregunta.setFecha(nuevaPregunta.getFecha());
         pregunta.setPregunta(Boolean.TRUE);
-        Usuario usuario = entityManager.find(Usuario.class, nuevaPregunta.getUsuarioId());
+        Usuario usuario = usuarioFacade.find(nuevaPregunta.getUsuarioId());
         pregunta.setUsuarioFk(usuario);
         pregunta.setPublicacionFk(publicacion);
-        entityManager.persist(pregunta);
+        comentarioFacade.create(pregunta);
 
         // Enviar email de notificacion
         Usuario usuarioDueno = publicacion.getUsuarioFk();
@@ -484,13 +480,10 @@ public class PublicacionBean implements PublicacionBeanLocal {
     @Override
     @RolesAllowed({"USUARIO", "ADMIN"})
     public List<ComentarioDTO> getPreguntasSinResponder(int usuarioId) {
-        List<Comentario> comentarios;
+        Usuario filter = usuarioFacade.find(usuarioId);
+        List<Comentario> comentarios = comentarioFacade.findPreguntasSinResponderByUsuario(filter);
         List<ComentarioDTO> resultado = new ArrayList<ComentarioDTO>();
-        Usuario filter = entityManager.find(Usuario.class, usuarioId);
-        Query query = entityManager.createNamedQuery("Comentario.findPreguntasSinResponderByUsuario");
-        query.setParameter("usuario", filter);
-        comentarios = query.getResultList();
-        Comentario respuesta;
+        Comentario respuesta = null;
         for (Comentario comentario : comentarios) {
             resultado.add(new ComentarioDTO(comentario.getComentarioId(),
                     comentario.getComentario(), comentario.getFecha(),
@@ -506,7 +499,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
     public void setRespuesta(ComentarioDTO preguntaConRespuesta)
             throws AlquilaCosasException {
 
-        Comentario pregunta = entityManager.find(Comentario.class, preguntaConRespuesta.getId());
+        Comentario pregunta = comentarioFacade.find(preguntaConRespuesta.getId());
         Publicacion publicacion = pregunta.getPublicacionFk();
 
         Comentario respuesta = new Comentario();
@@ -514,12 +507,12 @@ public class PublicacionBean implements PublicacionBeanLocal {
         respuesta.setFecha(preguntaConRespuesta.getRespuesta().getFecha());
         respuesta.setPregunta(Boolean.FALSE);
 
-        Usuario usuarioResponde = entityManager.find(Usuario.class, preguntaConRespuesta.getRespuesta().getUsuarioId());
+        Usuario usuarioResponde = usuarioFacade.find(preguntaConRespuesta.getRespuesta().getUsuarioId());
         respuesta.setUsuarioFk(usuarioResponde);
         respuesta.setPublicacionFk(publicacion);
 
         pregunta.setRespuesta(respuesta);
-        entityManager.persist(respuesta);
+        comentarioFacade.create(respuesta);
 
         Usuario usuarioPregunto = pregunta.getUsuarioFk();
 
@@ -558,7 +551,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
     @Override
     @PermitAll
     public List<Date> getFechasSinStock(int publicationId, int cantidad) {
-        Publicacion publicacion = entityManager.find(Publicacion.class, publicationId);
+        Publicacion publicacion = publicacionFacade.find(publicationId);
         List<Date> respuesta = new ArrayList<Date>();
         List<Alquiler> alquileres = alquilerFacade.getAlquileresByPublicacionFromToday(publicacion);
         Iterator<Alquiler> itAlquiler = alquileres.iterator();
@@ -654,16 +647,16 @@ public class PublicacionBean implements PublicacionBeanLocal {
     public void crearPedidoAlquiler(int publicationId, int usuarioId,
             Date beginDate, Date endDate, double monto, int cantidad) throws AlquilaCosasException {
         Alquiler nuevoPedido = new Alquiler();
-        Publicacion publicacion = entityManager.find(Publicacion.class, publicationId);
+        Publicacion publicacion = publicacionFacade.find(publicationId);
         Usuario propietario = publicacion.getUsuarioFk();
         nuevoPedido.setPublicacionFk(publicacion);
-        nuevoPedido.setUsuarioFk(entityManager.find(Usuario.class, usuarioId));
+        nuevoPedido.setUsuarioFk(usuarioFacade.find(usuarioId));
         nuevoPedido.setFechaInicio(beginDate);
         nuevoPedido.setFechaFin(endDate);
         nuevoPedido.setMonto(monto);
         nuevoPedido.setCantidad(cantidad);
 
-        entityManager.persist(nuevoPedido);
+        alquilerFacade.create(nuevoPedido);
 
         estadoAlquiler.saveState(nuevoPedido, EstadoAlquiler.NombreEstadoAlquiler.PEDIDO);
 

@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -18,6 +19,7 @@ import javax.persistence.Query;
  */
 @Stateless
 public class EstadoUsuarioFacade extends AbstractFacade<EstadoUsuario> {
+
     @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
     private EntityManager em;
 
@@ -29,17 +31,18 @@ public class EstadoUsuarioFacade extends AbstractFacade<EstadoUsuario> {
     public EstadoUsuarioFacade() {
         super(EstadoUsuario.class);
     }
-    
+
     public EstadoUsuario findByNombre(NombreEstadoUsuario nombre) {
         EstadoUsuario estado = null;
         Query getEstadoQuery = em.createNamedQuery("EstadoUsuario.findByNombre");
         getEstadoQuery.setParameter("nombre", nombre);
         try {
             estado = (EstadoUsuario) getEstadoQuery.getSingleResult();
-        } catch(NoResultException e) {
-            
+        } catch (NoResultException e) {
+            Logger.getLogger(EstadoUsuarioFacade.class).
+                    error("findByNombre(). "
+                    + "Excepcion al ejecutar consulta: " + e);
         }
         return estado;
     }
-    
 }

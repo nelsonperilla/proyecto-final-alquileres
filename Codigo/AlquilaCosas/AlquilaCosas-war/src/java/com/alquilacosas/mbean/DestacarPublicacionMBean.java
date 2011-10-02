@@ -18,7 +18,6 @@ import com.paypal.soap.api.PaymentDetailsType;
 import com.paypal.soap.api.SetExpressCheckoutRequestDetailsType;
 import com.paypal.soap.api.SetExpressCheckoutRequestType;
 import com.paypal.soap.api.SetExpressCheckoutResponseType;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
 import javax.annotation.PostConstruct;
@@ -29,7 +28,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletResponse;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -106,6 +105,9 @@ public class DestacarPublicacionMBean implements Serializable {
             try {
                 context.redirect(url);
             } catch (Exception e) {
+                Logger.getLogger(DestacarPublicacionMBean.class).
+                    error("destacar(). Excepcion al invocar redirect(): " 
+                    + e + ": " + e.getMessage());
             }
         } else {
             
@@ -159,12 +161,15 @@ public class DestacarPublicacionMBean implements Serializable {
             //get the token from the response
             url = paypalUrl + ppresponse.getToken();
         } catch (PayPalException e) {
-            //
+            Logger.getLogger(DestacarPublicacionMBean.class).
+                    error("setExpressCheckout(). Excepcion al conectarse con Paypal: " 
+                    + e + ": " + e.getMessage());
         }
         return url;
     }
 
-    // Getteers & Setters
+    // Getters & Setters
+    
     public ManejadorUsuarioMBean getLogin() {
         return login;
     }

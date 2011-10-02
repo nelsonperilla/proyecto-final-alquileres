@@ -135,6 +135,8 @@
                             <h:panelGrid columns="2" columnClasses="leftCol,rightCol" style="width:100%; margin-top: 5px" >
                                 <h:outputLabel value="Periodo:" />
                                 <h:outputText value="#{alquileresOfrecidos.periodo}" />
+                                <h:outputLabel value="Duracion actual:" />
+                                <h:outputText value="#{alquileresOfrecidos.duracionAnterior}" />
                                 <h:outputLabel value="Nueva duracion:" />
                                 <h:outputText value="#{alquileresOfrecidos.duracion}" />
                                 <p:commandButton value="Aceptar" actionListener="#{alquileresOfrecidos.responderPedidoCambio(true)}"

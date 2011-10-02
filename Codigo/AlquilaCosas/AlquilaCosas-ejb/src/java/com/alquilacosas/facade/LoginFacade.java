@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -21,6 +22,7 @@ public class LoginFacade extends AbstractFacade<Login> {
     @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
     private EntityManager em;
 
+    @Override
     protected EntityManager getEntityManager() {
         return em;
     }
@@ -36,7 +38,9 @@ public class LoginFacade extends AbstractFacade<Login> {
         try {
             login = (Login) query.getSingleResult();
         } catch(NoResultException e) {
-            
+            Logger.getLogger(LoginFacade.class).
+                    error("findByUsername(). "
+                    + "Excepcion al ejecutar consulta: " + e);
         }
         return login;
     }

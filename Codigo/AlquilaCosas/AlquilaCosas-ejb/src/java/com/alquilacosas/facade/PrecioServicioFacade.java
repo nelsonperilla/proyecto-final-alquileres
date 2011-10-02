@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -18,6 +19,7 @@ import javax.persistence.Query;
  */
 @Stateless
 public class PrecioServicioFacade extends AbstractFacade<PrecioServicio> {
+
     @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
     private EntityManager em;
 
@@ -29,7 +31,7 @@ public class PrecioServicioFacade extends AbstractFacade<PrecioServicio> {
     public PrecioServicioFacade() {
         super(PrecioServicio.class);
     }
-    
+
     public PrecioServicio getPrecioServicio(NombreTipoServicio servicio) {
         Query query = em.createQuery("SELECT p FROM PrecioServicio p WHERE p.tipoServicioFk.nombre = :servicio");
         query.setParameter("servicio", servicio);
@@ -37,9 +39,10 @@ public class PrecioServicioFacade extends AbstractFacade<PrecioServicio> {
         try {
             precio = (PrecioServicio) query.getSingleResult();
         } catch (NoResultException e) {
-            
+            Logger.getLogger(PrecioServicioFacade.class).
+                    error("getPrecioServicio(). "
+                    + "Excepcion al ejecutar consulta: " + e);
         }
         return precio;
     }
-    
 }

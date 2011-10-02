@@ -28,6 +28,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -93,7 +94,9 @@ public class PagoConfirmadoMBean implements Serializable {
             GetExpressCheckoutDetailsResponseType ppresponse = (GetExpressCheckoutDetailsResponseType) caller.call("GetExpressCheckoutDetails", pprequest);
             details = ppresponse.getGetExpressCheckoutDetailsResponseDetails();
         } catch (PayPalException e) {
-            System.out.println("exception in getExpressCheckoutDetails: " + e);
+            Logger.getLogger(PagoConfirmadoMBean.class)
+                    .error("getExpressCheckoutDetails(). Excepcion al conectarse con Paypal: "
+                    + e + ": " + e.getMessage());
         }
         return details;
     }
@@ -135,7 +138,9 @@ public class PagoConfirmadoMBean implements Serializable {
             type = ppresponse.getDoExpressCheckoutPaymentResponseDetails();
 
         } catch (PayPalException e) {
-            System.out.println("exception in doExpresCheckoutService(): " + e);
+            Logger.getLogger(PagoConfirmadoMBean.class)
+                    .error("doExpressCheckoutService(). Excepcion al conectarse con Paypal: "
+                    + e + ": " + e.getMessage());
             return null;
         }
         if (type != null) {
@@ -144,18 +149,24 @@ public class PagoConfirmadoMBean implements Serializable {
                 paymentInfo = type.getPaymentInfo(0);
                 publicacionId = Integer.valueOf(response.getCustom());
             } catch(Exception ex) {
-                System.out.println("error: " + ex);
+                Logger.getLogger(PagoConfirmadoMBean.class)
+                    .error("doExpressCheckoutService(). Excepcion al conectarse con Paypal: "
+                    + ex + ": " + ex.getMessage());
                 return null;
             }
             if (paymentInfo != null && paymentInfo.getPaymentStatus().equals(PaymentStatusCodeType.fromString("Completed"))) {
-                System.out.println("Payment completed.");
+                Logger.getLogger(PagoConfirmadoMBean.class)
+                    .error("doExpressCheckoutService(). Pago completado.");
                 return publicacionId;
             } else {
-                System.out.println("Payment not completed.. (" + paymentInfo.getPaymentStatus() + ")");
+                Logger.getLogger(PagoConfirmadoMBean.class)
+                    .error("doExpressCheckoutService(). Pago no completado. PaymentInfoType es nulo o tiene un estado de pago incorrecto.");
                 return null;
             }
         } else {
-            System.out.println("Problem executing DoExpressCheckoutPayment.. Maybe you tried to process an ExpressCheckout that has already been processed.");
+            Logger.getLogger(PagoConfirmadoMBean.class)
+                    .error("doExpressCheckoutService(). Problema al ejecutar el metodo... "
+                    + "Tal vez se trato de procesar un pago que ya fue procesado.");
             return null;
         }
     }

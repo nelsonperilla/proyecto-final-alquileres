@@ -10,6 +10,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -17,6 +18,7 @@ import javax.persistence.Query;
  */
 @Stateless
 public class PedidoCambioXEstadoFacade extends AbstractFacade<PedidoCambioXEstado> {
+
     @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
     private EntityManager em;
 
@@ -28,7 +30,7 @@ public class PedidoCambioXEstadoFacade extends AbstractFacade<PedidoCambioXEstad
     public PedidoCambioXEstadoFacade() {
         super(PedidoCambioXEstado.class);
     }
-    
+
     public PedidoCambioXEstado getPedidoCambioXEstadoActual(PedidoCambio pedido) {
         Query query = em.createQuery("SELECT pcxe FROM PedidoCambioXEstado pcxe "
                 + "WHERE pcxe.pedidoCambioFk = :pedido AND pcxe.fechaHasta IS NULL");
@@ -37,9 +39,10 @@ public class PedidoCambioXEstadoFacade extends AbstractFacade<PedidoCambioXEstad
         try {
             pcxe = (PedidoCambioXEstado) query.getSingleResult();
         } catch (Exception e) {
-            //
+            Logger.getLogger(PedidoCambioXEstadoFacade.class).
+                    error("getPedidoCambioXEstadoActual(). "
+                    + "Excepcion al ejecutar consulta: " + e);
         }
         return pcxe;
     }
-    
 }

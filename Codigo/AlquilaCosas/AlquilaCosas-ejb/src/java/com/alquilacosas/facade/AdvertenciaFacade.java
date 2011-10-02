@@ -18,6 +18,7 @@ public class AdvertenciaFacade extends AbstractFacade<Advertencia> {
     @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
     private EntityManager em;
 
+    @Override
     protected EntityManager getEntityManager() {
         return em;
     }

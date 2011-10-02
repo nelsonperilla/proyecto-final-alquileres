@@ -5,6 +5,7 @@
         <data xmlns="http://www.netbeans.org/ns/j2ee-ejbjarproject/3">
             <name>AlquilaCosas-ejb</name>
             <minimum-ant-version>1.6.5</minimum-ant-version>
+            <included-library dirs="200">file.reference.log4j-1.2.16.jar</included-library>
             <source-roots>
                 <root id="src.dir"/>
             </source-roots>
