@@ -129,6 +129,24 @@ public class Periodo implements Serializable {
         this.precioList = precioList;
     }
 
+    @XmlTransient
+    public List<Publicacion> getPublicacionList() {
+        return publicacionList;
+    }
+
+    public void setPublicacionList(List<Publicacion> publicacionList) {
+        this.publicacionList = publicacionList;
+    }
+
+    @XmlTransient
+    public List<Publicacion> getPublicacionList1() {
+        return publicacionList1;
+    }
+
+    public void setPublicacionList1(List<Publicacion> publicacionList1) {
+        this.publicacionList1 = publicacionList1;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -152,24 +170,6 @@ public class Periodo implements Serializable {
     @Override
     public String toString() {
         return "com.alquilacosas.ejb.entity.Periodo[ periodoId=" + periodoId + " ]";
-    }
-
-    @XmlTransient
-    public List<Publicacion> getPublicacionList() {
-        return publicacionList;
-    }
-
-    public void setPublicacionList(List<Publicacion> publicacionList) {
-        this.publicacionList = publicacionList;
-    }
-
-    @XmlTransient
-    public List<Publicacion> getPublicacionList1() {
-        return publicacionList1;
-    }
-
-    public void setPublicacionList1(List<Publicacion> publicacionList1) {
-        this.publicacionList1 = publicacionList1;
     }
     
 }

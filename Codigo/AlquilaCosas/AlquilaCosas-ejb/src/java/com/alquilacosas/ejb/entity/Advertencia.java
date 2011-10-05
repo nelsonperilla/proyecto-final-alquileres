@@ -13,12 +13,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -28,16 +27,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "ADVERTENCIA")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Advertencia.findAll", query = "SELECT a FROM Advertencia a"),
-    @NamedQuery(name = "Advertencia.findByAdvertenciaId", query = "SELECT a FROM Advertencia a WHERE a.advertenciaId = :advertenciaId"),
-    @NamedQuery(name = "Advertencia.findByFecha", query = "SELECT a FROM Advertencia a WHERE a.fecha = :fecha"),
-    @NamedQuery(name = "Advertencia.findByMotivo", query = "SELECT a FROM Advertencia a WHERE a.motivo = :motivo")})
 public class Advertencia implements Serializable {
-    
-    @Column(name = "FECHA")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fecha;
     
     private static final long serialVersionUID = 1L;
     
@@ -46,13 +36,21 @@ public class Advertencia implements Serializable {
     @Column(name = "ADVERTENCIA_ID")
     private Integer advertenciaId;
     
-    @Size(max = 150)
-    @Column(name = "MOTIVO")
-    private String motivo;
+    @Column(name = "FECHA")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fecha;
     
     @JoinColumn(name = "USUARIO_FK", referencedColumnName = "USUARIO_ID")
     @ManyToOne(optional = false)
     private Usuario usuarioFk;
+    
+    @JoinColumn(name = "SUSPENSION_FK", referencedColumnName = "SUSPENSION_ID")
+    @ManyToOne(optional = false)
+    private Suspension suspensionFk;
+    
+    @OneToOne
+    @PrimaryKeyJoinColumn(name="ADVERTENCIA_ID", referencedColumnName="DENUNCIA_ID")
+    private Denuncia denuncia;
 
     public Advertencia() {
     }
@@ -61,10 +59,9 @@ public class Advertencia implements Serializable {
         this.advertenciaId = advertenciaId;
     }
 
-    public Advertencia(Integer advertenciaId, Date fecha, String motivo) {
+    public Advertencia(Integer advertenciaId, Date fecha) {
         this.advertenciaId = advertenciaId;
         this.fecha = fecha;
-        this.motivo = motivo;
     }
 
     public Integer getAdvertenciaId() {
@@ -75,20 +72,28 @@ public class Advertencia implements Serializable {
         this.advertenciaId = advertenciaId;
     }
 
-    public String getMotivo() {
-        return motivo;
-    }
-
-    public void setMotivo(String motivo) {
-        this.motivo = motivo;
-    }
-
     public Usuario getUsuarioFk() {
         return usuarioFk;
     }
 
     public void setUsuarioFk(Usuario usuarioFk) {
         this.usuarioFk = usuarioFk;
+    }
+
+    public Denuncia getDenuncia() {
+        return denuncia;
+    }
+
+    public void setDenuncia(Denuncia denuncia) {
+        this.denuncia = denuncia;
+    }
+
+    public Suspension getSuspensionFk() {
+        return suspensionFk;
+    }
+
+    public void setSuspensionFk(Suspension suspensionFk) {
+        this.suspensionFk = suspensionFk;
     }
     
     public Date getFecha() {
