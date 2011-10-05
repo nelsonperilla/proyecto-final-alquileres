@@ -5,7 +5,10 @@
 package com.alquilacosas.ejb.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,8 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -27,11 +29,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "SUSPENSION")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Suspension.findAll", query = "SELECT s FROM Suspension s"),
-    @NamedQuery(name = "Suspension.findBySuspensionId", query = "SELECT s FROM Suspension s WHERE s.suspensionId = :suspensionId"),
-    @NamedQuery(name = "Suspension.findByDuracion", query = "SELECT s FROM Suspension s WHERE s.duracion = :duracion"),
-    @NamedQuery(name = "Suspension.findByFecha", query = "SELECT s FROM Suspension s WHERE s.fecha = :fecha")})
 public class Suspension implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -41,28 +38,38 @@ public class Suspension implements Serializable {
     @Column(name = "SUSPENSION_ID")
     private Integer suspensionId;
     
-    @Column(name = "DURACION")
-    private String duracion;
-    
-    @Column(name = "FECHA")
+    @Column(name = "FECHA_DESDE")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date fecha;
+    private Date fechaDesde;
+    
+    @Column(name = "FECHA_HASTA")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaHasta;
     
     @JoinColumn(name = "USUARIO_FK", referencedColumnName = "USUARIO_ID")
     @ManyToOne(optional = false)
     private Usuario usuarioFk;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "suspensionFk")
+    private List<Advertencia> advertenciaList;
 
     public Suspension() {
+        advertenciaList = new ArrayList<Advertencia>();
     }
 
     public Suspension(Integer suspensionId) {
         this.suspensionId = suspensionId;
     }
 
-    public Suspension(Integer suspensionId, String duracion, Date fecha) {
+    public Suspension(Integer suspensionId, Date fechaDesde, Date fechaHasta) {
         this.suspensionId = suspensionId;
-        this.duracion = duracion;
-        this.fecha = fecha;
+        this.fechaDesde = fechaDesde;
+        this.fechaHasta = fechaHasta;
+    }
+    
+    public void agregarAdvertencia(Advertencia advertencia) {
+        advertenciaList.add(advertencia);
+        advertencia.setSuspensionFk(this);
     }
 
     public Integer getSuspensionId() {
@@ -73,12 +80,20 @@ public class Suspension implements Serializable {
         this.suspensionId = suspensionId;
     }
 
-    public String getDuracion() {
-        return duracion;
+    public Date getFechaDesde() {
+        return fechaDesde;
     }
 
-    public void setDuracion(String duracion) {
-        this.duracion = duracion;
+    public void setFechaDesde(Date fechaDesde) {
+        this.fechaDesde = fechaDesde;
+    }
+
+    public Date getFechaHasta() {
+        return fechaHasta;
+    }
+
+    public void setFechaHasta(Date fechaHasta) {
+        this.fechaHasta = fechaHasta;
     }
 
     public Usuario getUsuarioFk() {
@@ -87,6 +102,14 @@ public class Suspension implements Serializable {
 
     public void setUsuarioFk(Usuario usuarioFk) {
         this.usuarioFk = usuarioFk;
+    }
+
+    public List<Advertencia> getAdvertenciaList() {
+        return advertenciaList;
+    }
+
+    public void setAdvertenciaList(List<Advertencia> advertenciaList) {
+        this.advertenciaList = advertenciaList;
     }
 
     @Override
@@ -112,14 +135,6 @@ public class Suspension implements Serializable {
     @Override
     public String toString() {
         return "com.alquilacosas.ejb.entity.Suspension[ suspensionId=" + suspensionId + " ]";
-    }
-
-    public Date getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
     }
     
 }
