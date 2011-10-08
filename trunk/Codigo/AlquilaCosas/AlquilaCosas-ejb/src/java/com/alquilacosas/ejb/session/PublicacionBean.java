@@ -372,16 +372,17 @@ public class PublicacionBean implements PublicacionBeanLocal {
 
             resultado.setPeriodoMinimoValor(publicacion.getMinValor());
             resultado.setPeriodoMinimo(publicacion.getMinPeriodoAlquilerFk());
-            if (publicacion.getMaxPeriodoAlquilerFk() != null) {
+            if(publicacion.getMaxPeriodoAlquilerFk() != null)
+            {
                 resultado.setPeriodoMaximoValor(publicacion.getMaxValor());
                 resultado.setPeriodoMaximo(publicacion.getMaxPeriodoAlquilerFk());
-            } else {
+            }else{
                 resultado.setPeriodoMaximoValor(100);
                 Periodo temp = new Periodo();
                 temp.setNombre(NombrePeriodo.DIA);
                 resultado.setPeriodoMaximo(temp);
             }
-
+            
             UsuarioDTO propietario = new UsuarioDTO(publicacion.getUsuarioFk());
             resultado.setPropietario(propietario);
 

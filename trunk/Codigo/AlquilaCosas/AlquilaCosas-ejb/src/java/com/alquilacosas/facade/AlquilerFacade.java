@@ -31,7 +31,7 @@ import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
 
-/**
+/**+
  *
  * @author damiancardozo
  */
@@ -68,7 +68,7 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
 
         Root<Alquiler> root = queryBuilder.from(alquiler);
 
-
+        
         Predicate idPublicacion = criteriaBuilder.equal(root.get(Alquiler_.publicacionFk), publicacion);
 
         Join<Alquiler, AlquilerXEstado> join = root.join("alquilerXEstadoList");
@@ -89,7 +89,7 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
 
         Predicate endAlquiler = criteriaBuilder.greaterThanOrEqualTo(root.get(Alquiler_.fechaFin), date.getTime());
 
-        queryBuilder.where(idPublicacion, endAlquiler, orStates);
+        queryBuilder.where(lastState, idPublicacion, endAlquiler, orStates);
         Query query = em.createQuery(queryBuilder);
 
         List<Alquiler> respuesta = query.getResultList();
@@ -107,7 +107,8 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
         Query query = em.createNativeQuery(" SELECT * FROM ALQUILER a, "
                 + "ALQUILER_X_ESTADO axe, ESTADO_ALQUILER ea "
                 + "WHERE ((a.fecha_Inicio <= '" + fechaDesde + "' AND a.fecha_Fin >= '" + fechaHasta + "') "
-                + "OR ( a.fecha_Inicio <=  '" + fechaHasta + "'  AND a.fecha_Fin >= '" + fechaHasta + "' ) "
+                + "OR ( a.fecha_Inicio <  '" + fechaHasta + "'  AND a.fecha_Fin >= '" + fechaHasta + "' ) "
+                + "OR ( a.fecha_Inicio <=  '" + fechaDesde + "'  AND a.fecha_Fin > '" + fechaDesde + "' ) "
                 + "OR ( a.fecha_Inicio >= '" + fechaDesde + "' AND a.fecha_Fin <= '" + fechaHasta + "' )) "
                 + "AND a.alquiler_Id = axe.alquiler_FK "
                 + "AND axe.estado_Alquiler_FK = ea.estado_Alquiler_Id "
