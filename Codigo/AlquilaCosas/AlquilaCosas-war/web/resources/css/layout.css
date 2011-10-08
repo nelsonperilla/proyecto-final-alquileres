@@ -752,3 +752,9 @@ h1, h2, h3 {
 .repTableColumn {
      vertical-align: top;
 }
+
+/* --------------------- Ver Calificación -------------------- */
+
+.calTableColumn {
+     vertical-align: top;
+}

@@ -86,43 +86,39 @@
                                    resizable="false" width="520">
                               <h:form id="formVer">
                                    <p:growl id="messagesVer" globalOnly="true" />
-                                   <h:panelGrid columns="2" style="width:500px">
+                                   <h:panelGrid columns="2" columnClasses="calTableColumn,calTableColumn" style="width:500px">
                                         <h:panelGrid columns="1">
-                                             <h:outputText value="OFRECE el Alquiler: #{alquileresTomados.calificacionOfrece.nombreUsuarioCalificador}" />
-                                             <h:outputText value="Puntuacion: #{alquileresTomados.calificacionOfrece.nombrePuntuacion}" />
-                                             <h:outputText value="Comentario:" />
+                                             <h:outputText value="El Usuario todavia no Calificó" style="font-style: oblique" rendered="#{alquileresTomados.calificacionOfrece.idCalificacion == null}" />
+                                             <h:outputText value="OFRECE el Alquiler: #{alquileresTomados.calificacionOfrece.nombreUsuarioCalificador}" rendered="#{alquileresTomados.calificacionOfrece.idCalificacion != null}" />
+                                             <h:outputText value="Puntuacion: #{alquileresTomados.calificacionOfrece.nombrePuntuacion}" rendered="#{alquileresTomados.calificacionOfrece.idCalificacion != null}"/>
+                                             <h:outputText value="Comentario:" rendered="#{alquileresTomados.calificacionOfrece.idCalificacion != null}"/>
                                              <h:outputText value="#{alquileresTomados.calificacionOfrece.comentarioCalificacion}" 
-                                                           style="font-style: oblique"/>
-                                             <h:outputText value="Replica:" />
+                                                           style="font-style: oblique" rendered="#{alquileresTomados.calificacionOfrece.idCalificacion != null}" />
+                                             <h:outputText value="Replica:" rendered="#{alquileresTomados.calificacionOfrece.idCalificacion != null 
+                                                                                        and alquileresTomados.calificacionOfrece.yaReplico}" />
                                              <h:inputTextarea value="#{alquileresTomados.calificacionOfrece.comentarioReplica}" 
-                                                              disabled="#{not alquileresTomados.toma 
-                                                                          or alquileresTomados.calificacionOfrece.yaReplico 
-                                                                          or not alquileresTomados.ofreceCalifico}" 
-                                                              style="max-width:200px; width:200px"/>
+                                                              disabled="#{alquileresTomados.calificacionOfrece.yaReplico}" 
+                                                              style="max-width:200px; width:200px" 
+                                                              rendered="#{alquileresTomados.calificacionOfrece.idCalificacion != null}" />
                                              <p:commandButton value="Enviar Replica" actionListener="#{alquileresTomados.registrarReplicaToma}" 
-                                                              rendered="#{alquileresTomados.toma 
-                                                                          and (not alquileresTomados.calificacionOfrece.yaReplico) 
-                                                                          and alquileresTomados.ofreceCalifico}" 
+                                                              rendered="#{not alquileresTomados.calificacionOfrece.yaReplico
+                                                                          and alquileresTomados.calificacionOfrece.idCalificacion != null}" 
                                                               update="formVer" />
                                         </h:panelGrid>
                                         <h:panelGrid columns="1">
-                                             <h:outputText value="TOMA el Alquiler: #{alquileresTomados.calificacionToma.nombreUsuarioCalificador}" />
-                                             <h:outputText value="Puntuacion: #{alquileresTomados.calificacionToma.nombrePuntuacion}" />
-                                             <h:outputText value="Comentario:" />
+                                             <h:outputText value="El Usuario todavia no Calificó" style="font-style: oblique" rendered="#{alquileresTomados.calificacionToma.idCalificacion == null}" />
+                                             <h:outputText value="TOMA el Alquiler: #{alquileresTomados.calificacionToma.nombreUsuarioCalificador}" rendered="#{alquileresTomados.calificacionToma.idCalificacion != null}" />
+                                             <h:outputText value="Puntuacion: #{alquileresTomados.calificacionToma.nombrePuntuacion}" rendered="#{alquileresTomados.calificacionToma.idCalificacion != null}" />
+                                             <h:outputText value="Comentario:" rendered="#{alquileresTomados.calificacionToma.idCalificacion != null}" />
                                              <h:outputText value="#{alquileresTomados.calificacionToma.comentarioCalificacion}"
-                                                           style="font-style: oblique"/>
-                                             <h:outputText value="Replica:" />
+                                                           style="font-style: oblique" rendered="#{alquileresTomados.calificacionToma.idCalificacion != null}" />
+                                             <h:outputText value="Replica:" rendered="#{alquileresTomados.calificacionToma.idCalificacion != null 
+                                                                                        and alquileresTomados.calificacionToma.yaReplico}" />
                                              <h:inputTextarea value="#{alquileresTomados.calificacionToma.comentarioReplica}" 
-                                                              disabled="#{not alquileresTomados.ofrece 
-                                                                          or alquileresTomados.calificacionToma.yaReplico 
-                                                                          or not alquileresTomados.tomaCalifico}"
-                                                              rendered="#{alquileresTomados.calificacionToma.yaReplico}"
+                                                              disabled="true"
+                                                              rendered="#{alquileresTomados.calificacionToma.yaReplico 
+                                                                          and alquileresTomados.calificacionToma.idCalificacion != null}"
                                                               style="max-width:200px; width:200px"/>
-                                             <p:commandButton value="Enviar Replica" actionListener="#{alquileresTomados.registrarReplicaOfrece}" 
-                                                              rendered="#{alquileresTomados.ofrece 
-                                                                          and (not alquileresTomados.calificacionToma.yaReplico) 
-                                                                          and alquileresTomados.tomaCalifico}"
-                                                              update="formVer"/>
                                         </h:panelGrid>
                                         <p:commandButton value="Salir" oncomplete="verCalificacionDlg.hide()"/>
                                    </h:panelGrid>

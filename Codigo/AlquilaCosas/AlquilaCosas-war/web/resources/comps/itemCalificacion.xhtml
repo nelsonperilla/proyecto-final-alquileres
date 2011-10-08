@@ -11,8 +11,6 @@
           <cc:attribute name="var" type="java.lang.Object" required="true" />
           <cc:attribute name="bean" type="java.lang.Object" required="true"  />    
           <cc:attribute name="panelDialogo" type="java.lang.String" required="true" />
-          <cc:attribute name="dlgVerReplica" type="java.lang.String" required="true" />
-          <cc:attribute name="metodoVerReplica" type="java.lang.String" required="true" />
      </cc:interface>
 
      <!-- IMPLEMENTATION -->
@@ -26,16 +24,12 @@
                          <h:outputText value="#{cc.attrs.var.nombrePuntuacion}"/>
                     </h:panelGrid>
                     <h:panelGrid columns="1" >
-                         <h:outputText value="#{cc.attrs.var.comentarioCalificacion}" style="font-style:oblique"/>
+                         <h:outputText value="Comentario: " />
+                         <h:outputText value="    #{cc.attrs.var.comentarioCalificacion}" style="font-style:oblique"/>
                     </h:panelGrid> 
                     <h:panelGrid columns="1" >
-                         <p:commandButton value="Ver Replica" 
-                                          rendered="#{cc.attrs.var.yaReplico}"
-                                          actionListener="#{cc.attrs.bean[cc.attrs.metodoVerReplica]}"
-                                          update="#{cc.attrs.panelDialogo}"
-                                          oncomplete="#{cc.attrs.dlgVerReplica}.show();" >
-                              <f:attribute name="replica" value="#{cc.attrs.var.comentarioReplica}" />
-                         </p:commandButton>
+                         <h:outputText value="Replica: " rendered="#{cc.attrs.var.yaReplico}" />
+                         <h:outputText value="    #{cc.attrs.var.comentarioReplica}" style="font-style:oblique" rendered="#{cc.attrs.var.yaReplico}" />
                     </h:panelGrid>
                </h:panelGrid>
           </div>

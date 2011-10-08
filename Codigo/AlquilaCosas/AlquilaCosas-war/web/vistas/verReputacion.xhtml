@@ -72,7 +72,6 @@
                                     </f:facet>
                                     <p:column>
                                         <comps:itemCalificacion var="#{calOfrece}" bean="#{reputacion}"
-                                                                dlgVerReplica="dlgReplica" metodoVerReplica="verReplica"
                                                                 panelDialogo="dialogo" />
                                     </p:column>
                                 </p:dataTable>
@@ -84,7 +83,6 @@
                                     </f:facet>
                                     <p:column>
                                         <comps:itemCalificacion var="#{calToma}" bean="#{reputacion}"
-                                                                dlgVerReplica="dlgReplica" metodoVerReplica="verReplica"
                                                                 panelDialogo="dialogo" />
                                     </p:column>
                                 </p:dataTable>
@@ -94,25 +92,6 @@
                     <!-- </p:fieldset>  -->
 
                 </h:form>
-                <p:outputPanel id="dialogo" >
-                    <p:dialog widgetVar="dlgReplica" header="Ver Réplica"
-                              modal="true" resizable="false" >
-                        <h:form>
-                            <table width="100%">
-                                <tr>
-                                    <td align="center">
-                                        <h:outputText value="#{reputacion.replica}" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td align="center">
-                                        <p:commandButton value="Cerrar" oncomplete="dlgReplica.hide()" />
-                                    </td>
-                                </tr>
-                            </table>
-                        </h:form>
-                    </p:dialog>
-                </p:outputPanel>
             </ui:define>
 
             <ui:define name="right">

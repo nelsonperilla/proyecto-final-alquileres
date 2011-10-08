@@ -193,11 +193,7 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
     @Override
     @RolesAllowed({"USUARIO", "ADMIN"})
     public void registrarReplica(int calificacionId, String comentarioReplica, int usuarioId) throws AlquilaCosasException {
-        Usuario usuario = usuarioFacade.find(usuarioId);
         Calificacion calificacionAReplicar = calificacionFacade.find(calificacionId);
-        if (calificacionAReplicar.getUsuarioCalificadoFk().getUsuarioId() != usuarioId) {
-            throw new AlquilaCosasException("No se puede replicar una calificacion que no ha sido otorgada a usted.");
-        }
         calificacionAReplicar.setFechaReplica(new Date());
         calificacionAReplicar.setComentarioReplica(comentarioReplica);
         calificacionFacade.edit(calificacionAReplicar);
