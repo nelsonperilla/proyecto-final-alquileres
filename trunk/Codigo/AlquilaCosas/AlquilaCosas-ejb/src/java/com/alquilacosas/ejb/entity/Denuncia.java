@@ -54,6 +54,10 @@ public class Denuncia implements Serializable {
     @ManyToOne(optional = false)
     private Publicacion pulicacionFk;
     
+    @JoinColumn(name = "MOTIVO_FK", referencedColumnName = "MOTIVO_DENUNCIA_ID")
+    @ManyToOne(optional = false)
+    private MotivoDenuncia motivoFk;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "denunciaFk")
     private List<DenunciaXEstado> denunciaXEstadoList;
     
@@ -104,6 +108,14 @@ public class Denuncia implements Serializable {
 
     public void setUsuarioFk(Usuario usuarioFk) {
         this.usuarioFk = usuarioFk;
+    }
+
+    public MotivoDenuncia getMotivoFk() {
+        return motivoFk;
+    }
+
+    public void setMotivoFk(MotivoDenuncia motivoFk) {
+        this.motivoFk = motivoFk;
     }
     
     @Override

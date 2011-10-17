@@ -4,7 +4,8 @@
  */
 package com.alquilacosas.facade;
 
-import com.alquilacosas.ejb.entity.TipoServicio;
+import com.alquilacosas.ejb.entity.TipoDestacacion;
+import com.alquilacosas.ejb.entity.TipoDestacacion.NombreTipoDestacacion;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -17,7 +18,7 @@ import org.apache.log4j.Logger;
  * @author damiancardozo
  */
 @Stateless
-public class TipoServicioFacade extends AbstractFacade<TipoServicio> {
+public class TipoDestacacionFacade extends AbstractFacade<TipoDestacacion> {
 
     @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
     private EntityManager em;
@@ -27,18 +28,18 @@ public class TipoServicioFacade extends AbstractFacade<TipoServicio> {
         return em;
     }
 
-    public TipoServicioFacade() {
-        super(TipoServicio.class);
+    public TipoDestacacionFacade() {
+        super(TipoDestacacion.class);
     }
 
-    public TipoServicio findByNombre(TipoServicio.NombreTipoServicio nombre) {
+    public TipoDestacacion findByNombre(NombreTipoDestacacion nombre) {
         Query query = em.createNamedQuery("TipoServicio.findByNombre");
         query.setParameter("nombre", nombre);
-        TipoServicio tipoServicio = null;
+        TipoDestacacion tipoServicio = null;
         try {
-            tipoServicio = (TipoServicio) query.getSingleResult();
+            tipoServicio = (TipoDestacacion) query.getSingleResult();
         } catch (NoResultException e) {
-            Logger.getLogger(TipoServicioFacade.class).
+            Logger.getLogger(TipoDestacacionFacade.class).
                     error("findByNombre(). "
                     + "Excepcion al ejecutar consulta: " + e);
         }

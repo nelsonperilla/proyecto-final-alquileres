@@ -5,21 +5,14 @@
 package com.alquilacosas.ejb.entity;
 
 import java.io.Serializable;
-import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -27,43 +20,66 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "PUBLICIDAD")
+@DiscriminatorValue(value="P")
+//@PrimaryKeyJoinColumn(name="SERVICIO_ID")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Publicidad.findAll", query = "SELECT p FROM Publicidad p"),
-    @NamedQuery(name = "Publicidad.findByPublicidadId", query = "SELECT p FROM Publicidad p WHERE p.publicidadId = :publicidadId"),
-    @NamedQuery(name = "Publicidad.findByTitulo", query = "SELECT p FROM Publicidad p WHERE p.titulo = :titulo")})
-public class Publicidad implements Serializable {
-    
-    private static final long serialVersionUID = 1L;
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "PUBLICIDAD_ID")
-    private Integer publicidadId;
-    
+public class Publicidad extends Servicio implements Serializable {
+
     @Column(name = "TITULO")
-    private String titulo;
+    protected String titulo;
+    
+    @Column(name = "URL")
+    protected String url;
+    
+    @Column(name = "CAPTION")
+    protected String caption;
+    
+    @Lob
+    @Column(name = "IMAGEN")
+    private byte[] imagen;
     
     @JoinColumn(name = "USUARIO_FK", referencedColumnName = "USUARIO_ID")
     @ManyToOne(optional = false)
     private Usuario usuarioFk;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "publicidadFk")
-    private List<ServicioPublicidad> servicioPublicidadList;
+    @JoinColumn(name = "TIPO_PUBLICIDAD_FK", referencedColumnName = "TIPO_PUBLICIDAD_ID")
+    @ManyToOne(optional = false)
+    private TipoPublicidad tipoPublicidadFk;
 
     public Publicidad() {
     }
+    
+    public Publicidad(String titulo, String url, String caption, byte[] imagen) {
+        super();
+        this.titulo = titulo;
+        this.url = url;
+        this.caption = caption;
+        this.imagen = imagen;
+    }
+    
 
-    public Publicidad(Integer publicidadId) {
-        this.publicidadId = publicidadId;
+    public String getCaption() {
+        return caption;
     }
 
-    public Integer getPublicidadId() {
-        return publicidadId;
+    public void setCaption(String caption) {
+        this.caption = caption;
     }
 
-    public void setPublicidadId(Integer publicidadId) {
-        this.publicidadId = publicidadId;
+    public byte[] getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(byte[] imagen) {
+        this.imagen = imagen;
+    }
+
+    public TipoPublicidad getTipoPublicidadFk() {
+        return tipoPublicidadFk;
+    }
+
+    public void setTipoPublicidadFk(TipoPublicidad tipoPublicidadFk) {
+        this.tipoPublicidadFk = tipoPublicidadFk;
     }
 
     public String getTitulo() {
@@ -74,6 +90,14 @@ public class Publicidad implements Serializable {
         this.titulo = titulo;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     public Usuario getUsuarioFk() {
         return usuarioFk;
     }
@@ -82,19 +106,10 @@ public class Publicidad implements Serializable {
         this.usuarioFk = usuarioFk;
     }
 
-    @XmlTransient
-    public List<ServicioPublicidad> getServicioPublicidadList() {
-        return servicioPublicidadList;
-    }
-
-    public void setServicioPublicidadList(List<ServicioPublicidad> servicioPublicidadList) {
-        this.servicioPublicidadList = servicioPublicidadList;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (publicidadId != null ? publicidadId.hashCode() : 0);
+        hash += (servicioId != null ? servicioId.hashCode() : 0);
         return hash;
     }
 
@@ -105,7 +120,7 @@ public class Publicidad implements Serializable {
             return false;
         }
         Publicidad other = (Publicidad) object;
-        if ((this.publicidadId == null && other.publicidadId != null) || (this.publicidadId != null && !this.publicidadId.equals(other.publicidadId))) {
+        if ((this.servicioId == null && other.servicioId != null) || (this.servicioId != null && !this.servicioId.equals(other.servicioId))) {
             return false;
         }
         return true;
@@ -113,7 +128,7 @@ public class Publicidad implements Serializable {
 
     @Override
     public String toString() {
-        return "com.alquilacosas.ejb.entity.Publicidad[ publicidadId=" + publicidadId + " ]";
+        return "com.alquilacosas.ejb.entity.ServicioPublicidad[ servicioId=" + servicioId + " ]";
     }
     
 }

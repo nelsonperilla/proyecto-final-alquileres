@@ -108,7 +108,7 @@ public class Publicacion implements Serializable {
     private Date fechaHasta;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "publicacionFk")
-    private List<ServicioDestacacion> servicioDestacacionList;
+    private List<Destacacion> servicioDestacacionList;
 
     public Publicacion() {
         imagenPublicacionList = new ArrayList<ImagenPublicacion>();
@@ -347,11 +347,11 @@ public class Publicacion implements Serializable {
     }
 
     @XmlTransient
-    public List<ServicioDestacacion> getServicioDestacacionList() {
+    public List<Destacacion> getServicioDestacacionList() {
         return servicioDestacacionList;
     }
 
-    public void setServicioDestacacionList(List<ServicioDestacacion> servicioDestacacionList) {
+    public void setServicioDestacacionList(List<Destacacion> servicioDestacacionList) {
         this.servicioDestacacionList = servicioDestacacionList;
     }
 

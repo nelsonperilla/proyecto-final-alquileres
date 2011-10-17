@@ -4,8 +4,8 @@
  */
 package com.alquilacosas.facade;
 
-import com.alquilacosas.ejb.entity.PrecioServicio;
-import com.alquilacosas.ejb.entity.TipoServicio.NombreTipoServicio;
+import com.alquilacosas.ejb.entity.PrecioTipoServicio;
+import com.alquilacosas.ejb.entity.TipoDestacacion.NombreTipoDestacacion;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
  * @author damiancardozo
  */
 @Stateless
-public class PrecioServicioFacade extends AbstractFacade<PrecioServicio> {
+public class PrecioServicioFacade extends AbstractFacade<PrecioTipoServicio> {
 
     @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
     private EntityManager em;
@@ -29,15 +29,15 @@ public class PrecioServicioFacade extends AbstractFacade<PrecioServicio> {
     }
 
     public PrecioServicioFacade() {
-        super(PrecioServicio.class);
+        super(PrecioTipoServicio.class);
     }
 
-    public PrecioServicio getPrecioServicio(NombreTipoServicio servicio) {
+    public PrecioTipoServicio getPrecioServicio(NombreTipoDestacacion servicio) {
         Query query = em.createQuery("SELECT p FROM PrecioServicio p WHERE p.tipoServicioFk.nombre = :servicio");
         query.setParameter("servicio", servicio);
-        PrecioServicio precio = null;
+        PrecioTipoServicio precio = null;
         try {
-            precio = (PrecioServicio) query.getSingleResult();
+            precio = (PrecioTipoServicio) query.getSingleResult();
         } catch (NoResultException e) {
             Logger.getLogger(PrecioServicioFacade.class).
                     error("getPrecioServicio(). "

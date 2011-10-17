@@ -12,21 +12,21 @@ import com.alquilacosas.ejb.entity.EstadoPublicacion;
 import com.alquilacosas.ejb.entity.ImagenPublicacion;
 import com.alquilacosas.ejb.entity.Pago;
 import com.alquilacosas.ejb.entity.Precio;
-import com.alquilacosas.ejb.entity.PrecioServicio;
+import com.alquilacosas.ejb.entity.PrecioTipoServicio;
 import com.alquilacosas.ejb.entity.Publicacion;
 import com.alquilacosas.ejb.entity.PublicacionXEstado;
-import com.alquilacosas.ejb.entity.ServicioDestacacion;
+import com.alquilacosas.ejb.entity.Destacacion;
 import com.alquilacosas.ejb.entity.TipoPago;
-import com.alquilacosas.ejb.entity.TipoServicio;
-import com.alquilacosas.ejb.entity.TipoServicio.NombreTipoServicio;
+import com.alquilacosas.ejb.entity.TipoDestacacion;
+import com.alquilacosas.ejb.entity.TipoDestacacion.NombreTipoDestacacion;
 import com.alquilacosas.ejb.entity.Usuario;
 import com.alquilacosas.facade.PrecioFacade;
 import com.alquilacosas.facade.PrecioServicioFacade;
 import com.alquilacosas.facade.PublicacionFacade;
 import com.alquilacosas.facade.PublicacionXEstadoFacade;
-import com.alquilacosas.facade.ServicioDestacacionFacade;
+import com.alquilacosas.facade.DestacacionFacade;
 import com.alquilacosas.facade.TipoPagoFacade;
-import com.alquilacosas.facade.TipoServicioFacade;
+import com.alquilacosas.facade.TipoDestacacionFacade;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -49,9 +49,9 @@ public class DestacarPublicacionBean implements DestacarPublicacionBeanLocal {
     @EJB
     private PrecioServicioFacade precioFacade;
     @EJB
-    private TipoServicioFacade tipoServicioFacade;
+    private TipoDestacacionFacade tipoServicioFacade;
     @EJB
-    private ServicioDestacacionFacade servicioFacade;
+    private DestacacionFacade servicioFacade;
     @EJB
     private TipoPagoFacade tipoPagoFacade;
     @EJB
@@ -65,14 +65,13 @@ public class DestacarPublicacionBean implements DestacarPublicacionBeanLocal {
         Publicacion publicacion = publicacionFacade.find(publicacionId);
         Usuario usuario = publicacion.getUsuarioFk();
         
-        TipoServicio tipoServicio = tipoServicioFacade.findByNombre(NombreTipoServicio.DESTACACION);
+        TipoDestacacion tipoServicio = tipoServicioFacade.findByNombre(NombreTipoDestacacion.MENSUAL);
         
-        ServicioDestacacion servicio = new ServicioDestacacion();
+        Destacacion servicio = new Destacacion();
         servicio.setFechaDesde(publicacion.getFechaDesde());
         servicio.setFechaHasta(publicacion.getFechaHasta());
         servicio.setPublicacionFk(publicacion);
-        servicio.setTipoServicioFk(tipoServicio);
-        servicio.setUsuarioFk(usuario);
+        servicio.setTipoDestacacionFk(null);
         
         TipoPago tipoPago = tipoPagoFacade.findByNombre(TipoPago.NombreTipoPago.PAYPAL);
         
@@ -139,7 +138,7 @@ public class DestacarPublicacionBean implements DestacarPublicacionBeanLocal {
     
     @Override
     public Double getPrecioDestacacion() {
-        PrecioServicio precio = precioFacade.getPrecioServicio(NombreTipoServicio.DESTACACION);
+        PrecioTipoServicio precio = precioFacade.getPrecioServicio(NombreTipoDestacacion.MENSUAL);
         if(precio != null)
             return precio.getPrecio();
         else

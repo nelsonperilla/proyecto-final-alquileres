@@ -9,8 +9,6 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -19,19 +17,21 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author damiancardozo
  */
 @Entity
-@Table(name = "SERVICIO_DESTACACION")
+@Table(name = "DESTACACION")
 @DiscriminatorValue(value="D")
 //@PrimaryKeyJoinColumn(name="SERVICIO_ID")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "ServicioDestacacion.findAll", query = "SELECT s FROM ServicioDestacacion s")})
-public class ServicioDestacacion extends Servicio implements Serializable {
+public class Destacacion extends Servicio implements Serializable {
     
     @JoinColumn(name = "PUBLICACION_FK", referencedColumnName = "PUBLICACION_ID")
     @ManyToOne(optional = false)
     private Publicacion publicacionFk;
+    
+    @JoinColumn(name = "TIPO_DESTACACION_FK", referencedColumnName = "TIPO_DESTACACION_ID")
+    @ManyToOne(optional = false)
+    private TipoDestacacion tipoDestacacionFk;
 
-    public ServicioDestacacion() {
+    public Destacacion() {
     }
 
     public Publicacion getPublicacionFk() {
@@ -40,6 +40,14 @@ public class ServicioDestacacion extends Servicio implements Serializable {
 
     public void setPublicacionFk(Publicacion publicacionFk) {
         this.publicacionFk = publicacionFk;
+    }
+
+    public TipoDestacacion getTipoDestacacionFk() {
+        return tipoDestacacionFk;
+    }
+
+    public void setTipoDestacacionFk(TipoDestacacion tipoDestacacionFk) {
+        this.tipoDestacacionFk = tipoDestacacionFk;
     }
 
     @Override
@@ -52,11 +60,13 @@ public class ServicioDestacacion extends Servicio implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ServicioDestacacion)) {
+        if (!(object instanceof Destacacion)) {
             return false;
         }
-        ServicioDestacacion other = (ServicioDestacacion) object;
-        if ((this.servicioId == null && other.servicioId != null) || (this.servicioId != null && !this.servicioId.equals(other.servicioId))) {
+        Destacacion other = (Destacacion) object;
+        if ((this.servicioId == null && other.servicioId != null) || 
+                (this.servicioId != null && 
+                !this.servicioId.equals(other.servicioId))) {
             return false;
         }
         return true;
@@ -64,7 +74,7 @@ public class ServicioDestacacion extends Servicio implements Serializable {
 
     @Override
     public String toString() {
-        return "com.alquilacosas.ejb.entity.ServicioDestacacion[ servicioId=" + servicioId + " ]";
+        return "com.alquilacosas.ejb.entity.Destacacion[ servicioId=" + servicioId + " ]";
     }
     
 }

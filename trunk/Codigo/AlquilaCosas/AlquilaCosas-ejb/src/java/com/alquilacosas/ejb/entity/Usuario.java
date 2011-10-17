@@ -34,20 +34,10 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Usuario.findAll", query = "SELECT u FROM Usuario u"),
     @NamedQuery(name = "Usuario.findByUsuarioId", query = "SELECT u FROM Usuario u WHERE u.usuarioId = :usuarioId"),
-    @NamedQuery(name = "Usuario.findByNombre", query = "SELECT u FROM Usuario u WHERE u.nombre = :nombre"),
     @NamedQuery(name = "Usuario.findByApellido", query = "SELECT u FROM Usuario u WHERE u.apellido = :apellido"),
     @NamedQuery(name = "Usuario.findByEmail", query = "SELECT u FROM Usuario u WHERE u.email = :email"),
-    @NamedQuery(name = "Usuario.findByTelefono", query = "SELECT u FROM Usuario u WHERE u.telefono = :telefono"),
-    @NamedQuery(name = "Usuario.findByDni", query = "SELECT u FROM Usuario u WHERE u.dni = :dni"),
-    @NamedQuery(name = "Usuario.findByFechaNac", query = "SELECT u FROM Usuario u WHERE u.fechaNac = :fechaNac")})
+    @NamedQuery(name = "Usuario.findByDni", query = "SELECT u FROM Usuario u WHERE u.dni = :dni"),})
 public class Usuario implements Serializable {
-
-    @Column(name = "FECHA_NAC")
-    @Temporal(TemporalType.DATE)
-    private Date fechaNac;
-    
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
-    private List<Publicidad> publicidadList;
     
     private static final long serialVersionUID = 1L;
     
@@ -72,6 +62,13 @@ public class Usuario implements Serializable {
     @Column(name = "DNI")
     private String dni;
     
+    @Column(name = "FECHA_NAC")
+    @Temporal(TemporalType.DATE)
+    private Date fechaNac;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
+    private List<Publicidad> publicidadList;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
     private List<Advertencia> advertenciaList;
     
@@ -80,9 +77,6 @@ public class Usuario implements Serializable {
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
     private List<Publicacion> publicacionList;
-    
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
-    private List<Servicio> servicioList;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
     private List<Comentario> comentarioList;
@@ -341,12 +335,12 @@ public class Usuario implements Serializable {
         this.publicidadList = publicidadList;
     }
 
-    public List<Servicio> getServicioList() {
-        return servicioList;
+    public List<Publicidad> getServicioList() {
+        return publicidadList;
     }
 
-    public void setServicioList(List<Servicio> servicioList) {
-        this.servicioList = servicioList;
+    public void setServicioList(List<Publicidad> publicidadList) {
+        this.publicidadList = publicidadList;
     }
 
     @Override
@@ -363,7 +357,8 @@ public class Usuario implements Serializable {
             return false;
         }
         Usuario other = (Usuario) object;
-        if ((this.usuarioId == null && other.usuarioId != null) || (this.usuarioId != null && !this.usuarioId.equals(other.usuarioId))) {
+        if ((this.usuarioId == null && other.usuarioId != null) || 
+                (this.usuarioId != null && !this.usuarioId.equals(other.usuarioId))) {
             return false;
         }
         return true;
