@@ -223,5 +223,15 @@
             <to-view-id>/vistas/verReputacion.xhtml?id=#{login.usuarioId}</to-view-id>
             <redirect/>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>nuevaPublicidad</from-outcome>
+            <to-view-id>/vistas/pub/registrarPublicidad.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>misPublicidades</from-outcome>
+            <to-view-id>/vistas/pub/misPublicidades.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
     </navigation-rule>
 </faces-config>

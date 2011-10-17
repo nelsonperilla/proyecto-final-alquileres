@@ -6,6 +6,7 @@ package com.alquilacosas.mbean;
 
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.PublicacionDTO;
+import com.alquilacosas.ejb.entity.TipoDestacacion.NombreTipoDestacacion;
 import com.alquilacosas.ejb.session.DestacarPublicacionBeanLocal;
 import com.paypal.sdk.exceptions.PayPalException;
 import com.paypal.sdk.profiles.APIProfile;
@@ -19,7 +20,9 @@ import com.paypal.soap.api.SetExpressCheckoutRequestDetailsType;
 import com.paypal.soap.api.SetExpressCheckoutRequestType;
 import com.paypal.soap.api.SetExpressCheckoutResponseType;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -28,6 +31,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 import org.apache.log4j.Logger;
 
 /**
@@ -47,7 +51,8 @@ public class DestacarPublicacionMBean implements Serializable {
     private CurrencyCodeType currencyCodeType = CurrencyCodeType.USD;
     private PaymentActionCodeType paymentAction = PaymentActionCodeType.Sale;
     private String paypalUrl = "https://www.sandbox.paypal.com/webscr?cmd=_express-checkout&useraction=commit&token=";
-    
+    private List<SelectItem> tipos;
+    private NombreTipoDestacacion tipoSeleccionado;
     private PublicacionDTO publicacion;
     private Integer publicacionId;
     private String tituloPublicacion;
@@ -90,10 +95,18 @@ public class DestacarPublicacionMBean implements Serializable {
                     "No se encontro el precio del servicio", "");
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
+        tipos = new ArrayList<SelectItem>();
+        for(NombreTipoDestacacion nombre: NombreTipoDestacacion.values()) {
+            tipos.add(new SelectItem(nombre, nombre.toString()));
+        }
     }
     
     public String verPublicacion() {
         return "";
+    }
+    
+    public void duracionSeleccionada() {
+        
     }
     
     public void destacar() {
@@ -216,6 +229,22 @@ public class DestacarPublicacionMBean implements Serializable {
 
     public void setPublicacion(PublicacionDTO publicacion) {
         this.publicacion = publicacion;
+    }
+
+    public NombreTipoDestacacion getTipoSeleccionado() {
+        return tipoSeleccionado;
+    }
+
+    public void setTipoSeleccionado(NombreTipoDestacacion tipoSeleccionado) {
+        this.tipoSeleccionado = tipoSeleccionado;
+    }
+
+    public List<SelectItem> getTipos() {
+        return tipos;
+    }
+
+    public void setTipos(List<SelectItem> tipos) {
+        this.tipos = tipos;
     }
     
     

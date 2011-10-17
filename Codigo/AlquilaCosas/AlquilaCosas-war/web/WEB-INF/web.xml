@@ -61,7 +61,7 @@
     <security-constraint>
         <display-name>UserConstraint</display-name>
         <web-resource-collection>
-            <web-resource-name>protected</web-resource-name>
+            <web-resource-name>usuarios</web-resource-name>
             <description>Paginas permitidas para usuarios registrados</description>
             <url-pattern>/faces/vistas/usuario/*</url-pattern>
         </web-resource-collection>
@@ -70,10 +70,21 @@
         </auth-constraint>
     </security-constraint>
     <security-constraint>
+        <display-name>PubConstraint</display-name>
+        <web-resource-collection>
+            <web-resource-name>publicitantes</web-resource-name>
+            <description>Paginas permitidas para publicitantes registrados</description>
+            <url-pattern>/faces/vistas/pub/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>PUBLICITANTE</role-name>
+        </auth-constraint>
+    </security-constraint>
+    <security-constraint>
         <display-name>AdminConstraint</display-name>
         <web-resource-collection>
-            <web-resource-name>Paginas permitidas para el administrador</web-resource-name>
-            <description/>
+            <web-resource-name>adminitradores</web-resource-name>
+            <description>Paginas permitidas para el administrador</description>
             <url-pattern>/faces/vistas/admin/*</url-pattern>
             <url-pattern>/faces/vistas/usuario/*</url-pattern>
         </web-resource-collection>
@@ -94,5 +105,8 @@
     </security-role>
     <security-role>
         <role-name>ADMIN</role-name>
+    </security-role>
+    <security-role>
+        <role-name>PUBLICITANTE</role-name>
     </security-role>
 </web-app>

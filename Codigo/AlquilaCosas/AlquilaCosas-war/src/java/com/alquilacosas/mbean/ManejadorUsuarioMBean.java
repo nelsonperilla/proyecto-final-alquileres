@@ -32,7 +32,7 @@ public class ManejadorUsuarioMBean implements Serializable {
     private String password;
     private String loginOnPageArg;
     private Integer usuarioId;
-    private boolean logueado, administrador;
+    private boolean logueado, administrador, publicitante;
 
     /** Creates a new instance of LoginMBean */
     public ManejadorUsuarioMBean() {
@@ -57,6 +57,7 @@ public class ManejadorUsuarioMBean implements Serializable {
         try {
             usuarioId = loginBean.loginUsuario(username);
             administrador = context.getExternalContext().isUserInRole("ADMIN");
+            publicitante = context.getExternalContext().isUserInRole("PUBLICITANTE");
         } catch (AlquilaCosasException e) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Error al obtener datos de usuario", e.getMessage()));
@@ -113,6 +114,10 @@ public class ManejadorUsuarioMBean implements Serializable {
 
     public boolean isAdministrador() {
         return administrador;
+    }
+    
+    public boolean isPublicitante() {
+        return publicitante;
     }
 
     /*
