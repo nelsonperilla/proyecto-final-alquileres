@@ -18,10 +18,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -39,9 +35,6 @@ import javax.xml.bind.annotation.XmlTransient;
 @DiscriminatorColumn(name="TIPO",
 discriminatorType= DiscriminatorType.STRING, length=1)
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Servicio.findAll", query = "SELECT s FROM Servicio s"),
-    @NamedQuery(name = "Servicio.findByServicioId", query = "SELECT s FROM Servicio s WHERE s.servicioId = :servicioId")})
 public abstract class Servicio implements Serializable {
     
     protected static final long serialVersionUID = 1L;
@@ -58,14 +51,6 @@ public abstract class Servicio implements Serializable {
     @Column(name = "FECHA_HASTA")
     @Temporal(TemporalType.TIMESTAMP)
     protected Date fechaHasta;
-    
-    @JoinColumn(name = "USUARIO_FK", referencedColumnName = "USUARIO_ID")
-    @ManyToOne(optional = false)
-    private Usuario usuarioFk;
-    
-    @JoinColumn(name = "TIPO_SERVICIO_FK", referencedColumnName = "TIPO_SERVICIO_ID")
-    @ManyToOne(optional = false)
-    protected TipoServicio tipoServicioFk;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "servicioFk")
     protected List<Pago> pagoList;
@@ -141,22 +126,6 @@ public abstract class Servicio implements Serializable {
 
     public void setFechaHasta(Date fechaHasta) {
         this.fechaHasta = fechaHasta;
-    }
-
-    public TipoServicio getTipoServicioFk() {
-        return tipoServicioFk;
-    }
-
-    public void setTipoServicioFk(TipoServicio tipoServicioFk) {
-        this.tipoServicioFk = tipoServicioFk;
-    }
-
-    public Usuario getUsuarioFk() {
-        return usuarioFk;
-    }
-
-    public void setUsuarioFk(Usuario usuarioFk) {
-        this.usuarioFk = usuarioFk;
     }
     
 }

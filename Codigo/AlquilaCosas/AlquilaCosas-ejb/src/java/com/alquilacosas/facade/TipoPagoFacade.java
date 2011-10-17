@@ -32,7 +32,7 @@ public class TipoPagoFacade extends AbstractFacade<TipoPago> {
     }
 
     public TipoPago findByNombre(TipoPago.NombreTipoPago nombre) {
-        Query query = em.createNamedQuery("TipoPago.findByNombre");
+        Query query = em.createQuery("SELECT t FROM TipoPago t WHERE t.nombre = :nombre");
         query.setParameter("nombre", nombre);
         TipoPago tipoPago = null;
         try {

@@ -5,17 +5,12 @@
 package com.alquilacosas.ejb.entity;
 
 import java.io.Serializable;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -25,13 +20,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "VARIABLE_DE_SISTEMA")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "VariableDeSistema.findAll", query = "SELECT v FROM VariableDeSistema v"),
-    @NamedQuery(name = "VariableDeSistema.findByVariableId", query = "SELECT v FROM VariableDeSistema v WHERE v.variableId = :variableId"),
-    @NamedQuery(name = "VariableDeSistema.findByNombre", query = "SELECT v FROM VariableDeSistema v WHERE v.nombre = :nombre"),
-    @NamedQuery(name = "VariableDeSistema.findByDescripcion", query = "SELECT v FROM VariableDeSistema v WHERE v.descripcion = :descripcion"),
-    @NamedQuery(name = "VariableDeSistema.findByValorNumerico", query = "SELECT v FROM VariableDeSistema v WHERE v.valorNumerico = :valorNumerico"),
-    @NamedQuery(name = "VariableDeSistema.findByValorString", query = "SELECT v FROM VariableDeSistema v WHERE v.valorString = :valorString")})
 public class VariableDeSistema implements Serializable {
     
     private static final long serialVersionUID = 1L;
