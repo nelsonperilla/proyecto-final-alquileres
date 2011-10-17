@@ -16,5 +16,9 @@
     <role-name>ADMIN</role-name>
     <group-name>ADMIN</group-name>
   </security-role-mapping>
+  <security-role-mapping>
+    <role-name>PUBLICITANTE</role-name>
+    <group-name>PUBLICITANTE</group-name>
+  </security-role-mapping>
   
 </glassfish-web-app>

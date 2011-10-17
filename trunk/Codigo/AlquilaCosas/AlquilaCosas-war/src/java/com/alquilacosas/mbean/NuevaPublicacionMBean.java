@@ -31,8 +31,6 @@ import org.primefaces.event.FileUploadEvent;
 @ViewScoped
 public class NuevaPublicacionMBean implements Serializable {
 
-    public NuevaPublicacionMBean() {
-    }
     @EJB
     private PublicacionBeanLocal publicacionBean;
     @EJB
@@ -68,6 +66,8 @@ public class NuevaPublicacionMBean implements Serializable {
     
     private Integer publicacionId;
 
+    public NuevaPublicacionMBean() {
+    }
 
     @PostConstruct
     public void init() {

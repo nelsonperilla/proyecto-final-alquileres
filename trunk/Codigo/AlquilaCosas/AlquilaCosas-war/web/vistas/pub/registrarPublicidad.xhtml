@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:comps="http://java.sun.com/jsf/composite/comps"
+      xmlns:p="http://primefaces.prime.com.tr/ui" 
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" >
+
+    <body>
+
+        <ui:composition template="./../../resources/templates/masterPage.xhtml">
+
+            <ui:define name="logInfo">
+                <h:form>
+                    <h:commandLink value="Inicio" action="inicio" />
+                </h:form>
+            </ui:define>
+
+            <ui:define name="left">
+                <comps:categoriesMenu />
+            </ui:define>
+
+            <ui:define name="principal">
+
+                <h:form>
+
+                    <h1>Registrar Publicidad</h1>
+                    <p:fieldset legend="Datos" styleClass="fieldset" >
+                        <h:panelGrid columns="3" columnClasses="labelColumn" >
+                            <h:outputLabel value="Titulo" />
+                            <p:inputText id="titulo" value="#{publicidadBean.titulo}" />
+                            <p:message for="titulo" />
+                            <h:outputLabel value="URL" />
+                            <p:inputText id="url" value="#{publicidadBean.url}" />
+                            <p:message for="url" />
+                            <h:outputLabel value="Caption" />
+                            <p:inputText id="caption" value="#{publicidadBean.caption}" />
+                            <p:message for="caption" />
+                            <h:outputLabel value="Duracion" />
+                            <h:selectOneMenu id="duracion" value="#{publicidadBean.duracionSeleccionada}" >
+                                <f:selectItem itemLabel="Seleccione una duracion.." />
+                                <f:selectItems value="#{publicidadBean.duraciones}" />
+                            </h:selectOneMenu>
+                            <p:message for="duracion" />
+                            <h:outputLabel value="Ubicacion" />
+                            <h:selectOneMenu id="ubicacion" value="#{publicidadBean.ubicacionSeleccionada}" >
+                                <f:selectItem itemLabel="Seleccione una ubicacion.." />
+                                <f:selectItems value="#{publicidadBean.ubicaciones}" />
+                            </h:selectOneMenu>
+                            <p:message for="ubicacion" />
+                        </h:panelGrid>
+                    </p:fieldset>
+
+                    <p:fieldset legend="Imagen" styleClass="fieldset" >
+
+                        <p:fileUpload widgetVar="uploader" height="48" width="48"
+                                      fileUploadListener="#{publicidadBean.handleFileUpload}"
+                                      image="./../../resources/images/upload.png" 
+                                      cancelImage="./../../resources/images/cancel.png"
+                                      allowTypes="*.jpg;*.png;*.gif;" description="Images" 
+                                      customUI="true" label="Subir"/>
+
+                        <h:outputLink value="#" title="Subir archivo" onclick="uploader.upload();" 
+                                      style="font-weight:bold;color:#616D7E">
+                            Seleccionar Imagen
+                        </h:outputLink>
+                    </p:fieldset>
+                    
+                    <h:panelGrid columns="2" columnClasses="labelColumn,null" style="margin-left: 20px; margin-top: 10px" >
+                        <p:commandButton value="Aceptar" action="#{publicidadBean.registrarPublicidad}"
+                                         ajax="false" />
+                        <p:commandButton value="Limpiar" type="button" />
+                    </h:panelGrid>
+                </h:form>
+
+            </ui:define>
+
+            <ui:define name="right">
+                <comps:loginBox />
+                <comps:adminPanel />
+                <comps:panelPublicitante />
+                <comps:userPanel />
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

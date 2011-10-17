@@ -41,6 +41,21 @@
                                 method="verPublicacion" var="#{destacarBean.publicacion}" />
                     </div>
                     
+                    <h:panelGrid columns="3" >
+                        <h:outputLabel value="Duracion:" />
+                        <h:selectOneMenu value="#{destacarBean.tipoSeleccionado}"
+                                         id="duracion" required="true" >
+                            <f:selectItem itemLabel="Seleccione una duracion..." />
+                            <f:selectItems value="#{destacarBean.tipos}" />
+                            <p:ajax event="change" listener="#{destacarBean.duracionSeleccionada}"
+                                    update="precio" />
+                        </h:selectOneMenu>
+                        <p:message for="duracion" />
+                        <h:outputLabel value="Precio:" />
+                        <h:outputText id="precio" value="#{destacarBean.precio}" 
+                                      rendered="#{not empty destacarBean.tipoSeleccionado}" />
+                    </h:panelGrid>
+                    
                     <p>
                         El servicio tiene un costo de U$D <h:outputText value="#{destacarBean.precio}" />
                     </p>
