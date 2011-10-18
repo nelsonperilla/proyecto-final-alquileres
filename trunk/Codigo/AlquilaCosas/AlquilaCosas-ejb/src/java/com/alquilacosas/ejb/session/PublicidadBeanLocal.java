@@ -6,6 +6,7 @@ package com.alquilacosas.ejb.session;
 
 import com.alquilacosas.ejb.entity.TipoPago.NombreTipoPago;
 import com.alquilacosas.ejb.entity.TipoPublicidad;
+import java.util.Date;
 import javax.ejb.Local;
 
 /**
@@ -19,7 +20,7 @@ public interface PublicidadBeanLocal {
             String url, String caption, 
             TipoPublicidad.UbicacionPublicidad ubicacion, 
             TipoPublicidad.DuracionPublicidad duracion, 
-            byte[] imagen, Double precio, NombreTipoPago nombreTipoPago) 
+            byte[] imagen, Date fechaDesde,  Double precio, NombreTipoPago nombreTipoPago) 
             throws com.alquilacosas.common.AlquilaCosasException;
 
     public Double getPrecio(TipoPublicidad.DuracionPublicidad duracion, 

@@ -96,11 +96,11 @@ public class DestacarPublicacionBean implements DestacarPublicacionBeanLocal {
         pago.setFechaConfirmado(new Date());
         pagoFacade.edit(pago);
         
-        Servicio servicio = (Destacacion) pago.getServicioFk();
+        Servicio servicio = pago.getServicioFk();
         
         Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
         if(servicio instanceof Destacacion) {
+            cal.setTime(new Date());
             Destacacion destacacion = (Destacacion) servicio;
             destacacion.setFechaDesde(new Date());
             NombreTipoDestacacion tipo = destacacion.getTipoDestacacionFk().getNombre();
@@ -124,7 +124,7 @@ public class DestacarPublicacionBean implements DestacarPublicacionBeanLocal {
             destacacionFacade.edit(destacacion);
         } else {
             Publicidad publicidad = (Publicidad) servicio;
-            publicidad.setFechaDesde(new Date());
+            cal.setTime(publicidad.getFechaDesde());
             DuracionPublicidad duracion = publicidad.getTipoPublicidadFk().getDuracion();
             if(duracion == DuracionPublicidad.SEMANAL) {
                 cal.add(Calendar.DAY_OF_YEAR, 7);

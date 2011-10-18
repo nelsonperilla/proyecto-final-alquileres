@@ -4,7 +4,7 @@
  */
 package com.alquilacosas.mbean;
 
-import com.alquilacosas.ejb.session.DestacarPublicacionBeanLocal;
+import com.alquilacosas.ejb.session.PagoBeanLocal;
 import com.alquilacosas.pagos.PaypalUtil;
 import com.paypal.soap.api.GetExpressCheckoutDetailsResponseDetailsType;
 import java.io.Serializable;
@@ -25,7 +25,7 @@ import javax.faces.context.FacesContext;
 public class PagoConfirmadoMBean implements Serializable {
 
     @EJB
-    private DestacarPublicacionBeanLocal destacarBean;
+    private PagoBeanLocal pagoBean;
     @ManagedProperty(value = "#{login}")
     private ManejadorUsuarioMBean login;
     private boolean pagoConfirmado;
@@ -54,7 +54,7 @@ public class PagoConfirmadoMBean implements Serializable {
         String pagoId = PaypalUtil.doExpressCheckoutService(details);
         if(pagoId != null) {
             pagoConfirmado = true;
-            destacarBean.efectuarServicio(Integer.valueOf(pagoId));
+            pagoBean.efectuarServicio(Integer.valueOf(pagoId));
         }
     }
 

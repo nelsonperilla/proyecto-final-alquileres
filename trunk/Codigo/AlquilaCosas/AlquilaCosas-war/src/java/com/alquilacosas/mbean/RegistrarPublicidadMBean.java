@@ -12,6 +12,7 @@ import com.alquilacosas.ejb.session.PublicidadBeanLocal;
 import com.alquilacosas.pagos.PaypalUtil;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -39,6 +40,7 @@ public class RegistrarPublicidadMBean implements Serializable {
     private ManejadorUsuarioMBean loginMBean;
     private String titulo, url, caption;
     private Double precio;
+    private Date fechaDesde;
     private List<SelectItem> duraciones, ubicaciones;
     private UbicacionPublicidad ubicacionSeleccionada;
     private DuracionPublicidad duracionSeleccionada;
@@ -69,11 +71,18 @@ public class RegistrarPublicidadMBean implements Serializable {
     }
     
     public void registrarPublicidad() {
+        if(imagen == null) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                    "Debe cargar una imagen", "");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
         Integer pagoId = null;
         try {
             pagoId = publicidadBean.registrarPublicidad(loginMBean.getUsuarioId(), 
                         titulo, url, caption, ubicacionSeleccionada, 
-                        duracionSeleccionada, imagen, precio, NombreTipoPago.PAYPAL);
+                        duracionSeleccionada, imagen, fechaDesde, precio, 
+                        NombreTipoPago.PAYPAL);
         } catch (AlquilaCosasException e) {
             Logger.getLogger(RegistrarPublicidadMBean.class).
                     error("registrarPublicidad(). Excepcion al invocar registrarPublicidad(): " 
@@ -204,5 +213,13 @@ public class RegistrarPublicidadMBean implements Serializable {
 
     public void setPrecio(Double precio) {
         this.precio = precio;
+    }
+
+    public Date getFechaDesde() {
+        return fechaDesde;
+    }
+
+    public void setFechaDesde(Date fechaDesde) {
+        this.fechaDesde = fechaDesde;
     }
 }
