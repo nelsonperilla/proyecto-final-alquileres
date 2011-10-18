@@ -7,18 +7,9 @@ package com.alquilacosas.mbean;
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.entity.TipoDestacacion.NombreTipoDestacacion;
+import com.alquilacosas.ejb.entity.TipoPago.NombreTipoPago;
 import com.alquilacosas.ejb.session.DestacarPublicacionBeanLocal;
-import com.paypal.sdk.exceptions.PayPalException;
-import com.paypal.sdk.profiles.APIProfile;
-import com.paypal.sdk.profiles.ProfileFactory;
-import com.paypal.sdk.services.CallerServices;
-import com.paypal.soap.api.BasicAmountType;
-import com.paypal.soap.api.CurrencyCodeType;
-import com.paypal.soap.api.PaymentActionCodeType;
-import com.paypal.soap.api.PaymentDetailsType;
-import com.paypal.soap.api.SetExpressCheckoutRequestDetailsType;
-import com.paypal.soap.api.SetExpressCheckoutRequestType;
-import com.paypal.soap.api.SetExpressCheckoutResponseType;
+import com.alquilacosas.pagos.PaypalUtil;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,11 +37,6 @@ public class DestacarPublicacionMBean implements Serializable {
     private DestacarPublicacionBeanLocal destacarBean;
     @ManagedProperty(value = "#{login}")
     private ManejadorUsuarioMBean login;
-    private String returnURL = "http://www.alquilacosas.com/pagoConfirmado.xhtml";
-    private String cancelURL = "http://www.alquilacosas.com/pagoCancelado.xhtml";
-    private CurrencyCodeType currencyCodeType = CurrencyCodeType.USD;
-    private PaymentActionCodeType paymentAction = PaymentActionCodeType.Sale;
-    private String paypalUrl = "https://www.sandbox.paypal.com/webscr?cmd=_express-checkout&useraction=commit&token=";
     private List<SelectItem> tipos;
     private NombreTipoDestacacion tipoSeleccionado;
     private PublicacionDTO publicacion;
@@ -89,12 +75,6 @@ public class DestacarPublicacionMBean implements Serializable {
         tituloPublicacion = publicacion.getTitulo();
         fechaPublicacion = publicacion.getFecha_desde();
         fechaFinalizacion = publicacion.getFecha_hasta();
-        precio = destacarBean.getPrecioDestacacion();
-        if(precio == null) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-                    "No se encontro el precio del servicio", "");
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        }
         tipos = new ArrayList<SelectItem>();
         for(NombreTipoDestacacion nombre: NombreTipoDestacacion.values()) {
             tipos.add(new SelectItem(nombre, nombre.toString()));
@@ -105,13 +85,17 @@ public class DestacarPublicacionMBean implements Serializable {
         return "";
     }
     
-    public void duracionSeleccionada() {
-        
-    }
-    
     public void destacar() {
-
-        String url = setExpressCheckout(publicacionId, precio.toString());
+        Integer pagoId = destacarBean.iniciarCobroDestacacion(publicacionId, tipoSeleccionado, 
+                precio, NombreTipoPago.PAYPAL);
+        if(pagoId == null) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                    "Error al registrar pago.", "");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+        String descripcion = "Destacar publicacion:" + publicacion.getTitulo();
+        String url = PaypalUtil.setExpressCheckout(descripcion, Integer.toString(pagoId), 
+                Integer.toString(publicacionId), precio.toString());
         if (url != null) {
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
 
@@ -123,62 +107,23 @@ public class DestacarPublicacionMBean implements Serializable {
                     + e + ": " + e.getMessage());
             }
         } else {
-            
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al comunicarse con paypal", "");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         }
 
     }
-
-    private String setExpressCheckout(Integer publicacionId, String paymentAmount) {
-
-        CallerServices caller = new CallerServices();
-        String url = null;
-
-        try {
-            //construct and set the profile, these are the credentials we establish as "the shop" with Paypal
-            APIProfile profile = ProfileFactory.createSignatureAPIProfile();
-//            profile.setAPIUsername("seller_1314645851_biz_api1.gmail.com");
-//            profile.setAPIPassword("1314645889");
-//            profile.setSignature("AdO-w7F17-IlSqAHGUzyrxYC7d8AAi-Mr9mYpAidn5Robg7h5He8Ize1");
-            profile.setAPIUsername("cardozo.damian_api1.gmail.com");
-            profile.setAPIPassword("EYGPM2859PNBMSHM");
-            profile.setSignature("AAE24aY3lpsWe.zrr2Px0axspt29ABZlMNWmQdQaipmLr0OvBcfQeSOb");
-            profile.setEnvironment("sandbox");
-            caller.setAPIProfile(profile);
-
-            //construct the request
-            SetExpressCheckoutRequestType pprequest = new SetExpressCheckoutRequestType();
-            pprequest.setVersion("63.0");
-
-            //construct the details for the request
-            SetExpressCheckoutRequestDetailsType details = new SetExpressCheckoutRequestDetailsType();
-
-            PaymentDetailsType paymentDetails = new PaymentDetailsType();
-            paymentDetails.setOrderDescription("Destacar publicacion: '" + tituloPublicacion + "'");
-            paymentDetails.setInvoiceID("Pago " + Math.random());
-            BasicAmountType orderTotal = new BasicAmountType(paymentAmount);
-            orderTotal.setCurrencyID(currencyCodeType);
-            paymentDetails.setOrderTotal(orderTotal);
-            paymentDetails.setPaymentAction(paymentAction);
-            details.setPaymentDetails(new PaymentDetailsType[]{paymentDetails});
-
-            details.setReturnURL(returnURL);
-            details.setCancelURL(cancelURL);
-            details.setCustom(publicacionId.toString());
-
-            //set the details on the request
-            pprequest.setSetExpressCheckoutRequestDetails(details);
-
-            //call the actual webservice, passing the constructed request
-            SetExpressCheckoutResponseType ppresponse = (SetExpressCheckoutResponseType) caller.call("SetExpressCheckout", pprequest);
-
-            //get the token from the response
-            url = paypalUrl + ppresponse.getToken();
-        } catch (PayPalException e) {
-            Logger.getLogger(DestacarPublicacionMBean.class).
-                    error("setExpressCheckout(). Excepcion al conectarse con Paypal: " 
-                    + e + ": " + e.getMessage());
+    
+    public void tipoSeleccionado() {
+        if(tipoSeleccionado == null)
+            precio = null;
+        else {
+            precio = destacarBean.getPrecioDestacacion(tipoSeleccionado);
+            if(precio == null) {
+                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                        "No se encontro el precio del servicio", "");
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            }
         }
-        return url;
     }
 
     // Getters & Setters

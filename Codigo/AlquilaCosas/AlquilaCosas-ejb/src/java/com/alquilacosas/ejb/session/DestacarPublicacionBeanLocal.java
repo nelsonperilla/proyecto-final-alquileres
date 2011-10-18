@@ -6,6 +6,8 @@ package com.alquilacosas.ejb.session;
 
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.PublicacionDTO;
+import com.alquilacosas.ejb.entity.TipoDestacacion.NombreTipoDestacacion;
+import com.alquilacosas.ejb.entity.TipoPago.NombreTipoPago;
 import javax.ejb.Local;
 
 /**
@@ -15,11 +17,14 @@ import javax.ejb.Local;
 @Local
 public interface DestacarPublicacionBeanLocal {
 
-    public void destacarPublicacion(java.lang.Integer publicacionId);
+    public Integer iniciarCobroDestacacion(Integer publicacionId, NombreTipoDestacacion nombreTipo, 
+            Double precio, NombreTipoPago nombreTipoPago);
+    
+    public void efectuarServicio(Integer pagoId);
     
     public PublicacionDTO getPublicacion(Integer publicacionId, Integer usuarioId) 
             throws AlquilaCosasException;
     
-    public Double getPrecioDestacacion();
+    public Double getPrecioDestacacion(NombreTipoDestacacion tipo);
     
 }

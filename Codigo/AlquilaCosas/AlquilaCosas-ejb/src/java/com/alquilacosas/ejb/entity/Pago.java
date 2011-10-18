@@ -6,7 +6,6 @@ package com.alquilacosas.ejb.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,12 +13,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -38,9 +34,13 @@ public class Pago implements Serializable {
     @Column(name = "PAGO_ID")
     private Integer pagoId;
     
-    @Column(name = "FECHA_PAGO")
+    @Column(name = "FECHA_INICIO")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaPago;
+    private Date fechaInicio;
+    
+    @Column(name = "FECHA_CONFIRMADO")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaConfirmado;
     
     @Column(name = "MONTO")
     private double monto;
@@ -62,7 +62,7 @@ public class Pago implements Serializable {
 
     public Pago(Integer pagoId, Date fechaPago, double monto) {
         this.pagoId = pagoId;
-        this.fechaPago = fechaPago;
+        this.fechaInicio = fechaPago;
         this.monto = monto;
     }
 
@@ -74,12 +74,20 @@ public class Pago implements Serializable {
         this.pagoId = pagoId;
     }
 
-    public Date getFechaPago() {
-        return fechaPago;
+    public Date getFechaInicio() {
+        return fechaInicio;
     }
 
-    public void setFechaPago(Date fechaPago) {
-        this.fechaPago = fechaPago;
+    public void setFechaInicio(Date fechaPago) {
+        this.fechaInicio = fechaPago;
+    }
+
+    public Date getFechaConfirmado() {
+        return fechaConfirmado;
+    }
+
+    public void setFechaConfirmado(Date fechaConfirmado) {
+        this.fechaConfirmado = fechaConfirmado;
     }
 
     public double getMonto() {

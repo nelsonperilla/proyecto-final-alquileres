@@ -41,14 +41,23 @@
                             <h:selectOneMenu id="duracion" value="#{publicidadBean.duracionSeleccionada}" >
                                 <f:selectItem itemLabel="Seleccione una duracion.." />
                                 <f:selectItems value="#{publicidadBean.duraciones}" />
+                                <p:ajax event="change" update="precio" listener="#{publicidadBean.duracionCambio}" />
                             </h:selectOneMenu>
                             <p:message for="duracion" />
                             <h:outputLabel value="Ubicacion" />
                             <h:selectOneMenu id="ubicacion" value="#{publicidadBean.ubicacionSeleccionada}" >
                                 <f:selectItem itemLabel="Seleccione una ubicacion.." />
                                 <f:selectItems value="#{publicidadBean.ubicaciones}" />
+                                <p:ajax event="change" update="precio" listener="#{publicidadBean.ubicacionCambio}" />
                             </h:selectOneMenu>
                             <p:message for="ubicacion" />
+                            <h:outputLabel value="Precio:" />
+                            <p:outputPanel id="precio" >
+                                <h:outputText value="U$D #{publicidadBean.precio}"
+                                              rendered="#{not empty publicidadBean.precio}"/>
+                                <h:outputText value="(Seleccione ubicacion y duracion)" 
+                                              rendered="#{empty publicidadBean.precio}"/>
+                            </p:outputPanel>
                         </h:panelGrid>
                     </p:fieldset>
 
@@ -67,11 +76,13 @@
                         </h:outputLink>
                     </p:fieldset>
                     
-                    <h:panelGrid columns="2" columnClasses="labelColumn,null" style="margin-left: 20px; margin-top: 10px" >
-                        <p:commandButton value="Aceptar" action="#{publicidadBean.registrarPublicidad}"
-                                         ajax="false" />
+                    <h:panelGrid columns="2" columnClasses="leftCol,rightCol" style="width: 100%" >
+                        <p:commandLink actionListener="#{publicidadBean.registrarPublicidad}" >
+                            <h:graphicImage value="#{resource['images:pagoPaypal.gif']}" />
+                        </p:commandLink>
                         <p:commandButton value="Limpiar" type="button" />
                     </h:panelGrid>
+                    
                 </h:form>
 
             </ui:define>

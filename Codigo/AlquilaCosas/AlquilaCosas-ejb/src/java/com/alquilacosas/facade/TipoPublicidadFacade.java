@@ -33,7 +33,7 @@ public class TipoPublicidadFacade extends AbstractFacade<TipoPublicidad> {
     
     public TipoPublicidad findByUbicacionYDuracion(UbicacionPublicidad ubicacion, 
             DuracionPublicidad duracion) {
-        Query query = em.createQuery("SELECT tp FROM TipoPublicidad WHERE "
+        Query query = em.createQuery("SELECT tp FROM TipoPublicidad tp WHERE "
                 + "tp.ubicacion = :ubicacion AND tp.duracion = :duracion");
         query.setParameter("ubicacion", ubicacion);
         query.setParameter("duracion", duracion);
