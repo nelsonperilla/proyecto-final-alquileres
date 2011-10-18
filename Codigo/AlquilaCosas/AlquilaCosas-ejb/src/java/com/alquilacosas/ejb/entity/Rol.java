@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Rol.findByDescripcion", query = "SELECT r FROM Rol r WHERE r.descripcion = :descripcion")})
 public class Rol implements Serializable {
     
-    public enum NombreRol {USUARIO, ADMIN};
+    public enum NombreRol {USUARIO, ADMIN, PUBLICITANTE};
     
     private static final long serialVersionUID = 1L;
     @Id

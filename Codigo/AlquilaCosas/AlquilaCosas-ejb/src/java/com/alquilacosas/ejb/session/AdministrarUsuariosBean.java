@@ -12,7 +12,6 @@ import com.alquilacosas.facade.LoginFacade;
 import com.alquilacosas.facade.RolFacade;
 import com.alquilacosas.facade.UsuarioFacade;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -22,7 +21,6 @@ import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 /**
  *
@@ -48,34 +46,12 @@ public class AdministrarUsuariosBean implements AdministrarUsuariosBeanLocal {
         
         List<UsuarioDTO> usuarios = new ArrayList<UsuarioDTO>();
         
-        Query query = entityManager.createNativeQuery("select u.usuario_id, l.username, "
-                + "u.email, u.nombre, u.apellido, uxe.fecha_desde, COUNT(r.rol_id) as NumRoles, r.nombre "
-       + " from ROL r, LOGIN_X_ROL lxr, LOGIN l, USUARIO u, USUARIO_X_ESTADO uxe, ESTADO_USUARIO eu "
-       + " where lxr.rol_fk = r.rol_id "
-       + " and lxr.login_fk = l.login_id " 
-       + " and l.usuario_fk = u.usuario_id "
-       + " and u.usuario_id = uxe.usuario_fk "
-       + " and uxe.estado_fk = eu.estado_usuario_id "
-       + " and fecha_hasta IS NULL "
-       + " group by u.usuario_id");
-        
-        List<Object[]> list = query.getResultList();
-        
-        for( Object[] object : list){
-            
-            Integer id = (Integer) object[0];
-            String username = (String) object[1];
-            String email = (String) object[2];
-            String nombre = (String) object[3];
-            String apellido = (String) object[4];
-            Date fechaDeRegistro = (Date) object[5];
-            Long numRoles = (Long) object[6];
-            String tipoUsuario = (String) object[7];
-
-            UsuarioDTO uf = new UsuarioDTO( id, username, email, nombre, 
-                    apellido, fechaDeRegistro, numRoles, tipoUsuario); 
-            
-           usuarios.add(uf);     
+        List<Usuario> lista = usuarioFacade.findAll();
+        for( Usuario u : lista ){
+            List<Rol> roles = u.getLoginList().get(0).getRolList();
+            UsuarioDTO usuarioDTO = new UsuarioDTO(u.getUsuarioId(), u.getLoginList().get(0).getUsername(),
+                    u.getEmail(), u.getNombre(), u.getApellido(), u.getLoginList().get(0).getFechaCreacion(), roles);
+            usuarios.add(usuarioDTO);
         }
         
         return usuarios;
@@ -89,6 +65,7 @@ public class AdministrarUsuariosBean implements AdministrarUsuariosBeanLocal {
        Login login = loginFacade.findByUsuario(usuario);
        List<Rol> rols = login.getRolList();
        List<Integer> rolIds = new ArrayList<Integer>();
+       
        for(Rol r: rols) {
            rolIds.add(r.getRolId());
        }

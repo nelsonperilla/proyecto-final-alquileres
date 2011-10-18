@@ -4,12 +4,12 @@
  */
 package com.alquilacosas.facade;
 
-import com.alquilacosas.common.ObjetoTemporal;
 import com.alquilacosas.ejb.entity.Alquiler;
 import com.alquilacosas.ejb.entity.AlquilerXEstado;
 import com.alquilacosas.ejb.entity.Alquiler_;
 import com.alquilacosas.ejb.entity.EstadoAlquiler;
 import com.alquilacosas.ejb.entity.EstadoAlquiler.NombreEstadoAlquiler;
+import com.alquilacosas.ejb.entity.PedidoCambio;
 import com.alquilacosas.ejb.entity.Publicacion;
 import com.alquilacosas.ejb.entity.Usuario;
 import java.util.ArrayList;
@@ -115,6 +115,7 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
                 + "AND axe.fecha_hasta IS NULL AND ea.nombre = 'PEDIDO' "
                 + "AND a.publicacion_Fk = " + publicacionId + " "
                 + "AND a.alquiler_id <> " + id + " ", Alquiler.class);
+          
 
         alquileres = query.getResultList();
 
@@ -149,33 +150,20 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
         return alquileres;
     }
 
-    public List<ObjetoTemporal> getCambiosDeAlquileresRecibidos(Publicacion publicacion) {
+    public List<PedidoCambio> getCambiosDeAlquileresRecibidos(Publicacion publicacion) {
 
-        List<ObjetoTemporal> pedidosDeCambio = new ArrayList<ObjetoTemporal>();
+        List<PedidoCambio> pedidosDeCambio = new ArrayList<PedidoCambio>();
         String publicacionId = String.valueOf(publicacion.getPublicacionId());
-        Query query = em.createNativeQuery("SELECT pc.pedido_cambio_id, a.fecha_inicio, a.fecha_fin, a.cantidad, pc.periodo_fk, pc.duracion "
+        Query query = em.createNativeQuery("SELECT * "
                 + "FROM ALQUILER a, PEDIDO_CAMBIO pc, PEDIDO_CAMBIO_X_ESTADO pcxe, ESTADO_PEDIDO_CAMBIO epc "
                 + "WHERE pc.pedido_cambio_id = pcxe.pedido_cambio_fk "
                 + "AND pcxe.estado_fk = epc.estado_pedido_cambio_id "
                 + "AND epc.nombre = 'ENVIADO' "
                 + "AND pc.alquiler_fk = a.alquiler_id "
-                + "AND a.publicacion_fk = " + publicacionId);
+                + "AND a.publicacion_fk = " + publicacionId, PedidoCambio.class);
 
-        List<Object[]> list = query.getResultList();
+        pedidosDeCambio = query.getResultList();
 
-        for (Object[] object : list) {
-
-            Integer id = (Integer) object[0];
-            Date fechaInicio = (Date) object[1];
-            Date fechaFin = (Date) object[2];
-            Integer cantidad = (Integer) object[3];
-            Integer periodo = (Integer) object[4];
-            Integer duracion = (Integer) object[5];
-
-            ObjetoTemporal temp = new ObjetoTemporal(id, fechaInicio, fechaFin,
-                    cantidad, periodo, duracion);
-            pedidosDeCambio.add(temp);
-        }
         return pedidosDeCambio;
     }
 
