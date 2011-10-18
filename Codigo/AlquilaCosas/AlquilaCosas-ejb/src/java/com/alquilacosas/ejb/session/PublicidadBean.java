@@ -44,7 +44,7 @@ public class PublicidadBean implements PublicidadBeanLocal {
     @Override
     public Integer registrarPublicidad(int usuarioId, String titulo, String url, String caption,
             UbicacionPublicidad ubicacion, DuracionPublicidad duracion, byte[] imagen,
-            Double precio, NombreTipoPago nombreTipoPago)
+            Date fechaDesde, Double precio, NombreTipoPago nombreTipoPago)
             throws AlquilaCosasException {
         
         TipoPago tipoPago = tipoPagoFacade.findByNombre(nombreTipoPago);
@@ -60,8 +60,7 @@ public class PublicidadBean implements PublicidadBeanLocal {
         }
         Publicidad publicidad = new Publicidad(titulo, url, caption, imagen);
         publicidad.setTipoPublicidadFk(tipo);
-        publicidad.setFechaDesde(new Date());
-        publicidad.setFechaHasta(new Date());
+        publicidad.setFechaDesde(fechaDesde);
         publicidad.setUsuarioFk(usuario);
         publicidad.agregarPago(pago);
         
