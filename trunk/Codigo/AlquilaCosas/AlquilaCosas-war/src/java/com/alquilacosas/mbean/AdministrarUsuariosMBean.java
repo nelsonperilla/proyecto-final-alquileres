@@ -44,20 +44,21 @@ public class AdministrarUsuariosMBean implements Serializable {
         
         try {
             
-            UsuarioDTO uf = (UsuarioDTO)ev.getObject();
-            if( uf.isUsuarioRol() && uf.isAdminRol() ){
+            UsuarioDTO usuarioDTO = (UsuarioDTO)ev.getObject();
+            if( usuarioDTO.isUsuarioRol() ){
                 tipos.add(1);
+            }
+            if( usuarioDTO.isAdminRol() ){
                 tipos.add(2);
-            }else if( uf.isUsuarioRol() && !uf.isAdminRol()){
-                tipos.add(1);
-            }else if( uf.isAdminRol() && !uf.isAdminRol() ){
-                tipos.add(2);          
+            }
+            if( usuarioDTO.isPublicitanteRol() ){
+                tipos.add(3);
             }
             
-            usuarioBean.setRoles(uf, tipos);
+            usuarioBean.setRoles(usuarioDTO, tipos);
 
         } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERRORE", e.toString()));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", e.toString()));
         }
     }
 

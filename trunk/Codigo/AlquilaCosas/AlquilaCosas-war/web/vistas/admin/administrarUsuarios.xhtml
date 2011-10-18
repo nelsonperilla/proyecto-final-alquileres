@@ -36,30 +36,12 @@
                                 </f:facet>
                                 <h:outputText value="#{usuario.username}" />
                             </p:column>
-
                             
-
                             <p:column>
                                 <f:facet name="header">
-                                    <h:outputText value="Nombre" />
+                                    <h:outputText value="Nombre y Apellido" />
                                 </f:facet>
-                                <h:outputText value="#{usuario.nombre}" />
-                            </p:column>
-
-                            <p:column>
-                                <f:facet name="header">
-                                    <h:outputText value="Apellido" />
-                                </f:facet>
-                                <h:outputText value="#{usuario.apellido}" />
-                            </p:column>
-
-                            <p:column>
-                                <f:facet name="header">
-                                    <h:outputText value="Fecha Registro" />
-                                </f:facet>
-                                <h:outputText value="#{usuario.fechaDeRegistro}" >
-                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
-                                </h:outputText>
+                                <h:outputText value="#{usuario.nombre} #{usuario.apellido}" />
                             </p:column>
 
                             <p:column>
@@ -70,16 +52,22 @@
                                     <f:facet name="output"> 
                                         <h:outputText value="Usuario"/>
                                         <h:selectBooleanCheckbox value="#{usuario.usuarioRol}" disabled="true" />
-                                        <br/>
+                                        <p:spacer width="10"/>
                                         <h:outputText value="Admin"/>
                                         <h:selectBooleanCheckbox value="#{usuario.adminRol}" disabled="true" />
+                                        <p:spacer width="10"/>
+                                        <h:outputText value="Publicitante"/>
+                                        <h:selectBooleanCheckbox value="#{usuario.publicitanteRol}" disabled="true" />
                                     </f:facet>
                                     <f:facet name="input">
                                         <h:outputText value="Usuario"/>
                                         <h:selectBooleanCheckbox value="#{usuario.usuarioRol}" />
-                                        <br/>
+                                        <p:spacer width="10"/>
                                         <h:outputText value="Admin"/>
                                         <h:selectBooleanCheckbox value="#{usuario.adminRol}" />
+                                        <p:spacer width="10"/>
+                                        <h:outputText value="Publicitante"/>
+                                        <h:selectBooleanCheckbox value="#{usuario.publicitanteRol}" />
                                     </f:facet>
                                 </p:cellEditor>
                             </p:column>

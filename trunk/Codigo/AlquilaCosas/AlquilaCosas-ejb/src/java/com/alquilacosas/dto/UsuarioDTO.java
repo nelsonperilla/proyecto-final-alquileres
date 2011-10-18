@@ -4,9 +4,11 @@
  */
 package com.alquilacosas.dto;
 
+import com.alquilacosas.ejb.entity.Rol;
 import com.alquilacosas.ejb.entity.Usuario;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -20,10 +22,11 @@ public class UsuarioDTO implements Serializable {
      private DomicilioDTO domicilio;
      private String username;
      private Date fechaDeRegistro;
-     private Long numRoles;
+     private List<Rol> roles;
      private String tipoUsuario;
      private boolean usuarioRol;
      private boolean adminRol;
+     private boolean publicitanteRol;
      private double userRating;
      private Integer userOfrecePositivas;
      private double userOfrecePositivasPorcentaje;
@@ -61,23 +64,22 @@ public class UsuarioDTO implements Serializable {
      }
 
      public UsuarioDTO(Integer id, String username, String email, String nombre, String apellido,
-             Date fechaDeRegistro, Long numRoles, String tipoUsuario) {
+             Date fechaDeRegistro, List<Rol> roles) {
           this.id = id;
           this.username = username;
           this.email = email;
           this.nombre = nombre;
           this.apellido = apellido;
           this.fechaDeRegistro = fechaDeRegistro;
-          this.numRoles = numRoles;
-          this.tipoUsuario = tipoUsuario;
-
-          if (numRoles == 1 && tipoUsuario.equalsIgnoreCase("usuario")) {
-               usuarioRol = true;
-          } else if (numRoles == 1 && tipoUsuario.equalsIgnoreCase("admin")) {
-               adminRol = true;
-          } else if (numRoles == 2) {
-               usuarioRol = true;
-               adminRol = true;
+          this.roles = roles;
+          
+          for( Rol r : roles ){
+              if( r.getRolId() == 1 )
+                  usuarioRol = true;
+              if( r.getRolId() == 2 )
+                  adminRol = true;
+              if( r.getRolId() == 3 )
+                  publicitanteRol = true;
           }
      }
 
@@ -192,13 +194,15 @@ public class UsuarioDTO implements Serializable {
           this.username = username;
      }
 
-     public Long getNumRoles() {
-          return numRoles;
-     }
+    public List<Rol> getRoles() {
+        return roles;
+    }
 
-     public void setNumRoles(Long numRoles) {
-          this.numRoles = numRoles;
-     }
+    public void setRoles(List<Rol> roles) {
+        this.roles = roles;
+    }
+
+     
 
      public String getTipoUsuario() {
           return tipoUsuario;
@@ -223,7 +227,15 @@ public class UsuarioDTO implements Serializable {
      public void setUsuarioRol(boolean usuarioRol) {
           this.usuarioRol = usuarioRol;
      }
+ 
+     public boolean isPublicitanteRol() {
+        return publicitanteRol;
+     }
 
+     public void setPublicitanteRol(boolean publicitanteRol) {
+        this.publicitanteRol = publicitanteRol;
+     }
+     
      public Integer getUserOfreceNegativas() {
           return userOfreceNegativas;
      }
