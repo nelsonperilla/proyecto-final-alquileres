@@ -33,32 +33,32 @@
                     <p>
                         De hacerlo, la misma aparecerá antes que otras publicaciones no destacadas, y de
                         esta forma usted está incrementando las posibilidades de que su producto sea alquilado.
-                        La publicación se verá destacada por 2 meses.
                     </p>
                     
                     <div id="items" >
                         <comps:itemInfo bean="#{destacarBean}" property="publicacionId" 
                                 method="verPublicacion" var="#{destacarBean.publicacion}" />
                     </div>
-                    
+                    <br/>
                     <h:panelGrid columns="3" >
                         <h:outputLabel value="Duracion:" />
                         <h:selectOneMenu value="#{destacarBean.tipoSeleccionado}"
                                          id="duracion" required="true" >
                             <f:selectItem itemLabel="Seleccione una duracion..." />
                             <f:selectItems value="#{destacarBean.tipos}" />
-                            <p:ajax event="change" listener="#{destacarBean.duracionSeleccionada}"
+                            <p:ajax event="change" listener="#{destacarBean.tipoSeleccionado}"
                                     update="precio" />
                         </h:selectOneMenu>
                         <p:message for="duracion" />
                         <h:outputLabel value="Precio:" />
-                        <h:outputText id="precio" value="#{destacarBean.precio}" 
-                                      rendered="#{not empty destacarBean.tipoSeleccionado}" />
+                        <p:outputPanel id="precio" >
+                            <h:outputText value="U$D #{destacarBean.precio}" 
+                                          rendered="#{not empty destacarBean.tipoSeleccionado}" />
+                            <h:outputText value="(Seleccione una duracion)" 
+                                          rendered="#{empty destacarBean.tipoSeleccionado}" />
+                        </p:outputPanel>
                     </h:panelGrid>
                     
-                    <p>
-                        El servicio tiene un costo de U$D <h:outputText value="#{destacarBean.precio}" />
-                    </p>
                     <h:panelGrid columns="2" columnClasses="leftCol,rightCol" style="width: 100%" >
                         <p:commandLink actionListener="#{destacarBean.destacar}" >
                             <h:graphicImage value="#{resource['images:pagoPaypal.gif']}" />

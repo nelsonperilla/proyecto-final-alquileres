@@ -38,6 +38,9 @@ public class Denuncia implements Serializable {
     @Column(name = "DENUNCIA_ID")
     private Integer denunciaId;
     
+    @Column(name = "EXPLICACION")
+    private String explicacion;
+    
     @Column(name = "FECHA")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fecha;
@@ -116,6 +119,14 @@ public class Denuncia implements Serializable {
 
     public void setMotivoFk(MotivoDenuncia motivoFk) {
         this.motivoFk = motivoFk;
+    }
+
+    public String getExplicacion() {
+        return explicacion;
+    }
+
+    public void setExplicacion(String explicacion) {
+        this.explicacion = explicacion;
     }
     
     @Override

@@ -20,11 +20,11 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author damiancardozo
  */
 @Entity
-@Table(name = "TIPO_PUBLICACION")
+@Table(name = "TIPO_PUBLICIDAD")
 @XmlRootElement
 public class TipoPublicidad implements Serializable {
     
-    public enum UbicacionPublicidad {CARRUSEL, LATERAL_IZQ, LATERAL_DER};
+    public enum UbicacionPublicidad {CARRUSEL, LATERAL_IZQUIERDA, LATERAL_DERECHA};
     public enum DuracionPublicidad {SEMANAL, BISEMANAL, MENSUAL, BIMENSUAL};
     
     private static final long serialVersionUID = 1L;

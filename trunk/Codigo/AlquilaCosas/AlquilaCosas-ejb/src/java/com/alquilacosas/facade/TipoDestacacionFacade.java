@@ -33,16 +33,16 @@ public class TipoDestacacionFacade extends AbstractFacade<TipoDestacacion> {
     }
 
     public TipoDestacacion findByNombre(NombreTipoDestacacion nombre) {
-        Query query = em.createNamedQuery("TipoServicio.findByNombre");
+        Query query = em.createQuery("SELECT t FROM TipoDestacacion t WHERE t.nombre = :nombre");
         query.setParameter("nombre", nombre);
-        TipoDestacacion tipoServicio = null;
+        TipoDestacacion tipoDestacacion = null;
         try {
-            tipoServicio = (TipoDestacacion) query.getSingleResult();
+            tipoDestacacion = (TipoDestacacion) query.getSingleResult();
         } catch (NoResultException e) {
             Logger.getLogger(TipoDestacacionFacade.class).
                     error("findByNombre(). "
                     + "Excepcion al ejecutar consulta: " + e);
         }
-        return tipoServicio;
+        return tipoDestacacion;
     }
 }

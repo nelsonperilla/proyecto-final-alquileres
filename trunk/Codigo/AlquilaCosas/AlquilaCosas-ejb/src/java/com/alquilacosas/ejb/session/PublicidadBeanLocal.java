@@ -4,6 +4,8 @@
  */
 package com.alquilacosas.ejb.session;
 
+import com.alquilacosas.ejb.entity.TipoPago.NombreTipoPago;
+import com.alquilacosas.ejb.entity.TipoPublicidad;
 import javax.ejb.Local;
 
 /**
@@ -13,10 +15,14 @@ import javax.ejb.Local;
 @Local
 public interface PublicidadBeanLocal {
 
-    public void registrarPublicidad(int usuarioId, java.lang.String titulo, 
-            java.lang.String url, java.lang.String caption, 
-            com.alquilacosas.ejb.entity.TipoPublicidad.UbicacionPublicidad ubicacion, 
-            com.alquilacosas.ejb.entity.TipoPublicidad.DuracionPublicidad duracion, 
-            byte[] imagen) throws com.alquilacosas.common.AlquilaCosasException;
+    public Integer registrarPublicidad(int usuarioId, String titulo, 
+            String url, String caption, 
+            TipoPublicidad.UbicacionPublicidad ubicacion, 
+            TipoPublicidad.DuracionPublicidad duracion, 
+            byte[] imagen, Double precio, NombreTipoPago nombreTipoPago) 
+            throws com.alquilacosas.common.AlquilaCosasException;
+
+    public Double getPrecio(TipoPublicidad.DuracionPublicidad duracion, 
+            TipoPublicidad.UbicacionPublicidad ubicacion);
     
 }
