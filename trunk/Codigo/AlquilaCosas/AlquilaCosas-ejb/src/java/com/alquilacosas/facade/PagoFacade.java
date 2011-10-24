@@ -5,9 +5,11 @@
 package com.alquilacosas.facade;
 
 import com.alquilacosas.ejb.entity.Pago;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -27,4 +29,17 @@ public class PagoFacade extends AbstractFacade<Pago> {
     public PagoFacade() {
         super(Pago.class);
     }
+    
+    /**
+     * Devuelve todos los pagos efectuados por un usuario
+     * @param usuarioId
+     * @return 
+     */
+    public List<Pago> getPagosPorUsuario(int usuarioId) {
+        Query query = em.createQuery("SELECT p FROM Pago p WHERE "
+                + "p.servicioFk.usuarioFk.usuarioId = :id");
+        query.setParameter("id", usuarioId);
+        return query.getResultList();
+    }
+    
 }

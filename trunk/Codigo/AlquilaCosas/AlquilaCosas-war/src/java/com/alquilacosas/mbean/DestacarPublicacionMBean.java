@@ -10,6 +10,7 @@ import com.alquilacosas.ejb.entity.TipoDestacacion.NombreTipoDestacacion;
 import com.alquilacosas.ejb.entity.TipoPago.NombreTipoPago;
 import com.alquilacosas.ejb.session.DestacarPublicacionBeanLocal;
 import com.alquilacosas.pagos.PaypalUtil;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -63,9 +64,12 @@ public class DestacarPublicacionMBean implements Serializable {
         try {
             publicacion = destacarBean.getPublicacion(Integer.valueOf(id), login.getUsuarioId());
         } catch(AlquilaCosasException e) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-                    "La publicacion no se puede destacar", e.getLocalizedMessage());
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            Logger.getLogger(DestacarPublicacionMBean.class).error("La publicacion indicada no se puede destacar: " + e.getMessage());
+            try {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("misPublicaciones.xhtml");
+            } catch(IOException ioe) {
+                Logger.getLogger(DestacarPublicacionMBean.class).error("Excepcion al ejecutar redirect().");
+            }
         }
         
         if(publicacion == null)
@@ -73,8 +77,8 @@ public class DestacarPublicacionMBean implements Serializable {
         publicacion.setDestacada(true);
         publicacionId = publicacion.getId();
         tituloPublicacion = publicacion.getTitulo();
-        fechaPublicacion = publicacion.getFecha_desde();
-        fechaFinalizacion = publicacion.getFecha_hasta();
+        fechaPublicacion = publicacion.getFechaDesde();
+        fechaFinalizacion = publicacion.getFechaHasta();
         tipos = new ArrayList<SelectItem>();
         for(NombreTipoDestacacion nombre: NombreTipoDestacacion.values()) {
             tipos.add(new SelectItem(nombre, nombre.toString()));

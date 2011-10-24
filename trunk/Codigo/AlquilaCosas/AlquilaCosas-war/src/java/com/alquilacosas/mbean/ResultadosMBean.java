@@ -53,25 +53,25 @@ public class ResultadosMBean implements Serializable {
     public void init() {
         publicaciones = new ArrayList<PublicacionDTO>();
         busqueda = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("art");
-        String cat = FacesContext.getCurrentInstance().getExternalContext()
-                .getRequestParameterMap().get("cat");
-        if(cat != null && !cat.equals(""))
+        String cat = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("cat");
+        if (cat != null && !cat.equals("")) {
             categoria = Integer.valueOf(cat);
-        
+        }
+
         periodos = new ArrayList<SelectItem>();
         cargarPeriodos();
-        
+
         buscar(0, 10);
         model = new LazyDataModel<PublicacionDTO>() {
 
             @Override
             public List<PublicacionDTO> load(int first, int pageSize, String sortFielf,
                     boolean sort, Map<String, String> filters) {
-                if(noBuscarEnModel) {
+                if (noBuscarEnModel) {
                     noBuscarEnModel = false;
-                }
-                else
+                } else {
                     buscar(first, pageSize);
+                }
                 return publicaciones;
             }
         };
@@ -83,29 +83,29 @@ public class ResultadosMBean implements Serializable {
         buscar(0, 10);
         noBuscarEnModel = true;
     }
-    
+
     public void noFiltrarCategoria() {
         categoria = null;
         buscar(0, 10);
         noBuscarEnModel = true;
     }
-    
+
     public void filtrarUbicacion() {
         buscar(0, 10);
         noBuscarEnModel = true;
     }
-    
+
     public void noFiltrarUbicacion() {
         ubicacion = null;
         buscar(0, 10);
         noBuscarEnModel = true;
     }
-    
+
     public void filtrarPrecio() {
         buscar(0, 10);
         noBuscarEnModel = true;
     }
-    
+
     public void noFiltrarPrecio() {
         periodoSeleccionado = null;
         precioDesde = null;
@@ -113,59 +113,65 @@ public class ResultadosMBean implements Serializable {
         buscar(0, 10);
         noBuscarEnModel = true;
     }
-    
+
     public String getNombreCategoria() {
-        if(categoria != null)
-        for(CategoriaDTO c: categorias) {
-            if(c.getId() == categoria)
-                return c.getNombre();
+        if (categoria != null) {
+            for (CategoriaDTO c : categorias) {
+                if (c.getId() == categoria) {
+                    return c.getNombre();
+                }
+            }
         }
         return "";
     }
 
     public void buscar(int first, int pageSize) {
-        Busqueda b = buscarBean.buscar(busqueda, categoria, ubicacion, periodoSeleccionado, 
+        Busqueda b = buscarBean.buscar(busqueda, categoria, ubicacion, periodoSeleccionado,
                 precioDesde, precioHasta, pageSize, first);
         publicaciones = b.getPublicaciones();
         categorias = b.getCategorias();
-        if(first == 0) {
+        if (first == 0) {
             totalRegistros = b.getTotalRegistros();
-            if(model != null)
+            if (model != null) {
                 model.setRowCount(totalRegistros);
+            }
         }
     }
 
     public String verPublicacion() {
         return "mostrarPublicacion";
     }
-    
+
     public String getParametrosUrl() {
         String parametros = "?art=" + busqueda;
-        if(categoria != null)
+        if (categoria != null) {
             parametros += "&cat=" + categoria;
-        if(ubicacion != null)
+        }
+        if (ubicacion != null) {
             parametros += "&ubicacion=" + ubicacion;
-        if(periodoSeleccionado != null && (precioDesde != null || precioHasta != null)) {
+        }
+        if (periodoSeleccionado != null && (precioDesde != null || precioHasta != null)) {
             parametros += "&periodo=" + periodoSeleccionado;
-            if(precioDesde != null)
+            if (precioDesde != null) {
                 parametros += "&pDesde=" + precioDesde;
-            if(precioHasta != null)
+            }
+            if (precioHasta != null) {
                 parametros += "&pHasta=" + precioHasta;
+            }
         }
         return parametros;
     }
-    
+
     private void cargarPeriodos() {
         List<PeriodoDTO> listaPeriodos = buscarBean.getPeriodos();
-        for(PeriodoDTO p: listaPeriodos) {
+        for (PeriodoDTO p : listaPeriodos) {
             periodos.add(new SelectItem(p.getId(), p.getNombre().toString()));
         }
     }
-    
+
     /*
      * Getters & Setters
      */
-
     public String getBusqueda() {
         return busqueda;
     }
@@ -261,5 +267,4 @@ public class ResultadosMBean implements Serializable {
     public void setPrecioHasta(Double precioHasta) {
         this.precioHasta = precioHasta;
     }
-        
 }

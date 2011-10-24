@@ -26,15 +26,26 @@
                 <tr>    
                     <td valign="top" class="columnaIzq">
                         <ui:insert name="left" />
-                        <h:graphicImage value="#{resource['images:publicidad2.jpg']}" />
+                        <ui:repeat value="#{mostrarPublicidad.publicidadesIzq}" var="pub" >
+                            <a href="#{pub.url}" >
+                                <h:graphicImage value="/imagenpub?id=#{pub.id}" width="140"
+                                                alt="#{pub.caption}" />
+                            </a>
+                        </ui:repeat>
+                        <!--<h:graphicImage value="#{resource['images:publicidad2.jpg']}" />-->
                     </td>
                     <td id="principal" valign="top" >
                         <ui:insert name="principal"/>
                     </td>
                     <td width="200px" valign="top">
                         <ui:insert name="right" />
-                        <h:graphicImage value="#{resource['images:publicidad1.jpg']}" 
-                                        style="margin-top: 10px" />
+                        <ui:repeat value="#{mostrarPublicidad.publicidadesDer}" var="pub" >
+                            <h:commandLink action="#{pub.url}" >
+                                <h:graphicImage value="/imagenpub?id=#{pub.id}"
+                                                alt="#{pub.caption}" width="140" height="200"
+                                                style="margin-top: 10px" />
+                            </h:commandLink>
+                        </ui:repeat>
                     </td> 
                 </tr>
                 <tr>

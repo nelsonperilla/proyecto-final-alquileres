@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
@@ -33,7 +34,8 @@ public class Log4jInit extends HttpServlet {
         else {
             BasicConfigurator.configure();
         }
-        Logger.getLogger(Log4jInit.class).info("\n ----------------------- Started running --------------------------");
+        Logger.getLogger(Log4jInit.class).setLevel(Level.INFO);
+        Logger.getLogger(Log4jInit.class).info("\n ------------ Comenzo ejecucion AlquilaCosas ------------");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

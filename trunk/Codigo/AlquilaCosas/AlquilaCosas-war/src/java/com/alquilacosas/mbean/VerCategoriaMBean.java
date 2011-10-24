@@ -4,19 +4,23 @@
  */
 package com.alquilacosas.mbean;
 
+import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.common.Busqueda;
 import com.alquilacosas.dto.CategoriaDTO;
 import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.session.BuscarPublicacionBeanLocal;
 import com.alquilacosas.ejb.session.CategoriaBeanLocal;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import org.apache.log4j.Logger;
 import org.primefaces.model.LazyDataModel;
 
 /**
@@ -48,13 +52,17 @@ public class VerCategoriaMBean implements Serializable {
     public void init() {
         String param = FacesContext.getCurrentInstance().getExternalContext()
                 .getRequestParameterMap().get("id");
-        if(param != null)
-            id = Integer.valueOf(param);
+        if(param != null) {
+            try {
+                id = Integer.valueOf(param);
+            } catch (NumberFormatException e) {
+                Logger.getLogger(VerCategoriaMBean.class).error("NumberFormatExcepcion al convertir parametro de url en int");
+            }
+        }
         if(id != null) {
             buscar(0, 10);
             subcategorias = categoriaBean.getSubCategorias(id);
         }
-        buscar(0, 10);
         
         model = new LazyDataModel<PublicacionDTO>() {
 
@@ -75,7 +83,16 @@ public class VerCategoriaMBean implements Serializable {
     public void buscar(int first, int pageSize) {
         if(id == null)
             return;
-        Busqueda b = buscarBean.buscarPublicacionesPorCategoria(id, pageSize, first);
+        Busqueda b = null;
+        try {
+            b = buscarBean.buscarPublicacionesPorCategoria(id, pageSize, first);
+        } catch(AlquilaCosasException e) {
+            publicaciones = new ArrayList<PublicacionDTO>();
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                    "Error al buscar publicaciones", e.getMessage());
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        } 
         publicaciones = b.getPublicaciones();        
         if(b.getCategorias() != null && !b.getCategorias().isEmpty())
             nombreCategoria = b.getCategorias().get(0).getNombre();
