@@ -4,6 +4,7 @@
  */
 package com.alquilacosas.ejb.session;
 
+import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.common.Busqueda;
 import com.alquilacosas.dto.PeriodoDTO;
 import java.util.List;
@@ -20,7 +21,8 @@ public interface BuscarPublicacionBeanLocal {
             String ubicacion, Integer periodoId, Double precioDesde, Double precioHasta,
             int registros, int desde);
     
-    Busqueda buscarPublicacionesPorCategoria(int categoriaId, int registros, int desde);
+    Busqueda buscarPublicacionesPorCategoria(int categoriaId, int registros, int desde) 
+            throws AlquilaCosasException;
     
     byte[] leerImagen(int id);
     

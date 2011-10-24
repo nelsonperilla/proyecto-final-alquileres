@@ -96,11 +96,14 @@ public class Usuario implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
     private List<Alquiler> alquilerList;
     
-        @OneToMany(mappedBy = "usuarioCalificadoFk")
+    @OneToMany(mappedBy = "usuarioCalificadoFk")
     private List<Calificacion> calificacionList;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioCalificadorFk")
     private List<Calificacion> calificacionList1;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
+    private List<Pago> pagoList;
 
     public Usuario() {
         domicilioList = new ArrayList<Domicilio>();
@@ -335,12 +338,22 @@ public class Usuario implements Serializable {
         this.publicidadList = publicidadList;
     }
 
+    @XmlTransient
     public List<Publicidad> getServicioList() {
         return publicidadList;
     }
 
     public void setServicioList(List<Publicidad> publicidadList) {
         this.publicidadList = publicidadList;
+    }
+
+    @XmlTransient
+    public List<Pago> getPagoList() {
+        return pagoList;
+    }
+
+    public void setPagoList(List<Pago> pagoList) {
+        this.pagoList = pagoList;
     }
 
     @Override

@@ -758,3 +758,12 @@ h1, h2, h3 {
 .calTableColumn {
      vertical-align: top;
 }
+
+/* ------ Mis Pagos ---------- */
+.filaAmarilla {
+    background: lemonchiffon;
+}
+
+.filaVerde  {
+    background: palegreen;
+}

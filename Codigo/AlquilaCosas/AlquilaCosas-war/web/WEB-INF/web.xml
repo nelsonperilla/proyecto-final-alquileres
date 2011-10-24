@@ -4,10 +4,10 @@
         <param-name>javax.faces.PROJECT_STAGE</param-name>
         <param-value>Production</param-value>
     </context-param>
-    <context-param>  
-        <param-name>primefaces.THEME</param-name>  
-        <param-value>redmond</param-value>  
-    </context-param> 
+    <context-param>
+        <param-name>primefaces.THEME</param-name>
+        <param-value>redmond</param-value>
+    </context-param>
     <filter>
         <filter-name>PrimeFaces FileUpload Filter</filter-name>
         <filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
@@ -24,6 +24,10 @@
         <servlet-name>Faces Servlet</servlet-name>
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet>
+        <servlet-name>ImagenPublicidadServlet</servlet-name>
+        <servlet-class>com.alquilacosas.servlet.ImagenPublicidadServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
@@ -42,10 +46,14 @@
         <servlet-class>com.alquilacosas.log.Log4jInit</servlet-class>
         <init-param>
             <param-name>log4j-init-file</param-name>
-            <param-value>WEB-INF/classes/com/alquilacosas/log/log4j.lcf</param-value>
+            <param-value>WEB-INF/classes/com/alquilacosas/log/log4j.properties</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
+    <servlet-mapping>
+        <servlet-name>ImagenPublicidadServlet</servlet-name>
+        <url-pattern>/imagenpub/*</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

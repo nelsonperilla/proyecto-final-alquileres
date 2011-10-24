@@ -4,6 +4,7 @@
  */
 package com.alquilacosas.ejb.session;
 
+import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.common.Busqueda;
 import com.alquilacosas.dto.CategoriaDTO;
 import com.alquilacosas.dto.PeriodoDTO;
@@ -81,10 +82,14 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
      * Busca publicaciones por categoria
      */
     @Override
-    public Busqueda buscarPublicacionesPorCategoria(int categoriaId, int registros, int desde) {
+    public Busqueda buscarPublicacionesPorCategoria(int categoriaId, int registros, int desde)
+            throws AlquilaCosasException {
         
         List<Integer> listaCategorias = new ArrayList<Integer>();
         Categoria cat = categoriaFacade.find(categoriaId);
+        if(cat == null) {
+            throw new AlquilaCosasException("Categoria inexistente");
+        }
         listaCategorias.add(cat.getCategoriaId());
         List<Categoria> sublista = cat.getCategoriaList();
         List<Categoria> sublista2 = new ArrayList<Categoria>();

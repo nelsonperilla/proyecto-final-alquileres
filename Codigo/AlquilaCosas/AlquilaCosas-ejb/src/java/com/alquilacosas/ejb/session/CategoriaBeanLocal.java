@@ -17,21 +17,21 @@ import javax.ejb.Local;
 @Local
 public interface CategoriaBeanLocal {
 
-     List<Categoria> getCategorias();
+    public List<Categoria> getCategorias();
 
-     Categoria getCategoriaPadre(int categoriaId);
-     
-     void registrarCategoria (String nombre, String descripcion, Categoria categoriaPadre) throws AlquilaCosasException;
+    public Categoria getCategoriaPadre(int categoriaId);
 
-     void borrarCategoria(int categoriaId);
+    public void registrarCategoria(String nombre, String descripcion, Categoria categoriaPadre) throws AlquilaCosasException;
 
-     void modificarCategoria(Categoria categoria);
-     
-     List<CategoriaDTO> getCategoriaFacade();
+    public void borrarCategoria(int categoriaId);
 
-     List<CategoriaDTO> getSubCategorias(int categoria);
+    public void modificarCategoria(Categoria categoria);
 
-    List<CategoriaDTO> getCategoriasPrincipal();
-    
-    List<Integer> getCategoriasPadre(int categoriaId);
+    public List<CategoriaDTO> getCategoriaFacade();
+
+    public List<CategoriaDTO> getSubCategorias(int categoria);
+
+    public List<CategoriaDTO> getCategoriasPrincipal();
+
+    public List<Integer> getCategoriasPadre(int categoriaId);
 }

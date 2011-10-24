@@ -6,7 +6,6 @@ package com.alquilacosas.facade;
 
 import com.alquilacosas.ejb.entity.Alquiler;
 import com.alquilacosas.ejb.entity.AlquilerXEstado;
-import com.alquilacosas.ejb.entity.Alquiler_;
 import com.alquilacosas.ejb.entity.EstadoAlquiler;
 import com.alquilacosas.ejb.entity.EstadoAlquiler.NombreEstadoAlquiler;
 import com.alquilacosas.ejb.entity.PedidoCambio;
@@ -69,7 +68,9 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
         Root<Alquiler> root = queryBuilder.from(alquiler);
 
         
-        Predicate idPublicacion = criteriaBuilder.equal(root.get(Alquiler_.publicacionFk), publicacion);
+        //Predicate idPublicacion = criteriaBuilder.equal(root.get(Alquiler_.publicacionFk), publicacion);
+        Path publicacionFk = root.get("publicacionFk");
+        Predicate idPublicacion = criteriaBuilder.equal(publicacionFk, publicacion);
 
         Join<Alquiler, AlquilerXEstado> join = root.join("alquilerXEstadoList");
         Path endDate = ((Path) join.as(AlquilerXEstado.class)).get("fechaHasta");
@@ -87,7 +88,9 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
         date.set(Calendar.MINUTE, 0);
         date.set(Calendar.SECOND, 0);
 
-        Predicate endAlquiler = criteriaBuilder.greaterThanOrEqualTo(root.get(Alquiler_.fechaFin), date.getTime());
+        //Predicate endAlquiler = criteriaBuilder.greaterThanOrEqualTo(root.get(Alquiler_.fechaFin), date.getTime());
+        Path fechaFin = root.get("fechaFin");
+        Predicate endAlquiler = criteriaBuilder.greaterThanOrEqualTo(fechaFin, date.getTime());
 
         queryBuilder.where(lastState, idPublicacion, endAlquiler, orStates);
         Query query = em.createQuery(queryBuilder);

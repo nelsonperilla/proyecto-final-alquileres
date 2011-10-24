@@ -106,8 +106,8 @@ public class ModificarPublicacionMBean implements Serializable {
 
         titulo = pf.getTitulo();
         descripcion = pf.getDescripcion();
-        fechaDesde = pf.getFecha_desde();
-        fechaHasta = pf.getFecha_hasta();
+        fechaDesde = pf.getFechaDesde();
+        fechaHasta = pf.getFechaHasta();
         destacada = pf.getDestacada();
         cantidad = pf.getCantidad();
         categoria = pf.getCategoria();

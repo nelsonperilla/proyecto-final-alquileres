@@ -16,8 +16,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.security.DeclareRoles;
 import javax.ejb.EJB;
@@ -27,6 +25,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.DateSelectEvent;
 import org.primefaces.json.JSONObject;
@@ -47,14 +46,14 @@ public class DesplieguePublicacionMBean implements Serializable {
     private PublicacionDTO publicacion;
     private String effect;
     private List<ComentarioDTO> comentarios;
-    private String  comentario;
+    private String comentario;
     private String fecha_hasta;
     private List<Date> fechas;
     private String myJson;
     private Date fechaInicio;
     private int periodoAlquiler;
     private List<SelectItem> periodos;
-    private int periodoSeleccionado;    
+    private int periodoSeleccionado;
     private Date today;
     private ComentarioDTO nuevaPregunta;
     private int cantidadProductos;
@@ -62,68 +61,89 @@ public class DesplieguePublicacionMBean implements Serializable {
     private double userRating;
     private String horaInicioAlquiler;
 
-
     /** Creates a new instance of DesplieguePublicacionMBean */
-    
     public DesplieguePublicacionMBean() {
     }
 
     @PostConstruct
     public void init() {
+        String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
+        setNuevaPregunta(new ComentarioDTO());
+        if (id == null) {
+            redirect();
+            return;
+        }
+        int publicationId = 0;
+        try {
+            publicationId = Integer.parseInt(id);
+        } catch (NumberFormatException e) {
+            Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al parsear ID de parametro.");
+            redirect();
+            return;
+        }
+        setPublicacion(publicationBean.getPublicacion(publicationId));
+        setComentarios(publicationBean.getPreguntas(publicationId));
+        try {
+            fechas = publicationBean.getFechasSinStock(publicationId, cantidadProductos);
+        } catch (AlquilaCosasException e) {
+            Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al ejecutar getFechasSinStock(): " + e.getMessage());
+            redirect();
+            return;
+        }
+        if (publicacion != null && publicacion.getFechaHasta() != null) {
+            setFecha_hasta(DateFormat.getDateInstance(DateFormat.SHORT).format(publicacion.getFechaHasta()));
+        }
+        userRating = publicationBean.getUserRate(publicacion.getPropietario());
+
+        createDictionary();
         cantidadProductos = 1;
         fechaInicio = new Date();
         effect = "fade";
-        today = new Date(); 
+        today = new Date();
         periodos = new ArrayList<SelectItem>();
         periodoAlquiler = 1;
         horaInicioAlquiler = "00:00";
         List<Periodo> listaPeriodos = publicationBean.getPeriodos();
         periodoSeleccionado = 2; //alto hardCode, para que por defecto este seleccionado dia y no hora (Jorge)
-        for(Periodo periodo: listaPeriodos)
-            periodos.add(new SelectItem(periodo.getPeriodoId(),periodo.getNombre().name()));
-        String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
-        setNuevaPregunta(new ComentarioDTO());
-        if (id != null) {
-            int publicationId = Integer.parseInt(id);
-            setPublicacion(publicationBean.getPublicacion(publicationId));
-            setComentarios(publicationBean.getPreguntas(publicationId));
-            fechas = publicationBean.getFechasSinStock(publicationId,cantidadProductos);
-            
-            if (publicacion != null && publicacion.getFecha_hasta() != null) {
-                setFecha_hasta(DateFormat.getDateInstance(DateFormat.SHORT).format(publicacion.getFecha_hasta()));
-            }
-            userRating = publicationBean.getUserRate(publicacion.getPropietario());
-
+        for (Periodo periodo : listaPeriodos) {
+            periodos.add(new SelectItem(periodo.getPeriodoId(), periodo.getNombre().name()));
         }
-        createDictionary();
-        
+    }
+
+    private void redirect() {
+        try {
+            FacesContext.getCurrentInstance().getExternalContext().redirect("inicio.xhtml");
+        } catch (Exception e) {
+            Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al ejecutar redirect().");
+        }
     }
 
     public void actualizarPreguntas() {
         comentarios = publicationBean.getPreguntas(publicacion.getId());
     }
 
-    public void actualizarFechas()
-    {
+    public void actualizarFechas() {
         boolean disponibilidad = true;
-        if(cantidadProductos > publicacion.getCantidad())
-        {
+        if (cantidadProductos > publicacion.getCantidad()) {
             disponibilidad = false;
-            FacesContext.getCurrentInstance().addMessage(null, 
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-                "La disponibilidad maxima es de " + publicacion.getCantidad() + " producto/s","" ));
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "La disponibilidad maxima es de " + publicacion.getCantidad() + " producto/s", ""));
+        } else {
+            try {
+                fechas = publicationBean.getFechasSinStock(publicacion.getId(), cantidadProductos);
+            } catch (AlquilaCosasException e) {
+                Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al ejecutar getFechasSinStock(): " + e.getMessage());
+            }
         }
-        else
-            fechas = publicationBean.getFechasSinStock(publicacion.getId(),cantidadProductos);
-        
+
         boolean logueado = usuarioLogueado.isLogueado();
         boolean ownerLogged = false;
-        if(logueado)
-        {
-            if(usuarioLogueado.getUsuarioId() == publicacion.getPropietario().getId()){
-                FacesContext.getCurrentInstance().addMessage(null, 
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-                "Usted no puede alquilar sus propios productos","" ));
+        if (logueado) {
+            if (usuarioLogueado.getUsuarioId() == publicacion.getPropietario().getId()) {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "Usted no puede alquilar sus propios productos", ""));
                 ownerLogged = true;
             }
         }
@@ -133,14 +153,14 @@ public class DesplieguePublicacionMBean implements Serializable {
         context.addCallbackParam("ownerLogged", ownerLogged);
         action = "alquilar";
     }
-    
+
     public void preguntar() {
         boolean logueado = usuarioLogueado.isLogueado();
         RequestContext context = RequestContext.getCurrentInstance();
         context.addCallbackParam("logueado", logueado);
         action = "preguntar";
     }
-    
+
     public String guardarPregunta() {
         getNuevaPregunta().setUsuarioId(usuarioLogueado.getUsuarioId());
         getNuevaPregunta().setUsuario(usuarioLogueado.getUsername());
@@ -156,39 +176,36 @@ public class DesplieguePublicacionMBean implements Serializable {
         }
         return null;
     }
-    
-    public String confirmarPedido()
-    {
+
+    public String confirmarPedido() {
         String redireccion = null;
-        if(usuarioLogueado.getUsuarioId() == publicacion.getPropietario().getId())
+        if (usuarioLogueado.getUsuarioId() == publicacion.getPropietario().getId()) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "No esta permitido alquilar sus propios productos", ""));
-        else
-        {
+        } else {
             Calendar beginDate = Calendar.getInstance();
             beginDate.setTime(fechaInicio);
             Calendar endDate = Calendar.getInstance();
             endDate.setTime(fechaInicio);
 
-            switch (periodoSeleccionado)
-            {
+            switch (periodoSeleccionado) {
                 case 1: //horas
-                    
-                    try{
+
+                    try {
                         String[] composicionHoraInicio = horaInicioAlquiler.split(":");
                         int hora = Integer.parseInt(composicionHoraInicio[0]);
                         int minuto = Integer.parseInt(composicionHoraInicio[1]);
                         beginDate.add(Calendar.HOUR_OF_DAY, hora);
-                        beginDate.add(Calendar.MINUTE, minuto); 
+                        beginDate.add(Calendar.MINUTE, minuto);
                         endDate.add(Calendar.HOUR_OF_DAY, hora);
-                        endDate.add(Calendar.MINUTE, minuto); 
-                        
-                    }catch(Exception e){
-                         FacesContext.getCurrentInstance().addMessage(null,
-                            new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                            "Ingrese una hora de inicio valida", "")); 
-                         return null;
+                        endDate.add(Calendar.MINUTE, minuto);
+
+                    } catch (Exception e) {
+                        FacesContext.getCurrentInstance().addMessage(null,
+                                new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                                "Ingrese una hora de inicio valida", ""));
+                        return null;
                     }
                     endDate.add(Calendar.HOUR_OF_DAY, periodoAlquiler);
                     break;
@@ -205,28 +222,26 @@ public class DesplieguePublicacionMBean implements Serializable {
             long minDuration = calcularDuracion(
                     publicacion.getPeriodoMinimo().getPeriodoId(),
                     publicacion.getPeriodoMinimoValor());
-            
+
             long maxDuration;
-            try{
+            try {
                 maxDuration = calcularDuracion(
                         publicacion.getPeriodoMaximo().getPeriodoId(),
                         publicacion.getPeriodoMaximoValor());
-            }catch(NullPointerException e){
+            } catch (NullPointerException e) {
                 //si no hay un periodo maximo, le pongo el mayor valor posible.
                 maxDuration = Long.MAX_VALUE;
             }
 
             long periodoAlquilerEnMillis = endDate.getTimeInMillis() - beginDate.getTimeInMillis();
-            if(periodoAlquilerEnMillis < minDuration || periodoAlquilerEnMillis > maxDuration )
-            {
+            if (periodoAlquilerEnMillis < minDuration || periodoAlquilerEnMillis > maxDuration) {
                 StringBuilder mensaje = new StringBuilder();
                 mensaje.append("El periodo minimo de alquiler es de ");
                 mensaje.append(publicacion.getPeriodoMinimoValor());
                 mensaje.append(" ");
                 mensaje.append(publicacion.getPeriodoMinimo().getNombre());
                 mensaje.append("/s ");
-                if(maxDuration != Long.MAX_VALUE)
-                {
+                if (maxDuration != Long.MAX_VALUE) {
                     mensaje.append("y el maximo de ");
                     mensaje.append(publicacion.getPeriodoMaximoValor());
                     mensaje.append(" ");
@@ -234,40 +249,40 @@ public class DesplieguePublicacionMBean implements Serializable {
                     mensaje.append("/s ");
                 }
                 FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    mensaje.toString() , ""));
-            }
-            else{
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        mensaje.toString(), ""));
+            } else {
                 Iterator<Date> itFechasSinStock = fechas.iterator();
                 boolean noStockFlag = false;
                 Calendar temp = Calendar.getInstance();
                 //Recorro la lista de fechas sin stock fijandome si alguna cae
                 //en el periodo seleccionado
-                while(!noStockFlag && itFechasSinStock.hasNext()){
+                while (!noStockFlag && itFechasSinStock.hasNext()) {
                     temp.setTime(itFechasSinStock.next());
-                    if(beginDate.before(temp) && endDate.after(temp))//la fecha sin stock cae en el periodo
+                    if (beginDate.before(temp) && endDate.after(temp))//la fecha sin stock cae en el periodo
+                    {
                         noStockFlag = true;
+                    }
                 }
-                if(noStockFlag)
+                if (noStockFlag) {
                     FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "Hay fechas sin stock en el periodo seleccionado", ""));
-                else
-                {
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                            "Hay fechas sin stock en el periodo seleccionado", ""));
+                } else {
                     //calculo el monto
                     double monto = calcularMonto(beginDate, endDate);
-                    
+
 
                     try {
-                        publicationBean.crearPedidoAlquiler(publicacion.getId(), 
-                                usuarioLogueado.getUsuarioId(), beginDate.getTime(), 
+                        publicationBean.crearPedidoAlquiler(publicacion.getId(),
+                                usuarioLogueado.getUsuarioId(), beginDate.getTime(),
                                 endDate.getTime(), monto, cantidadProductos);
-                                redireccion = "misPedidosRealizados";
+                        redireccion = "misPedidosRealizados";
                     } catch (AlquilaCosasException ex) {
                         FacesContext.getCurrentInstance().addMessage(null,
-                            new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                                new FacesMessage(FacesMessage.SEVERITY_ERROR,
                                 "El pedido de alquiler no se ha concretado, por favor intente de nuevo", ""));
-                        Logger.getLogger(DesplieguePublicacionMBean.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al crear pedido de alquiler: " + ex + ": " + ex.getMessage());
                         redireccion = null;
                     }
 
@@ -276,58 +291,55 @@ public class DesplieguePublicacionMBean implements Serializable {
         }
         return redireccion;
     }
-    
-    private double calcularMonto(Calendar beginDate, Calendar endDate)
-    {
+
+    private double calcularMonto(Calendar beginDate, Calendar endDate) {
         double monto = 0;
         Calendar temp = Calendar.getInstance();
         temp.setTime(beginDate.getTime());
         temp.add(Calendar.MONTH, 1);
         endDate.add(Calendar.SECOND, 1);
         int second = endDate.get(Calendar.SECOND);
-        while(endDate.after(temp)){
+        while (endDate.after(temp)) {
             //hardCode muy duro, se el orden porque hice la consulta con orderby
             //si se agregan periodos nuevos corregir esto
-            monto+= publicacion.getPrecios().get(3).getPrecio();
+            monto += publicacion.getPrecios().get(3).getPrecio();
             temp.add(Calendar.MONTH, 1);
         }
 
         temp.add(Calendar.MONTH, -1);
         temp.add(Calendar.WEEK_OF_YEAR, 1);
-        while(endDate.after(temp)){
+        while (endDate.after(temp)) {
             //hardCode muy duro, se el orden porque hice la consulta con orderby
             //si se agregan periodos nuevos corregir esto
-            monto+= publicacion.getPrecios().get(2).getPrecio();
-            temp.add(Calendar.WEEK_OF_YEAR, 1);                
+            monto += publicacion.getPrecios().get(2).getPrecio();
+            temp.add(Calendar.WEEK_OF_YEAR, 1);
 
 
         }
 
         temp.add(Calendar.WEEK_OF_YEAR, -1);
         temp.add(Calendar.DATE, 1);
-        while(endDate.after(temp)){
+        while (endDate.after(temp)) {
             //hardCode muy duro, se el orden porque hice la consulta con orderby
             //si se agregan periodos nuevos corregir esto
-            monto+= publicacion.getPrecios().get(1).getPrecio();
+            monto += publicacion.getPrecios().get(1).getPrecio();
             temp.add(Calendar.DATE, 1);
         }
 
         temp.add(Calendar.DATE, -1);
         temp.add(Calendar.HOUR_OF_DAY, 1);
-        while(endDate.after(temp)){
+        while (endDate.after(temp)) {
             //hardCode muy duro, se el orden porque hice la consulta con orderby
             //si se agregan periodos nuevos corregir esto
-            monto+= publicacion.getPrecios().get(0).getPrecio();
+            monto += publicacion.getPrecios().get(0).getPrecio();
             temp.add(Calendar.HOUR_OF_DAY, 1);
         }
         endDate.add(Calendar.SECOND, -1);
         return monto;
     }
-    
-    private long calcularDuracion(int periodoId, long periodo)
-    {
-        switch (periodoId)
-        {
+
+    private long calcularDuracion(int periodoId, long periodo) {
+        switch (periodoId) {
             case 1: //horas
                 periodo *= 60 * 60 * 1000;
                 break;
@@ -341,36 +353,35 @@ public class DesplieguePublicacionMBean implements Serializable {
                 Date now = new Date();
                 Calendar temp = Calendar.getInstance();
                 temp.setTime(now);
-                temp.add(Calendar.MONTH,(int)periodo);
+                temp.add(Calendar.MONTH, (int) periodo);
                 periodo = temp.getTimeInMillis() - now.getTime();
         }
         return periodo;
     }
-    
+
     private void createDictionary() {
-        try {      
+        try {
             int month = -1;
             JSONObject yearJson = new JSONObject();
             JSONObject monthJson = new JSONObject();
             JSONObject dayJson = null;
             Calendar cal = Calendar.getInstance();
-            for(Date d: fechas) {
+            for (Date d : fechas) {
                 cal.setTime(d);
-                if(cal.get(Calendar.MONTH) + 1 != month) {
-                    if(dayJson != null) {
+                if (cal.get(Calendar.MONTH) + 1 != month) {
+                    if (dayJson != null) {
                         monthJson.putOpt(Integer.toString(month), dayJson);
                     }
                     dayJson = new JSONObject();
                     month = cal.get(Calendar.MONTH) + 1;
                     int day = cal.get(Calendar.DAY_OF_MONTH);
                     dayJson.putOpt(Integer.toString(day), true);
-                }
-                else {
+                } else {
                     int day = cal.get(Calendar.DAY_OF_MONTH);
                     dayJson.putOpt(Integer.toString(day), true);
                 }
             }
-            if(dayJson != null) {
+            if (dayJson != null) {
                 monthJson.putOpt(Integer.toString(month), dayJson);
             }
             int y = cal.get(Calendar.YEAR);
@@ -382,13 +393,12 @@ public class DesplieguePublicacionMBean implements Serializable {
     }
 
     public String getFechas() {
-       return myJson;
-    }   
-    
-    public String seleccionarFecha(DateSelectEvent e)
-    {
-              fechaInicio = e.getDate();
-              return "";
+        return myJson;
+    }
+
+    public String seleccionarFecha(DateSelectEvent e) {
+        fechaInicio = e.getDate();
+        return "";
 //        try {
 //            absenceDetails = repEJB.readDayAbsenceDetail(sessionId, date); //se cargan los datos que queres mostrar en el dialogo
 //        } catch (EraServiceException ex) {
@@ -616,6 +626,4 @@ public class DesplieguePublicacionMBean implements Serializable {
     public void setHoraInicioAlquiler(String horaInicioAlquiler) {
         this.horaInicioAlquiler = horaInicioAlquiler;
     }
-
-
 }

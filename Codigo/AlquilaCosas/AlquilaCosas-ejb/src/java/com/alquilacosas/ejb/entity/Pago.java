@@ -52,6 +52,10 @@ public class Pago implements Serializable {
     @JoinColumn(name = "TIPO_PAGO_FK", referencedColumnName = "TIPO_PAGO_ID")
     @ManyToOne(optional = false)
     private TipoPago tipoPagoFk;
+    
+    @JoinColumn(name = "USUARIO_FK", referencedColumnName = "USUARIO_ID")
+    @ManyToOne(optional = false)
+    private Usuario usuarioFk;
 
     public Pago() {
     }
@@ -112,6 +116,14 @@ public class Pago implements Serializable {
 
     public void setTipoPagoFk(TipoPago tipoPagoFk) {
         this.tipoPagoFk = tipoPagoFk;
+    }
+
+    public Usuario getUsuarioFk() {
+        return usuarioFk;
+    }
+
+    public void setUsuarioFk(Usuario usuarioFk) {
+        this.usuarioFk = usuarioFk;
     }
 
     @Override

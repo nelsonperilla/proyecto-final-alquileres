@@ -23,8 +23,8 @@ public class PublicacionDTO implements Serializable  {
     private int id;
     private String titulo;
     private String descripcion;
-    private Date fecha_desde;
-    private Date fecha_hasta;
+    private Date fechaDesde;
+    private Date fechaHasta;
     private boolean destacada;
     private int cantidad;
     private int imagenId = -1;
@@ -51,8 +51,8 @@ public class PublicacionDTO implements Serializable  {
         this.id = id;
         this.titulo = titulo;
         this.descripcion = descripcion;
-        this.fecha_desde = fecha_desde;
-        this.fecha_hasta = fecha_hasta;
+        this.fechaDesde = fecha_desde;
+        this.fechaHasta = fecha_hasta;
         this.destacada = destacada;
         this.cantidad = cantidad;
         this.categoria = categoria;
@@ -71,8 +71,8 @@ public class PublicacionDTO implements Serializable  {
         this.id = id;
         this.titulo = titulo;
         this.descripcion = descripcion;
-        this.fecha_desde = fecha_desde;
-        this.fecha_hasta = fecha_hasta;
+        this.fechaDesde = fecha_desde;
+        this.fechaHasta = fecha_hasta;
         this.destacada = destacada;
         this.cantidad = cantidad;
     }
@@ -118,29 +118,29 @@ public class PublicacionDTO implements Serializable  {
     /**
      * @return the fecha_desde
      */
-    public Date getFecha_desde() {
-        return fecha_desde;
+    public Date getFechaDesde() {
+        return fechaDesde;
     }
 
     /**
      * @param fecha_desde the fecha_desde to set
      */
-    public void setFecha_desde(Date fecha_desde) {
-        this.fecha_desde = fecha_desde;
+    public void setFechaDesde(Date fecha_desde) {
+        this.fechaDesde = fecha_desde;
     }
 
     /**
      * @return the fecha_hasta
      */
-   public Date getFecha_hasta() {
-       return fecha_hasta;
+   public Date getFechaHasta() {
+       return fechaHasta;
     }
 
     /**
      * @param fecha_hasta the fecha_hasta to set
      */
-    public void setFecha_hasta(Date fecha_hasta) {
-        this.fecha_hasta = fecha_hasta;
+    public void setFechaHasta(Date fecha_hasta) {
+        this.fechaHasta = fecha_hasta;
     }
 
     /**

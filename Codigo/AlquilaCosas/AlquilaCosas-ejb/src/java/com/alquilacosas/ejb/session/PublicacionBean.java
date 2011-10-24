@@ -551,8 +551,12 @@ public class PublicacionBean implements PublicacionBeanLocal {
 
     @Override
     @PermitAll
-    public List<Date> getFechasSinStock(int publicationId, int cantidad) {
+    public List<Date> getFechasSinStock(int publicationId, int cantidad) 
+            throws AlquilaCosasException {
         Publicacion publicacion = publicacionFacade.find(publicationId);
+        if(publicacion == null) {
+            throw new AlquilaCosasException("Publicacion inexistente.");
+        }
         List<Date> respuesta = new ArrayList<Date>();
         List<Alquiler> alquileres = alquilerFacade.getAlquileresByPublicacionFromToday(publicacion);
         Iterator<Alquiler> itAlquiler = alquileres.iterator();
