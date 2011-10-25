@@ -25,7 +25,8 @@
                         <td>
                             <h:form>
                                 <p:carousel value="#{mostrarPublicidad.publicidadesCarrusel}" autoPlayInterval="3500"
-                                            var="pub" rows="1" circular="true" itemStyle="height:130px;width:600px;" >
+                                            var="pub" rows="1" circular="true" itemStyle="height:130px;width:600px;"
+                                            style="width:600px" >
                                     <h:commandLink action="#{pub.url}" >
                                         <h:graphicImage value="/imagenpub?id=#{pub.id}" 
                                                         alt="#{pub.caption}"

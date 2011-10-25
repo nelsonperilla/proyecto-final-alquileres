@@ -4,9 +4,11 @@
  */
 package com.alquilacosas.ejb.session;
 
+import com.alquilacosas.dto.PublicidadDTO;
 import com.alquilacosas.ejb.entity.TipoPago.NombreTipoPago;
 import com.alquilacosas.ejb.entity.TipoPublicidad;
 import java.util.Date;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -25,5 +27,9 @@ public interface PublicidadBeanLocal {
 
     public Double getPrecio(TipoPublicidad.DuracionPublicidad duracion, 
             TipoPublicidad.UbicacionPublicidad ubicacion);
+    
+    public List<PublicidadDTO> getPublicidades(int usuarioId);
+    
+    public List<Date> getFechasSinStock();
     
 }
