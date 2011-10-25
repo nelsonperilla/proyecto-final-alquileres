@@ -36,7 +36,6 @@ import org.primefaces.json.JSONObject;
  */
 @ManagedBean(name = "publicacionDesplegada")
 @ViewScoped
-@DeclareRoles({"USUARIO", "ADMIN"})
 public class DesplieguePublicacionMBean implements Serializable {
 
     @EJB

@@ -7,6 +7,7 @@ package com.alquilacosas.mbean;
 import com.alquilacosas.dto.PublicidadDTO;
 import com.alquilacosas.ejb.entity.TipoPublicidad.UbicacionPublicidad;
 import com.alquilacosas.ejb.session.MostrarPublicidadBeanLocal;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -14,6 +15,7 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -29,6 +31,7 @@ public class MostrarPublicidadMBean implements Serializable {
     private List<PublicidadDTO> publicidadesCarrusel;
     private List<PublicidadDTO> publicidadesIzq;
     private List<PublicidadDTO> publicidadesDer;
+    private PublicidadDTO pubCarrusel, pubIzq, pubDer;
     
     /** Creates a new instance of MostrarPublicidadMBean */
     public MostrarPublicidadMBean() {
@@ -43,6 +46,14 @@ public class MostrarPublicidadMBean implements Serializable {
         }
         publicidadesIzq = publicidadBean.getPublicidades(UbicacionPublicidad.LATERAL_IZQUIERDA, 1);
         publicidadesDer = publicidadBean.getPublicidades(UbicacionPublicidad.LATERAL_DERECHA, 3);
+    }
+    
+    public void navegarUrl(ActionEvent event) {
+        String url = (String) event.getComponent().getAttributes().get("url");
+        try {
+            FacesContext.getCurrentInstance().getExternalContext().redirect(url);
+        } catch (IOException e) {
+        }
     }
     
     public List<PublicidadDTO> getPublicidadesCarrusel() {

@@ -29,8 +29,7 @@ public class PublicationsGroup implements Serializable {
     }
 
     @PostConstruct
-    public void init()
-    {
+    public void init() {
         publicacionesRandom = publicationBean.getPublicacionesRandom(0);
     }
     

@@ -24,6 +24,7 @@
                     <tr>
                         <td>
                             <h:form>
+                                <p:outputPanel rendered="#{not empty mostrarPublicidad.publicidadesCarrusel}" >
                                 <p:carousel value="#{mostrarPublicidad.publicidadesCarrusel}" autoPlayInterval="3500"
                                             var="pub" rows="1" circular="true" itemStyle="height:130px;width:600px;"
                                             style="width:600px" >
@@ -33,6 +34,12 @@
                                                         width="600" height="130" />
                                     </h:commandLink>
                                 </p:carousel>
+                                </p:outputPanel>
+                                <p:outputPanel rendered="#{empty mostrarPublicidad.publicidadesCarrusel}" >
+                                    <h:commandLink action="comoPublicitar" >
+                                        <h:graphicImage value="#{resource['images:publiciteCarrusel.jpg']}" />
+                                    </h:commandLink>
+                                </p:outputPanel>
                             </h:form>
                         </td>
                     </tr>

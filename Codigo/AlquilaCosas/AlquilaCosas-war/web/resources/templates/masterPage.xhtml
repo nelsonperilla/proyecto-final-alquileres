@@ -7,52 +7,63 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:comps="http://java.sun.com/jsf/composite/comps">
     <h:head>
-        
+
         <title>Alquila Cosas</title>
     </h:head>
     <h:body >
         <h:outputStylesheet library="css" name="layout.css" />
-            <table id="form:panel" width="1024px" align="center" >
-                <tr>
-                    <td colspan="3" class="encabezado">
-                        <ui:insert name="logInfo"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td id="title" colspan="3" >
-                        <comps:logoBar />
-                    </td>
-                </tr>
-                <tr>    
-                    <td valign="top" class="columnaIzq">
-                        <ui:insert name="left" />
-                        <ui:repeat value="#{mostrarPublicidad.publicidadesIzq}" var="pub" >
-                            <a href="#{pub.url}" >
-                                <h:graphicImage value="/imagenpub?id=#{pub.id}" width="140"
-                                                alt="#{pub.caption}" />
-                            </a>
-                        </ui:repeat>
-                        <!--<h:graphicImage value="#{resource['images:publicidad2.jpg']}" />-->
-                    </td>
-                    <td id="principal" valign="top" >
-                        <ui:insert name="principal"/>
-                    </td>
-                    <td width="200px" valign="top">
-                        <ui:insert name="right" />
-                        <ui:repeat value="#{mostrarPublicidad.publicidadesDer}" var="pub" >
-                            <h:commandLink action="#{pub.url}" >
-                                <h:graphicImage value="/imagenpub?id=#{pub.id}"
-                                                alt="#{pub.caption}" width="140" height="200"
-                                                style="margin-top: 10px" />
-                            </h:commandLink>
-                        </ui:repeat>
-                    </td> 
-                </tr>
-                <tr>
-                    <td>
-                        <div id="footer"/>
-                    </td>
-                </tr>
-            </table>
+        <table id="form:panel" width="1024px" align="center" >
+            <tr>
+                <td colspan="3" class="encabezado">
+            <ui:insert name="logInfo"/>
+            </td>
+            </tr>
+            <tr>
+                <td id="title" colspan="3" >
+            <comps:logoBar />
+            </td>
+            </tr>
+            <tr>    
+                <td valign="top" class="columnaIzq">
+            <ui:insert name="left" />
+            <h:form>
+                <ui:repeat value="#{mostrarPublicidad.publicidadesIzq}" var="pub" >
+                    <p:commandLink actionListener="#{mostrarPublicidad.navegarUrl}" >
+                        <h:graphicImage value="/imagenpub?id=#{pub.id}" width="140"
+                                        alt="#{pub.caption}" />
+                    </p:commandLink>
+                </ui:repeat>
+                <p:outputPanel rendered="#{empty mostrarPublicidad.publicidadesIzq}" >
+                    <a >
+                        <h:graphicImage value="#{resource['images:publiciteLateral.jpg']}" />
+                    </a>
+                </p:outputPanel>
+            </h:form>
+            </td>
+            <td id="principal" valign="top" >
+            <ui:insert name="principal"/>
+            </td>
+            <td width="200px" valign="top">
+            <ui:insert name="right" />
+            <ui:repeat value="#{mostrarPublicidad.publicidadesDer}" var="pub" >
+                <h:commandLink action="#{pub.url}" >
+                    <h:graphicImage value="/imagenpub?id=#{pub.id}"
+                                    alt="#{pub.caption}" width="140" height="200"
+                                    style="margin-top: 10px" />
+                </h:commandLink>
+            </ui:repeat>
+            <p:outputPanel rendered="#{empty mostrarPublicidad.publicidadesDer}" >
+                <a href="" >
+                    <h:graphicImage value="#{resource['images:publiciteLateral.jpg']}" />
+                </a>
+            </p:outputPanel>
+            </td> 
+            </tr>
+            <tr>
+                <td>
+                    <div id="footer"/>
+                </td>
+            </tr>
+        </table>
     </h:body>
 </html>
