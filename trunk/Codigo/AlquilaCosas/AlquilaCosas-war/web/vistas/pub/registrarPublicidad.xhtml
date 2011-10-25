@@ -22,6 +22,11 @@
             </ui:define>
 
             <ui:define name="principal">
+                
+                <h:outputScript library="javascript" name="util.js" />
+
+                <h:outputScript library="javascript" name="timePicker.js" />
+                
                 <p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide();"/>
                 <p:dialog modal="true" widgetVar="statusDialog" header="Espere por favor..." 
                           draggable="false" closable="false" resizable="false" >
@@ -29,6 +34,21 @@
                 </p:dialog>
                 
                 <h:form>
+                    
+                    <script type="text/javascript" >
+                                     jQuery(function () {
+                                             window.setTimeout('bindEventsHighlights()',500);
+                                     });
+
+                                     function bindEventsHighlights() {
+                                             var specialDays = <h:outputText value="#{publicidadBean.fechas}" /> ;
+                                             jQuery(".hasDatepicker").datepicker("option", "beforeShowDay", function (date) {
+                                                       return highlightCalendar(specialDays, date, 'highlight-calendar');
+                                             });
+                                     };
+                                     
+
+                                  </script>
 
                     <h1>Registrar Publicidad</h1>
                     <p:fieldset legend="Datos" styleClass="fieldset" >

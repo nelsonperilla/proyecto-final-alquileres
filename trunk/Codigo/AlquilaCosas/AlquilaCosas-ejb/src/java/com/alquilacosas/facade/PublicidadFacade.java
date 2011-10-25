@@ -62,4 +62,13 @@ public class PublicidadFacade extends AbstractFacade<Publicidad> {
         }
         return imagen;
     }
+    
+     public List<Publicidad> getPublicidadPorUsuario( Integer usuarioId){
+        List<Publicidad> publicidades = null;
+        Query query = em.createQuery("SELECT p from Publicidad p "
+                + "WHERE p.usuarioFk.usuarioId = :usuarioId");
+        query.setParameter("usuarioId", usuarioId);
+        publicidades = query.getResultList();
+        return publicidades;
+    }
 }
