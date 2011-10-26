@@ -56,6 +56,7 @@ public class MisPublicidadesMBean {
     }
 
     public PublicidadDTO getSelectedPublicidad() {
+        System.out.println("a ver" + selectedPublicidad.getTitulo());     
         return selectedPublicidad;
     }
 

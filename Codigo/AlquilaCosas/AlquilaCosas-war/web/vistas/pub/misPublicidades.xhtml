@@ -27,7 +27,9 @@
                     <h1>Mis Publicidades</h1>
 
                     <p:dataTable var="publicidad" value="#{misPublicidades.publicidades}"
-                                 selection="#{misPublicidades.selectedPublicidad}" selectionMode="single">
+                                 selection="#{misPublicidades.selectedPublicidad}" 
+                                 selectionMode="single" 
+                                 style="text-align: center">
 
                         <f:facet name="header">
                             Seleccione una fila para mayor información de una Publicidad
@@ -45,50 +47,55 @@
                                 <h:outputText value="Estado" />
                             </f:facet>
                             <h:outputText value="#{publicidad.estado}" />
+                                
                         </p:column>
 
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="Desde" />
                             </f:facet>
-                            <h:outputText value="#{publicidad.fechaDesde}" />
+                            <h:outputText value="#{publicidad.fechaDesde}" >
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
                         </p:column>
 
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="Hasta" />
                             </f:facet>
-                            <h:outputText value="#{publicidad.fechaHasta}" />
+                            <h:outputText value="#{publicidad.fechaHasta}" >
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
                         </p:column>
                         
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="Costo" />
                             </f:facet>
-                            <h:outputText value="#{publicidad.costo}" />
+                            <h:outputText value="U$S #{publicidad.costo}" />
                         </p:column>
 
                         <f:facet name="footer">
-                            <p:commandButton value="View" image="ui-icon ui-icon-search"
+                            <p:commandButton value="Ver Publicidad" image="ui-icon ui-icon-search"
                                              update="form:display" oncomplete="pubDialog.show()"/>
                         </f:facet>
 
                     </p:dataTable>
 
                     <p:dialog header="Publicidad" widgetVar="pubDialog" resizable="false"
-                              width="200" showEffect="clip" hideEffect="fold">
+                              width="300" height="300" showEffect="clip" hideEffect="fold">
 
                         <h:panelGrid id="display" columns="2" cellpadding="4">
 
                             <f:facet name="header">
-                                <h:graphicImage value="/imagenpub?id=#{publicidad.id}" width="100" height="85" styleClass="img"/> 
+                                <h:graphicImage value="/imagenpub?id=#{publicidades.selectedPublicidad.id}" width="200" height="185" styleClass="img"/> 
                             </f:facet>
 
                             <h:outputText value="caption:" />
-                            <h:outputText value="#{publicidad.caption}" />
+                            <h:outputText value="#{publicidades.selectedPublicidad.caption}" />
 
                             <h:outputText value="url:" />
-                            <h:outputText value="#{publicidad.url}" />
+                            <h:outputText value="#{publicidades.selectedPublicidad.url}" />
 
                         </h:panelGrid>
                     </p:dialog>
