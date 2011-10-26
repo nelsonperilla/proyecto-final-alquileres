@@ -60,7 +60,7 @@ public class AlquilerTimerBean implements AlquilerTimerBeanLocal{
      * @author ignacio Gigante
      */
 
-    @Schedule(second="10", minute="*", hour="*")
+    @Schedule(second="0", minute="0", hour="23")
     @Override
     public void fromConfirmadoToActivo(Timer timer) {
         

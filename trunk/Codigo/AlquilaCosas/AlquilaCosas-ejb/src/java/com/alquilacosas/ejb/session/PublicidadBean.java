@@ -52,7 +52,7 @@ public class PublicidadBean implements PublicidadBeanLocal {
     @Override
     public Integer registrarPublicidad(int usuarioId, String titulo, String url, String caption,
             UbicacionPublicidad ubicacion, DuracionPublicidad duracion, byte[] imagen,
-            Date fechaDesde, Double precio, NombreTipoPago nombreTipoPago)
+            Date fechaDesde, Date fechaHasta, Double precio, NombreTipoPago nombreTipoPago)
             throws AlquilaCosasException {
         
         TipoPago tipoPago = tipoPagoFacade.findByNombre(nombreTipoPago);
@@ -69,6 +69,7 @@ public class PublicidadBean implements PublicidadBeanLocal {
         Publicidad publicidad = new Publicidad(titulo, url, caption, imagen);
         publicidad.setTipoPublicidadFk(tipo);
         publicidad.setFechaDesde(fechaDesde);
+        publicidad.setFechaHasta(fechaHasta);
         publicidad.setUsuarioFk(usuario);
         publicidad.agregarPago(pago);
         
@@ -104,11 +105,11 @@ public class PublicidadBean implements PublicidadBeanLocal {
         for( Publicidad p : publicidades){
             Pago pago = p.getPagoList().get(0);
             if( pago.getFechaConfirmado() == null ){
-               publicidadDto = new PublicidadDTO(p.getTitulo(), p.getUrl(), 
+               publicidadDto = new PublicidadDTO(p.getServicioId(), p.getTitulo(), p.getUrl(), 
                     p.getCaption(), p.getFechaDesde(), p.getFechaHasta(), pago.getMonto(), 
                     EstadoPublicidad.PENDIENTE, p.getImagen());
             }else{
-               publicidadDto = new PublicidadDTO(p.getTitulo(), p.getUrl(), 
+               publicidadDto = new PublicidadDTO(p.getServicioId(), p.getTitulo(), p.getUrl(), 
                     p.getCaption(), p.getFechaDesde(), p.getFechaHasta(), pago.getMonto(), 
                     EstadoPublicidad.ACTIVA, p.getImagen());
             }
@@ -119,15 +120,17 @@ public class PublicidadBean implements PublicidadBeanLocal {
     
     /**
      * Devuelve las fechas que no tienen stock.
-     * Se considera como fecha final de control 60 d√≠as a partir de hoy.
+     * Se considera como fecha final de control 60 dias a partir de hoy.
      * @return respuesta
      */
     @Override
     @PermitAll
-    public List<Date> getFechasSinStock() {
+    public List<Date> getFechasSinStock( UbicacionPublicidad ubicacion ) {
+        
+        int disponibles = 0;
         
         List<Date> respuesta = new ArrayList<Date>();
-        List<Publicidad> publicidades = publicidadFacade.findAll();
+        List<Publicidad> publicidades = publicidadFacade.getPublicidadesPorSector(ubicacion);
         Iterator<Publicidad> itPublicidad = publicidades.iterator();
 
         Calendar today = Calendar.getInstance();
@@ -136,7 +139,14 @@ public class PublicidadBean implements PublicidadBeanLocal {
         today.set(Calendar.MINUTE, 0);
         today.set(Calendar.SECOND, 0);
         
-        int disponibles = 5;
+        if( ubicacion.equals(UbicacionPublicidad.CARRUSEL) ){
+            disponibles = 4;
+        }else if( ubicacion.equals(UbicacionPublicidad.LATERAL_IZQUIERDA) ){
+            disponibles = 50;
+        }else if( ubicacion.equals(UbicacionPublicidad.LATERAL_DERECHA) ){
+            disponibles = 100;
+        }
+         
 
         HashMap<String, Integer> dataCounter = new HashMap(60);//probablemente no existan pedidos mas haya de 60 dias desde hoy
         Calendar lastDate = Calendar.getInstance();

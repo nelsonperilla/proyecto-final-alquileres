@@ -12,7 +12,9 @@ import com.alquilacosas.ejb.session.PublicidadBeanLocal;
 import com.alquilacosas.pagos.PaypalUtil;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -25,6 +27,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.json.JSONObject;
 
 /**
  *
@@ -45,6 +48,9 @@ public class RegistrarPublicidadMBean implements Serializable {
     private UbicacionPublicidad ubicacionSeleccionada;
     private DuracionPublicidad duracionSeleccionada;
     private byte[] imagen;
+    private List<Date> fechas;
+    private String myJson;
+    private Date fechaHasta;
 
     /** Creates a new instance of RegistrarPublicidadMBean */
     public RegistrarPublicidadMBean() {
@@ -52,6 +58,10 @@ public class RegistrarPublicidadMBean implements Serializable {
 
     @PostConstruct
     public void init() {
+        
+        fechas = new ArrayList<Date>();//publicidadBean.getFechasSinStock(UbicacionPublicidad.CARRUSEL); 
+        this.createDictionary();
+        
         duraciones = new ArrayList<SelectItem>();
         for(DuracionPublicidad d: DuracionPublicidad.values()) {
             duraciones.add(new SelectItem(d, d.toString()));
@@ -71,18 +81,56 @@ public class RegistrarPublicidadMBean implements Serializable {
     }
     
     public void registrarPublicidad() {
+        
         if(imagen == null) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
                     "Debe cargar una imagen", "");
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return;
         }
+       
         Integer pagoId = null;
+        
         try {
-            pagoId = publicidadBean.registrarPublicidad(loginMBean.getUsuarioId(), 
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(fechaDesde);
+            DuracionPublicidad duracion = duracionSeleccionada;
+            if(duracion == DuracionPublicidad.SEMANAL) {
+                cal.add(Calendar.DAY_OF_YEAR, 7);
+                this.setFechaHasta(cal.getTime());
+            } else if(duracion == DuracionPublicidad.BISEMANAL) {
+                cal.add(Calendar.DAY_OF_YEAR, 14);
+                this.setFechaHasta(cal.getTime());
+            } else if(duracion == DuracionPublicidad.MENSUAL) {
+                cal.add(Calendar.MONTH, 1);
+                this.setFechaHasta(cal.getTime());
+            } else if(duracion == DuracionPublicidad.BIMENSUAL) {
+                cal.add(Calendar.MONTH, 2);
+                this.setFechaHasta(cal.getTime());
+            }
+            
+            Iterator<Date> itFechasSinStock = fechas.iterator();
+            boolean noStockFlag = false;
+            Calendar fecha = Calendar.getInstance();
+            //Recorro la lista de fechas sin stock fijandome si alguna cae
+            //en el periodo seleccionado
+            while(!noStockFlag && itFechasSinStock.hasNext()){
+                fecha.setTime(itFechasSinStock.next());
+                if(fechaDesde.before(fecha.getTime()) && fechaHasta.after(fecha.getTime()))//la fecha sin stock cae en el periodo
+                    noStockFlag = true;
+            }
+            
+            if(noStockFlag){
+                FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Hay fechas sin stock en el periodo seleccionado", ""));
+            }else{
+                pagoId = publicidadBean.registrarPublicidad(loginMBean.getUsuarioId(), 
                         titulo, url, caption, ubicacionSeleccionada, 
-                        duracionSeleccionada, imagen, fechaDesde, precio, 
+                        duracionSeleccionada, imagen, fechaDesde, fechaHasta, precio, 
                         NombreTipoPago.PAYPAL);
+            }
+            
         } catch (AlquilaCosasException e) {
             Logger.getLogger(RegistrarPublicidadMBean.class).
                     error("registrarPublicidad(). Excepcion al invocar registrarPublicidad(): " 
@@ -127,6 +175,8 @@ public class RegistrarPublicidadMBean implements Serializable {
     public void ubicacionCambio() {
         if(duracionSeleccionada != null && ubicacionSeleccionada != null) {
             precio = publicidadBean.getPrecio(duracionSeleccionada, ubicacionSeleccionada);
+            fechas = publicidadBean.getFechasSinStock(ubicacionSeleccionada); 
+            this.createDictionary();
         } else {
             precio = null;
         }
@@ -221,5 +271,51 @@ public class RegistrarPublicidadMBean implements Serializable {
 
     public void setFechaDesde(Date fechaDesde) {
         this.fechaDesde = fechaDesde;
+    }
+
+    public String getFechas() {
+        return myJson;
+    }
+
+    public Date getFechaHasta() {
+        return fechaHasta;
+    }
+
+    public void setFechaHasta(Date fechaHasta) {
+        this.fechaHasta = fechaHasta;
+    }
+    
+    private void createDictionary() {
+        try {      
+            int month = -1;
+            JSONObject yearJson = new JSONObject();
+            JSONObject monthJson = new JSONObject();
+            JSONObject dayJson = null;
+            Calendar cal = Calendar.getInstance();
+            for(Date d: fechas) {
+                cal.setTime(d);
+                if(cal.get(Calendar.MONTH) + 1 != month) {
+                    if(dayJson != null) {
+                        monthJson.putOpt(Integer.toString(month), dayJson);
+                    }
+                    dayJson = new JSONObject();
+                    month = cal.get(Calendar.MONTH) + 1;
+                    int day = cal.get(Calendar.DAY_OF_MONTH);
+                    dayJson.putOpt(Integer.toString(day), true);
+                }
+                else {
+                    int day = cal.get(Calendar.DAY_OF_MONTH);
+                    dayJson.putOpt(Integer.toString(day), true);
+                }
+            }
+            if(dayJson != null) {
+                monthJson.putOpt(Integer.toString(month), dayJson);
+            }
+            int y = cal.get(Calendar.YEAR);
+            yearJson.putOpt(Integer.toString(y), monthJson);
+            myJson = yearJson.toString();
+        } catch (Exception e) {
+            //Logger.getLogger(this).error("Exception creating JSON dictionary: " + e);
+        }
     }
 }

@@ -7,6 +7,7 @@ package com.alquilacosas.ejb.session;
 import com.alquilacosas.dto.PublicidadDTO;
 import com.alquilacosas.ejb.entity.TipoPago.NombreTipoPago;
 import com.alquilacosas.ejb.entity.TipoPublicidad;
+import com.alquilacosas.ejb.entity.TipoPublicidad.UbicacionPublicidad;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
@@ -22,7 +23,7 @@ public interface PublicidadBeanLocal {
             String url, String caption, 
             TipoPublicidad.UbicacionPublicidad ubicacion, 
             TipoPublicidad.DuracionPublicidad duracion, 
-            byte[] imagen, Date fechaDesde,  Double precio, NombreTipoPago nombreTipoPago) 
+            byte[] imagen, Date fechaDesde,Date fechaHasta, Double precio, NombreTipoPago nombreTipoPago) 
             throws com.alquilacosas.common.AlquilaCosasException;
 
     public Double getPrecio(TipoPublicidad.DuracionPublicidad duracion, 
@@ -30,6 +31,6 @@ public interface PublicidadBeanLocal {
     
     public List<PublicidadDTO> getPublicidades(int usuarioId);
     
-    public List<Date> getFechasSinStock();
+    public List<Date> getFechasSinStock( UbicacionPublicidad ubicacion );
     
 }

@@ -5,6 +5,7 @@
 package com.alquilacosas.facade;
 
 import com.alquilacosas.ejb.entity.Publicidad;
+import com.alquilacosas.ejb.entity.TipoPublicidad;
 import com.alquilacosas.ejb.entity.TipoPublicidad.UbicacionPublicidad;
 import java.util.Date;
 import java.util.List;
@@ -63,11 +64,20 @@ public class PublicidadFacade extends AbstractFacade<Publicidad> {
         return imagen;
     }
     
-     public List<Publicidad> getPublicidadPorUsuario( Integer usuarioId){
+     public List<Publicidad> getPublicidadPorUsuario( Integer usuarioId ){
         List<Publicidad> publicidades = null;
         Query query = em.createQuery("SELECT p from Publicidad p "
                 + "WHERE p.usuarioFk.usuarioId = :usuarioId");
         query.setParameter("usuarioId", usuarioId);
+        publicidades = query.getResultList();
+        return publicidades;
+    }
+     
+    public List<Publicidad> getPublicidadesPorSector( UbicacionPublicidad ubicacion ){
+        List<Publicidad> publicidades = null;
+        Query query = em.createQuery("SELECT p from Publicidad p "
+                + "WHERE p.tipoPublicidadFk.ubicacion = :ubicacion");
+        query.setParameter("ubicacion", ubicacion);
         publicidades = query.getResultList();
         return publicidades;
     }

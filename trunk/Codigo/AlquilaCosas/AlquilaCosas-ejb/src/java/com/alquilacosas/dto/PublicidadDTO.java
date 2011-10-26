@@ -31,8 +31,9 @@ public class PublicidadDTO implements Serializable {
         this.url = url;
     }
     
-    public PublicidadDTO( String titulo, String url, String caption, Date fechaDesde,
+    public PublicidadDTO( Integer id, String titulo, String url, String caption, Date fechaDesde,
             Date fechaHasta, double costo, EstadoPublicidad estado, byte [] imagen){
+        this.id = id;
         this.titulo = titulo;
         this.url = url;
         this.caption = caption;
