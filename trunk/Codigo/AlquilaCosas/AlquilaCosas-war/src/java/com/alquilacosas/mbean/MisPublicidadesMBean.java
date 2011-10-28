@@ -6,6 +6,7 @@ package com.alquilacosas.mbean;
 
 import com.alquilacosas.dto.PublicidadDTO;
 import com.alquilacosas.ejb.session.PublicidadBeanLocal;
+import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -19,7 +20,7 @@ import javax.faces.bean.ViewScoped;
  */
 @ManagedBean (name = "misPublicidades")
 @ViewScoped
-public class MisPublicidadesMBean {
+public class MisPublicidadesMBean implements Serializable {
 
     @ManagedProperty(value="#{login}")
     private ManejadorUsuarioMBean usuarioLogueado;
@@ -56,11 +57,12 @@ public class MisPublicidadesMBean {
     }
 
     public PublicidadDTO getSelectedPublicidad() {
-        System.out.println("a ver" + selectedPublicidad.getTitulo());     
+        System.out.println("a ver" + selectedPublicidad);     
         return selectedPublicidad;
     }
 
     public void setSelectedPublicidad(PublicidadDTO selectedPublicidad) {
+        System.out.println("setting publicidad: " + selectedPublicidad);
         this.selectedPublicidad = selectedPublicidad;
     }
     

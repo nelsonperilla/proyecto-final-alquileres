@@ -22,19 +22,19 @@
             </ui:define>
 
             <ui:define name="principal">
-                
+
                 <h:outputScript library="javascript" name="util.js" />
 
                 <h:outputScript library="javascript" name="timePicker.js" />
-                
+
                 <p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide();"/>
                 <p:dialog modal="true" widgetVar="statusDialog" header="Espere por favor..." 
                           draggable="false" closable="false" resizable="false" >
                     <p:graphicImage value="#{resource['images:ajaxLoadingBar.gif']}" />
                 </p:dialog>
-                
+
                 <h:form>
-                    
+
                     <script type="text/javascript" >
                                      jQuery(function () {
                                              window.setTimeout('bindEventsHighlights()',500);
@@ -48,7 +48,7 @@
                                      };
                                      
 
-                                  </script>
+                    </script>
 
                     <h1>Registrar Publicidad</h1>
                     <p:fieldset legend="Datos" styleClass="fieldset" >
@@ -81,7 +81,7 @@
                                              required="true" requiredMessage="Valor requerido" >
                                 <f:selectItem itemLabel="Seleccione una ubicacion.." />
                                 <f:selectItems value="#{publicidadBean.ubicaciones}" />
-                                <p:ajax event="change" update="precio fecha" listener="#{publicidadBean.ubicacionCambio}" />
+                                <p:ajax event="change" update="@form" listener="#{publicidadBean.ubicacionCambio}" />
                             </h:selectOneMenu>
                             <p:message for="ubicacion" />
                             <h:outputLabel value="Precio:" />
@@ -108,14 +108,14 @@
                             Subir imagen
                         </h:outputLink>
                     </p:fieldset>
-                    
+
                     <h:panelGrid columns="2" columnClasses="leftCol,rightCol" style="width: 100%" >
                         <p:commandLink actionListener="#{publicidadBean.registrarPublicidad}" >
                             <h:graphicImage value="#{resource['images:pagoPaypal.gif']}" />
                         </p:commandLink>
                         <p:commandButton value="Limpiar" type="reset" />
                     </h:panelGrid>
-                    
+
                 </h:form>
 
             </ui:define>

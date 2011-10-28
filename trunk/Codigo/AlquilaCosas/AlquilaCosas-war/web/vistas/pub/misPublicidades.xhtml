@@ -23,7 +23,7 @@
 
             <ui:define name="principal">
 
-                <h:form>
+                <h:form id="form">
                     <h1>Mis Publicidades</h1>
 
                     <p:dataTable var="publicidad" value="#{misPublicidades.publicidades}"
@@ -88,14 +88,15 @@
                         <h:panelGrid id="display" columns="2" cellpadding="4">
 
                             <f:facet name="header">
-                                <h:graphicImage value="/imagenpub?id=#{publicidades.selectedPublicidad.id}" width="200" height="185" styleClass="img"/> 
+                                <h:graphicImage value="/imagenpub?id=#{misPublicidades.selectedPublicidad.id}" 
+                                                width="200" height="185" styleClass="img"/> 
                             </f:facet>
 
                             <h:outputText value="caption:" />
-                            <h:outputText value="#{publicidades.selectedPublicidad.caption}" />
+                            <h:outputText value="#{misPublicidades.selectedPublicidad.caption}" />
 
                             <h:outputText value="url:" />
-                            <h:outputText value="#{publicidades.selectedPublicidad.url}" />
+                            <h:outputText value="#{misPublicidades.selectedPublicidad.url}" />
 
                         </h:panelGrid>
                     </p:dialog>

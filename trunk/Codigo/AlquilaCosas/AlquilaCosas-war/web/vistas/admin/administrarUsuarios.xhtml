@@ -28,7 +28,8 @@
                         <p:dataTable var="usuario" value="#{administrarUsuarios.usuarios}" paginatorPosition="bottom"
                                      paginator="true" rows="10" rowEditListener="#{administrarUsuarios.asignarRol}"
                                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                     rowsPerPageTemplate="5,10,15">
+                                     rowsPerPageTemplate="5,10,15"
+                                     rowStyleClass="#{usuario.estadoUsuario eq 'SUSPENDIDO' ? 'filaRoja' : null}">
 
                             <p:column>
                                 <f:facet name="header">
