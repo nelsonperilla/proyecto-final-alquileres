@@ -50,7 +50,8 @@ public class AdministrarUsuariosBean implements AdministrarUsuariosBeanLocal {
         for( Usuario u : lista ){
             List<Rol> roles = u.getLoginList().get(0).getRolList();
             UsuarioDTO usuarioDTO = new UsuarioDTO(u.getUsuarioId(), u.getLoginList().get(0).getUsername(),
-                    u.getEmail(), u.getNombre(), u.getApellido(), u.getLoginList().get(0).getFechaCreacion(), roles);
+                    u.getEmail(), u.getNombre(), u.getApellido(), u.getLoginList().get(0).getFechaCreacion(), 
+                    roles, u.getUsuarioXEstadoList().get(0).getEstadoUsuario().getNombre());
             usuarios.add(usuarioDTO);
         }
         

@@ -767,3 +767,7 @@ h1, h2, h3 {
 .filaVerde  {
     background: palegreen;
 }
+
+.filaRoja  {
+    background: #E40000;
+}

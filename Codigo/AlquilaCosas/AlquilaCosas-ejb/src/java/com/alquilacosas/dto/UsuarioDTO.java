@@ -4,6 +4,8 @@
  */
 package com.alquilacosas.dto;
 
+import com.alquilacosas.ejb.entity.EstadoUsuario;
+import com.alquilacosas.ejb.entity.EstadoUsuario.NombreEstadoUsuario;
 import com.alquilacosas.ejb.entity.Rol;
 import com.alquilacosas.ejb.entity.Usuario;
 import java.io.Serializable;
@@ -40,6 +42,7 @@ public class UsuarioDTO implements Serializable {
      private double userTomaNeutralesPorcentaje;
      private Integer userTomaNegativas;
      private double userTomaNegativasPorcentaje;
+     private NombreEstadoUsuario estadoUsuario;
 
      public UsuarioDTO(Integer id, String nombre, String apellido, String email,
              String telefono, String dni, Date fechaNacimiento) {
@@ -64,7 +67,7 @@ public class UsuarioDTO implements Serializable {
      }
 
      public UsuarioDTO(Integer id, String username, String email, String nombre, String apellido,
-             Date fechaDeRegistro, List<Rol> roles) {
+             Date fechaDeRegistro, List<Rol> roles, NombreEstadoUsuario estadoUsuario) {
           this.id = id;
           this.username = username;
           this.email = email;
@@ -72,6 +75,7 @@ public class UsuarioDTO implements Serializable {
           this.apellido = apellido;
           this.fechaDeRegistro = fechaDeRegistro;
           this.roles = roles;
+          this.estadoUsuario = estadoUsuario;
           
           for( Rol r : roles ){
               if( r.getRolId() == 1 )
@@ -339,4 +343,13 @@ public class UsuarioDTO implements Serializable {
      public void setUserTomaPositivasPorcentaje(double userTomaPositivasPorcentaje) {
           this.userTomaPositivasPorcentaje = userTomaPositivasPorcentaje;
      }
+
+    public String getEstadoUsuario(){
+        return estadoUsuario.name();
+    }
+
+    public void setEstadoUsuario(NombreEstadoUsuario estadoUsuario) {
+        this.estadoUsuario = estadoUsuario;
+    }
+     
 }
