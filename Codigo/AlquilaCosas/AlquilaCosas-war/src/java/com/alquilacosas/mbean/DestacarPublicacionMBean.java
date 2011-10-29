@@ -10,6 +10,7 @@ import com.alquilacosas.ejb.entity.TipoDestacacion.NombreTipoDestacacion;
 import com.alquilacosas.ejb.entity.TipoPago.NombreTipoPago;
 import com.alquilacosas.ejb.session.DestacarPublicacionBeanLocal;
 import com.alquilacosas.pagos.PaypalUtil;
+import com.alquilacosas.validator.webutil.Navigation;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -65,11 +66,7 @@ public class DestacarPublicacionMBean implements Serializable {
             publicacion = destacarBean.getPublicacion(Integer.valueOf(id), login.getUsuarioId());
         } catch(AlquilaCosasException e) {
             Logger.getLogger(DestacarPublicacionMBean.class).error("La publicacion indicada no se puede destacar: " + e.getMessage());
-            try {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("misPublicaciones.xhtml");
-            } catch(IOException ioe) {
-                Logger.getLogger(DestacarPublicacionMBean.class).error("Excepcion al ejecutar redirect().");
-            }
+            Navigation.redirect("misPublicaciones.xhtml");
         }
         
         if(publicacion == null)
@@ -101,15 +98,7 @@ public class DestacarPublicacionMBean implements Serializable {
         String url = PaypalUtil.setExpressCheckout(descripcion, Integer.toString(pagoId), 
                 Integer.toString(publicacionId), precio.toString());
         if (url != null) {
-            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-
-            try {
-                context.redirect(url);
-            } catch (Exception e) {
-                Logger.getLogger(DestacarPublicacionMBean.class).
-                    error("destacar(). Excepcion al invocar redirect(): " 
-                    + e + ": " + e.getMessage());
-            }
+            Navigation.redirect(url);
         } else {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al comunicarse con paypal", "");
             FacesContext.getCurrentInstance().addMessage(null, msg);

@@ -238,5 +238,10 @@
             <to-view-id>/vistas/usuario/misPagos.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>comoPublicitar</from-outcome>
+            <to-view-id>/vistas/comoPublicitar.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
     </navigation-rule>
 </faces-config>

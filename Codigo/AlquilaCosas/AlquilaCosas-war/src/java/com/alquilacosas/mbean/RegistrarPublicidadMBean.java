@@ -10,6 +10,7 @@ import com.alquilacosas.ejb.entity.TipoPublicidad.DuracionPublicidad;
 import com.alquilacosas.ejb.entity.TipoPublicidad.UbicacionPublicidad;
 import com.alquilacosas.ejb.session.PublicidadBeanLocal;
 import com.alquilacosas.pagos.PaypalUtil;
+import com.alquilacosas.validator.webutil.Navigation;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -149,14 +150,7 @@ public class RegistrarPublicidadMBean implements Serializable {
         String descripcion = "Publicar anuncio: " + titulo;
         String redirectUrl = PaypalUtil.setExpressCheckout(descripcion, Integer.toString(pagoId), null, precio.toString());
         if (redirectUrl != null) {
-            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-            try {
-                context.redirect(redirectUrl);
-            } catch (Exception e) {
-                Logger.getLogger(RegistrarPublicidadMBean.class).
-                    error("registrarPublicidad(). Excepcion al invocar redirect(): " 
-                    + e + ": " + e.getMessage());
-            }
+            Navigation.redirect(redirectUrl);
         } else {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
                     "Error al comunicarse con paypal", "");

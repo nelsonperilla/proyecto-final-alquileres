@@ -9,6 +9,7 @@ import com.alquilacosas.dto.ComentarioDTO;
 import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.entity.Periodo;
 import com.alquilacosas.ejb.session.PublicacionBeanLocal;
+import com.alquilacosas.validator.webutil.Navigation;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -17,7 +18,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.annotation.security.DeclareRoles;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -69,7 +69,7 @@ public class DesplieguePublicacionMBean implements Serializable {
         String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
         setNuevaPregunta(new ComentarioDTO());
         if (id == null) {
-            redirect();
+            Navigation.redirect("inicio.xhtml");
             return;
         }
         int publicationId = 0;
@@ -77,7 +77,7 @@ public class DesplieguePublicacionMBean implements Serializable {
             publicationId = Integer.parseInt(id);
         } catch (NumberFormatException e) {
             Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al parsear ID de parametro.");
-            redirect();
+            Navigation.redirect("inicio.xhtml");
             return;
         }
         setPublicacion(publicationBean.getPublicacion(publicationId));
@@ -86,7 +86,7 @@ public class DesplieguePublicacionMBean implements Serializable {
             fechas = publicationBean.getFechasSinStock(publicationId, cantidadProductos);
         } catch (AlquilaCosasException e) {
             Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al ejecutar getFechasSinStock(): " + e.getMessage());
-            redirect();
+            Navigation.redirect("inicio.xhtml");
             return;
         }
         if (publicacion != null && publicacion.getFechaHasta() != null) {
@@ -106,14 +106,6 @@ public class DesplieguePublicacionMBean implements Serializable {
         periodoSeleccionado = 2; //alto hardCode, para que por defecto este seleccionado dia y no hora (Jorge)
         for (Periodo periodo : listaPeriodos) {
             periodos.add(new SelectItem(periodo.getPeriodoId(), periodo.getNombre().name()));
-        }
-    }
-
-    private void redirect() {
-        try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("inicio.xhtml");
-        } catch (Exception e) {
-            Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al ejecutar redirect().");
         }
     }
 

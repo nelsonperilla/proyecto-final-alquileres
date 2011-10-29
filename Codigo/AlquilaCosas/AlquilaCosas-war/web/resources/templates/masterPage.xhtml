@@ -5,7 +5,8 @@
       xmlns:p="http://primefaces.prime.com.tr/ui"
       xmlns:h="http://java.sun.com/jsf/html" 
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:comps="http://java.sun.com/jsf/composite/comps">
+      xmlns:comps="http://java.sun.com/jsf/composite/comps"
+      xmlns:f="http://java.sun.com/jsf/core" >
     <h:head>
 
         <title>Alquila Cosas</title>
@@ -26,17 +27,19 @@
             <tr>    
                 <td valign="top" class="columnaIzq">
             <ui:insert name="left" />
-            <h:form>
-                <ui:repeat value="#{mostrarPublicidad.publicidadesIzq}" var="pub" >
-                    <p:commandLink actionListener="#{mostrarPublicidad.navegarUrl}" >
-                        <h:graphicImage value="/imagenpub?id=#{pub.id}" width="140"
-                                        alt="#{pub.caption}" />
-                    </p:commandLink>
-                </ui:repeat>
-                <p:outputPanel rendered="#{empty mostrarPublicidad.publicidadesIzq}" >
-                    <a >
+
+            <ui:repeat value="#{mostrarPublicidad.publicidadesIzq}" var="pub" >
+                <a href="#{pub.url}" >
+                    <f:attribute name="url" value="#{pub.url}" />
+                    <h:graphicImage value="/imagenpub?id=#{pub.id}" width="140"
+                                    alt="#{pub.caption}" />
+                </a>
+            </ui:repeat>
+            <h:form>    
+                <p:outputPanel rendered="#{empty mostrarPublicidad.publicidadesIzq}" >        
+                    <h:commandLink action="comoPublicitar" >
                         <h:graphicImage value="#{resource['images:publiciteLateral.jpg']}" />
-                    </a>
+                    </h:commandLink>
                 </p:outputPanel>
             </h:form>
             </td>
@@ -45,17 +48,21 @@
             </td>
             <td width="200px" valign="top">
             <ui:insert name="right" />
+
             <ui:repeat value="#{mostrarPublicidad.publicidadesDer}" var="pub" >
-                <h:commandLink action="#{pub.url}" >
+                <a href="#{mostrarPublicidad.navegarUrl}" >
+<!--                            <f:attribute name="url" value="#{pub.url}" />-->
                     <h:graphicImage value="/imagenpub?id=#{pub.id}"
                                     alt="#{pub.caption}" width="140" height="200"
                                     style="margin-top: 10px" />
-                </h:commandLink>
+                </a>
             </ui:repeat>
             <p:outputPanel rendered="#{empty mostrarPublicidad.publicidadesDer}" >
-                <a href="" >
-                    <h:graphicImage value="#{resource['images:publiciteLateral.jpg']}" />
-                </a>
+                <h:form>
+                    <h:commandLink action="comoPublicitar" >
+                        <h:graphicImage value="#{resource['images:publiciteLateral.jpg']}" />
+                    </h:commandLink>
+                </h:form>
             </p:outputPanel>
             </td> 
             </tr>
