@@ -5,7 +5,7 @@
       xmlns:p="http://primefaces.prime.com.tr/ui"
       xmlns:h="http://java.sun.com/jsf/html" 
       xmlns:comps="http://java.sun.com/jsf/composite/comps" 
-      xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:f="http://java.sun.com/jsf/core" >
 
     <body>
 
@@ -23,20 +23,21 @@
                 <table>
                     <tr>
                         <td>
-                            <h:form>
-                                <p:outputPanel rendered="#{not empty mostrarPublicidad.publicidadesCarrusel}" >
+
+                            <p:outputPanel rendered="#{not empty mostrarPublicidad.publicidadesCarrusel}" >
                                 <p:carousel value="#{mostrarPublicidad.publicidadesCarrusel}" autoPlayInterval="3500"
                                             var="pub" rows="1" circular="true" itemStyle="height:130px;width:600px;"
                                             style="width:600px" >
-                                    <h:commandLink action="#{pub.url}" >
+                                    <a href="#{pub.url}" >    
                                         <h:graphicImage value="/imagenpub?id=#{pub.id}" 
                                                         alt="#{pub.caption}"
                                                         width="600" height="130" />
-                                    </h:commandLink>
+                                    </a>
                                 </p:carousel>
-                                </p:outputPanel>
+                            </p:outputPanel>
+                            <h:form>    
                                 <p:outputPanel rendered="#{empty mostrarPublicidad.publicidadesCarrusel}" >
-                                    <h:commandLink action="comoPublicitar" >
+                                    <h:commandLink actionListener="comoPublicitar" >
                                         <h:graphicImage value="#{resource['images:publiciteCarrusel.jpg']}" />
                                     </h:commandLink>
                                 </p:outputPanel>
