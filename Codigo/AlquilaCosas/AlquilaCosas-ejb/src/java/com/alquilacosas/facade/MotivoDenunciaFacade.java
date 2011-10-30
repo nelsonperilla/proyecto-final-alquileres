@@ -5,9 +5,11 @@
 package com.alquilacosas.facade;
 
 import com.alquilacosas.ejb.entity.MotivoDenuncia;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -25,6 +27,11 @@ public class MotivoDenunciaFacade extends AbstractFacade<MotivoDenuncia> {
 
     public MotivoDenunciaFacade() {
         super(MotivoDenuncia.class);
+    }
+    
+    public List<MotivoDenuncia> getAllMotivosDenuncia() {
+        Query query = em.createNamedQuery("MotivoDenuncia.findAll");
+        return query.getResultList();   
     }
     
 }

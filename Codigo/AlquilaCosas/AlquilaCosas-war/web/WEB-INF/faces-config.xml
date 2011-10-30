@@ -92,6 +92,15 @@
     </navigation-rule>
 
     <navigation-rule>
+        <from-view-id>/vistas/mostrarPublicaciones.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>denunciarComentario</from-outcome>
+            <to-view-id>/vistas/usuario/denunciaDePregunta.xhtml?id=#{publicacionDesplegada.comentarioDenunciadoId}</to-view-id>
+            <redirect/>
+        </navigation-case>
+    </navigation-rule>
+
+    <navigation-rule>
         <from-view-id>*</from-view-id>
         <navigation-case>
             <from-outcome>inicio</from-outcome>
@@ -133,6 +142,11 @@
             <to-view-id>/vistas/mostrarPublicacion.xhtml?id=#{verCategoriaBean.publicacionSeleccionada}</to-view-id>
             <redirect/>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>denunciarComentario</from-outcome>
+            <to-view-id>/vistas/usuario/denunciaDePregunta.xhtml?id=#{publicacionDesplegada.comentarioDenunciadoId}</to-view-id>
+            <redirect/>
+        </navigation-case>        
         <navigation-case>
             <from-action>#{buscarBean.buscar}</from-action>
             <to-view-id>/vistas/resultados.xhtml?art=#{buscarBean.buscar}</to-view-id>

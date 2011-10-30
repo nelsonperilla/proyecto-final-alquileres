@@ -35,10 +35,7 @@ public class PublicationsGroup implements Serializable {
     
     public String seleccionarPublicacion() {
 
-        return "mostrarPublicacion";//"mostrarPublicacion.xhtml?id=" +  getSelectedPublicationId();
-
-        //return "mostrarPublicacion?id=" +  selectedPublicationId;
-
+        return "mostrarPublicacion";
     }
     
     public int getSelectedPublicationId() {

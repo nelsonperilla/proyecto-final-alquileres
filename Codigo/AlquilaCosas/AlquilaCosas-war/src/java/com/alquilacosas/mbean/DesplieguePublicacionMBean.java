@@ -59,6 +59,7 @@ public class DesplieguePublicacionMBean implements Serializable {
     private String action;
     private double userRating;
     private String horaInicioAlquiler;
+    private int comentarioDenunciadoId;
 
     /** Creates a new instance of DesplieguePublicacionMBean */
     public DesplieguePublicacionMBean() {
@@ -109,6 +110,11 @@ public class DesplieguePublicacionMBean implements Serializable {
         }
     }
 
+    public String denunciarComentario()
+    {
+        return "denunciarComentario";
+    }
+    
     public void actualizarPreguntas() {
         comentarios = publicationBean.getPreguntas(publicacion.getId());
     }
@@ -390,12 +396,6 @@ public class DesplieguePublicacionMBean implements Serializable {
     public String seleccionarFecha(DateSelectEvent e) {
         fechaInicio = e.getDate();
         return "";
-//        try {
-//            absenceDetails = repEJB.readDayAbsenceDetail(sessionId, date); //se cargan los datos que queres mostrar en el dialogo
-//        } catch (EraServiceException ex) {
-//            Logger.getLogger(ReportsBean.class).error("Exception in dateSelected: " + ex);
-//            absenceDetails = new ArrayList<AbsenceDetail>();
-//        }  
     }
 
     /**
@@ -617,4 +617,20 @@ public class DesplieguePublicacionMBean implements Serializable {
     public void setHoraInicioAlquiler(String horaInicioAlquiler) {
         this.horaInicioAlquiler = horaInicioAlquiler;
     }
+
+    /**
+     * @return the comentarioDenunciadoId
+     */
+    public int getComentarioDenunciadoId() {
+        return comentarioDenunciadoId;
+    }
+
+    /**
+     * @param comentarioDenunciadoId the comentarioDenunciadoId to set
+     */
+    public void setComentarioDenunciadoId(int comentarioDenunciadoId) {
+        this.comentarioDenunciadoId = comentarioDenunciadoId;
+    }
+
+
 }

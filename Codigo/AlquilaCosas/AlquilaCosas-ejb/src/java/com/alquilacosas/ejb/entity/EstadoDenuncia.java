@@ -12,6 +12,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -22,6 +24,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "ESTADO_DENUNCIA")
 @XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "EstadoDenuncia.findByNombre", query = "SELECT e FROM EstadoDenuncia e WHERE e.nombre = :nombre")})
 public class EstadoDenuncia implements Serializable {
  
     public enum NombreEstadoDenuncia {PENDIENTE, ACEPTADA, RECHAZADA}; 
