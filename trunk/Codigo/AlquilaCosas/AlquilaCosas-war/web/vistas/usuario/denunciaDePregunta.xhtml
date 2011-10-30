@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:comps="http://java.sun.com/jsf/composite/comps"
+      xmlns:p="http://primefaces.prime.com.tr/ui" 
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" >
+
+    <body>
+        <ui:composition template="./../../resources/templates/masterPage.xhtml">
+            <ui:define name="logInfo">
+                <h:form>
+                    <h:commandLink value="Inicio" action="inicio" />
+                </h:form>
+            </ui:define>
+
+            <ui:define name="left">
+                <comps:categoriesMenu />
+            </ui:define>
+
+            <ui:define name="principal">
+                <h3>Denuncia de Comentarios</h3>
+                <br/>
+                
+                    <table>
+                        <tr>
+                            <td>
+                                <h:outputLabel value="Publicacion : #{denuncia.publicacion}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div id="itemPregunta">
+                                    <table cellspacing="0" cellpadding="5">
+                                        <tr>
+                                            <td width="30px">
+                                                <h:outputText value="Comentario:"  />  
+                                            </td>
+                                            <td>
+                                                <h:outputText value="#{denuncia.comentario.comentario}"/> 
+                                            </td>
+                                        </tr>                                
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr> 
+                            <td >
+                                <h:form>
+                                <div class="preguntas" style="text-align: center;">
+                                    <table style="width: 600px">
+                                        <tr>
+                                            <td>
+                                                <h:outputText value="Seleccione un motivo:"/>
+                                            </td>
+                                            <td>
+                                                <h:selectOneMenu value="#{denuncia.motivoSeleccionado}"
+                                                    style="width: 150px; margin-left: 40px">
+                                                    <f:selectItems value="#{denuncia.motivos}" />
+                                                </h:selectOneMenu>                                            
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                <h:outputText value="Si desea, puede detallar la razón de su denuncia:"  /><br/>
+                                                <h:inputTextarea style="width: 400px; height: 200px" value="#{denuncia.descripcionDenuncia}"/><br/>
+                                                <p:commandButton value="Ingresar denuncia" action="#{denuncia.saveDenuncia}" update="grow"/>
+                                                <p:growl id="grow" showDetail="true" globalOnly="true" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                </h:form>
+                            </td>    
+                        </tr>
+                    </table>
+                
+            </ui:define>
+            <ui:define name="right" >
+                <p:outputPanel id="paneles" >
+                    <comps:loginBox />
+                    <comps:adminPanel />
+                    <comps:userPanel />
+                </p:outputPanel>
+            </ui:define>            
+        </ui:composition>
+    </body>
+</html>

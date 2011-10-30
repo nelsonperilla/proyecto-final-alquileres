@@ -9,73 +9,77 @@
     <Scope Scope="Project">
         <Node id="resources/comps/itemInfo.xhtml" x="150" y="300" zoom="true"/>
         <Node id="vistas/usuario/datosUsuario.xhtml" x="150" y="900" zoom="true"/>
-        <Node id="vistas/verReputacion.xhtml?id=#{login.usuarioId}" x="900" y="1200" zoom="true"/>
         <Node id="vistas/admin/administrarUsuarios.xhtml" x="900" y="750" zoom="true"/>
+        <Node id="vistas/verReputacion.xhtml?id=#{login.usuarioId}" x="900" y="1200" zoom="true"/>
         <Node id="vistas/verReputacion.xhtml?id=#{misPedidosRecibidos.usuarioId}" x="650" y="1350" zoom="true"/>
-        <Node id="vistas/mostrarPublicacion.xhtml?id=#{publicationsGroup.selectedPublicationId}" x="1400" y="300" zoom="true"/>
-        <Node id="resources/comps/logoBar.xhtml" x="400" y="300" zoom="true"/>
-        <Node id="resources/comps/itemCalificacion.xhtml" x="2400" y="450" zoom="true"/>
-        <Node id="vistas/mostrarPublicacion.xhtml" x="1650" y="150" zoom="true"/>
+        <Node id="vistas/mostrarPublicacion.xhtml?id=#{publicationsGroup.selectedPublicationId}" x="1418" y="258" zoom="true"/>
+        <Node id="resources/comps/logoBar.xhtml" x="429" y="261" zoom="true"/>
+        <Node id="vistas/mostrarPublicacion.xhtml" x="1658" y="199" zoom="true"/>
+        <Node id="resources/comps/itemCalificacion.xhtml" x="2411" y="555" zoom="true"/>
         <Node id="vistas/verReputacion.xhtml?id=#{misPedidosRealizados.usuarioId}" x="1650" y="750" zoom="true"/>
-        <Node id="vistas/usuario/misPublicaciones.xhtml" x="1650" y="300" zoom="true"/>
-        <Node id="vistas/usuario/destacarPublicacion.xhtml?id=#{misPublicaciones.publicacionId}" x="1150" y="1050" zoom="true"/>
-        <Node id="vistas/usuarioCreado.xhtml" x="400" y="600" zoom="true"/>
+        <Node id="vistas/usuario/misPublicaciones.xhtml" x="1608" y="333" zoom="true"/>
+        <Node id="vistas/usuarioCreado.xhtml" x="392" y="640" zoom="true"/>
+        <Node id="vistas/usuario/destacarPublicacion.xhtml?id=#{misPublicaciones.publicacionId}" x="1897" y="640" zoom="true"/>
         <Node id="vistas/usuario/modificarUsuario.xhtml" x="900" y="300" zoom="true"/>
         <Node id="vistas/resultados.xhtml" x="1400" y="150" zoom="true"/>
-        <Node id="vistas/usuario/nuevaPublicacion.xhtml" x="1150" y="150" zoom="true"/>
-        <Node id="vistas/admin/periodosAlquiler.xhtml" x="1150" y="600" zoom="true"/>
-        <Node id="vistas/mostrarPublicacion.xhtml?id=#{resultadosBean.publicacionSeleccionada}" x="1400" y="450" zoom="true"/>
+        <Node id="vistas/mostrarPublicacion.xhtml?id=#{resultadosBean.publicacionSeleccionada}" x="1408" y="488" zoom="true"/>
+        <Node id="vistas/admin/periodosAlquiler.xhtml" x="1199" y="638" zoom="true"/>
+        <Node id="vistas/usuario/nuevaPublicacion.xhtml" x="1147" y="191" zoom="true"/>
         <Node id="vistas/verCategoria.xhtml" x="400" y="900" zoom="true"/>
-        <Node id="vistas/activarCuenta.xhtml" x="650" y="450" zoom="true"/>
+        <Node id="vistas/usuarioCreado.xhtml?email=#{regUsuario.email}" x="1370" y="564" zoom="true"/>
+        <Node id="vistas/activarCuenta.xhtml" x="670" y="410" zoom="true"/>
         <Node id="*" x="150" y="750" zoom="true"/>
-        <Node id="vistas/usuarioCreado.xhtml?email=#{regUsuario.email}" x="1400" y="600" zoom="true"/>
         <Node id="resources/comps/itemPreguntas.xhtml" x="900" y="600" zoom="true"/>
         <Node id="vistas/login.xhtml" x="650" y="600" zoom="true"/>
-        <Node id="vistas/usuario/responderPreguntas.xhtml" x="2150" y="150" zoom="true"/>
+        <Node id="vistas/usuario/responderPreguntas.xhtml" x="2139" y="200" zoom="true"/>
         <Node id="vistas/mostrarPublicacion.xhtml?id=#{misPublicaciones.publicacionId}" x="400" y="1050" zoom="true"/>
-        <Node id="resources/comps/adminPanel.xhtml" x="900" y="450" zoom="true"/>
-        <Node id="vistas/resultados.xhtml?art=#{buscarBean.buscar}" x="1150" y="300" zoom="true"/>
+        <Node id="resources/comps/adminPanel.xhtml" x="924" y="488" zoom="true"/>
+        <Node id="vistas/resultados.xhtml?art=#{buscarBean.buscar}" x="1108" y="335" zoom="true"/>
         <Node id="vistas/verCategoria.xhtml?id=#{menuCatBean.categoriaSeleccionada}" x="150" y="1050" zoom="true"/>
         <Node id="resources/comps/loginOnPage.xhtml" x="150" y="1500" zoom="true"/>
         <Node id="vistas/usuario/modificarPublicacion.xhtml" x="650" y="750" zoom="true"/>
         <Node id="vistas/admin/paises.xhtml" x="900" y="150" zoom="true"/>
         <Node id="resources/comps/alquiler.xhtml" x="150" y="1350" zoom="true"/>
-        <Node id="vistas/mostrarPublicacion.xhtml?id=#{misPedidosRecibidos.publicacionId}" x="1900" y="450" zoom="true"/>
-        <Node id="vistas/pagoConfirmado.xhtml" x="2150" y="300" zoom="true"/>
+        <Node id="vistas/mostrarPublicacion.xhtml?id=#{misPedidosRecibidos.publicacionId}" x="1903" y="517" zoom="true"/>
+        <Node id="vistas/pagoConfirmado.xhtml" x="2166" y="262" zoom="true"/>
         <Node id="vistas/usuario/misPedidosRealizados.xhtml" x="1150" y="900" zoom="true"/>
         <Node id="vistas/usuario/misAlquileresTomados.xhtml" x="650" y="1050" zoom="true"/>
+        <Node id="vistas/mostrarPublicaciones.xhtml" x="2718" y="267" zoom="true"/>
         <Node id="vistas/admin/categorias.xhtml" x="400" y="750" zoom="true"/>
-        <Node id="vistas/pub/registrarPublicidad.xhtml" x="2650" y="300" zoom="true"/>
+        <Node id="vistas/pub/registrarPublicidad.xhtml" x="2594" y="298" zoom="true"/>
+        <Node id="vistas/comoPublicitar.xhtml" x="1150" y="1050" zoom="true"/>
         <Node id="resources/comps/itemPedido.xhtml" x="1150" y="750" zoom="true"/>
-        <Node id="vistas/terminos.html" x="150" y="1200" zoom="true"/>
         <Node id="vistas/verReputacion.xhtml?id=#{alquileresTomados.usuarioId}" x="1400" y="900" zoom="true"/>
+        <Node id="vistas/terminos.html" x="150" y="1200" zoom="true"/>
         <Node id="vistas/mostrarPublicacion.xhtml?id=#{alquileresTomados.publicacionId}" x="650" y="1200" zoom="true"/>
         <Node id="vistas/mostrarPublicacion.xhtml?id=#{alquileresOfrecidos.publicacionId}" x="400" y="1350" zoom="true"/>
-        <Node id="vistas/registrarUsuario.xhtml" x="650" y="300" zoom="true"/>
-        <Node id="vistas/usuario/destacarPublicacion.xhtml?id=#{publicacion.publicacionId}" x="2650" y="150" zoom="true"/>
-        <Node id="vistas/mostrarPublicacion.xhtml?id=#{misPedidosRealizados.publicacionId}" x="2400" y="300" zoom="true"/>
+        <Node id="vistas/registrarUsuario.xhtml" x="659" y="337" zoom="true"/>
+        <Node id="vistas/usuario/destacarPublicacion.xhtml?id=#{publicacion.publicacionId}" x="2644" y="185" zoom="true"/>
+        <Node id="vistas/mostrarPublicacion.xhtml?id=#{misPedidosRealizados.publicacionId}" x="2386" y="337" zoom="true"/>
         <Node id="vistas/usuario/misPedidosRecibidos.xhtml" x="400" y="1200" zoom="true"/>
-        <Node id="vistas/usuario/modificarPublicacion.xhtml?id=#{misPublicaciones.publicacionId}" x="1150" y="450" zoom="true"/>
+        <Node id="vistas/usuario/modificarPublicacion.xhtml?id=#{misPublicaciones.publicacionId}" x="1088" y="438" zoom="true"/>
         <Node id="resources/comps/highlightItems.xhtml" x="400" y="150" zoom="true"/>
         <Node id="resources/templates/masterPage.xhtml" x="400" y="450" zoom="true"/>
         <Node id="vistas/inicio.xhtml" x="150" y="150" zoom="true"/>
         <Node id="vistas/usuario/pruebaCalificar.xhtml" x="900" y="1050" zoom="true"/>
         <Node id="vistas/verReputacion.xhtml?id=#{alquileresOfrecidos.usuarioId}" x="150" y="1650" zoom="true"/>
-        <Node id="vistas/usuario/cambiarContrasena.xhtml" x="2400" y="150" zoom="true"/>
+        <Node id="vistas/usuario/cambiarContrasena.xhtml" x="2398" y="125" zoom="true"/>
         <Node id="vistas/usuario/misPagos.xhtml" x="400" y="1500" zoom="true"/>
+        <Node id="vistas/admin/provincias.xhtml" x="2018" y="330" zoom="true"/>
         <Node id="vistas/usuario/destacarPublicacion.xhtml" x="1400" y="750" zoom="true"/>
-        <Node id="vistas/admin/provincias.xhtml" x="1900" y="300" zoom="true"/>
-        <Node id="vistas/verReputacion.xhtml" x="2150" y="450" zoom="true"/>
-        <Node id="resources/comps/userPanel.xhtml" x="150" y="600" zoom="true"/>
+        <Node id="vistas/usuario/denunciaDePregunta.xhtml" x="2160" y="429" zoom="true"/>
+        <Node id="vistas/verReputacion.xhtml" x="900" y="1200" zoom="true"/>
+        <Node id="resources/comps/userPanel.xhtml" x="95" y="583" zoom="true"/>
         <Node id="index.xhtml" x="150" y="450" zoom="true"/>
-        <Node id="resources/comps/loginBox.xhtml" x="1650" y="450" zoom="true"/>
         <Node id="vistas/mostrarPublicacion.xhtml?id=#{verCategoriaBean.publicacionSeleccionada}" x="900" y="900" zoom="true"/>
-        <Node id="resources/comps/panelPublicitante.xhtml" x="1900" y="600" zoom="true"/>
+        <Node id="resources/comps/loginBox.xhtml" x="1647" y="406" zoom="true"/>
+        <Node id="resources/comps/panelPublicitante.xhtml" x="1898" y="568" zoom="true"/>
         <Node id="vistas/usuario/misAlquileresOfrecidos.xhtml" x="1650" y="600" zoom="true"/>
+        <Node id="vistas/usuario/denunciaDePregunta.xhtml?id=#{publicacionDesplegada.comentarioDenunciadoId}" x="2910" y="102" zoom="true"/>
         <Node id="vistas/noEncontrado.xhtml" x="650" y="900" zoom="true"/>
         <Node id="vistas/pub/misPublicidades.xhtml" x="2900" y="150" zoom="true"/>
-        <Node id="resources/comps/categoriesMenu.xhtml" x="650" y="150" zoom="true"/>
-        <Node id="vistas/verCategoria.xhtml?id=#{verCategoriaBean.subcategoriaSeleccionada}" x="1900" y="150" zoom="true"/>
+        <Node id="resources/comps/categoriesMenu.xhtml" x="652" y="195" zoom="true"/>
+        <Node id="vistas/verCategoria.xhtml?id=#{verCategoriaBean.subcategoriaSeleccionada}" x="1913" y="94" zoom="true"/>
     </Scope>
     <Scope Scope="All Faces Configurations">
         <Node id="vistas/usuario/cuentaUsuario.xhtml" x="900" y="300" zoom="true"/>

@@ -45,6 +45,10 @@ public class Denuncia implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fecha;
     
+    @JoinColumn(name = "MOTIVO_FK", referencedColumnName = "MOTIVO_DENUNCIA_ID")
+    @ManyToOne(optional = false)
+    private MotivoDenuncia motivoFk;
+    
     @JoinColumn(name = "USUARIO_FK", referencedColumnName = "USUARIO_ID")
     @ManyToOne(optional = false)
     private Usuario usuarioFk;
@@ -56,10 +60,6 @@ public class Denuncia implements Serializable {
     @JoinColumn(name = "PUBLICACION_FK", referencedColumnName = "PUBLICACION_ID")
     @ManyToOne(optional = false)
     private Publicacion pulicacionFk;
-    
-    @JoinColumn(name = "MOTIVO_FK", referencedColumnName = "MOTIVO_DENUNCIA_ID")
-    @ManyToOne(optional = false)
-    private MotivoDenuncia motivoFk;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "denunciaFk")
     private List<DenunciaXEstado> denunciaXEstadoList;

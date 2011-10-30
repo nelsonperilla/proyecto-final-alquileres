@@ -43,6 +43,7 @@ public class ComentarioDTO implements Serializable  {
         this.fecha=fecha;
         this.usuarioId=usuarioId;
         this.usuario=usuario;
+        this.publicacionId = publicacionId;
         if(respuesta!=null)
             this.respuesta=respuesta;
         else{
