@@ -22,12 +22,11 @@
                         <h:outputText value="#{pregunta.comentario}"/> 
                     </td>
                     <td width="30px">
-                        <h:commandLink value="Denunciar" 
+                        <p:commandLink value="Denunciar"
                             action="#{publicacionDesplegada.denunciarComentario}">
                             <f:setPropertyActionListener value="#{pregunta.id}" 
-                                target="#{publicacionDesplegada.comentarioDenunciadoId}" />
-                        </h:commandLink>                        
-
+                                target="#{publicacionDesplegada.comentarioDenunciadoId}"/>                           
+                        </p:commandLink>
                     </td>
                 </tr>
                 <tr>
@@ -38,12 +37,11 @@
                         <h:outputText value="#{pregunta.respuesta.comentario}" rendered="#{pregunta.respuesta != null}"/>  
                     </td>
                     <td>
-                        <h:commandLink value="Denunciar" style="text-align: right" rendered="#{pregunta.respuesta != null}"
+                        <p:commandLink value="Denunciar" style="text-align: right" rendered="#{pregunta.respuesta != null}"
                             action="#{publicacionDesplegada.denunciarComentario}">
                             <f:setPropertyActionListener value="#{pregunta.respuesta.id}" 
-                                target="#{publicacionDesplegada.comentarioDenunciadoId}" />
-                        </h:commandLink>                        
-                        
+                                target="#{publicacionDesplegada.comentarioDenunciadoId}" />                        
+                        </p:commandLink>
                     </td>
                 </tr>
             </table>

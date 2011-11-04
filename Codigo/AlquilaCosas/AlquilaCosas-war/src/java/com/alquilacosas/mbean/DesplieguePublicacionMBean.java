@@ -59,7 +59,7 @@ public class DesplieguePublicacionMBean implements Serializable {
     private String action;
     private double userRating;
     private String horaInicioAlquiler;
-    private int comentarioDenunciadoId;
+    private int comentarioDenunciadoId;    
 
     /** Creates a new instance of DesplieguePublicacionMBean */
     public DesplieguePublicacionMBean() {
@@ -630,7 +630,5 @@ public class DesplieguePublicacionMBean implements Serializable {
      */
     public void setComentarioDenunciadoId(int comentarioDenunciadoId) {
         this.comentarioDenunciadoId = comentarioDenunciadoId;
-    }
-
-
+    }    
 }

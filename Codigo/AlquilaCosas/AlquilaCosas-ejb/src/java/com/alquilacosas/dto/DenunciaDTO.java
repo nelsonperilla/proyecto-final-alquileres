@@ -131,8 +131,4 @@ public class DenunciaDTO implements Serializable {
     public void setMotivo(MotivoDenuncia motivo) {
         this.motivo = motivo;
     }
-    
-    
-    
-    
 }

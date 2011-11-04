@@ -31,7 +31,7 @@ public class DenunciaXEstadoFacade extends AbstractFacade<DenunciaXEstado> {
     public DenunciaXEstadoFacade() {
         super(DenunciaXEstado.class);
     }
-    
+
     public void saveState(Denuncia denuncia, NombreEstadoDenuncia nombreEstadoDenuncia) {
         DenunciaXEstado estadoActual = new DenunciaXEstado();
         estadoActual.setDenunciaFk(denuncia);
@@ -44,6 +44,5 @@ public class DenunciaXEstadoFacade extends AbstractFacade<DenunciaXEstado> {
 
         denuncia.agregarDenunciaXEstado(estadoActual);
         em.persist(estadoActual);
-    }
-
+    }    
 }

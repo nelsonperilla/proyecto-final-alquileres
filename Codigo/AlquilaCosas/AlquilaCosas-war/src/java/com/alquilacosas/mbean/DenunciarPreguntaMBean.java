@@ -61,7 +61,7 @@ public class DenunciarPreguntaMBean implements Serializable {
         }
     }
     
-    public void saveDenuncia()
+    public String saveDenuncia()
     {
         if(getUsuarioLogueado().isLogueado())
         {
@@ -83,7 +83,7 @@ public class DenunciarPreguntaMBean implements Serializable {
                     "Su denuncia no ha podido ser ingresada, por favor intente nuevamente", ""));                
             }
         }
-        //return null;
+        return "";
     }
 
     /**
