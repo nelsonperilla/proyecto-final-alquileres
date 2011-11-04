@@ -9,7 +9,6 @@ import com.alquilacosas.dto.DenunciaDTO;
 import com.alquilacosas.ejb.entity.MotivoDenuncia;
 import java.util.List;
 import javax.ejb.Local;
-import javax.faces.model.SelectItem;
 
 
 /**
@@ -26,7 +25,4 @@ public interface DenunciaPreguntaBeanLocal {
     public List<MotivoDenuncia> getMotivosDenuncia();
 
     public void saveDenuncia(DenunciaDTO nuevaDenuncia, int motivoSeleccionado);
-
-
-    
 }

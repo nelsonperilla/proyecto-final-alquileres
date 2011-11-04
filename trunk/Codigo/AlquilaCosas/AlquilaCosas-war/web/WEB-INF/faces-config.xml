@@ -143,11 +143,6 @@
             <redirect/>
         </navigation-case>
         <navigation-case>
-            <from-outcome>denunciarComentario</from-outcome>
-            <to-view-id>/vistas/usuario/denunciaDePregunta.xhtml?id=#{publicacionDesplegada.comentarioDenunciadoId}</to-view-id>
-            <redirect/>
-        </navigation-case>        
-        <navigation-case>
             <from-action>#{buscarBean.buscar}</from-action>
             <to-view-id>/vistas/resultados.xhtml?art=#{buscarBean.buscar}</to-view-id>
             <redirect/>
@@ -257,5 +252,10 @@
             <to-view-id>/vistas/comoPublicitar.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>denunciarComentario</from-outcome>
+            <to-view-id>/vistas/usuario/denunciaDePregunta.xhtml?id=#{publicacionDesplegada.comentarioDenunciadoId}</to-view-id>
+            <redirect/>
+        </navigation-case>         
     </navigation-rule>
 </faces-config>

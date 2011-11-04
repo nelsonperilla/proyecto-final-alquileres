@@ -28,10 +28,9 @@ public class MotivoDenunciaFacade extends AbstractFacade<MotivoDenuncia> {
     public MotivoDenunciaFacade() {
         super(MotivoDenuncia.class);
     }
-    
+
     public List<MotivoDenuncia> getAllMotivosDenuncia() {
         Query query = em.createNamedQuery("MotivoDenuncia.findAll");
         return query.getResultList();   
-    }
-    
+    }    
 }
