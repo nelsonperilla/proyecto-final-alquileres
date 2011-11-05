@@ -130,6 +130,16 @@ public class Usuario implements Serializable {
         this.fechaNac = fechaNac;
     }
     
+    public void agregarAdvertencia(Advertencia adv) {
+        advertenciaList.add(adv);
+        adv.setUsuarioFk(this);
+    }
+    
+    public void agregarSuspension(Suspension sus) {
+        suspensionList.add(sus);
+        sus.setUsuarioFk(this);
+    }
+    
     public void agregarDomicilio(Domicilio dom) {
         domicilioList.add(dom);
         dom.setUsuarioFk(this);
@@ -354,6 +364,15 @@ public class Usuario implements Serializable {
 
     public void setPagoList(List<Pago> pagoList) {
         this.pagoList = pagoList;
+    }
+    
+    public UsuarioXEstado getEstadoVigente() {
+         UsuarioXEstado estado = null;
+         for (UsuarioXEstado e : this.getUsuarioXEstadoList()) {
+              if (e.getFechaHasta() == null)
+                   estado = e;
+         }
+         return estado;
     }
 
     @Override

@@ -5,125 +5,110 @@
 package com.alquilacosas.dto;
 
 import com.alquilacosas.ejb.entity.MotivoDenuncia;
-import java.io.Serializable;
 import java.util.Date;
 
 /**
  *
- * @author jorge
+ * @author wilson
  */
-public class DenunciaDTO implements Serializable {
-    private int id;
-    private Date fecha;
-    private String explicacion;
-    private int usuarioId;
-    private int comentarioId;
-    private int publicacionId;
-    private MotivoDenuncia motivo;
-    
-    public DenunciaDTO()
-    {}
-    
-    public DenunciaDTO(int id, Date fecha, String explicacion,int usuarioId,int comentarioId, int publicacionId)
-    {
-        this.comentarioId = id;
-        this.fecha = fecha;
-        this.explicacion = explicacion;
-        this.usuarioId = usuarioId;
-        this.comentarioId = comentarioId;
-        this.publicacionId = publicacionId;
-    }
+public class DenunciaDTO {
+     
+     private Integer denunciaId;
+     private Date fecha;
+     private Integer usuarioId;
+     private String usuarioUsername;
+     private Integer publicacionId;
+     private String textoPublicacion;
+     private Integer comentarioId;
+     private String textoComentario;
+     private MotivoDenuncia motivo;
+     private String nombreMotivo;
+     private String explicacion;
 
-    /**
-     * @return the id
-     */
-    public int getId() {
-        return id;
-    }
+     public DenunciaDTO(Integer denunciaId, Date fecha, Integer usuarioId, String usuarioUsername, Integer publicacionId, Integer comentarioId, String nombremotivo) {
+          this.denunciaId = denunciaId;
+          this.fecha = fecha;
+          this.usuarioId = usuarioId;
+          this.usuarioUsername = usuarioUsername;
+          this.publicacionId = publicacionId;
+          this.comentarioId = comentarioId;
+          this.nombreMotivo = nombremotivo;
+     }
 
-    /**
-     * @param id the id to set
-     */
-    public void setId(int id) {
-        this.id = id;
-    }
+     public DenunciaDTO() {
+     }
+     
+     public Boolean getIsPublicacion() {
+          return comentarioId == null;
+     }
 
-    /**
-     * @return the fecha
-     */
-    public Date getFecha() {
-        return fecha;
-    }
+     public Integer getComentarioId() {
+          return comentarioId;
+     }
 
-    /**
-     * @param fecha the fecha to set
-     */
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
-    }
+     public String getTextoComentario() {
+          return textoComentario;
+     }
 
-    /**
-     * @return the explicacion
-     */
-    public String getExplicacion() {
-        return explicacion;
-    }
+     public void setTextoComentario(String textoComentario) {
+          this.textoComentario = textoComentario;
+     }
 
-    /**
-     * @param explicacion the explicacion to set
-     */
-    public void setExplicacion(String explicacion) {
-        this.explicacion = explicacion;
-    }
+     public String getTextoPublicacion() {
+          return textoPublicacion;
+     }
 
-    /**
-     * @return the usuarioId
-     */
-    public int getUsuarioId() {
-        return usuarioId;
-    }
+     public void setTextoPublicacion(String textoPublicacion) {
+          this.textoPublicacion = textoPublicacion;
+     }
 
-    /**
-     * @param usuarioId the usuarioId to set
-     */
-    public void setUsuarioId(int usuarioId) {
-        this.usuarioId = usuarioId;
-    }
+     public void setComentarioId(Integer comentarioId) {
+          this.comentarioId = comentarioId;
+     }
 
-    /**
-     * @return the comentarioId
-     */
-    public int getComentarioId() {
-        return comentarioId;
-    }
+     public Integer getDenunciaId() {
+          return denunciaId;
+     }
 
-    /**
-     * @param comentarioId the comentarioId to set
-     */
-    public void setComentarioId(int comentarioId) {
-        this.comentarioId = comentarioId;
-    }
+     public void setDenunciaId(Integer denunciaId) {
+          this.denunciaId = denunciaId;
+     }
 
-    /**
-     * @return the publicacionId
-     */
-    public int getPublicacionId() {
-        return publicacionId;
-    }
+     public Date getFecha() {
+          return fecha;
+     }
 
-    /**
-     * @param publicacionId the publicacionId to set
-     */
-    public void setPublicacionId(int publicacionId) {
-        this.publicacionId = publicacionId;
-    }
+     public void setFecha(Date fecha) {
+          this.fecha = fecha;
+     }
 
-    /**
-     * @return the motivo
-     */
-    public MotivoDenuncia getMotivo() {
-        return motivo;
-    }
+     public MotivoDenuncia getMotivo() {
+          return motivo;
+     }
+
+          public Integer getPublicacionId() {
+          return publicacionId;
+     }
+
+     public void setPublicacionId(Integer publicacionId) {
+          this.publicacionId = publicacionId;
+     }
+
+     public Integer getUsuarioId() {
+          return usuarioId;
+     }
+
+     public void setUsuarioId(Integer usuarioId) {
+          this.usuarioId = usuarioId;
+     }
+
+     public String getUsuarioUsername() {
+          return usuarioUsername;
+     }
+
+     public void setUsuarioUsername(String usuarioUsername) {
+          this.usuarioUsername = usuarioUsername;
+     }
 
     /**
      * @param motivo the motivo to set
@@ -131,4 +116,20 @@ public class DenunciaDTO implements Serializable {
     public void setMotivo(MotivoDenuncia motivo) {
         this.motivo = motivo;
     }
+    
+    public String getExplicacion() {
+          return explicacion;
+     }
+
+     public void setExplicacion(String explicacion) {
+          this.explicacion = explicacion;
+     }
+
+     public String getNombreMotivo() {
+          return nombreMotivo;
+     }
+
+     public void setNombreMotivo(String nombreMotivo) {
+          this.nombreMotivo = nombreMotivo;
+     }
 }

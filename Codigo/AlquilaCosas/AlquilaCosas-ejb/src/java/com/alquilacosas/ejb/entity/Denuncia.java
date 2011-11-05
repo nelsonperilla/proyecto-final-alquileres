@@ -128,6 +128,14 @@ public class Denuncia implements Serializable {
     public void setExplicacion(String explicacion) {
         this.explicacion = explicacion;
     }
+
+     public List<DenunciaXEstado> getDenunciaXEstadoList() {
+          return denunciaXEstadoList;
+     }
+
+     public void setDenunciaXEstadoList(List<DenunciaXEstado> denunciaXEstadoList) {
+          this.denunciaXEstadoList = denunciaXEstadoList;
+     }
     
     @Override
     public int hashCode() {

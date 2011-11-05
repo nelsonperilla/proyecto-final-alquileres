@@ -32,7 +32,7 @@ public class EstadoPublicacionFacade extends AbstractFacade<EstadoPublicacion> {
 
     public EstadoPublicacion findByNombre(NombreEstadoPublicacion nombre) {
         EstadoPublicacion estadoPublicacion = null;
-        Query query = em.createNamedQuery("EstadoPublicacion.findByNombre");
+        Query query = em.createQuery("SELECT e FROM EstadoPublicacion e WHERE e.nombre = :nombre");
         query.setParameter("nombre", nombre);
         estadoPublicacion = (EstadoPublicacion) query.getSingleResult();
         return estadoPublicacion;

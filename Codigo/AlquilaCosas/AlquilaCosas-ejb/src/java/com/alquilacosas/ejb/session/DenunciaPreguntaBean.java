@@ -76,11 +76,11 @@ public class DenunciaPreguntaBean implements DenunciaPreguntaBeanLocal
 
     @Override
     public void saveDenuncia(DenunciaDTO nuevaDenuncia, int motivoSeleccionado) {
-        nuevaDenuncia.setMotivo(motivoDenunciaFacade.find(motivoSeleccionado));
+        //nuevaDenuncia.setMotivo(motivoDenunciaFacade.find(motivoSeleccionado));
         Denuncia denuncia = new Denuncia();
         
         denuncia.setExplicacion(nuevaDenuncia.getExplicacion());
-        denuncia.setMotivoFk(nuevaDenuncia.getMotivo());
+        //denuncia.setMotivoFk(nuevaDenuncia.getMotivo());
         denuncia.setComentarioFk(comentarioFacade.find(nuevaDenuncia.getComentarioId()));
         denuncia.setFecha(nuevaDenuncia.getFecha());
         denuncia.setPulicacionFk(publicacionFacade.find(nuevaDenuncia.getPublicacionId()));

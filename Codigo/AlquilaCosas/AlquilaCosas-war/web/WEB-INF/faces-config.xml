@@ -78,15 +78,29 @@
     </navigation-rule>
     
     <navigation-rule>
-        <from-view-id>/vistas/usuario/misPublicaciones.xhtml</from-view-id>
+        <from-view-id>/vistas/usuario/misAlquileresOfrecidos.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>mostrarPublicacion</from-outcome>
-            <to-view-id>/vistas/mostrarPublicacion.xhtml?id=#{misPublicaciones.publicacionId}</to-view-id>
+            <to-view-id>/vistas/mostrarPublicacion.xhtml?id=#{alquileresOfrecidos.publicacionId}</to-view-id>
             <redirect/>
         </navigation-case>
         <navigation-case>
-            <from-outcome>destacarPublicacion</from-outcome>
-            <to-view-id>/vistas/usuario/destacarPublicacion.xhtml?id=#{misPublicaciones.publicacionId}</to-view-id>
+            <from-outcome>verReputacionUsuario</from-outcome>
+            <to-view-id>/vistas/verReputacion.xhtml?id=#{alquileresOfrecidos.usuarioId}</to-view-id>
+            <redirect/>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <from-view-id>/vistas/admin/administrarDenuncias.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>mostrarPublicacion</from-outcome>
+            <to-view-id>/vistas/mostrarPublicacion.xhtml?id=#{admDenuncias.publicacionId}</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>verReputacionUsuario</from-outcome>
+            <to-view-id>/vistas/verReputacion.xhtml?id=#{admDenuncias.usuarioDenunciadoId}</to-view-id>
             <redirect/>
         </navigation-case>
     </navigation-rule>
@@ -257,5 +271,10 @@
             <to-view-id>/vistas/usuario/denunciaDePregunta.xhtml?id=#{publicacionDesplegada.comentarioDenunciadoId}</to-view-id>
             <redirect/>
         </navigation-case>         
+        <navigation-case>
+            <from-outcome>administrarDenuncias</from-outcome>
+            <to-view-id>/vistas/admin/administrarDenuncias.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
     </navigation-rule>
 </faces-config>

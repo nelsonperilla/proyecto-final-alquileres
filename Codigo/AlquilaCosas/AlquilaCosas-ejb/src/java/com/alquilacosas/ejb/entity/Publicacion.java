@@ -354,5 +354,13 @@ public class Publicacion implements Serializable {
     public void setServicioDestacacionList(List<Destacacion> servicioDestacacionList) {
         this.servicioDestacacionList = servicioDestacacionList;
     }
-
+    
+    public PublicacionXEstado getEstadoPublicacionVigente () {
+         PublicacionXEstado estado = null;
+         for (PublicacionXEstado e : this.publicacionXEstadoList) {
+              if (e.getFechaHasta() == null)
+                   estado = e;
+         }
+         return estado;
+    }
 }
