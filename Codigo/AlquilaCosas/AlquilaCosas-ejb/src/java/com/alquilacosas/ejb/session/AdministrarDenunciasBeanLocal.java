@@ -31,12 +31,4 @@ public interface AdministrarDenunciasBeanLocal {
 
      List<DenunciaDTO> convertirADenunciaDTO(List<Denuncia> denunciasList);
 
-     void suspenderPublicacion(int idPublicacion, Usuario usuario);
-
-     void banearComentario(Usuario usuario, int idComentario);
-
-     void advertirUsuario(Denuncia denuncia, Usuario usuario);
-
-     void suspenderUsuario(Usuario usuario, int idPublicacionYaSuspendida);
-     
 }
