@@ -65,17 +65,17 @@
                                             <td colspan="2">
                                                 <h:outputText value="Si desea, puede detallar la razón de su denuncia:"  /><br/>
                                                 <h:inputTextarea style="width: 400px; height: 200px" value="#{denuncia.descripcionDenuncia}"/><br/>
-                                                <p:commandButton value="Ingresar denuncia" action="#{denuncia.saveDenuncia}" update="grow"/>
-                                                <p:growl id="grow" showDetail="true" globalOnly="true" />
+                                                <p:commandButton value="Ingresa denuncia" action="#{denuncia.saveDenuncia}" update="grow"/>
                                             </td>
                                         </tr>
                                     </table>
                                 </div>
+                                <p:growl id="grow" showDetail="true"  globalOnly="true" />
                                 </h:form>
                             </td>    
                         </tr>
                     </table>
-                
+                    
             </ui:define>
             <ui:define name="right" >
                 <p:outputPanel id="paneles" >
