@@ -38,7 +38,7 @@
                               <f:setPropertyActionListener value="#{cc.attrs.var.publicacionId}" 
                                                            target="#{cc.attrs.bean[cc.attrs.propPublicacion]}" />
                          </h:commandLink>
-                         <h:commandLink value="Usuario: #{cc.attrs.var.usuarioUsername}" action="#{cc.attrs.bean[cc.attrs.metodoVerUsuario]}" >
+                         <h:commandLink value="Usuario Denunciado: #{cc.attrs.var.usuarioUsername}" action="#{cc.attrs.bean[cc.attrs.metodoVerUsuario]}" >
                               <f:setPropertyActionListener value="#{cc.attrs.var.usuarioId}" 
                                                            target="#{cc.attrs.bean[cc.attrs.propUsuario]}" />
                          </h:commandLink>
@@ -46,7 +46,9 @@
                     </h:panelGrid>
                     <h:panelGrid columns="1" >
                          <h:outputText value="Fecha: #{cc.attrs.var.fecha}" />
-                         <h:outputText value="Explicación: #{cc.attrs.var.explicacion}" />
+                         <h:outputText id="explicacion" value="Explicación: #{cc.attrs.var.explicacionShort}" />
+                         <p:tooltip for="explicacion" value="#{cc.attrs.var.explicacion}"  
+                              showEffect="slide" hideEffect="fade" showEffectLength="1000" hideEffectLength="1000"/>
                     </h:panelGrid> 
                     <h:panelGrid columns="1" >
                          <p:commandLink value="Aceptar" title="Aceptar Denuncia"

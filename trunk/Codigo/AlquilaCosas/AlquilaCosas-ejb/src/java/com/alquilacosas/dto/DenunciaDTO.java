@@ -132,4 +132,8 @@ public class DenunciaDTO {
      public void setNombreMotivo(String nombreMotivo) {
           this.nombreMotivo = nombreMotivo;
      }
+     
+     public String getExplicacionShort() {
+          return explicacion.length() > 20 ? explicacion.substring(0, 20) + "..." : explicacion;
+     }
 }

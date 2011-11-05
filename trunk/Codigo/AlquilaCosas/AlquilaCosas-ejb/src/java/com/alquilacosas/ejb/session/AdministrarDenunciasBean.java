@@ -19,12 +19,14 @@ import com.alquilacosas.ejb.entity.PublicacionXEstado;
 import com.alquilacosas.ejb.entity.Suspension;
 import com.alquilacosas.ejb.entity.Usuario;
 import com.alquilacosas.ejb.entity.UsuarioXEstado;
+import com.alquilacosas.facade.AdvertenciaFacade;
 import com.alquilacosas.facade.ComentarioFacade;
 import com.alquilacosas.facade.DenunciaFacade;
 import com.alquilacosas.facade.EstadoDenunciaFacade;
 import com.alquilacosas.facade.EstadoPublicacionFacade;
 import com.alquilacosas.facade.EstadoUsuarioFacade;
 import com.alquilacosas.facade.PublicacionFacade;
+import com.alquilacosas.facade.SuspensionFacade;
 import com.alquilacosas.facade.UsuarioFacade;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -44,11 +46,15 @@ public class AdministrarDenunciasBean implements AdministrarDenunciasBeanLocal {
      @EJB
      private DenunciaFacade denunciaFacade;
      @EJB
+     private UsuarioFacade usuarioFacade;
+     @EJB
      private PublicacionFacade publicacionFacade;
      @EJB
      private ComentarioFacade comentarioFacade;
      @EJB
-     private UsuarioFacade usuarioFacade;
+     private SuspensionFacade suspensionFacade;
+     @EJB
+     private AdvertenciaFacade advertenciaFacade;
      @EJB
      private EstadoDenunciaFacade estadoDenunciaFacade;
      @EJB
@@ -83,27 +89,122 @@ public class AdministrarDenunciasBean implements AdministrarDenunciasBeanLocal {
      @RolesAllowed({"USUARIO", "ADMIN"})
      public void aceptarDenuncia(int denunciaId) {
           Denuncia denuncia = denunciaFacade.find(denunciaId);
-          if (denuncia.getComentarioFk() == null) {
-               Usuario usuario = usuarioFacade.find(denuncia.getPulicacionFk().getUsuarioFk().getUsuarioId());
-               // Publicacion: Suspender Publicacion
-               suspenderPublicacion(denuncia.getPulicacionFk().getPublicacionId(), usuario);
-               // Advertir Usuario
-               advertirUsuario(denuncia, usuario);
-               usuarioFacade.edit(usuario);
-          }
-          else {
-               Usuario usuario = usuarioFacade.find(denuncia.getComentarioFk().getUsuarioFk().getUsuarioId());
-               // Comentario: Banear Comentario
-               banearComentario(usuario,denuncia.getComentarioFk().getComentarioId());
-               // Advertir Usuario
-               advertirUsuario(denuncia, usuario);
-               usuarioFacade.edit(usuario);
-          }
           // Cambiar de Estado Denuncia
           EstadoDenuncia newEstadoDenuncia = estadoDenunciaFacade.findByNombre(EstadoDenuncia.NombreEstadoDenuncia.ACEPTADA);
           denuncia.getDenunciaXEstadoList().get(0).setFechaHasta(new Date());
           denuncia.agregarDenunciaXEstado(new DenunciaXEstado(denuncia, newEstadoDenuncia));
           denunciaFacade.edit(denuncia);
+          //Si es Publicacion
+          if (denuncia.getComentarioFk() == null) {               
+               //Suspender Publicacion
+               Publicacion publicacionSuspender = publicacionFacade.find(denuncia.getPulicacionFk().getPublicacionId());
+               EstadoPublicacion estadoSuspendidoSuspender = estadoPublicacionFacade.findByNombre(NombreEstadoPublicacion.SUSPENDIDA);
+               PublicacionXEstado newEstadoPublicacionSuspender = new PublicacionXEstado(publicacionSuspender, estadoSuspendidoSuspender);
+               publicacionSuspender.getEstadoPublicacionVigente().setFechaHasta(new Date());
+               publicacionSuspender.agregarPublicacionXEstado(newEstadoPublicacionSuspender);
+               publicacionFacade.edit(publicacionSuspender);
+               
+               //Advertir Usuario
+               Usuario usuario = usuarioFacade.find(denuncia.getPulicacionFk().getUsuarioFk().getUsuarioId());
+               Advertencia advertencia = new Advertencia();
+               advertencia.setDenuncia(denuncia);
+               advertencia.setFecha(new Date());
+               usuario.agregarAdvertencia(advertencia);
+               usuarioFacade.edit(usuario);
+               usuarioFacade.refresh(usuario);
+               
+               //Suspender Usuario Si aplica
+               if (usuario.getAdvertenciaList().size() % 3 == 0) {
+                    //Cambiar Estado Usuario
+                    EstadoUsuario estadoUsuarioSuspendido = estadoUsuarioFacade.findByNombre(NombreEstadoUsuario.SUSPENDIDO);
+                    UsuarioXEstado newEstadoUsuario = new UsuarioXEstado(usuario, estadoUsuarioSuspendido);
+                    usuario.getEstadoVigente().setFechaHasta(new Date());
+                    usuario.agregarUsuarioXEstado(newEstadoUsuario);
+                    usuarioFacade.edit(usuario);
+                    
+                    //Agregar Suspencion                    
+                    Suspension suspension = new Suspension();
+                    suspension.setFechaDesde(new Date());
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(new Date());
+                    cal.add(Calendar.MONTH, 1);
+                    suspension.setFechaHasta(cal.getTime());
+                    usuario.agregarSuspension(suspension);
+                    
+                    //Asignar Suspencion a Advertencias
+                    for(Advertencia a : usuario.getAdvertenciaList())
+                         if (a.getSuspensionFk() == null)
+                              suspension.agregarAdvertencia(a);
+                    usuarioFacade.edit(usuario);
+                    
+                    //Suspender publicaciones
+                    for(Publicacion p : usuario.getPublicacionList())
+                         if (p.getPublicacionId() != denuncia.getPulicacionFk().getPublicacionId()) {
+                              if (p.getEstadoPublicacionVigente().getEstadoPublicacion().getNombre().equals(NombreEstadoPublicacion.ACTIVA)) {
+                                   Publicacion publicacion = publicacionFacade.find(p.getPublicacionId());
+                                   EstadoPublicacion estadoSuspendido = estadoPublicacionFacade.findByNombre(NombreEstadoPublicacion.SUSPENDIDA);
+                                   PublicacionXEstado newEstadoPublicacion = new PublicacionXEstado(publicacion, estadoSuspendido);
+                                   publicacion.getEstadoPublicacionVigente().setFechaHasta(new Date());
+                                   publicacion.agregarPublicacionXEstado(newEstadoPublicacion);
+                                   publicacionFacade.edit(publicacion);
+                              }
+                         }
+               }
+          }
+          
+          //Si es Comentario
+          else {
+               //Banear Comentario
+               Comentario comentario = comentarioFacade.find(denuncia.getComentarioFk().getComentarioId());
+               comentario.setBaneado(Boolean.TRUE);
+               comentarioFacade.edit(comentario);
+               
+               //Advertir Usuario
+               Usuario usuario = usuarioFacade.find(denuncia.getComentarioFk().getUsuarioFk().getUsuarioId());
+               Advertencia advertencia = new Advertencia();
+               advertencia.setDenuncia(denuncia);
+               advertencia.setFecha(new Date());
+               usuario.agregarAdvertencia(advertencia);
+               usuarioFacade.edit(usuario);
+               usuarioFacade.refresh(usuario);
+               
+               //Suspender Usuario si aplica
+               if (usuario.getAdvertenciaList().size() % 3 == 0) {
+                    //Cambiar Estado Usuario
+                    EstadoUsuario estadoUsuarioSuspendido = estadoUsuarioFacade.findByNombre(NombreEstadoUsuario.SUSPENDIDO);
+                    UsuarioXEstado newEstadoUsuario = new UsuarioXEstado(usuario, estadoUsuarioSuspendido);
+                    usuario.getEstadoVigente().setFechaHasta(new Date());
+                    usuario.agregarUsuarioXEstado(newEstadoUsuario);
+                    usuarioFacade.edit(usuario);
+                    
+                    //Agregar Suspencion                    
+                    Suspension suspension = new Suspension();
+                    suspension.setFechaDesde(new Date());
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(new Date());
+                    cal.add(Calendar.MONTH, 1);
+                    suspension.setFechaHasta(cal.getTime());
+                    usuario.agregarSuspension(suspension);
+                    
+                    //Asignar Suspencion a Advertencias
+                    for(Advertencia a : usuario.getAdvertenciaList())
+                         if (a.getSuspensionFk() == null)
+                              suspension.agregarAdvertencia(a);
+                    usuarioFacade.edit(usuario);
+                    
+                    //Suspender publicaciones
+                    for(Publicacion p : usuario.getPublicacionList()) {
+                         if (p.getEstadoPublicacionVigente().getEstadoPublicacion().getNombre().equals(NombreEstadoPublicacion.ACTIVA)) {
+                              Publicacion publicacion = publicacionFacade.find(p.getPublicacionId());
+                              EstadoPublicacion estadoSuspendido = estadoPublicacionFacade.findByNombre(NombreEstadoPublicacion.SUSPENDIDA);
+                              PublicacionXEstado newEstadoPublicacion = new PublicacionXEstado(publicacion, estadoSuspendido);
+                              publicacion.getEstadoPublicacionVigente().setFechaHasta(new Date());
+                              publicacion.agregarPublicacionXEstado(newEstadoPublicacion);
+                              publicacionFacade.edit(publicacion);
+                         }
+                    }
+               }
+          }     
      }
      
      @Override
@@ -118,6 +219,7 @@ public class AdministrarDenunciasBean implements AdministrarDenunciasBeanLocal {
      }
 
      @Override
+     @RolesAllowed({"USUARIO", "ADMIN"})
      public List<DenunciaDTO> convertirADenunciaDTO(List<Denuncia> denunciasList) {
           List<DenunciaDTO> denunciasDTO = new ArrayList<DenunciaDTO>();
           for(Denuncia d : denunciasList) {
@@ -135,63 +237,5 @@ public class AdministrarDenunciasBean implements AdministrarDenunciasBeanLocal {
                denunciasDTO.add(denunciaDTO);
           }
           return denunciasDTO;
-     }
-
-     @Override
-     public void suspenderPublicacion(int idPublicacion, Usuario usuario) {
-          for (Publicacion p : usuario.getPublicacionList()) {
-               if (p.getPublicacionId() == idPublicacion) {
-                    EstadoPublicacion estadoSuspendido = estadoPublicacionFacade.findByNombre(NombreEstadoPublicacion.SUSPENDIDA);
-                    PublicacionXEstado newEstadoPublicacion = new PublicacionXEstado(p, estadoSuspendido);
-                    p.getEstadoPublicacionVigente().setFechaHasta(new Date());
-                    p.agregarPublicacionXEstado(newEstadoPublicacion);
-               }
-          }
-     }
-
-     @Override
-     public void banearComentario(Usuario usuario, int idComentario) {
-          for (Comentario c : usuario.getComentarioList())
-               if (c.getComentarioId() == idComentario)
-                    c.setBaneado(Boolean.TRUE);
-     }
-
-     @Override
-     public void advertirUsuario(Denuncia denuncia, Usuario usuario) {
-          Advertencia advertencia = new Advertencia();
-          advertencia.setDenuncia(denuncia);
-          advertencia.setFecha(new Date());
-          usuario.agregarAdvertencia(advertencia);
-          // Si Aplica: Suspender Usuario
-          if (usuario.getAdvertenciaList().size() % 3 == 0) {
-               if (denuncia.getComentarioFk() == null)
-                    suspenderUsuario(usuario, denuncia.getPulicacionFk().getPublicacionId());
-               else
-                    suspenderUsuario(usuario, -1);
-          }
-     }
-
-     @Override
-     public void suspenderUsuario(Usuario usuario, int idPublicacionYaSuspendida) {
-          // Desactivar sus Publicaciones
-          for(Publicacion p : usuario.getPublicacionList())
-               if (p.getPublicacionId() != idPublicacionYaSuspendida)
-                    suspenderPublicacion(p.getPublicacionId(), usuario);
-          EstadoUsuario estadoUsuarioSuspendido = estadoUsuarioFacade.findByNombre(NombreEstadoUsuario.SUSPENDIDO);
-          UsuarioXEstado newEstadoUsuario = new UsuarioXEstado(usuario, estadoUsuarioSuspendido);
-          usuario.getEstadoVigente().setFechaHasta(new Date());
-          usuario.agregarUsuarioXEstado(newEstadoUsuario);
-          Suspension suspension = new Suspension();
-          suspension.setFechaDesde(new Date());
-          Calendar cal = Calendar.getInstance();
-          cal.setTime(new Date());
-          cal.add(Calendar.MONTH, 1);
-          suspension.setFechaHasta(cal.getTime());
-          for(Advertencia a : usuario.getAdvertenciaList())
-               if (a.getSuspensionFk() == null) {
-                    suspension.agregarAdvertencia(a);
-                    a.setSuspensionFk(suspension);
-               }          
-          usuario.agregarSuspension(suspension);
      }
 }
