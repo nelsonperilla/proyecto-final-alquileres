@@ -20,6 +20,7 @@ public class ComentarioDTO implements Serializable  {
     private String usuario;
     private ComentarioDTO respuesta;
     private int publicacionId;
+    private boolean baneado;
 
     public ComentarioDTO(){ }
     
@@ -152,6 +153,20 @@ public class ComentarioDTO implements Serializable  {
      */
     public void setPublicacionId(int publicacionId) {
         this.publicacionId = publicacionId;
+    }
+
+    /**
+     * @return the baneado
+     */
+    public boolean isBaneado() {
+        return baneado;
+    }
+
+    /**
+     * @param baneado the baneado to set
+     */
+    public void setBaneado(boolean baneado) {
+        this.baneado = baneado;
     }
     
     

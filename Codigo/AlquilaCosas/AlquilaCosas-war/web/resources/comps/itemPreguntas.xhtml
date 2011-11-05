@@ -19,11 +19,16 @@
                         <h:outputText value="Pregunta:"  />  
                     </td>
                     <td width="500px">
-                        <h:outputText value="#{pregunta.comentario}"/> 
+                        <h:outputText value="#{pregunta.comentario}" 
+                                      rendered="#{pregunta.baneado == false}"/> 
+                         <h:graphicImage value="/resources/images/comentarioBaneado.jpg"
+                                width="416" height="90" 
+                                rendered="#{pregunta.baneado == true}" />                       
                     </td>
                     <td width="30px">
                         <p:commandLink value="Denunciar"
-                            action="#{publicacionDesplegada.denunciarComentario}">
+                            action="#{publicacionDesplegada.denunciarComentario}"
+                            rendered="#{pregunta.baneado == false}">
                             <f:setPropertyActionListener value="#{pregunta.id}" 
                                 target="#{publicacionDesplegada.comentarioDenunciadoId}"/>                           
                         </p:commandLink>
@@ -34,10 +39,15 @@
                         <h:outputText value="Respuesta:" rendered="#{pregunta.respuesta != null}"/>  
                     </td>
                     <td>
-                        <h:outputText value="#{pregunta.respuesta.comentario}" rendered="#{pregunta.respuesta != null}"/>  
+                        <h:outputText value="#{pregunta.respuesta.comentario}" 
+                        rendered="#{pregunta.respuesta != null and pregunta.respuesta.baneado == false}"/>  
+                         <h:graphicImage value="/resources/images/comentarioBaneado.jpg"
+                                width="416" height="90" 
+                                rendered="#{pregunta.baneado == true and pregunta.respuesta.baneado == true}" />                            
                     </td>
                     <td>
-                        <p:commandLink value="Denunciar" style="text-align: right" rendered="#{pregunta.respuesta != null}"
+                        <p:commandLink value="Denunciar" style="text-align: right" 
+                        rendered="#{pregunta.respuesta != null}"
                             action="#{publicacionDesplegada.denunciarComentario}">
                             <f:setPropertyActionListener value="#{pregunta.respuesta.id}" 
                                 target="#{publicacionDesplegada.comentarioDenunciadoId}" />                        

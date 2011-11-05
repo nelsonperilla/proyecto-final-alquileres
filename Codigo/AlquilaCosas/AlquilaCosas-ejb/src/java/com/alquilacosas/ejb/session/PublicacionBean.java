@@ -428,12 +428,15 @@ public class PublicacionBean implements PublicacionBeanLocal {
                         respuestaTemp.getComentario(), respuestaTemp.getFecha(),
                         respuestaTemp.getUsuarioFk().getUsuarioId(),
                         respuestaTemp.getUsuarioFk().getNombre(), null);
+                respuesta.setBaneado(respuestaTemp.getBaneado());
             }
-
-            resultado.add(new ComentarioDTO(comentario.getComentarioId(),
+            ComentarioDTO pregunta = new ComentarioDTO(comentario.getComentarioId(),
                     comentario.getComentario(), comentario.getFecha(),
                     comentario.getUsuarioFk().getUsuarioId(),
-                    comentario.getUsuarioFk().getNombre(), respuesta));
+                    comentario.getUsuarioFk().getNombre(), respuesta);
+            pregunta.setBaneado(comentario.getBaneado());
+            
+            resultado.add(pregunta);
         }
         return resultado;
     }
