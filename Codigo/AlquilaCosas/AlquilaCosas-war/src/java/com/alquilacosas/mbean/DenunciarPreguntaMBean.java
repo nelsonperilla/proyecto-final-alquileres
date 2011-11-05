@@ -61,7 +61,7 @@ public class DenunciarPreguntaMBean implements Serializable {
         }
     }
     
-    public String saveDenuncia()
+    public void saveDenuncia()
     {
         if(getUsuarioLogueado().isLogueado())
         {
@@ -79,11 +79,10 @@ public class DenunciarPreguntaMBean implements Serializable {
             }
             catch(Exception e){
                 FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Su denuncia no ha podido ser ingresada, por favor intente nuevamente", ""));                
             }
         }
-        return "";
     }
 
     /**

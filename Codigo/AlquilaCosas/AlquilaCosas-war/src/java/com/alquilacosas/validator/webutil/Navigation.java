@@ -15,11 +15,11 @@ import org.apache.log4j.Logger;
 public class Navigation {
     
     public static void redirect(String url) {
-        /*try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect(url);
-        } catch (Exception e) {
-            Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al ejecutar redirect().");
-        }*/
+//        try {
+//            FacesContext.getCurrentInstance().getExternalContext().redirect(url);
+//        } catch (Exception e) {
+//            Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al ejecutar redirect().");
+//        }
     }
     
 }

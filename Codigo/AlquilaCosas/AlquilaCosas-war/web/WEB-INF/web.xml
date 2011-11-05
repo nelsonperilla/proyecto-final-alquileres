@@ -95,6 +95,7 @@
             <description>Paginas permitidas para el administrador</description>
             <url-pattern>/faces/vistas/admin/*</url-pattern>
             <url-pattern>/faces/vistas/usuario/*</url-pattern>
+            <url-pattern>/faces/vistas/pub/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>ADMIN</role-name>

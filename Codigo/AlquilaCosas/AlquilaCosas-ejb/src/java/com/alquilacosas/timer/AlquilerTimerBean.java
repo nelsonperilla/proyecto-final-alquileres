@@ -60,7 +60,7 @@ public class AlquilerTimerBean implements AlquilerTimerBeanLocal{
      * @author ignacio Gigante
      */
 
-    @Schedule(second="0", minute="0", hour="23")
+    //@Schedule(second="0", minute="0", hour="23")
     @Override
     public void fromConfirmadoToActivo(Timer timer) {
         
@@ -96,7 +96,7 @@ public class AlquilerTimerBean implements AlquilerTimerBeanLocal{
      * @author ignacio Gigante
      */
     
-    @Schedule(second="0", minute="0", hour="23")
+    //@Schedule(second="0", minute="0", hour="23")
     @Override
     public void fromActivoToFinalizado(Timer timer) {
         
@@ -134,7 +134,7 @@ public class AlquilerTimerBean implements AlquilerTimerBeanLocal{
      * @author ignacio Gigante
      */
     
-    @Schedule(second="0", minute="0", hour="23")
+    //@Schedule(second="0", minute="0", hour="23")
     @Override
     public void controlarPublicacionesVencidas(Timer timer) {
         
@@ -174,7 +174,7 @@ public class AlquilerTimerBean implements AlquilerTimerBeanLocal{
      * @author ignacio Gigante
      */
     
-    @Schedule(second="0", minute="0", hour="23")
+    //@Schedule(second="0", minute="0", hour="23")
     @Override
     public void borrarPedidosRechazadosYCancelados(Timer timer) {
         
