@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.prime.com.tr/ui" >
+
+     <!-- INTERFACE -->
+     <cc:interface>
+          <cc:attribute name="var" type="java.lang.Object" required="true" />
+          <cc:attribute name="bean" type="java.lang.Object" required="true"  />
+          <cc:attribute name="metodoVerUsuario" type="java.lang.String" required="true" />
+          <cc:attribute name="metodoVerPublicacion" type="java.lang.String" required="true" />
+          <cc:attribute name="metodoAceptar" type="java.lang.String" required="true" />
+          <cc:attribute name="metodoRechazar" type="java.lang.String" required="true" />
+          <cc:attribute name="propPublicacion" type="java.lang.String" required="true" />
+          <cc:attribute name="propUsuario" type="java.lang.String" required="true" />
+          <cc:attribute name="aceptarDlg" type="java.lang.String" required="true" />
+          <cc:attribute name="rechazarDlg" type="java.lang.String" required="true" />
+          <cc:attribute name="panelDialogos" type="java.lang.String" required="true" />
+     </cc:interface>
+
+     <!-- IMPLEMENTATION -->
+     <cc:implementation>
+          <div class="itemDenuncia">
+               <h:panelGrid columns="3" >
+                    <h:panelGrid columns="1" >
+                         <h:commandLink value="Publicación: #{cc.attrs.var.textoPublicacion}" 
+                                        action="#{cc.attrs.bean[cc.attrs.metodoVerPublicacion]}" 
+                                        rendered="#{cc.attrs.var.isPublicacion}">
+                              <f:setPropertyActionListener value="#{cc.attrs.var.publicacionId}" 
+                                                           target="#{cc.attrs.bean[cc.attrs.propPublicacion]}" />
+                         </h:commandLink>
+                         <h:commandLink value="Comentario: #{cc.attrs.var.textoComentario}" 
+                                        action="#{cc.attrs.bean[cc.attrs.metodoVerPublicacion]}" 
+                                        rendered="#{not cc.attrs.var.isPublicacion}">
+                              <f:setPropertyActionListener value="#{cc.attrs.var.publicacionId}" 
+                                                           target="#{cc.attrs.bean[cc.attrs.propPublicacion]}" />
+                         </h:commandLink>
+                         <h:commandLink value="Usuario: #{cc.attrs.var.usuarioUsername}" action="#{cc.attrs.bean[cc.attrs.metodoVerUsuario]}" >
+                              <f:setPropertyActionListener value="#{cc.attrs.var.usuarioId}" 
+                                                           target="#{cc.attrs.bean[cc.attrs.propUsuario]}" />
+                         </h:commandLink>
+                         <h:outputText value="Motivo: #{cc.attrs.var.nombreMotivo}" />
+                    </h:panelGrid>
+                    <h:panelGrid columns="1" >
+                         <h:outputText value="Fecha: #{cc.attrs.var.fecha}" />
+                         <h:outputText value="Explicación: #{cc.attrs.var.explicacion}" />
+                    </h:panelGrid> 
+                    <h:panelGrid columns="1" >
+                         <p:commandLink value="Aceptar" title="Aceptar Denuncia"
+                                        actionListener="#{cc.attrs.bean[cc.attrs.metodoAceptar]}"
+                                        update="#{cc.attrs.panelDialogos}"
+                                        oncomplete="#{cc.attrs.aceptarDlg}.show();" >
+                              <f:attribute name="denId" value="#{cc.attrs.var.denunciaId}" />
+                         </p:commandLink>
+                         <p:commandLink value="Rechazar" title="Rechazar Denuncia"
+                                        actionListener="#{cc.attrs.bean[cc.attrs.metodoRechazar]}"
+                                        update="#{cc.attrs.panelDialogos}"
+                                        oncomplete="#{cc.attrs.rechazarDlg}.show();" >
+                              <f:attribute name="denId" value="#{cc.attrs.var.denunciaId}" />
+                         </p:commandLink>
+                    </h:panelGrid>
+               </h:panelGrid>
+          </div>
+     </cc:implementation>
+</html>

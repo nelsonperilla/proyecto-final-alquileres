@@ -59,6 +59,9 @@ public class Comentario implements Serializable {
     @Column(name = "PREGUNTA")
     private Boolean pregunta;
     
+    @Column(name = "BANEADO")
+    private Boolean baneado;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "respuesta")
     private List<Comentario> comentarioList;
     
@@ -171,6 +174,14 @@ public class Comentario implements Serializable {
         }
         return true;
     }
+
+     public Boolean getBaneado() {
+          return baneado;
+     }
+
+     public void setBaneado(Boolean baneado) {
+          this.baneado = baneado;
+     }
 
     @Override
     public String toString() {

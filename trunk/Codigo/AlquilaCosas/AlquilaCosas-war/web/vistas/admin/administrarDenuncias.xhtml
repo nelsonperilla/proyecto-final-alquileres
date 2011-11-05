@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:comps="http://java.sun.com/jsf/composite/comps"
+      xmlns:p="http://primefaces.prime.com.tr/ui" 
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" >
+
+     <body>
+
+          <ui:composition template="./../../resources/templates/masterPage.xhtml">
+
+               <ui:define name="logInfo">
+                    <h:form>
+                         <h:commandLink value="Inicio" action="inicio" />
+                    </h:form>
+               </ui:define>
+
+               <ui:define name="left">
+                    <comps:categoriesMenu />    
+               </ui:define>
+
+               <ui:define name="principal">
+                    <h1>Administrar Denuncias</h1>
+                    <br />
+                    <h:form id="denuncias">
+                         <p:growl id="growl" globalOnly="true" showDetail="true" />
+                         <h:selectOneMenu id="ver" value="#{admDenuncias.filtroSeleccionado}" >                                
+                              <f:selectItems value="#{admDenuncias.filtros}" />
+                              <p:ajax event="change" update="denuncias tabla" process="@this"
+                                      listener="#{admDenuncias.actualizarDenuncias}" />
+                         </h:selectOneMenu>
+                         <p:dataTable id="tabla" value="#{admDenuncias.denuncias}" var="den"
+                                      styleClass="itemsTable" paginator="true" rows="10" paginatorPosition="bottom"
+                                      emptyMessage="No hay denuncias para mostrar.">
+                              <p:column>
+                                   <comps:itemDenuncias var="#{den}" bean="#{admDenuncias}"
+                                                        metodoAceptar="prepararAceptarDenuncia"
+                                                        metodoRechazar="prepararRechazarDenuncia"
+                                                        metodoVerPublicacion="verPublicacion"
+                                                        metodoVerUsuario="verUsuario"
+                                                        propPublicacion="publicacionId"
+                                                        propUsuario="usuarioDenunciadoId"
+                                                        aceptarDlg="aceptarDlg"
+                                                        rechazarDlg="rechazarDlg" 
+                                                        panelDialogos="dialogos"/>
+                              </p:column>
+                         </p:dataTable>
+                    </h:form>
+
+                    <p:outputPanel id="dialogos" >
+                         <p:dialog widgetVar="aceptarDlg" header="Aceptar Denuncia"
+                                   modal="true" resizable="false" >
+                              <h:form >
+                                   <h:outputText value="Esta seguro que desea Aceptar la Denuncia y aplicar las sanciones correspondientes al infractor?" />
+                                   <p:separator />
+                                   <h:panelGrid columns="2" columnClasses="leftCol,rightCol" style="width:100%" >
+                                        <p:commandButton value="Si" actionListener="#{admDenuncias.aceptarDenuncia()}" 
+                                                         update=":denuncias" oncomplete="aceptarDlg.hide()" />
+                                        <p:commandButton value="No" oncomplete="aceptarDlg.hide()" />
+                                   </h:panelGrid>
+                              </h:form>
+                         </p:dialog>
+
+                         <p:dialog widgetVar="rechazarDlg" header="Rechazar Denuncia"
+                                   modal="true" resizable="false" >
+                              <h:form >
+                                   <h:outputText value="Esta seguro que desea Rechazar la Denuncia y absolver al supuesto infractor?" />
+                                   <p:separator />
+                                   <h:panelGrid columns="2" columnClasses="leftCol,rightCol" style="width:100%" >
+                                        <p:commandButton value="Si" actionListener="#{admDenuncias.rechazarDenuncia()}" 
+                                                         update=":denuncias" oncomplete="rechazarDlg.hide()" />
+                                        <p:commandButton value="No" oncomplete="rechazarDlg.hide()" />
+                                   </h:panelGrid>
+                              </h:form>
+                         </p:dialog>
+                    </p:outputPanel>
+               </ui:define>
+
+               <ui:define name="right">
+                    <comps:loginBox />
+                    <comps:adminPanel />
+                    <comps:panelPublicitante />
+                    <comps:userPanel />
+               </ui:define>
+
+          </ui:composition>
+
+     </body>
+</html>

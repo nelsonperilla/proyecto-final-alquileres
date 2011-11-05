@@ -6,6 +6,7 @@ package com.alquilacosas.facade;
 
 import com.alquilacosas.ejb.entity.EstadoDenuncia;
 import javax.ejb.Stateless;
+import javax.persistence.Query;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -27,4 +28,11 @@ public class EstadoDenunciaFacade extends AbstractFacade<EstadoDenuncia> {
         super(EstadoDenuncia.class);
     }
     
+    public EstadoDenuncia findByNombre(EstadoDenuncia.NombreEstadoDenuncia nombre) {
+        EstadoDenuncia estadoDenuncia = null;
+        Query query = em.createQuery("SELECT e FROM EstadoDenuncia e WHERE e.nombre = :nombre");
+        query.setParameter("nombre", nombre);
+        estadoDenuncia = (EstadoDenuncia) query.getSingleResult();
+        return estadoDenuncia;
+    }
 }

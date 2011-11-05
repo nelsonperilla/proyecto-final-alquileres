@@ -45,7 +45,7 @@ public class Advertencia implements Serializable {
     private Usuario usuarioFk;
     
     @JoinColumn(name = "SUSPENSION_FK", referencedColumnName = "SUSPENSION_ID")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Suspension suspensionFk;
     
     @OneToOne

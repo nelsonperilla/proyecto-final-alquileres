@@ -54,6 +54,8 @@ public class DenunciaXEstado implements Serializable {
     }
     
     public DenunciaXEstado(Denuncia denuncia, EstadoDenuncia estado) {
+         this.fechaDesde = new Date();
+         this.fechaHasta = null;
         this.denunciaFk = denuncia;
         this.estadoDenunciaFk = estado;
     }
