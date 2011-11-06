@@ -18,9 +18,9 @@ import com.alquilacosas.ejb.entity.PublicacionXEstado;
 import com.alquilacosas.ejb.entity.Destacacion;
 import com.alquilacosas.ejb.entity.Publicidad;
 import com.alquilacosas.ejb.entity.Servicio;
-import com.alquilacosas.ejb.entity.TipoPago;
 import com.alquilacosas.ejb.entity.TipoDestacacion;
 import com.alquilacosas.ejb.entity.TipoDestacacion.NombreTipoDestacacion;
+import com.alquilacosas.ejb.entity.TipoPago;
 import com.alquilacosas.ejb.entity.TipoPago.NombreTipoPago;
 import com.alquilacosas.ejb.entity.TipoPublicidad.DuracionPublicidad;
 import com.alquilacosas.ejb.entity.Usuario;
@@ -33,6 +33,7 @@ import com.alquilacosas.facade.PagoFacade;
 import com.alquilacosas.facade.PublicidadFacade;
 import com.alquilacosas.facade.TipoPagoFacade;
 import com.alquilacosas.facade.TipoDestacacionFacade;
+import com.alquilacosas.facade.UsuarioFacade;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -66,16 +67,20 @@ public class DestacarPublicacionBean implements DestacarPublicacionBeanLocal {
     private PagoFacade pagoFacade;
     @EJB
     private PublicidadFacade publicidadFacade;
+    @EJB
+    private UsuarioFacade usuarioFacade;
     
     @Override
-    public Integer iniciarCobroDestacacion(Integer publicacionId, NombreTipoDestacacion nombreTipo, 
+    public Integer iniciarCobroDestacacion(Integer usuarioId, Integer publicacionId, NombreTipoDestacacion nombreTipo, 
             Double precio, NombreTipoPago nombreTipoPago) {
         
+        Usuario usuario = usuarioFacade.find(usuarioId);
         TipoPago tipoPago = tipoPagoFacade.findByNombre(nombreTipoPago);
         Pago pago = new Pago();
         pago.setFechaInicio(new Date());
         pago.setMonto(precio);
         pago.setTipoPagoFk(tipoPago);
+        pago.setUsuarioFk(usuario);
         
         Publicacion publicacion = publicacionFacade.find(publicacionId);
         TipoDestacacion tipo = tipoDestacacionFacade.findByNombre(nombreTipo);

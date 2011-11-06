@@ -15,6 +15,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import org.apache.log4j.Logger;
 import org.primefaces.event.RowEditEvent;
 
 /**
@@ -45,6 +46,7 @@ public class PaisMBean implements Serializable {
      
      @PostConstruct
      public void init(){
+         Logger.getLogger(PaisMBean.class).info("PaisMBean: postconstruct.");
           paises = paisBean.getPaises();
      }
      

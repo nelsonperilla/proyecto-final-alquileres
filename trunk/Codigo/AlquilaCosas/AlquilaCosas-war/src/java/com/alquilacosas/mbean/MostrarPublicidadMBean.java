@@ -15,6 +15,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -37,6 +38,7 @@ public class MostrarPublicidadMBean implements Serializable {
     
     @PostConstruct
     public void init() {
+        Logger.getLogger(MostrarPublicidadMBean.class).info("MostrarPublicidadMBean: postconstruct.");
         HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String url = req.getPathInfo();
         if(url.contains("inicio.xhtml")) {

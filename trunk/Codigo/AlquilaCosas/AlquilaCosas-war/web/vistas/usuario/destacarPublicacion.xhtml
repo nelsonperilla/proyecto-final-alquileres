@@ -12,9 +12,7 @@
         <ui:composition template="./../../resources/templates/masterPage.xhtml">
 
             <ui:define name="logInfo">
-                <h:form>
-                    <h:commandLink value="Inicio" action="inicio" />
-                </h:form>
+                <h:link value="inicio" outcome="/vistas/inicio" />
             </ui:define>
 
             <ui:define name="left">
@@ -37,13 +35,14 @@
                     
                     <div id="items" >
                         <comps:itemInfo bean="#{destacarBean}" property="publicacionId" 
-                                method="verPublicacion" var="#{destacarBean.publicacion}" />
+                                var="#{destacarBean.publicacion}" />
                     </div>
                     <br/>
                     <h:panelGrid columns="3" >
                         <h:outputLabel value="Duracion:" />
                         <h:selectOneMenu value="#{destacarBean.tipoSeleccionado}"
-                                         id="duracion" required="true" >
+                                         id="duracion" required="true"
+                                         readonly="Seleccione una duracion" >
                             <f:selectItem itemLabel="Seleccione una duracion..." />
                             <f:selectItems value="#{destacarBean.tipos}" />
                             <p:ajax event="change" listener="#{destacarBean.tipoSeleccionado}"
@@ -63,7 +62,7 @@
                         <p:commandLink actionListener="#{destacarBean.destacar}" >
                             <h:graphicImage value="#{resource['images:pagoPaypal.gif']}" />
                         </p:commandLink>
-                        <p:commandButton value="No, gracias" action="misPublicaciones" ajax="false" />
+                        <p:button value="No, gracias" outcome="/vistas/usuario/misPublicaciones" />
                     </h:panelGrid>
                     <p:growl id="growl" globalOnly="true" />
                 </h:form>

@@ -21,6 +21,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -48,6 +49,7 @@ public class DenunciarPreguntaMBean implements Serializable {
     
     @PostConstruct
     public void init() {
+        Logger.getLogger(DenunciarPreguntaMBean.class).info("DenunciarPreguntaMBean: postconstruct."); 
         motivos = new ArrayList<SelectItem>();
         List<MotivoDenuncia> listaMotivos = denunciaBean.getMotivosDenuncia();
         motivoSeleccionado = 0; 

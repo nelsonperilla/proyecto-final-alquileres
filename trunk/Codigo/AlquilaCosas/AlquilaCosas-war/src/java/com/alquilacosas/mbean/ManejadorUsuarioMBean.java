@@ -16,6 +16,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
 /**
@@ -40,6 +41,7 @@ public class ManejadorUsuarioMBean implements Serializable {
 
     @PostConstruct
     public void init() {
+        Logger.getLogger(ManejadorUsuarioMBean.class).info("ManejadorUsuarioMBean: postconstruct."); 
         FacesContext context = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
     }
@@ -65,7 +67,7 @@ public class ManejadorUsuarioMBean implements Serializable {
             return null;
         }
         logueado = true;
-        return "inicio";
+        return "inicio.xhtml";
     }
     
     public String loginEnPagina() {
@@ -109,7 +111,7 @@ public class ManejadorUsuarioMBean implements Serializable {
         logueado = false;
         administrador = false;
         request.getSession().invalidate();
-        return "inicio";
+        return "pinicio";
     }
 
     public boolean isAdministrador() {
@@ -167,5 +169,9 @@ public class ManejadorUsuarioMBean implements Serializable {
      */
     public void setLoginOnPageArg(String loginOnPageArg) {
         this.loginOnPageArg = loginOnPageArg;
+    }
+
+    public void setPublicitante(boolean publicitante) {
+        this.publicitante = publicitante;
     }
 }

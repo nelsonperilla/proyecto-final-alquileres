@@ -50,6 +50,7 @@ public class VerCategoriaMBean implements Serializable {
     
     @PostConstruct
     public void init() {
+        Logger.getLogger(VerCategoriaMBean.class).info("VerCategoriaMBean: postconstruct.");
         String param = FacesContext.getCurrentInstance().getExternalContext()
                 .getRequestParameterMap().get("id");
         if(param != null) {
@@ -58,10 +59,14 @@ public class VerCategoriaMBean implements Serializable {
             } catch (NumberFormatException e) {
                 Logger.getLogger(VerCategoriaMBean.class).error("NumberFormatExcepcion al convertir parametro de url en int");
             }
+        } else {
+            return;
         }
         if(id != null) {
             buscar(0, 10);
             subcategorias = categoriaBean.getSubCategorias(id);
+        } else {
+            return;
         }
         
         model = new LazyDataModel<PublicacionDTO>() {

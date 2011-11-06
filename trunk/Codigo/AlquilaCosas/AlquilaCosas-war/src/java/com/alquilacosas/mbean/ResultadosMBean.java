@@ -20,6 +20,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
+import org.apache.log4j.Logger;
 import org.primefaces.model.LazyDataModel;
 
 /**
@@ -51,6 +52,7 @@ public class ResultadosMBean implements Serializable {
 
     @PostConstruct
     public void init() {
+        Logger.getLogger(ResultadosMBean.class).info("ResultadosMBean: postconstruct.");
         publicaciones = new ArrayList<PublicacionDTO>();
         busqueda = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("art");
         String cat = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("cat");

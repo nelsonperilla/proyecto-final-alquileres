@@ -18,5 +18,7 @@ public interface AdministrarUsuariosBeanLocal {
     List<UsuarioDTO> getUsuariosList();
 
     void setRoles(UsuarioDTO usuarioFacade, List<Integer> roles);
+
+    public void registrarPublicitante(int usuarioId);
     
 }

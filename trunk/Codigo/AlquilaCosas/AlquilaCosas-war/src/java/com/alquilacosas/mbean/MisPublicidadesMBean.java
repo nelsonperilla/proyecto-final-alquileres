@@ -13,6 +13,7 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -35,6 +36,7 @@ public class MisPublicidadesMBean implements Serializable {
     
     @PostConstruct
     public void init() {
+        Logger.getLogger(MisPublicidadesMBean.class).info("MisPublicidadesMBean: postconstruct."); 
         if( usuarioLogueado.getUsuarioId() != null ){
            publicidades = publicidadBean.getPublicidades(usuarioLogueado.getUsuarioId());
         }
@@ -57,12 +59,10 @@ public class MisPublicidadesMBean implements Serializable {
     }
 
     public PublicidadDTO getSelectedPublicidad() {
-        System.out.println("a ver" + selectedPublicidad);     
         return selectedPublicidad;
     }
 
     public void setSelectedPublicidad(PublicidadDTO selectedPublicidad) {
-        System.out.println("setting publicidad: " + selectedPublicidad);
         this.selectedPublicidad = selectedPublicidad;
     }
     

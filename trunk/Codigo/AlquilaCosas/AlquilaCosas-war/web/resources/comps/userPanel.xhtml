@@ -13,29 +13,34 @@
     <!-- IMPLEMENTATION -->
     <cc:implementation>
         <p:outputPanel rendered="#{login.logueado}" >
-            <h:form>
                 <p:panel styleClass="controlPanel">
                     <h3 style="color:gainsboro; margin-top: 1px">Usuario</h3>
                     <h:panelGrid columns="1" cellpadding="2" style="width: 100%; text-align: center">
                         <h:outputLabel value="Hola #{login.username}" styleClass="labelBienvenida" />
-                        <h:commandLink value="Publicar" action="nuevaPublicacion" />
-                        <h:commandLink value="Responder preguntas" action="responderPreguntas" />
-                        <h:commandLink value="Mis publicaciones" action="misPublicaciones"/>
-                        <h:commandLink value="Mis datos" action="datosUsuario" />
-                        <h:commandLink value="Cambiar contraseña" action="cambiarContrasena" />
-                        <h:commandLink value="Pedidos Recibidos" action="misPedidosRecibidos" />
-                        <h:commandLink value="Pedidos Realizados" action="misPedidosRealizados" />
-                        <h:commandLink value="Mis alquileres ofrecidos" action="misAlquileresOfrecidos" />
-                        <h:commandLink value="Mis alquileres tomados" action="misAlquileresTomados" />
-                        <h:commandLink value="Mi Reputación" action="verReputacion" />
-                        <h:commandLink value="Mis Pagos" action="misPagos" />
+                        <h:link value="Publicar" outcome="/vistas/usuario/nuevaPublicacion" />
+                        <h:link value="Responder preguntas" outcome="/vistas/usuario/responderPreguntas" />
+                        <h:link value="Responder preguntas" outcome="/vistas/usuario/responderPreguntas" />
+                        <h:link value="Mis publicaciones" outcome="/vistas/usuario/misPublicaciones"/>
+                        <h:link value="Mis datos" outcome="/vistas/usuario/datosUsuario" />
+                        <h:link value="Cambiar contraseña" outcome="/vistas/usuario/cambiarContrasena" />
+                        <h:link value="Pedidos Recibidos" outcome="/vistas/usuario/misPedidosRecibidos" />
+                        <h:link value="Pedidos Realizados" outcome="/vistas/usuario/misPedidosRealizados" />
+                        <h:link value="Mis alquileres ofrecidos" outcome="/vistas/usuario/misAlquileresOfrecidos" />
+                        <h:link value="Mis alquileres tomados" outcome="/vistas/usuario/misAlquileresTomados" />
+                        <h:link value="Mi Reputación" outcome="/vistas/verReputacion" >
+                            <f:param name="id" value="#{login.usuarioId}" />
+                        </h:link>
+                        <h:link value="Mis Pagos" outcome="/vistas/usuario/misPagos" />
+                        <h:link value="Registrar como publicitante" outcome="/vistas/usuario/nuevoPublicitante"
+                                       rendered="#{not login.publicitante}"/>
                     
                         <f:facet name="footer" >
-                            <h:commandLink value="Salir" action="#{login.logout}" />
+                            <h:form>
+                                <h:commandLink value="Salir" action="#{login.logout}" />
+                            </h:form>
                         </f:facet>
                     </h:panelGrid>
                 </p:panel>
-            </h:form>
         </p:outputPanel>
     </cc:implementation>
 </html>

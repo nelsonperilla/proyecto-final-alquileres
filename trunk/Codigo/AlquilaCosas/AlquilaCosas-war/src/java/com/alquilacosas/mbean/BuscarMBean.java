@@ -8,6 +8,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -25,6 +26,7 @@ public class BuscarMBean {
     
     @PostConstruct
     public void init() {
+        Logger.getLogger(BuscarMBean.class).info("BuscarMBean: postconstruct.");
         buscar = FacesContext.getCurrentInstance().getExternalContext()
                 .getRequestParameterMap().get("art");
     }

@@ -12,9 +12,7 @@
         <ui:composition template="./../../resources/templates/masterPage.xhtml">
 
             <ui:define name="logInfo">
-                <h:form>
-                    <h:commandLink value="Inicio" action="inicio" />
-                </h:form>
+                <h:link value="inicio" outcome="/vistas/inicio" />
             </ui:define>
 
             <ui:define name="left" >
@@ -30,26 +28,32 @@
 
                                 <h:outputLabel value="Nombre" />
                                 <p:inputText value="#{modUsuario.usuario.nombre}"
+                                             styleClass="datosInput"
                                              disabled="true"/>
 
                                 <h:outputLabel value="Apellido" />
                                 <p:inputText value="#{modUsuario.usuario.apellido}"
+                                             styleClass="datosInput"
                                              disabled="true"/>
 
                                 <h:outputLabel value="DNI" />
                                 <p:inputText value="#{modUsuario.usuario.dni}"
+                                             styleClass="datosInput"
                                              disabled="true"/>
 
                                 <h:outputLabel value="Email" />
                                 <p:inputText value="#{modUsuario.usuario.email}" 
+                                             styleClass="datosInput"
                                              disabled="true" />
 
                                 <h:outputLabel value="Telefono" />
                                 <p:inputText value="#{modUsuario.telefono}"
+                                             styleClass="datosInput"
                                              disabled="#{not modUsuario.editando}" />
 
                                 <h:outputLabel value="Fecha de nacimiento" />
                                 <p:calendar value="#{modUsuario.fechaNacimiento}"
+                                            styleClass="datosInput"
                                             pattern="dd/MM/yyyy" disabled="#{not modUsuario.editando}"
                                             locale="es" />
                             </h:panelGrid>
@@ -81,31 +85,37 @@
 
                             <h:outputLabel value="Ciudad" />
                             <p:inputText id="ciudad" value="#{modUsuario.domicilio.ciudad}"
+                                         styleClass="datosInput"
                                          disabled="#{not modUsuario.editando}" />
                             <p:message for="ciudad" />
 
                             <h:outputLabel value="Barrio" />
                             <p:inputText id="barrio" value="#{modUsuario.domicilio.barrio}"
+                                         styleClass="datosInput"
                                          disabled="#{not modUsuario.editando}" />
                             <p:message for="barrio" />
 
                             <h:outputLabel value="Calle" />
                             <p:inputText id="calle" value="#{modUsuario.domicilio.calle}"
+                                         styleClass="datosInput"
                                          disabled="#{not modUsuario.editando}"/>
                             <p:message for="calle" />
 
                             <h:outputLabel value="Numero" />
                             <p:inputText id="numero" value="#{modUsuario.domicilio.numero}"
+                                         styleClass="datosInput"
                                          disabled="#{not modUsuario.editando}"/>
                             <p:message for="numero" />
 
                             <h:outputLabel value="Piso" />
                             <p:inputText id="piso" value="#{modUsuario.domicilio.piso}"
+                                         styleClass="datosInput"
                                          disabled="#{not modUsuario.editando}"/>
                             <p:message for="piso" />
 
                             <h:outputLabel value="Depto" />
                             <p:inputText id="depto" value="#{modUsuario.domicilio.depto}" 
+                                         styleClass="datosInput"
                                          disabled="#{not modUsuario.editando}" />
                             <p:message for="depto" />
 

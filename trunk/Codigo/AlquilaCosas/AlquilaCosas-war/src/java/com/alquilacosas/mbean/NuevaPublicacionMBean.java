@@ -25,6 +25,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 
 @ManagedBean(name = "publicacion")
@@ -71,7 +72,7 @@ public class NuevaPublicacionMBean implements Serializable {
 
     @PostConstruct
     public void init() {
-
+        Logger.getLogger(NuevaPublicacionMBean.class).info("NuevaPublicacionMBean: postconstruct.");
         imagenes = new ArrayList<byte[]>();
         precios = new ArrayList<PrecioDTO>();
         for(PeriodoDTO p: periodosBean.getPeriodos()) {
@@ -87,10 +88,9 @@ public class NuevaPublicacionMBean implements Serializable {
         periodoMaximos = new ArrayList<SelectItem>();
         
         List<CategoriaDTO> listaCategoria = categoriaBean.getCategoriasPrincipal();
-        for (CategoriaDTO categoria : listaCategoria) {
-            categorias.add(new SelectItem(categoria.getId(), categoria.getNombre()));
+        for (CategoriaDTO c : listaCategoria) {
+            categorias.add(new SelectItem(c.getId(), c.getNombre()));
         }
-        
         List<PeriodoDTO> periodos = periodosBean.getPeriodos();
         for ( PeriodoDTO p : periodos ){
             periodoMinimos.add( new SelectItem( p.getId(), p.getNombre().name() ));
@@ -136,7 +136,7 @@ public class NuevaPublicacionMBean implements Serializable {
             context.addMessage(null,
                     new FacesMessage("Publicacion Creada"));
 
-            return "destacarPublicacion";
+            return "pdestacarPublicacion";
 
         } catch (AlquilaCosasException e) {
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,

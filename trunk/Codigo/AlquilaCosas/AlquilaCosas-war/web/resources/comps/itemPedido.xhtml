@@ -38,14 +38,12 @@
                 </h:panelGrid>
 
                 <h:panelGrid columns="1" >
-                    <h:commandLink value="#{cc.attrs.var.titulo}" action="#{cc.attrs.bean[cc.attrs.pubMethod]}" >
-                        <f:setPropertyActionListener value="#{cc.attrs.var.idPublicacion}" 
-                                                     target="#{cc.attrs.bean[cc.attrs.propertyPub]}" />
-                    </h:commandLink>
-                    <h:commandLink value="#{cc.attrs.var.usuario}" action="#{cc.attrs.bean[cc.attrs.userMethod]}" >
-                        <f:setPropertyActionListener value="#{cc.attrs.var.idUsuario}" 
-                                                     target="#{cc.attrs.bean[cc.attrs.propertyUser]}" />
-                    </h:commandLink>
+                    <h:link value="#{cc.attrs.var.titulo}" outcome="/vistas/mostrarPublicacion" >
+                        <f:param name="id" value="#{cc.attrs.var.idPublicacion}" />                        
+                    </h:link>
+                    <h:link value="#{cc.attrs.var.usuario}" outcome="/vistas/verReputacion" >
+                        <f:param name="id" value="#{cc.attrs.var.idUsuario}" />
+                    </h:link>
 
                 </h:panelGrid>
 

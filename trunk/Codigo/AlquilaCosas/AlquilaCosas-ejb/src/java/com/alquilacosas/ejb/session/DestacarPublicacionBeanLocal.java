@@ -17,8 +17,8 @@ import javax.ejb.Local;
 @Local
 public interface DestacarPublicacionBeanLocal {
 
-    public Integer iniciarCobroDestacacion(Integer publicacionId, NombreTipoDestacacion nombreTipo, 
-            Double precio, NombreTipoPago nombreTipoPago);
+    public Integer iniciarCobroDestacacion(Integer usuarioId, Integer publicacionId, 
+            NombreTipoDestacacion nombreTipo, Double precio, NombreTipoPago nombreTipoPago);
     
     public void efectuarServicio(Integer pagoId);
     

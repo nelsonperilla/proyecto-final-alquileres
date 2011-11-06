@@ -15,6 +15,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import org.apache.log4j.Logger;
 import org.primefaces.event.RowEditEvent;
 
 /**
@@ -36,6 +37,7 @@ public class AdministrarUsuariosMBean implements Serializable {
     
     @PostConstruct
     public void init() {
+        Logger.getLogger(AdministrarUsuariosMBean.class).info("AdministrarUsuariosMBean: postconstruct.");
         usuarios = usuarioBean.getUsuariosList();
         tipos = new ArrayList<Integer>();
     }

@@ -10,8 +10,6 @@ import com.alquilacosas.ejb.entity.TipoDestacacion.NombreTipoDestacacion;
 import com.alquilacosas.ejb.entity.TipoPago.NombreTipoPago;
 import com.alquilacosas.ejb.session.DestacarPublicacionBeanLocal;
 import com.alquilacosas.pagos.PaypalUtil;
-import com.alquilacosas.validator.webutil.Navigation;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,7 +20,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import org.apache.log4j.Logger;
@@ -54,6 +51,7 @@ public class DestacarPublicacionMBean implements Serializable {
 
     @PostConstruct
     public void init() {
+        Logger.getLogger(DestacarPublicacionMBean.class).info("DestacarPublicacionMBean: postconstruct."); 
         String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
         if(id == null || id.equals("")) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
@@ -66,7 +64,8 @@ public class DestacarPublicacionMBean implements Serializable {
             publicacion = destacarBean.getPublicacion(Integer.valueOf(id), login.getUsuarioId());
         } catch(AlquilaCosasException e) {
             Logger.getLogger(DestacarPublicacionMBean.class).error("La publicacion indicada no se puede destacar: " + e.getMessage());
-            Navigation.redirect("misPublicaciones.xhtml");
+            redirect();
+            return;
         }
         
         if(publicacion == null)
@@ -82,13 +81,22 @@ public class DestacarPublicacionMBean implements Serializable {
         }
     }
     
+    public void redirect() {
+        try {
+            FacesContext.getCurrentInstance().getExternalContext().redirect("inicio.xhtml");
+            FacesContext.getCurrentInstance().responseComplete();
+        } catch (Exception e) {
+            Logger.getLogger(DestacarPublicacionMBean.class).error("Excepcion al ejecutar redirect().");
+        }
+    }
+    
     public String verPublicacion() {
         return "";
     }
     
     public void destacar() {
-        Integer pagoId = destacarBean.iniciarCobroDestacacion(publicacionId, tipoSeleccionado, 
-                precio, NombreTipoPago.PAYPAL);
+        Integer pagoId = destacarBean.iniciarCobroDestacacion(login.getUsuarioId(), 
+                publicacionId, tipoSeleccionado,  precio, NombreTipoPago.PAYPAL);
         if(pagoId == null) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
                     "Error al registrar pago.", "");
@@ -98,7 +106,7 @@ public class DestacarPublicacionMBean implements Serializable {
         String url = PaypalUtil.setExpressCheckout(descripcion, Integer.toString(pagoId), 
                 Integer.toString(publicacionId), precio.toString());
         if (url != null) {
-            Navigation.redirect(url);
+            redirect();
         } else {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al comunicarse con paypal", "");
             FacesContext.getCurrentInstance().addMessage(null, msg);

@@ -16,6 +16,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import org.apache.log4j.Logger;
 import org.primefaces.event.RowEditEvent;
 
 /**
@@ -39,6 +40,7 @@ public class PeriodoAlquilerMBean implements Serializable {
      
      @PostConstruct
      public void init() {
+         Logger.getLogger(PeriodoAlquilerMBean.class).info("PeriodoAlquilerMBean: postconstruct.");
           periodosAlquiler = periodoAlquilerBean.getPeriodos();
      }
      

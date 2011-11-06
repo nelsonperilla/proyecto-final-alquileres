@@ -91,4 +91,12 @@ public class AdministrarUsuariosBean implements AdministrarUsuariosBeanLocal {
        login.setRolList(rols);
        loginFacade.edit(login); 
     }
+    
+    @Override
+    public void registrarPublicitante(int usuarioId) {
+        Rol rol = rolFacade.findByNombre(Rol.NombreRol.PUBLICITANTE);
+        Login login = loginFacade.findByUsuarioId(usuarioId);
+        login.agregarRol(rol);
+        loginFacade.edit(login);
+    }
 }

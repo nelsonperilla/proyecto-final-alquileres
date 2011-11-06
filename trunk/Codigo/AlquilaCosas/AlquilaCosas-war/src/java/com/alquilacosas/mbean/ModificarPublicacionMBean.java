@@ -28,6 +28,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
+import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 
 /**
@@ -87,6 +88,7 @@ public class ModificarPublicacionMBean implements Serializable {
 
     @PostConstruct
     public void init() {
+        Logger.getLogger(ModificarPublicacionMBean.class).info("ModificarPublicacionMBean: postconstruct.");
         String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
         if(id == null) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
@@ -230,7 +232,7 @@ public class ModificarPublicacionMBean implements Serializable {
                     selectedPeriodoMaximo, selectedEstado);
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage("Los datos fueron guardados correctamente"));
-            return "misPublicaciones";
+            return "pmisPublicaciones";
         } catch (AlquilaCosasException e) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR,

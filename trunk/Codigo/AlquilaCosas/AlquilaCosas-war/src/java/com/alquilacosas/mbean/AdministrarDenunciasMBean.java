@@ -85,13 +85,13 @@ public class AdministrarDenunciasMBean {
           actualizarDenuncias();
      }
 
-     public String verPublicacion() {
-          return "mostrarPublicacion";
-     }
-
-     public String verUsuario() {
-          return "verReputacionUsuario";
-     }
+//     public String verPublicacion() {
+//          return "mostrarPublicacion";
+//     }
+//
+//     public String verUsuario() {
+//          return "verReputacionUsuario";
+//     }
 
      public Integer getPublicacionId() {
           return publicacionId;

@@ -8,6 +8,10 @@
         <param-name>primefaces.THEME</param-name>
         <param-value>redmond</param-value>
     </context-param>
+    <context-param>
+        <param-name>javax.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL</param-name>
+        <param-value>true</param-value>
+    </context-param>
     <filter>
         <filter-name>PrimeFaces FileUpload Filter</filter-name>
         <filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
@@ -46,7 +50,7 @@
         <servlet-class>com.alquilacosas.log.Log4jInit</servlet-class>
         <init-param>
             <param-name>log4j-init-file</param-name>
-            <param-value>META-INF/classes/com/alquilacosas/log/log4j.properties</param-value>
+            <param-value>WEB-INF/log4j.properties</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>

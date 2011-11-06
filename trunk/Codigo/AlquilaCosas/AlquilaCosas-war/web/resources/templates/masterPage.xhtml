@@ -17,12 +17,12 @@
             <tr>
                 <td colspan="3" class="encabezado">
             <ui:insert name="logInfo"/>
-                </td>
+            </td>
             </tr>
             <tr>
                 <td id="title" colspan="3" >
-                    <comps:logoBar />
-                </td>
+            <comps:logoBar />
+            </td>
             </tr>
             <tr>    
                 <td valign="top" class="columnaIzq">
@@ -35,13 +35,11 @@
                                     alt="#{pub.caption}" />
                 </a>
             </ui:repeat>
-            <h:form>    
-                <p:outputPanel rendered="#{empty mostrarPublicidad.publicidadesIzq}" >        
-                    <h:commandLink action="comoPublicitar" >
-                        <h:graphicImage value="#{resource['images:publiciteLateral.jpg']}" />
-                    </h:commandLink>
-                </p:outputPanel>
-            </h:form>
+            <p:outputPanel rendered="#{empty mostrarPublicidad.publicidadesIzq}" >        
+                <h:link outcome="/vistas/comoPublicitar" >
+                    <h:graphicImage value="#{resource['images:publiciteLateral.jpg']}" />
+                </h:link>
+            </p:outputPanel>
             </td>
             <td id="principal" valign="top" >
             <ui:insert name="principal"/>
@@ -51,20 +49,17 @@
 
             <ui:repeat value="#{mostrarPublicidad.publicidadesDer}" var="pub" >
                 <a href="#{mostrarPublicidad.navegarUrl}" >
-<!--                            <f:attribute name="url" value="#{pub.url}" />-->
                     <h:graphicImage value="/imagenpub?id=#{pub.id}"
                                     alt="#{pub.caption}" width="140" height="200"
                                     style="margin-top: 10px" />
                 </a>
             </ui:repeat>
             <p:outputPanel rendered="#{empty mostrarPublicidad.publicidadesDer}" >
-                <h:form>
-                    <h:commandLink action="comoPublicitar" >
-                        <h:graphicImage value="#{resource['images:publiciteLateral.jpg']}" />
-                    </h:commandLink>
-                </h:form>
+                <h:link outcome="/vistas/comoPublicitar" >
+                    <h:graphicImage value="#{resource['images:publiciteLateral.jpg']}" />
+                </h:link>
             </p:outputPanel>
-            </td> 
+            </td>
             </tr>
             <tr>
                 <td>

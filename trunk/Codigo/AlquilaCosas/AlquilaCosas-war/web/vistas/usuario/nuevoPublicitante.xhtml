@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:comps="http://java.sun.com/jsf/composite/comps"
+      xmlns:p="http://primefaces.prime.com.tr/ui" 
+      xmlns:h="http://java.sun.com/jsf/html" >
+
+    <body>
+
+        <ui:composition template="./../../resources/templates/masterPage.xhtml">
+
+            <ui:define name="logInfo">
+                <h:link value="inicio" outcome="/vistas/inicio" />
+            </ui:define>
+
+            <ui:define name="left">
+                <comps:categoriesMenu /> 
+            </ui:define>
+
+            <ui:define name="principal">
+                <h1>Registrar publicitante</h1>
+                <h:form>
+                    <p>
+                        El registrarse como publicitante no tiene ningún costo.
+                        Lo habilitará para publicar sus anuncios en AlquilaCosas.
+                        El precio del servicio varía en función de la 
+                        duración de la publicidad, y de la ubicación de la misma en la
+                        página.
+                    </p>
+                    ¿Está seguro que se desea registrar como publicitante? Esta acción
+                    no se puede deshacer.
+                    <h:panelGrid columns="2"  >
+                        <p:commandButton value="Si" action="#{nuevoPublicitante.registrar}" ajax="false" />
+                        <p:button value="No" outcome="/vistas/inicio" />
+                    </h:panelGrid>
+                </h:form>
+            </ui:define>
+
+            <ui:define name="right">
+                <comps:loginBox />
+                <comps:adminPanel />
+                <comps:userPanel />
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

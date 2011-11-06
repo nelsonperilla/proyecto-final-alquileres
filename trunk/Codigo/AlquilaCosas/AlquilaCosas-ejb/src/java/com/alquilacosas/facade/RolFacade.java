@@ -35,7 +35,7 @@ public class RolFacade extends AbstractFacade<Rol> {
     public Rol findByNombre(NombreRol nombre) {
         Rol rol = null;
         Query getRolQuery = em.createNamedQuery("Rol.findByNombre");
-        getRolQuery.setParameter("nombre", NombreRol.USUARIO);
+        getRolQuery.setParameter("nombre", nombre);
         try {
             rol = (Rol) getRolQuery.getSingleResult();
         } catch (NoResultException e) {

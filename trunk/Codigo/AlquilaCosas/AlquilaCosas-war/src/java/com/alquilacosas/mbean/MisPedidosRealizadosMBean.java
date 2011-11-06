@@ -17,6 +17,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -42,6 +43,7 @@ public class MisPedidosRealizadosMBean implements Serializable {
     
     @PostConstruct
     public void init() {
+        Logger.getLogger(MisPedidosRealizadosMBean.class).info("MisPedidosRealizadosMBean: postconstruct."); 
         pedidosRealizados = alquilerBean.getPedidosRealizados(usuarioLogueado.getUsuarioId());
     }
     
@@ -66,13 +68,13 @@ public class MisPedidosRealizadosMBean implements Serializable {
         }
     }
     
-    public String mostrarPublicacion(){
-        return "mostrarPublicacion";    
-    }
-    
-    public String mostrarUsuario(){
-        return "verReputacionUsuario";    
-    }
+//    public String mostrarPublicacion(){
+//        return "mostrarPublicacion";    
+//    }
+//    
+//    public String mostrarUsuario(){
+//        return "verReputacionUsuario";    
+//    }
 
     public AlquilerBeanLocal getAlquilerBean() {
         return alquilerBean;

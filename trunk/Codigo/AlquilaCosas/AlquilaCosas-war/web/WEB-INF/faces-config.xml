@@ -1,270 +1,74 @@
 <?xml version='1.0' encoding='UTF-8'?>
-
-<!-- =========== FULL CONFIGURATION FILE ================================== -->
-
 <faces-config version="2.0"
     xmlns="http://java.sun.com/xml/ns/javaee" 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
 
-    <validator>
+   <validator>
         <validator-id>checkboxRequeridoValidator</validator-id>
         <validator-class>com.alquilacosas.validator.CheckboxRequeridoValidator</validator-class>
     </validator>
     
     <navigation-rule>
-        <from-view-id>/vistas/resultados.xhtml</from-view-id>
+        <from-view-id>/vistas/mostrarPublicacion.xhtml</from-view-id>
         <navigation-case>
-            <from-outcome>mostrarPublicacion</from-outcome>
-            <to-view-id>/vistas/mostrarPublicacion.xhtml?id=#{resultadosBean.publicacionSeleccionada}</to-view-id>
+            <from-outcome>pmisPedidosRealizados</from-outcome>
+            <to-view-id>/vistas/usuario/misPedidosRealizados.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
     </navigation-rule>
     
     <navigation-rule>
-        <from-view-id>/vistas/usuario/misPedidosRecibidos.xhtml</from-view-id>
+        <from-view-id>/vistas/registrarUsuario.xhtml</from-view-id>
         <navigation-case>
-            <from-outcome>mostrarPublicacion</from-outcome>
-            <to-view-id>/vistas/mostrarPublicacion.xhtml?id=#{misPedidosRecibidos.publicacionId}</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>verReputacionUsuario</from-outcome>
-            <to-view-id>/vistas/verReputacion.xhtml?id=#{misPedidosRecibidos.usuarioId}</to-view-id>
+            <from-outcome>pusuarioCreado</from-outcome>
+            <to-view-id>/vistas/usuarioCreado.xhtml?email=#{regUsuario.email}</to-view-id>
             <redirect/>
         </navigation-case>
     </navigation-rule>
     
     <navigation-rule>
-        <from-view-id>/vistas/usuario/misPedidosRealizados.xhtml</from-view-id>
+        <from-view-id>/vistas/usuario/modificarPublicacion.xhtml</from-view-id>
         <navigation-case>
-            <from-outcome>mostrarPublicacion</from-outcome>
-            <to-view-id>/vistas/mostrarPublicacion.xhtml?id=#{misPedidosRealizados.publicacionId}</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>verReputacionUsuario</from-outcome>
-            <to-view-id>/vistas/verReputacion.xhtml?id=#{misPedidosRealizados.usuarioId}</to-view-id>
+            <from-outcome>pmisPublicaciones</from-outcome>
+            <to-view-id>/vistas/usuario/misPublicaciones.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
     </navigation-rule>
     
     <navigation-rule>
-        <from-view-id>/vistas/usuario/misAlquileresTomados.xhtml</from-view-id>
+        <from-view-id>/vistas/admin/categorias.xhtml</from-view-id>
         <navigation-case>
-            <from-outcome>mostrarPublicacion</from-outcome>
-            <to-view-id>/vistas/mostrarPublicacion.xhtml?id=#{alquileresTomados.publicacionId}</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>verReputacionUsuario</from-outcome>
-            <to-view-id>/vistas/verReputacion.xhtml?id=#{alquileresTomados.usuarioId}</to-view-id>
+            <from-outcome>pcategorias</from-outcome>
+            <to-view-id>/vistas/admin/categorias.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
     </navigation-rule>
     
     <navigation-rule>
-        <from-view-id>/vistas/usuario/misAlquileresOfrecidos.xhtml</from-view-id>
+        <from-view-id>/vistas/usuario/nuevaPublicacion.xhtml</from-view-id>
         <navigation-case>
-            <from-outcome>mostrarPublicacion</from-outcome>
-            <to-view-id>/vistas/mostrarPublicacion.xhtml?id=#{alquileresOfrecidos.publicacionId}</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>verReputacionUsuario</from-outcome>
-            <to-view-id>/vistas/verReputacion.xhtml?id=#{alquileresOfrecidos.usuarioId}</to-view-id>
-            <redirect/>
-        </navigation-case>
-    </navigation-rule>
-    
-    <navigation-rule>
-        <from-view-id>/vistas/usuario/misAlquileresOfrecidos.xhtml</from-view-id>
-        <navigation-case>
-            <from-outcome>mostrarPublicacion</from-outcome>
-            <to-view-id>/vistas/mostrarPublicacion.xhtml?id=#{alquileresOfrecidos.publicacionId}</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>verReputacionUsuario</from-outcome>
-            <to-view-id>/vistas/verReputacion.xhtml?id=#{alquileresOfrecidos.usuarioId}</to-view-id>
-            <redirect/>
-        </navigation-case>
-    </navigation-rule>
-    
-    <navigation-rule>
-        <from-view-id>/vistas/admin/administrarDenuncias.xhtml</from-view-id>
-        <navigation-case>
-            <from-outcome>mostrarPublicacion</from-outcome>
-            <to-view-id>/vistas/mostrarPublicacion.xhtml?id=#{admDenuncias.publicacionId}</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>verReputacionUsuario</from-outcome>
-            <to-view-id>/vistas/verReputacion.xhtml?id=#{admDenuncias.usuarioDenunciadoId}</to-view-id>
+            <from-outcome>pdestacarPublicacion</from-outcome>
+            <to-view-id>/vistas/usuario/destacarPublicacion.xhtml?id=#{publicacion.publicacionId}</to-view-id>
             <redirect/>
         </navigation-case>
     </navigation-rule>
 
     <navigation-rule>
         <from-view-id>*</from-view-id>
-        <navigation-case>
-            <from-outcome>inicio</from-outcome>
-            <to-view-id>/vistas/inicio.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>registrarUsuario</from-outcome>
-            <to-view-id>/vistas/registrarUsuario.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>usuarioCreado</from-outcome>
-            <to-view-id>/vistas/usuarioCreado.xhtml?email=#{regUsuario.email}</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>datosUsuario</from-outcome>
-            <to-view-id>/vistas/usuario/datosUsuario.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>nuevaPublicacion</from-outcome>
-            <to-view-id>/vistas/usuario/nuevaPublicacion.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>misPublicaciones</from-outcome>
-            <to-view-id>/vistas/usuario/misPublicaciones.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>mostrarPublicacion</from-outcome>
+<!--        <navigation-case>
+            <from-outcome>pmostrarPublicacion</from-outcome>
             <to-view-id>/vistas/mostrarPublicacion.xhtml?id=#{publicationsGroup.selectedPublicationId}</to-view-id>
             <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>mostrarPublicacionDeCat</from-outcome>
-            <to-view-id>/vistas/mostrarPublicacion.xhtml?id=#{verCategoriaBean.publicacionSeleccionada}</to-view-id>
-            <redirect/>
-        </navigation-case>
+        </navigation-case>-->
         <navigation-case>
             <from-action>#{buscarBean.buscar}</from-action>
             <to-view-id>/vistas/resultados.xhtml?art=#{buscarBean.buscar}</to-view-id>
             <redirect/>
         </navigation-case>
         <navigation-case>
-            <from-outcome>categorias</from-outcome>
-            <to-view-id>/vistas/admin/categorias.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>periodos</from-outcome>
-            <to-view-id>/vistas/admin/periodosAlquiler.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>provincias</from-outcome>
-            <to-view-id>/vistas/admin/provincias.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>paises</from-outcome>
-            <to-view-id>/vistas/admin/paises.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>verCategoria</from-outcome>
-            <to-view-id>/vistas/verCategoria.xhtml?id=#{menuCatBean.categoriaSeleccionada}</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>verSubCategoria</from-outcome>
-            <to-view-id>/vistas/verCategoria.xhtml?id=#{verCategoriaBean.subcategoriaSeleccionada}</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>modificarPublicacion</from-outcome>
-            <to-view-id>/vistas/usuario/modificarPublicacion.xhtml?id=#{misPublicaciones.publicacionId}</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>administrarUsuarios</from-outcome>
-            <to-view-id>/vistas/admin/administrarUsuarios.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>responderPreguntas</from-outcome>
-            <to-view-id>/vistas/usuario/responderPreguntas.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>usuarioCreado</from-outcome>
-            <to-view-id>/vistas/usuarioCreado.xhtml?email=#{regUsuario.email}</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>misPedidosRecibidos</from-outcome>
-            <to-view-id>/vistas/usuario/misPedidosRecibidos.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>destacarPublicacion</from-outcome>
-            <to-view-id>/vistas/usuario/destacarPublicacion.xhtml?id=#{publicacion.publicacionId}</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>misAlquileresOfrecidos</from-outcome>
-            <to-view-id>/vistas/usuario/misAlquileresOfrecidos.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>misPedidosRealizados</from-outcome>
-            <to-view-id>/vistas/usuario/misPedidosRealizados.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>misAlquileresTomados</from-outcome>
-            <to-view-id>/vistas/usuario/misAlquileresTomados.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>cambiarContrasena</from-outcome>
-            <to-view-id>/vistas/usuario/cambiarContrasena.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>verReputacion</from-outcome>
-            <to-view-id>/vistas/verReputacion.xhtml?id=#{login.usuarioId}</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>nuevaPublicidad</from-outcome>
-            <to-view-id>/vistas/pub/registrarPublicidad.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>misPublicidades</from-outcome>
-            <to-view-id>/vistas/pub/misPublicidades.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>misPagos</from-outcome>
-            <to-view-id>/vistas/usuario/misPagos.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>comoPublicitar</from-outcome>
-            <to-view-id>/vistas/comoPublicitar.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>denunciarComentario</from-outcome>
-            <to-view-id>/vistas/usuario/denunciaDePregunta.xhtml?id=#{publicacionDesplegada.comentarioDenunciadoId}</to-view-id>
-            <redirect/>
-        </navigation-case>         
-        <navigation-case>
-            <from-outcome>administrarDenuncias</from-outcome>
-            <to-view-id>/vistas/admin/administrarDenuncias.xhtml</to-view-id>
+            <from-outcome>pinicio</from-outcome>
+            <to-view-id>/vistas/inicio.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
     </navigation-rule>

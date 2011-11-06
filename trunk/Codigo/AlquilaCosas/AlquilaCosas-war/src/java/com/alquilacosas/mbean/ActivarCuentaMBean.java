@@ -13,6 +13,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -33,6 +34,7 @@ public class ActivarCuentaMBean implements Serializable {
     
     @PostConstruct
     public void init() {
+        Logger.getLogger(ActivarCuentaMBean.class).info("ActivarCuentaMBean: postconstruct.");
         usuario = FacesContext.getCurrentInstance().getExternalContext()
                 .getRequestParameterMap().get("user");
         String codigo = FacesContext.getCurrentInstance().getExternalContext()

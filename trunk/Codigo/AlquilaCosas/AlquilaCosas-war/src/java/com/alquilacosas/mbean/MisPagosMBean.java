@@ -13,6 +13,7 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -35,6 +36,7 @@ public class MisPagosMBean implements Serializable {
     
     @PostConstruct
     public void init() {
+        Logger.getLogger(MisPagosMBean.class).info("MisPagosMBean: postconstruct."); 
         usuarioId = loginBean.getUsuarioId();
         if(usuarioId != null) {
             pagos = pagosBean.getMisPagos(usuarioId);

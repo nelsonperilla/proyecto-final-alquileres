@@ -18,6 +18,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -47,6 +48,7 @@ public class ResponderPreguntasMBean implements Serializable {
     
     @PostConstruct
     public void init(){
+        Logger.getLogger(ResponderPreguntasMBean.class).info("ResponderPreguntasMBean: postconstruct.");
         setEffect("fade"); 
 //        String id = FacesContext.getCurrentInstance().getExternalContext()
 //                .getRequestParameterMap().get("id");
