@@ -176,6 +176,16 @@
                         </td>
                     </tr>
                     <tr>
+                        <td>
+                            <h:link value="Denunciar esta publicacion"
+                               outcome="/vistas/usuario/denunciaDePregunta" 
+                               >
+                                <f:param name="motivo" value="1" />
+                                <f:param name="id" value="#{publicacionDesplegada.publicacion.id}" />                        
+                            </h:link>                        
+                        </td>                    
+                    </tr>
+                    <tr>
                         <td colspan="2"  >
                             <h:panelGrid  styleClass="data" columns="1" >
                                 <h:outputText value="#{publicacionDesplegada.publicacion.descripcion}" 
@@ -235,6 +245,7 @@
                 <p:outputPanel id="paneles" >
                     <comps:loginBox />
                     <comps:adminPanel />
+                    <comps:panelPublicitante />
                     <comps:userPanel />
                 </p:outputPanel>
             </ui:define>            

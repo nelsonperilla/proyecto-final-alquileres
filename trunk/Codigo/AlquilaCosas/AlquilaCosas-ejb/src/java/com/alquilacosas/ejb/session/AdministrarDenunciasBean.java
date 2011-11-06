@@ -232,8 +232,10 @@ public class AdministrarDenunciasBean implements AdministrarDenunciasBeanLocal {
                denunciaDTO.setPublicacionId(d.getComentarioFk() == null ? d.getPulicacionFk().getPublicacionId() : d.getComentarioFk().getPublicacionFk().getPublicacionId());
                denunciaDTO.setTextoComentario(d.getComentarioFk() == null ? null : d.getComentarioFk().getComentario());
                denunciaDTO.setTextoPublicacion(d.getPulicacionFk() == null ? null : d.getPulicacionFk().getTitulo());
-               denunciaDTO.setUsuarioId(d.getPulicacionFk() == null ? d.getComentarioFk().getUsuarioFk().getUsuarioId() : d.getPulicacionFk().getUsuarioFk().getUsuarioId());
-               denunciaDTO.setUsuarioUsername(d.getPulicacionFk() == null ? d.getComentarioFk().getUsuarioFk().getLoginList().get(0).getUsername() : d.getPulicacionFk().getUsuarioFk().getLoginList().get(0).getUsername());
+               
+               //si viene la lista de denuncias de comentarios, el id
+               denunciaDTO.setUsuarioId(d.getUsuarioFk().getUsuarioId());//denunciaDTO.setUsuarioId(d.getPulicacionFk() == null ? d.getComentarioFk().getUsuarioFk().getUsuarioId() : d.getPulicacionFk().getUsuarioFk().getUsuarioId());
+               denunciaDTO.setUsuarioUsername(d.getUsuarioFk().getNombre()); //denunciaDTO.setUsuarioUsername(d.getPulicacionFk() == null ? d.getComentarioFk().getUsuarioFk().getLoginList().get(0).getUsername() : d.getPulicacionFk().getUsuarioFk().getLoginList().get(0).getUsername());
                denunciasDTO.add(denunciaDTO);
           }
           return denunciasDTO;

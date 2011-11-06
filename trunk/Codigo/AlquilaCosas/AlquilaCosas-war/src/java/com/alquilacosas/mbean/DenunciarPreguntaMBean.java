@@ -42,6 +42,8 @@ public class DenunciarPreguntaMBean implements Serializable {
     private String descripcionDenuncia;
     private List<SelectItem> motivos;
     private int motivoSeleccionado;    
+    private int tipoMotivo;
+    private int publicationId;
     
     /** Creates a new instance of DenunciarPreguntaMBean */
     public DenunciarPreguntaMBean() {
@@ -51,16 +53,54 @@ public class DenunciarPreguntaMBean implements Serializable {
     public void init() {
         Logger.getLogger(DenunciarPreguntaMBean.class).info("DenunciarPreguntaMBean: postconstruct."); 
         motivos = new ArrayList<SelectItem>();
-        List<MotivoDenuncia> listaMotivos = denunciaBean.getMotivosDenuncia();
-        motivoSeleccionado = 0; 
-        for(MotivoDenuncia motivo: listaMotivos)
-            motivos.add(new SelectItem(motivo.getMotivoDenunciaId(),motivo.getNombre()));        
+        motivoSeleccionado = 0;
+
         String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
-        if (id != null) {
-            int comentarioId = Integer.parseInt(id);
-            setComentario(denunciaBean.getComentario(comentarioId));
-            setPublicacion(denunciaBean.getPublication(comentario.getPublicacionId()));
+        String motivo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("motivo");        
+ 
+        if (id == null || motivo == null) {
+            redirect();
+            return;
         }
+        
+        int elementId = 0;
+        tipoMotivo = -1;
+        try {
+                elementId = Integer.parseInt(id);
+                tipoMotivo = Integer.parseInt(motivo);
+        } catch (NumberFormatException e) {
+            Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al parsear ID de parametro.");
+            redirect();
+            return;
+        }
+        
+        List<MotivoDenuncia> listaMotivos = null;
+        
+        switch(tipoMotivo)
+        {
+            case 0:
+                listaMotivos = denunciaBean.getMotivosDenunciaComentario();
+                for(MotivoDenuncia motivoDenuncia: listaMotivos)
+                    motivos.add(new SelectItem(motivoDenuncia.getMotivoDenunciaId(),motivoDenuncia.getNombre()));        
+
+                setComentario(denunciaBean.getComentario(elementId));
+                setPublicacion(denunciaBean.getPublication(comentario.getPublicacionId()));
+                break;
+            case 1:
+                listaMotivos = denunciaBean.getMotivosDenunciaPublicacion();
+                for(MotivoDenuncia motivoDenuncia: listaMotivos)
+                    motivos.add(new SelectItem(motivoDenuncia.getMotivoDenunciaId(),motivoDenuncia.getNombre()));        
+
+                setComentario(null);
+                setPublicacion(denunciaBean.getPublication(elementId));  
+                publicationId = elementId;
+                break;
+            case -1:
+            default:
+                redirect();
+
+        }
+            
     }
     
     public void saveDenuncia()
@@ -68,10 +108,18 @@ public class DenunciarPreguntaMBean implements Serializable {
         if(getUsuarioLogueado().isLogueado())
         {
             DenunciaDTO nuevaDenuncia = new DenunciaDTO();
-            nuevaDenuncia.setComentarioId(comentario.getId());
+            switch(tipoMotivo)
+            {
+                case 0:   
+                    nuevaDenuncia.setComentarioId(comentario.getId());
+                    nuevaDenuncia.setPublicacionId(comentario.getPublicacionId());
+                    break;
+                case 1:
+                    nuevaDenuncia.setComentarioId(-1);
+                    nuevaDenuncia.setPublicacionId(publicationId);
+            }
             nuevaDenuncia.setExplicacion(descripcionDenuncia);
             nuevaDenuncia.setFecha(new Date());
-            nuevaDenuncia.setPublicacionId(comentario.getPublicacionId());
             nuevaDenuncia.setUsuarioId(getUsuarioLogueado().getUsuarioId());
             try{
                 denunciaBean.saveDenuncia(nuevaDenuncia,motivoSeleccionado);
@@ -85,8 +133,23 @@ public class DenunciarPreguntaMBean implements Serializable {
                     "Su denuncia no ha podido ser ingresada, por favor intente nuevamente", ""));                
             }
         }
+        else
+        {
+           FacesContext.getCurrentInstance().addMessage(null,
+               new FacesMessage(FacesMessage.SEVERITY_ERROR,
+               "Su denuncia no ha podido ser ingresada, por favor intente nuevamente", ""));                
+        }
     }
 
+    public void redirect() {
+        try {
+            FacesContext.getCurrentInstance().getExternalContext().redirect("inicio.xhtml");
+            FacesContext.getCurrentInstance().responseComplete();
+        } catch (Exception e) {
+            Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al ejecutar redirect().");
+        }
+    }
+    
     /**
      * @return the comentario
      */

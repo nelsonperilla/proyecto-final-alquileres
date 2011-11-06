@@ -33,10 +33,12 @@
                                     <table cellspacing="0" cellpadding="5">
                                         <tr>
                                             <td width="30px">
-                                                <h:outputText value="Comentario:"  />  
+                                                <h:outputText value="Comentario:" 
+                                                    rendered="#{denuncia.comentario != null}"/>  
                                             </td>
                                             <td>
-                                                <h:outputText value="#{denuncia.comentario.comentario}"/> 
+                                                <h:outputText value="#{denuncia.comentario.comentario}"
+                                                    rendered="#{denuncia.comentario != null}"/> 
                                             </td>
                                         </tr>                                
                                     </table>
@@ -79,6 +81,7 @@
                 <p:outputPanel id="paneles" >
                     <comps:loginBox />
                     <comps:adminPanel />
+                    <comps:panelPublicitante />
                     <comps:userPanel />
                 </p:outputPanel>
             </ui:define>            

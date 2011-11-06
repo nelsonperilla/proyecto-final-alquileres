@@ -23,6 +23,10 @@ public interface DenunciaPreguntaBeanLocal {
     public String getPublication(int publicacionId);
 
     public List<MotivoDenuncia> getMotivosDenuncia();
+    
+    public List<MotivoDenuncia> getMotivosDenunciaPublicacion();
+    
+    public List<MotivoDenuncia> getMotivosDenunciaComentario();
 
     public void saveDenuncia(DenunciaDTO nuevaDenuncia, int motivoSeleccionado);
 }

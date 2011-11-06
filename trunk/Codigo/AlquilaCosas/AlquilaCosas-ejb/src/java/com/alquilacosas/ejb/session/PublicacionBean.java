@@ -453,6 +453,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
         Usuario usuario = usuarioFacade.find(nuevaPregunta.getUsuarioId());
         pregunta.setUsuarioFk(usuario);
         pregunta.setPublicacionFk(publicacion);
+        pregunta.setBaneado(Boolean.FALSE);
         comentarioFacade.create(pregunta);
 
         // Enviar email de notificacion
@@ -514,7 +515,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
         Usuario usuarioResponde = usuarioFacade.find(preguntaConRespuesta.getRespuesta().getUsuarioId());
         respuesta.setUsuarioFk(usuarioResponde);
         respuesta.setPublicacionFk(publicacion);
-
+        respuesta.setBaneado(Boolean.FALSE);
         pregunta.setRespuesta(respuesta);
         comentarioFacade.create(respuesta);
 

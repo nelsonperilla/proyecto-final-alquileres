@@ -58,7 +58,8 @@ public class DesplieguePublicacionMBean implements Serializable {
     private String action;
     private double userRating;
     private String horaInicioAlquiler;
-    private int comentarioDenunciadoId;
+    private int denunciaId;   
+    private int motivoDenuncia;
 
     /** Creates a new instance of DesplieguePublicacionMBean */
     public DesplieguePublicacionMBean() {
@@ -68,11 +69,13 @@ public class DesplieguePublicacionMBean implements Serializable {
     public void init() {
         Logger.getLogger(DesplieguePublicacionMBean.class).info("DesplieguePublicacionMBean: postconstruct.");
         String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
+
         if (id == null) {
             redirect();
             return;
         }
         int publicationId = 0;
+        int tipoDeDenuncia = -1;
         try {
             publicationId = Integer.parseInt(id);
         } catch (NumberFormatException e) {
@@ -627,16 +630,30 @@ public class DesplieguePublicacionMBean implements Serializable {
     }
 
     /**
-     * @return the comentarioDenunciadoId
+     * @return the denunciaId
      */
-    public int getComentarioDenunciadoId() {
-        return comentarioDenunciadoId;
+    public int getDenunciaId() {
+        return denunciaId;
     }
 
     /**
-     * @param comentarioDenunciadoId the comentarioDenunciadoId to set
+     * @param denunciaId the denunciaId to set
      */
-    public void setComentarioDenunciadoId(int comentarioDenunciadoId) {
-        this.comentarioDenunciadoId = comentarioDenunciadoId;
+    public void setDenunciaId(int comentarioDenunciadoId) {
+        this.denunciaId = comentarioDenunciadoId;
+    }
+
+    /**
+     * @return the motivoDenuncia
+     */
+    public int getMotivoDenuncia() {
+        return motivoDenuncia;
+    }
+
+    /**
+     * @param motivoDenuncia the motivoDenuncia to set
+     */
+    public void setMotivoDenuncia(int motivoDenuncia) {
+        this.motivoDenuncia = motivoDenuncia;
     }
 }

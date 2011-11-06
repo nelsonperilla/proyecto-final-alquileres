@@ -23,7 +23,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "MOTIVO_DENUNCIA")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "MotivoDenuncia.findAll", query = "SELECT m FROM MotivoDenuncia m")})
+    @NamedQuery(name = "MotivoDenuncia.findAll", query = "SELECT m FROM MotivoDenuncia m"),
+    @NamedQuery(name = "MotivoDenuncia.findByTipo", query = "SELECT m FROM MotivoDenuncia m WHERE m.motivoPublicacion = :motivoPublicacion")})
 public class MotivoDenuncia implements Serializable {
     
     private static final long serialVersionUID = 1L;
@@ -39,6 +40,9 @@ public class MotivoDenuncia implements Serializable {
     @Column(name = "DESCRIPCION")
     private String descripcion;
 
+    @Column(name = "MOTIVO_PUBLICACION")
+    private boolean motivoPublicacion;
+    
     public String getDescripcion() {
         return descripcion;
     }
@@ -87,6 +91,20 @@ public class MotivoDenuncia implements Serializable {
     @Override
     public String toString() {
         return "com.alquilacosas.ejb.entity.MotivoDenuncia[ motivoDenunciaId=" + motivoDenunciaId + " ]";
+    }
+
+    /**
+     * @return the motivo_publicacion
+     */
+    public boolean isMotivoPublicacion() {
+        return motivoPublicacion;
+    }
+
+    /**
+     * @param motivo_publicacion the motivo_publicacion to set
+     */
+    public void setMotivoPublicacion(boolean motivoPublicacion) {
+        this.motivoPublicacion = motivoPublicacion;
     }
     
 }
