@@ -9,7 +9,6 @@ import com.alquilacosas.dto.ComentarioDTO;
 import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.entity.Periodo;
 import com.alquilacosas.ejb.session.PublicacionBeanLocal;
-import com.alquilacosas.validator.webutil.Navigation;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -59,7 +58,7 @@ public class DesplieguePublicacionMBean implements Serializable {
     private String action;
     private double userRating;
     private String horaInicioAlquiler;
-    private int comentarioDenunciadoId;    
+    private int comentarioDenunciadoId;
 
     /** Creates a new instance of DesplieguePublicacionMBean */
     public DesplieguePublicacionMBean() {
@@ -67,10 +66,10 @@ public class DesplieguePublicacionMBean implements Serializable {
 
     @PostConstruct
     public void init() {
+        Logger.getLogger(DesplieguePublicacionMBean.class).info("DesplieguePublicacionMBean: postconstruct.");
         String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
-        setNuevaPregunta(new ComentarioDTO());
         if (id == null) {
-            Navigation.redirect("inicio.xhtml");
+            redirect();
             return;
         }
         int publicationId = 0;
@@ -78,16 +77,17 @@ public class DesplieguePublicacionMBean implements Serializable {
             publicationId = Integer.parseInt(id);
         } catch (NumberFormatException e) {
             Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al parsear ID de parametro.");
-            Navigation.redirect("inicio.xhtml");
+            redirect();
             return;
         }
         setPublicacion(publicationBean.getPublicacion(publicationId));
+        setNuevaPregunta(new ComentarioDTO());
         setComentarios(publicationBean.getPreguntas(publicationId));
         try {
             fechas = publicationBean.getFechasSinStock(publicationId, cantidadProductos);
         } catch (AlquilaCosasException e) {
             Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al ejecutar getFechasSinStock(): " + e.getMessage());
-            Navigation.redirect("inicio.xhtml");
+            redirect();
             return;
         }
         if (publicacion != null && publicacion.getFechaHasta() != null) {
@@ -110,11 +110,19 @@ public class DesplieguePublicacionMBean implements Serializable {
         }
     }
 
-    public String denunciarComentario()
-    {
+    public void redirect() {
+        try {
+            FacesContext.getCurrentInstance().getExternalContext().redirect("inicio.xhtml");
+            FacesContext.getCurrentInstance().responseComplete();
+        } catch (Exception e) {
+            Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al ejecutar redirect().");
+        }
+    }
+
+    public String denunciarComentario() {
         return "denunciarComentario";
     }
-    
+
     public void actualizarPreguntas() {
         comentarios = publicationBean.getPreguntas(publicacion.getId());
     }
@@ -274,7 +282,7 @@ public class DesplieguePublicacionMBean implements Serializable {
                         publicationBean.crearPedidoAlquiler(publicacion.getId(),
                                 usuarioLogueado.getUsuarioId(), beginDate.getTime(),
                                 endDate.getTime(), monto, cantidadProductos);
-                        redireccion = "misPedidosRealizados";
+                        redireccion = "pmisPedidosRealizados";
                     } catch (AlquilaCosasException ex) {
                         FacesContext.getCurrentInstance().addMessage(null,
                                 new FacesMessage(FacesMessage.SEVERITY_ERROR,
@@ -630,5 +638,5 @@ public class DesplieguePublicacionMBean implements Serializable {
      */
     public void setComentarioDenunciadoId(int comentarioDenunciadoId) {
         this.comentarioDenunciadoId = comentarioDenunciadoId;
-    }    
+    }
 }

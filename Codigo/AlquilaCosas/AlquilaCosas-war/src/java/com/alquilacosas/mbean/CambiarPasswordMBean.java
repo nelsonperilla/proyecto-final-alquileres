@@ -14,6 +14,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -36,6 +37,7 @@ public class CambiarPasswordMBean implements Serializable {
     
     @PostConstruct
     public void init() {
+        Logger.getLogger(BuscarMBean.class).info("BuscarMBean: postconstruct.");
         usuarioId = loginMBean.getUsuarioId();
     }
     
@@ -59,7 +61,7 @@ public class CambiarPasswordMBean implements Serializable {
                     "Error al cambiar contraseña", e.getMessage());
             return null;
         }
-        return "inicio";
+        return "pinicio";
     }
 
     public String getPassword() {

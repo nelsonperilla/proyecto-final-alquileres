@@ -26,6 +26,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
+import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.json.JSONObject;
 
@@ -65,6 +66,7 @@ public class AlquileresOfrecidosMBean implements Serializable {
 
     @PostConstruct
     public void init() {
+        Logger.getLogger(AlquileresOfrecidosMBean.class).info("AlquileresOfrecidosMBean: postconstruct.");
         usuarioLogueado = loginBean.getUsuarioId();
         if (usuarioLogueado == null) {
             return;
@@ -101,13 +103,13 @@ public class AlquileresOfrecidosMBean implements Serializable {
         }
     }
 
-    public String verPublicacion() {
-        return "mostrarPublicacion";
-    }
-
-    public String verUsuario() {
-        return "verReputacionUsuario";
-    }
+//    public String verPublicacion() {
+//        return "mostrarPublicacion";
+//    }
+//
+//    public String verUsuario() {
+//        return "verReputacionUsuario";
+//    }
 
     public void prepararCalificar(ActionEvent event) {
         alquilerId = (Integer) event.getComponent().getAttributes().get("alq");

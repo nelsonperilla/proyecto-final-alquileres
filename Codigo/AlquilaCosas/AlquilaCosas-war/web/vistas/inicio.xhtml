@@ -34,14 +34,31 @@
                                                         width="600" height="130" />
                                     </a>
                                 </p:carousel>
+                            </p:outputPanel>    
+                            <p:outputPanel rendered="#{empty mostrarPublicidad.publicidadesCarrusel}" >
+                                <p:carousel autoPlayInterval="3500" rows="1"
+                                            effect="easeInStrong" circular="true"
+                                            itemStyle="height:130px;width:600px;" >
+                                    <p:tab title="1" >
+                                        <div class="carusel">
+                                            <br/><br/>
+                                            <h1>Alquilar productos ahora es muy facil!</h1>
+                                        </div>
+                                    </p:tab>
+                                    <p:tab title="2">
+                                        <div class="carusel">
+                                            <br/><br/>
+                                            <h1>Comienza a publicar y alquilar productos ya mismo</h1>
+                                        </div>
+                                    </p:tab>
+                                    <p:tab title="3">
+                                        <div class="carusel">
+                                            <br/><br/>
+                                            <h1>¡Es totalmente gratis!</h1>
+                                        </div>
+                                    </p:tab>
+                                </p:carousel>
                             </p:outputPanel>
-                            <h:form>    
-                                <p:outputPanel rendered="#{empty mostrarPublicidad.publicidadesCarrusel}" >
-                                    <h:commandLink actionListener="comoPublicitar" >
-                                        <h:graphicImage value="#{resource['images:publiciteCarrusel.jpg']}" />
-                                    </h:commandLink>
-                                </p:outputPanel>
-                            </h:form>
                         </td>
                     </tr>
                     <tr id="products">
@@ -61,7 +78,6 @@
                                                     <p:column>
 
                                                         <comps:itemInfo var="#{publication}" bean="#{publicationsGroup}"
-                                                                        method="seleccionarPublicacion" 
                                                                         property="selectedPublicationId"/>
                                                     </p:column>
                                                 </p:dataTable>

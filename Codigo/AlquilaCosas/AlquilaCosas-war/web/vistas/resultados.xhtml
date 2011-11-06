@@ -12,9 +12,7 @@
         <ui:composition template="./../resources/templates/masterPage.xhtml">
 
             <ui:define name="logInfo">
-                <h:form>
-                    <h:commandLink value="inicio" action="inicio" />
-                </h:form>
+                <h:link value="inicio" outcome="/vistas/inicio" />
             </ui:define>
 
             <ui:define name="left" >
@@ -86,7 +84,7 @@
 
                             <p:column>
                                 <comps:itemInfo var="#{pub}" bean="#{resultadosBean}"
-                                                method="verPublicacion" property="publicacionSeleccionada" />
+                                                property="publicacionSeleccionada" />
                             </p:column>
 
                         </p:dataTable>

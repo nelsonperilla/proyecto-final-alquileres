@@ -22,6 +22,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -30,10 +31,6 @@ import javax.faces.validator.ValidatorException;
 @ManagedBean(name = "regUsuario")
 @ViewScoped
 public class RegistrarUsuarioMBean implements Serializable {
-
-    /** Creates a new instance of UsuarioMBean */
-    public RegistrarUsuarioMBean() {
-    }
     
     @EJB
     private RegistrarUsuarioBeanLocal usuarioBean;
@@ -60,8 +57,13 @@ public class RegistrarUsuarioMBean implements Serializable {
     private DomicilioDTO domicilio;
     private boolean creado;
     
+    public RegistrarUsuarioMBean() {
+        
+    }
+    
     @PostConstruct
     public void init() {
+        Logger.getLogger(RegistrarUsuarioMBean.class).info("RegistrarUsuarioMBean: postconstruct.");
         paises = new ArrayList<SelectItem>();
         provincias = new ArrayList<SelectItem>();
         List<Pais> listaPais = usuarioBean.getPaises();
@@ -90,7 +92,7 @@ public class RegistrarUsuarioMBean implements Serializable {
         try {
             usuarioBean.registrarUsuario(username, password, nombre, apellido, domicilio,
                 provinciaSeleccionada, fechaNacimiento, dni, telefono, email);
-            return "usuarioCreado";
+            return "pusuarioCreado";
         } catch (AlquilaCosasException e) {
                 FacesContext.getCurrentInstance().addMessage(null, 
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, 
@@ -123,12 +125,6 @@ public class RegistrarUsuarioMBean implements Serializable {
                     "El usuario debe tener al menos 6 caracteres");
             throw new ValidatorException(message);
         }
-//        else if(!username.matches("[a-zA-Z_0-9]")) {
-//            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-//                    "El usuario solo puede contener letras y numeros", 
-//                    "El usuario solo puede contener letras y numeros");
-//            throw new ValidatorException(message);
-//        }
         boolean existe = usuarioBean.usernameExistente(user);
         if(existe) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, 

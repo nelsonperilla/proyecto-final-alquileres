@@ -16,6 +16,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import org.apache.log4j.Logger;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
@@ -52,7 +53,8 @@ public class CategoriaMBean implements Serializable{
      
      @PostConstruct
      public void init() {
-          cargarTrees();
+         Logger.getLogger(CategoriaMBean.class).info("CategoriaMBean: postconstruct."); 
+         cargarTrees();
      }
      
      public void cargarTrees() {
@@ -98,7 +100,7 @@ public class CategoriaMBean implements Serializable{
                          menuBean.cargarMenu();
                          FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Categoria Creada", selectedNode.getData().toString());  
                          FacesContext.getCurrentInstance().addMessage(null, message);
-                         return "categorias";
+                         return "pcategorias";
                     }
                     else{
                          FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "La Categoria ya Existe", "");  

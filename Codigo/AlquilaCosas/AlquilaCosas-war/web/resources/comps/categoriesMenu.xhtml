@@ -3,7 +3,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:cc="http://java.sun.com/jsf/composite"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.prime.com.tr/ui" 
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core" >
 
@@ -15,23 +14,20 @@
     <cc:implementation>  
 
         <div id="menu" >
-            <h:form>
                 <nav id="topNav">
                 <ul>
                     <ui:repeat value="#{menuCatBean.categorias}" var="cat" >
                         <li>
-                            <h:commandLink value="#{cat.nombre}" action="verCategoria" >
-                                <f:setPropertyActionListener target="#{menuCatBean.categoriaSeleccionada}" 
-                                                             value="#{cat.id}" />
-                            </h:commandLink>
+                            <h:link value="#{cat.nombre}" outcome="/vistas/verCategoria" >
+                                <f:param name="id" value="#{cat.id}" />
+                            </h:link>
                             <ul>
                                 <ui:repeat value="#{cat.subcategorias}" var="subcat" >
                                     <li>
-                                        <h:commandLink value="#{subcat.nombre}"
-                                                       action="verCategoria">
-                                            <f:setPropertyActionListener target="#{menuCatBean.categoriaSeleccionada}" 
-                                                                         value="#{subcat.id}" />
-                                        </h:commandLink>
+                                        <h:link value="#{subcat.nombre}"
+                                                       outcome="/vistas/verCategoria">
+                                            <f:param name="id" value="#{subcat.id}" />
+                                        </h:link>
                                     </li>
                                 </ui:repeat>
                             </ul>
@@ -39,7 +35,6 @@
                     </ui:repeat>
                 </ul>
                 </nav>
-            </h:form>
         </div>
 
 

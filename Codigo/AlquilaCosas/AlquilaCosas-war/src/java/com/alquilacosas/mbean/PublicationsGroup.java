@@ -12,6 +12,7 @@ import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ViewScoped;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -30,6 +31,7 @@ public class PublicationsGroup implements Serializable {
 
     @PostConstruct
     public void init() {
+        Logger.getLogger(PublicationsGroup.class).info("PublicationsGroup: postconstruct.");
         publicacionesRandom = publicationBean.getPublicacionesRandom(0);
     }
     

@@ -32,16 +32,14 @@
                               <f:setPropertyActionListener value="#{cc.attrs.var.publicacionId}" 
                                                            target="#{cc.attrs.bean[cc.attrs.propPublicacion]}" />
                          </h:commandLink>
-                         <h:commandLink value="Comentario: #{cc.attrs.var.textoComentario}" 
-                                        action="#{cc.attrs.bean[cc.attrs.metodoVerPublicacion]}" 
+                         <h:link value="Comentario: #{cc.attrs.var.textoComentario}" 
+                                        outcome="/vistas/mostrarPublicacion" 
                                         rendered="#{not cc.attrs.var.isPublicacion}">
-                              <f:setPropertyActionListener value="#{cc.attrs.var.publicacionId}" 
-                                                           target="#{cc.attrs.bean[cc.attrs.propPublicacion]}" />
-                         </h:commandLink>
-                         <h:commandLink value="Usuario Denunciado: #{cc.attrs.var.usuarioUsername}" action="#{cc.attrs.bean[cc.attrs.metodoVerUsuario]}" >
-                              <f:setPropertyActionListener value="#{cc.attrs.var.usuarioId}" 
-                                                           target="#{cc.attrs.bean[cc.attrs.propUsuario]}" />
-                         </h:commandLink>
+                             <f:param name="id" value="#{cc.attrs.var.publicacionId}" /> 
+                         </h:link>
+                         <h:link value="Usuario Denunciado: #{cc.attrs.var.usuarioUsername}" outcome="/vistas/usuario/verReputacion" >
+                             <f:param name="id" value="#{cc.attrs.var.usuarioId}" />
+                         </h:link>
                          <h:outputText value="Motivo: #{cc.attrs.var.nombreMotivo}" />
                     </h:panelGrid>
                     <h:panelGrid columns="1" >

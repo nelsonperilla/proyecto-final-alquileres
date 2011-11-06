@@ -17,6 +17,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -41,6 +42,7 @@ public class VerReputacionMBean implements Serializable {
 
     @PostConstruct
     public void init() {
+        Logger.getLogger(VerReputacionMBean.class).info("VerReputacionMBean: postconstruct.");
         usuarioCorrecto = true;
         String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
         if (id == null) {

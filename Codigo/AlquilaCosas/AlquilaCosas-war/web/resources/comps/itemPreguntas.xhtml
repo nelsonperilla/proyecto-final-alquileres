@@ -6,7 +6,7 @@
       xmlns:p="http://primefaces.prime.com.tr/ui"
       xmlns:f="http://java.sun.com/jsf/core">
 
-        <!-- INTERFACE -->
+    <!-- INTERFACE -->
     <cc:interface>
     </cc:interface>
 
@@ -30,7 +30,7 @@
                             action="#{publicacionDesplegada.denunciarComentario}"
                             rendered="#{pregunta.baneado == false}">
                             <f:setPropertyActionListener value="#{pregunta.id}" 
-                                target="#{publicacionDesplegada.comentarioDenunciadoId}"/>                           
+                                                         target="#{publicacionDesplegada.comentarioDenunciadoId}"/>                           
                         </p:commandLink>
                     </td>
                 </tr>
@@ -48,9 +48,9 @@
                     <td>
                         <p:commandLink value="Denunciar" style="text-align: right" 
                         rendered="#{pregunta.respuesta != null}"
-                            action="#{publicacionDesplegada.denunciarComentario}">
+                                       action="#{publicacionDesplegada.denunciarComentario}">
                             <f:setPropertyActionListener value="#{pregunta.respuesta.id}" 
-                                target="#{publicacionDesplegada.comentarioDenunciadoId}" />                        
+                                                         target="#{publicacionDesplegada.comentarioDenunciadoId}" />                        
                         </p:commandLink>
                     </td>
                 </tr>

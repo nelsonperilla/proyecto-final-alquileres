@@ -13,9 +13,7 @@
 
         <ui:composition template="./../resources/templates/masterPage.xhtml">
             <ui:define name="logInfo">
-                <h:form>
-                    <h:commandLink value="inicio" action="inicio" />
-                </h:form>
+                <h:link value="Inicio" outcome="/vistas/inicio" />
             </ui:define>
             <ui:define name="left" >
                 <comps:categoriesMenu />

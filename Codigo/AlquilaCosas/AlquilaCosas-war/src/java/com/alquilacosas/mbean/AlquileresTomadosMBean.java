@@ -26,6 +26,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
+import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.json.JSONObject;
 
@@ -73,7 +74,8 @@ public class AlquileresTomadosMBean implements Serializable {
 
      @PostConstruct
      public void init() {
-          usuarioLogueadoId = usuarioMBean.getUsuarioId();
+         Logger.getLogger(AlquileresTomadosMBean.class).info("AlquileresTomadosMBean: postconstruct."); 
+         usuarioLogueadoId = usuarioMBean.getUsuarioId();
           if(usuarioLogueadoId == null)
               return;
           filtros = new ArrayList<SelectItem>();
@@ -111,13 +113,13 @@ public class AlquileresTomadosMBean implements Serializable {
         }
     }
 
-    public String verPublicacion() {
-        return "mostrarPublicacion";
-    }
-
-     public String verUsuario() {
-          return "verReputacionUsuario";
-     }
+//    public String verPublicacion() {
+//        return "mostrarPublicacion";
+//    }
+//
+//     public String verUsuario() {
+//          return "verReputacionUsuario";
+//     }
 
     public void prepararCalificar(ActionEvent event) {
         alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
@@ -201,7 +203,6 @@ public class AlquileresTomadosMBean implements Serializable {
                 return;
             }
         }
-        
     }
 
      public void registrarReplicaToma() {

@@ -13,15 +13,13 @@
     <!-- IMPLEMENTATION -->
     <cc:implementation>
         <p:outputPanel rendered="#{login.logueado and login.publicitante}" >
-            <h:form>
-                <p:panel styleClass="controlPanel">
-                    <h3 style="color:gainsboro; margin-top: 1px">Publicitante</h3>
-                    <h:panelGrid columns="1" cellpadding="2" style="width: 100%; text-align: center">
-                        <h:commandLink value="Nueva publicidad" action="nuevaPublicidad" />
-                        <h:commandLink value="Mis Publicidades" action="misPublicidades" />
-                    </h:panelGrid>
-                </p:panel>
-            </h:form>
+            <p:panel styleClass="controlPanel">
+                <h3 style="color:gainsboro; margin-top: 1px">Publicitante</h3>
+                <h:panelGrid columns="1" cellpadding="2" style="width: 100%; text-align: center">
+                    <h:link value="Nueva publicidad" outcome="/vistas/pub/registrarPublicidad" />
+                    <h:link value="Mis Publicidades" outcome="/vistas/pub/misPublicidades" />
+                </h:panelGrid>
+            </p:panel>
         </p:outputPanel>
     </cc:implementation>
 </html>

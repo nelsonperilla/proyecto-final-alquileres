@@ -12,18 +12,16 @@
     <!-- IMPLEMENTATION -->
     <cc:implementation>
         <p:outputPanel rendered="#{login.administrador}">
-            <h:form >
-                <p:panel styleClass="controlPanel" >
-                    <h3 style="color:gainsboro; margin-top: 1px">Administracion</h3>
-                    <h:panelGrid columns="1" cellpadding="2" style="width: 100%; text-align: center">
-                        <h:commandLink value="Categorias" action="categorias" />
-                        <h:commandLink value="Usuarios" action="administrarUsuarios" />
-                        <h:commandLink value="Denuncias" action="administrarDenuncias" />
- <!--                       <h:commandLink value="Provincias" action="provincias" />
-                        <h:commandLink value="Paises" action="paises" />-->
-                    </h:panelGrid>
-                </p:panel>
-            </h:form>
+            <p:panel styleClass="controlPanel" >
+                <h3 style="color:gainsboro; margin-top: 1px">Administracion</h3>
+                <h:panelGrid columns="1" cellpadding="2" style="width: 100%; text-align: center">
+                    <h:link value="Categorias" outcome="/vistas/admin/categorias" />
+                    <h:link value="Usuarios" outcome="/vistas/admin/administrarUsuarios" />
+                    <h:link value="Denuncias" outcome="/vistas/admin/administrarDenuncias" />
+                    <!--                       <h:commandLink value="Provincias" action="provincias" />
+                                           <h:commandLink value="Paises" action="paises" />-->
+                </h:panelGrid>
+            </p:panel>
         </p:outputPanel>
     </cc:implementation>
 </html>

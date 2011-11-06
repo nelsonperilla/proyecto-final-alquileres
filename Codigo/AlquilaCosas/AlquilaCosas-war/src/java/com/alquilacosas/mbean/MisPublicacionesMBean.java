@@ -16,6 +16,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -39,6 +40,7 @@ public class MisPublicacionesMBean implements Serializable {
     
     @PostConstruct
     public void init() {
+        Logger.getLogger(MisPublicacionesMBean.class).info("MisPublicacionesMBean: postconstruct."); 
         if( usuarioLogueado.getUsuarioId() != null ){
             publicacionesDto = misPublicacionesBean.getPublicaciones(usuarioLogueado.getUsuarioId());
         }
@@ -55,7 +57,7 @@ public class MisPublicacionesMBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage("La publicacion fue eliminada correctamente"));
             //publicacionesFacade = misPublicacionesBean.getPublicaciones(usuarioMBean.getUsuarioId());
-            return "misPublicaciones";
+            return "misPublicaciones.xhtml";
         } catch( AlquilaCosasException e ){
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR,
@@ -64,19 +66,17 @@ public class MisPublicacionesMBean implements Serializable {
         return null;
     }
     
-    public String editarPublicacion(){
-        return "modificarPublicacion";
-    }
+//    public String editarPublicacion(){
+//        return "modificarPublicacion";
+//    }
+//    
+//    public String destacarPublicacion() {
+//        return "destacarPublicacion";
+//    }
     
-    public String destacarPublicacion() {
-        return "destacarPublicacion";
-    }
-    
-    public String mostrarPublicacion(){
-       
-        return "mostrarPublicacion";
-        
-    }
+//    public String mostrarPublicacion(){
+//        return "mostrarPublicacion";
+//    }
 
     public List<PublicacionDTO> getPublicacionesDto() {
         return publicacionesDto;

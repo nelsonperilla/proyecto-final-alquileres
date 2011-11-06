@@ -22,6 +22,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -54,7 +55,7 @@ public class ModificarUsuarioMBean implements Serializable {
 
     @PostConstruct
     public void init() {
-
+        Logger.getLogger(ModificarUsuarioMBean.class).info("ModificarUsuarioMBean: postconstruct.");
         Integer id = usuarioMBean.getUsuarioId();
         usuario = usuarioBean.getDatosUsuario(id);
 
