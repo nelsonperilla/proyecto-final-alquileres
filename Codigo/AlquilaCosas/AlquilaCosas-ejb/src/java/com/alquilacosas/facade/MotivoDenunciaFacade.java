@@ -32,5 +32,19 @@ public class MotivoDenunciaFacade extends AbstractFacade<MotivoDenuncia> {
     public List<MotivoDenuncia> getAllMotivosDenuncia() {
         Query query = em.createNamedQuery("MotivoDenuncia.findAll");
         return query.getResultList();   
-    }    
+    }
+
+    public List<MotivoDenuncia> getMotivosDenunciaPublicacion() {
+        Query query = em.createNamedQuery("MotivoDenuncia.findByTipo");
+        query.setParameter("motivoPublicacion", true);
+        return query.getResultList();   
+    }
+
+    public List<MotivoDenuncia> getMotivosDenunciaComentario() {
+        Query query = em.createNamedQuery("MotivoDenuncia.findByTipo");
+        query.setParameter("motivoPublicacion", false);
+        return query.getResultList();   
+    }
+    
+    
 }

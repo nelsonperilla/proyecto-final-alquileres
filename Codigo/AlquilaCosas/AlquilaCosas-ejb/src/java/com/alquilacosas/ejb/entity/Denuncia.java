@@ -54,7 +54,7 @@ public class Denuncia implements Serializable {
     private Usuario usuarioFk;
     
     @JoinColumn(name = "COMENTARIO_FK", referencedColumnName = "COMENTARIO_ID")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = true)
     private Comentario comentarioFk;
     
     @JoinColumn(name = "PUBLICACION_FK", referencedColumnName = "PUBLICACION_ID")

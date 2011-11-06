@@ -75,13 +75,29 @@ public class DenunciaPreguntaBean implements DenunciaPreguntaBeanLocal
     }
 
     @Override
+    public List<MotivoDenuncia> getMotivosDenunciaPublicacion() {
+        List<MotivoDenuncia> result = motivoDenunciaFacade.getMotivosDenunciaPublicacion();
+        return result;
+    }
+
+    @Override
+    public List<MotivoDenuncia> getMotivosDenunciaComentario() {
+        List<MotivoDenuncia> result = motivoDenunciaFacade.getMotivosDenunciaComentario();
+        return result;
+    }
+    
+    
+    @Override
     public void saveDenuncia(DenunciaDTO nuevaDenuncia, int motivoSeleccionado) {
         nuevaDenuncia.setMotivo(motivoDenunciaFacade.find(motivoSeleccionado));
         Denuncia denuncia = new Denuncia();
         
         denuncia.setExplicacion(nuevaDenuncia.getExplicacion());
         denuncia.setMotivoFk(nuevaDenuncia.getMotivo());
-        denuncia.setComentarioFk(comentarioFacade.find(nuevaDenuncia.getComentarioId()));
+        if(nuevaDenuncia.getComentarioId() != -1)
+            denuncia.setComentarioFk(comentarioFacade.find(nuevaDenuncia.getComentarioId()));
+        else
+            denuncia.setComentarioFk(null);
         denuncia.setFecha(nuevaDenuncia.getFecha());
         denuncia.setPulicacionFk(publicacionFacade.find(nuevaDenuncia.getPublicacionId()));
         denuncia.setUsuarioFk(usuarioFacade.find(nuevaDenuncia.getUsuarioId()));

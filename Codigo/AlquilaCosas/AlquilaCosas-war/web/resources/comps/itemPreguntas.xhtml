@@ -26,12 +26,12 @@
                                 rendered="#{pregunta.baneado == true}" />                       
                     </td>
                     <td width="30px">
-                        <p:commandLink value="Denunciar"
-                            action="#{publicacionDesplegada.denunciarComentario}"
-                            rendered="#{pregunta.baneado == false}">
-                            <f:setPropertyActionListener value="#{pregunta.id}" 
-                                                         target="#{publicacionDesplegada.comentarioDenunciadoId}"/>                           
-                        </p:commandLink>
+                    <h:link value="Denunciar"
+                       outcome="/vistas/usuario/denunciaDePregunta" 
+                       rendered="#{pregunta.baneado == false}">
+                        <f:param name="motivo" value="0" />
+                        <f:param name="id" value="#{pregunta.id}" />                        
+                    </h:link>
                     </td>
                 </tr>
                 <tr>
@@ -43,15 +43,15 @@
                         rendered="#{pregunta.respuesta != null and pregunta.respuesta.baneado == false}"/>  
                          <h:graphicImage value="/resources/images/comentarioBaneado.jpg"
                                 width="416" height="90" 
-                                rendered="#{pregunta.baneado == true and pregunta.respuesta.baneado == true}" />                            
+                                rendered="#{pregunta.respuesta != null and pregunta.respuesta.baneado == true}"/>                            
                     </td>
                     <td>
-                        <p:commandLink value="Denunciar" style="text-align: right" 
-                        rendered="#{pregunta.respuesta != null}"
-                                       action="#{publicacionDesplegada.denunciarComentario}">
-                            <f:setPropertyActionListener value="#{pregunta.respuesta.id}" 
-                                                         target="#{publicacionDesplegada.comentarioDenunciadoId}" />                        
-                        </p:commandLink>
+                        <h:link value="Denunciar"
+                            outcome="/vistas/usuario/denunciaDePregunta" 
+                            rendered="#{pregunta.respuesta != null and pregunta.respuesta.baneado == true}">
+                            <f:param name="motivo" value="0" />
+                            <f:param name="id" value="#{pregunta.respuesta.id}" />                        
+                        </h:link>
                     </td>
                 </tr>
             </table>
