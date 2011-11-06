@@ -27,15 +27,24 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 
 /**
  *
  * @author damiancardozo
  */
 @Stateless
+@TransactionManagement(TransactionManagementType.CONTAINER)
+@TransactionAttribute(TransactionAttributeType.REQUIRED)
+@DeclareRoles({"USUARIO", "ADMIN"})
 public class PublicidadBean implements PublicidadBeanLocal {
 
     @EJB
@@ -48,22 +57,26 @@ public class PublicidadBean implements PublicidadBeanLocal {
     private PrecioTipoServicioFacade precioFacade;
     @EJB
     private TipoPagoFacade tipoPagoFacade;
-    
+
     @Override
+    @RolesAllowed({"USUARIO", "ADMIN"})
     public Integer registrarPublicidad(int usuarioId, String titulo, String url, String caption,
             UbicacionPublicidad ubicacion, DuracionPublicidad duracion, byte[] imagen,
             Date fechaDesde, Date fechaHasta, Double precio, NombreTipoPago nombreTipoPago)
             throws AlquilaCosasException {
+        
+        Usuario usuario = usuarioFacade.find(usuarioId);
         
         TipoPago tipoPago = tipoPagoFacade.findByNombre(nombreTipoPago);
         Pago pago = new Pago();
         pago.setFechaInicio(new Date());
         pago.setMonto(precio);
         pago.setTipoPagoFk(tipoPago);
+        pago.setUsuarioFk(usuario);
         
-        Usuario usuario = usuarioFacade.find(usuarioId);
         TipoPublicidad tipo = tipoPubFacade.findByUbicacionYDuracion(ubicacion, duracion);
-        if(tipo == null) {
+        
+        if (tipo == null) {
             throw new AlquilaCosasException("No se encontro el tipo de publicidad correspondiente en la base de datos.");
         }
         Publicidad publicidad = new Publicidad(titulo, url, caption, imagen);
@@ -72,52 +85,74 @@ public class PublicidadBean implements PublicidadBeanLocal {
         publicidad.setFechaHasta(fechaHasta);
         publicidad.setUsuarioFk(usuario);
         publicidad.agregarPago(pago);
-        
+
         publicidadFacade.create(publicidad);
         return pago.getPagoId();
     }
-    
+
     @Override
+    @RolesAllowed({"USUARIO", "ADMIN"})
     public Double getPrecio(DuracionPublicidad duracion, UbicacionPublicidad ubicacion) {
         TipoPublicidad tipo = tipoPubFacade.findByUbicacionYDuracion(ubicacion, duracion);
-        if(tipo != null) {
+        if (tipo != null) {
             PrecioTipoServicio precio = precioFacade.getPrecioPublicidad(tipo);
-            if(precio != null)
+            if (precio != null) {
                 return precio.getPrecio();
-            else
+            } else {
                 return null;
+            }
         } else {
             return null;
         }
     }
-    
+
     /**
      * Devuelve las publicidadesDTO de un usuario
      * @param usuarioId
      * @return lista 
      */
     @Override
+    @PermitAll
     public List<PublicidadDTO> getPublicidades(int usuarioId) {
-        
+
         List<Publicidad> publicidades = publicidadFacade.getPublicidadPorUsuario(usuarioId);
         List<PublicidadDTO> lista = new ArrayList<PublicidadDTO>();
         PublicidadDTO publicidadDto = null;
-        for( Publicidad p : publicidades){
-            Pago pago = p.getPagoList().get(0);
-            if( pago.getFechaConfirmado() == null ){
-               publicidadDto = new PublicidadDTO(p.getServicioId(), p.getTitulo(), p.getUrl(), 
-                    p.getCaption(), p.getFechaDesde(), p.getFechaHasta(), pago.getMonto(), 
-                    EstadoPublicidad.PENDIENTE, p.getImagen());
-            }else{
-               publicidadDto = new PublicidadDTO(p.getServicioId(), p.getTitulo(), p.getUrl(), 
-                    p.getCaption(), p.getFechaDesde(), p.getFechaHasta(), pago.getMonto(), 
-                    EstadoPublicidad.ACTIVA, p.getImagen());
+
+        
+            for (Publicidad p : publicidades) {
+                try {
+                Pago pago = p.getPagoList().get(0);
+                if (pago.getFechaConfirmado() == null) {
+                    publicidadDto = new PublicidadDTO(p.getServicioId(), p.getTitulo(), p.getUrl(),
+                            p.getCaption(), p.getFechaDesde(), p.getFechaHasta(), pago.getMonto(),
+                            EstadoPublicidad.PENDIENTE, p.getImagen());
+                } else {
+                    publicidadDto = new PublicidadDTO(p.getServicioId(), p.getTitulo(), p.getUrl(),
+                            p.getCaption(), p.getFechaDesde(), p.getFechaHasta(), pago.getMonto(),
+                            EstadoPublicidad.ACTIVA, p.getImagen());
+                }
+                lista.add(publicidadDto);
+                } catch (Exception e) {
+                        System.out.println("La publicidad no tiene un pago creado" + e.getMessage());
+                    }
             }
-            lista.add(publicidadDto);      
-        }
-        return lista;
+            return lista;
     }
-    
+
+    @Override
+    @PermitAll
+    public PublicidadDTO getPublicidad(Integer publicidadId) {
+
+        Publicidad p = publicidadFacade.find(publicidadId);
+
+        PublicidadDTO publicidad = new PublicidadDTO(publicidadId, p.getTitulo(), p.getUrl(),
+                p.getCaption(), p.getFechaDesde(), p.getFechaHasta(), publicidadId,
+                EstadoPublicidad.ACTIVA, p.getImagen());
+
+        return publicidad;
+    }
+
     /**
      * Devuelve las fechas que no tienen stock.
      * Se considera como fecha final de control 60 dias a partir de hoy.
@@ -125,10 +160,10 @@ public class PublicidadBean implements PublicidadBeanLocal {
      */
     @Override
     @PermitAll
-    public List<Date> getFechasSinStock( UbicacionPublicidad ubicacion ) {
-        
+    public List<Date> getFechasSinStock(UbicacionPublicidad ubicacion) {
+
         int disponibles = 0;
-        
+
         List<Date> respuesta = new ArrayList<Date>();
         List<Publicidad> publicidades = publicidadFacade.getPublicidadesPorSector(ubicacion);
         Iterator<Publicidad> itPublicidad = publicidades.iterator();
@@ -138,15 +173,15 @@ public class PublicidadBean implements PublicidadBeanLocal {
         today.set(Calendar.HOUR_OF_DAY, 0);
         today.set(Calendar.MINUTE, 0);
         today.set(Calendar.SECOND, 0);
-        
-        if( ubicacion.equals(UbicacionPublicidad.CARRUSEL) ){
+
+        if (ubicacion.equals(UbicacionPublicidad.CARRUSEL)) {
             disponibles = 4;
-        }else if( ubicacion.equals(UbicacionPublicidad.LATERAL_IZQUIERDA) ){
+        } else if (ubicacion.equals(UbicacionPublicidad.LATERAL_IZQUIERDA)) {
             disponibles = 50;
-        }else if( ubicacion.equals(UbicacionPublicidad.LATERAL_DERECHA) ){
+        } else if (ubicacion.equals(UbicacionPublicidad.LATERAL_DERECHA)) {
             disponibles = 100;
         }
-         
+
 
         HashMap<String, Integer> dataCounter = new HashMap(60);//probablemente no existan pedidos mas haya de 60 dias desde hoy
         Calendar lastDate = Calendar.getInstance();
@@ -160,10 +195,10 @@ public class PublicidadBean implements PublicidadBeanLocal {
             fechaDesde.set(Calendar.HOUR_OF_DAY, 0);
             fechaDesde.set(Calendar.MINUTE, 0);
             fechaDesde.set(Calendar.SECOND, 0);
-            
+
             Calendar fechaHasta = Calendar.getInstance();
             fechaHasta.setTime(temp.getFechaHasta());
-            
+
             if (fechaHasta.get(Calendar.HOUR_OF_DAY) == 0 && fechaHasta.get(Calendar.MINUTE) == 0
                     && fechaHasta.get(Calendar.SECOND) == 0) //fechaFin.add(Calendar.SECOND, 1); 
             //No me importan las fechas anteriores a hoy, no son seleccionables
@@ -173,7 +208,7 @@ public class PublicidadBean implements PublicidadBeanLocal {
                 }
             }
             //Reviso cada publicidad y acumulo una cantidad en el hashmap
-            
+
             while (fechaDesde.before(fechaHasta)) {
                 Integer acumulado = dataCounter.get(fechaDesde.getTime().toString());
                 if (acumulado != null) {
@@ -183,7 +218,7 @@ public class PublicidadBean implements PublicidadBeanLocal {
                 }
                 fechaDesde.add(Calendar.DATE, 1);
             }
-            
+
             if (fechaDesde.after(lastDate)) {
                 lastDate = fechaDesde;
             }
@@ -204,7 +239,7 @@ public class PublicidadBean implements PublicidadBeanLocal {
         while (hoy.before(lastDate)) {
             Integer acumulado = dataCounter.get(hoy.getTime().toString());
             if (acumulado != null) {
-                if ( acumulado >= disponibles) {
+                if (acumulado >= disponibles) {
                     respuesta.add(hoy.getTime());
                 }
             }
@@ -213,5 +248,4 @@ public class PublicidadBean implements PublicidadBeanLocal {
 
         return respuesta;
     }
-    
 }

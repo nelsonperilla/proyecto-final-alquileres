@@ -32,5 +32,7 @@ public interface PublicidadBeanLocal {
     public List<PublicidadDTO> getPublicidades(int usuarioId);
     
     public List<Date> getFechasSinStock( UbicacionPublicidad ubicacion );
+
+    PublicidadDTO getPublicidad(Integer publicidadId);
     
 }

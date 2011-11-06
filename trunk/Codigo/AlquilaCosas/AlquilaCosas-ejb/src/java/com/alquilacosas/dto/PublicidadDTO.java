@@ -13,7 +13,7 @@ import java.util.Date;
  */
 public class PublicidadDTO implements Serializable {
     
-    public enum EstadoPublicidad { ACTIVA, PENDIENTE };
+    public enum EstadoPublicidad { ACTIVA, PENDIENTE, INACTIVA };
     
     private int id;
     private String titulo, caption, url;
@@ -94,6 +94,10 @@ public class PublicidadDTO implements Serializable {
 
     public EstadoPublicidad getEstado() {
         return estado;
+    }
+    
+    public String getEstadoPublicidad() {
+        return estado.name();
     }
 
     public void setEstado(EstadoPublicidad estado) {

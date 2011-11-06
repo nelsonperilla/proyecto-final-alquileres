@@ -45,7 +45,6 @@
                                 <h:outputText value="Estado" />
                             </f:facet>
                             <h:outputText value="#{publicidad.estado}" />
-                                
                         </p:column>
 
                         <p:column>
@@ -53,7 +52,7 @@
                                 <h:outputText value="Desde" />
                             </f:facet>
                             <h:outputText value="#{publicidad.fechaDesde}" >
-                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                                <f:convertDateTime pattern="dd/MM/yyyy"/>
                             </h:outputText>
                         </p:column>
 
@@ -62,7 +61,7 @@
                                 <h:outputText value="Hasta" />
                             </f:facet>
                             <h:outputText value="#{publicidad.fechaHasta}" >
-                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                                <f:convertDateTime pattern="dd/MM/yyyy"/>
                             </h:outputText>
                         </p:column>
                         
@@ -70,7 +69,15 @@
                             <f:facet name="header">
                                 <h:outputText value="Costo" />
                             </f:facet>
-                            <h:outputText value="U$S #{publicidad.costo}" />
+                            <h:outputText value="#{publicidad.costo}" />
+                        </p:column>
+
+                        <p:column headerText="E">
+                            <p:rowEditor rendered="#{not (publicidad.estadoPublicidad eq 'ACTIVA')}" />
+
+                            <h:link value="RP" outcome="/vistas/pub/registrarPublicacion">
+                                <f:param name="id" value="#{pub.id}" />
+                            </h:link>
                         </p:column>
 
                         <f:facet name="footer">
@@ -90,18 +97,18 @@
                                                 width="200" height="185" styleClass="img"/> 
                             </f:facet>
 
-                            <h:outputText value="caption:" />
+                            <h:outputText value="Descripción:" />
                             <h:outputText value="#{misPublicidades.selectedPublicidad.caption}" />
 
-                            <h:outputText value="url:" />
-                            <h:outputText value="#{misPublicidades.selectedPublicidad.url}" />
+                            <h:outputText value="Dir Web:" />
+                            <a href="#{misPublicidades.selectedPublicidad.url}" >#{misPublicidades.selectedPublicidad.url}</a>
 
                         </h:panelGrid>
                     </p:dialog>
                 </h:form>
             </ui:define>
 
-            <ui:define name="right">
+                <ui:define name="right">
                 <comps:loginBox />
                 <comps:adminPanel />
                 <comps:panelPublicitante />
