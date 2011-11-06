@@ -167,7 +167,7 @@ public class ModificarPublicacionMBean implements Serializable {
         if (padres.isEmpty()) {
             selectedCategoria = categoriaId;
         } else if (padres.size() == 1) {
-            selectedCategoria = padres.get(0);;
+            selectedCategoria = padres.get(0);
             List<CategoriaDTO> cats = categoriaBean.getSubCategorias(selectedCategoria);
             for (CategoriaDTO c : cats) {
                 subcategorias1.add(new SelectItem(c.getId(), c.getNombre()));

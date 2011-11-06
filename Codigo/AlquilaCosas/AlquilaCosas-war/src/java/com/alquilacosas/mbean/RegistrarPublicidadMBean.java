@@ -5,6 +5,7 @@
 package com.alquilacosas.mbean;
 
 import com.alquilacosas.common.AlquilaCosasException;
+import com.alquilacosas.dto.PublicidadDTO;
 import com.alquilacosas.ejb.entity.TipoPago.NombreTipoPago;
 import com.alquilacosas.ejb.entity.TipoPublicidad.DuracionPublicidad;
 import com.alquilacosas.ejb.entity.TipoPublicidad.UbicacionPublicidad;
@@ -22,7 +23,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import org.apache.log4j.Logger;
@@ -51,6 +51,7 @@ public class RegistrarPublicidadMBean implements Serializable {
     private List<Date> fechas;
     private String myJson;
     private Date fechaHasta;
+    private Integer publicidadId;
 
     /** Creates a new instance of RegistrarPublicidadMBean */
     public RegistrarPublicidadMBean() {
@@ -59,7 +60,20 @@ public class RegistrarPublicidadMBean implements Serializable {
     @PostConstruct
     public void init() {
         Logger.getLogger(RegistrarPublicidadMBean.class).info("RegistrarPublicidadMBean: postconstruct.");
-        fechas = new ArrayList<Date>();//publicidadBean.getFechasSinStock(UbicacionPublicidad.CARRUSEL); 
+        String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
+        if(id != null) {
+            publicidadId = Integer.parseInt(id);
+        
+            PublicidadDTO publicidad = publicidadBean.getPublicidad(publicidadId);
+
+            this.setTitulo(publicidad.getTitulo());
+            this.setCaption(publicidad.getCaption());
+            this.setUrl(publicidad.getUrl());
+            this.setPrecio(publicidad.getCosto());
+            this.setFechaDesde(publicidad.getFechaDesde());
+        }
+        
+        fechas = new ArrayList<Date>(); 
         this.createDictionary();
 
         duraciones = new ArrayList<SelectItem>();
@@ -317,4 +331,14 @@ public class RegistrarPublicidadMBean implements Serializable {
             //Logger.getLogger(this).error("Exception creating JSON dictionary: " + e);
         }
     }
+
+    public Integer getPublicidadId() {
+        return publicidadId;
+    }
+
+    public void setPublicidadId(Integer publicidadId) {
+        this.publicidadId = publicidadId;
+    }
+    
+    
 }

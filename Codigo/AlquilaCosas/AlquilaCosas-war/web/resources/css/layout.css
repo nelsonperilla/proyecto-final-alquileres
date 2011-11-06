@@ -770,6 +770,11 @@ h1, h2, h3 {
     background: #E40000;
 }
 
+.ui-icon-publish {
+    background-image: url(../images/ui-icon-publish.png)
+
+}
+
 /*.datosInput .ui-state-default, .datosInput .ui-widget-content .ui-state-default, .datosInput .ui-widget-header .ui-state-default {
     font-weight: normal !important;
     color: black !important;

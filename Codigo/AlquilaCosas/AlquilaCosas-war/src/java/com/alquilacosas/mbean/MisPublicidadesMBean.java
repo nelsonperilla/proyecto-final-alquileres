@@ -29,6 +29,7 @@ public class MisPublicidadesMBean implements Serializable {
     private PublicidadBeanLocal publicidadBean;
     private List<PublicidadDTO> publicidades;
     private PublicidadDTO selectedPublicidad;
+    private Integer publicidadId;
     
     /** Creates a new instance of MisPublicidadesMBean */
     public MisPublicidadesMBean() {
@@ -45,7 +46,8 @@ public class MisPublicidadesMBean implements Serializable {
     public List<PublicidadDTO> getPublicidades() {
         return publicidades;
     }
-
+    
+    
     public void setPublicidades(List<PublicidadDTO> publicidades) {
         this.publicidades = publicidades;
     }
@@ -66,5 +68,16 @@ public class MisPublicidadesMBean implements Serializable {
         this.selectedPublicidad = selectedPublicidad;
     }
     
-    
+    public String republicar(){
+        return "pregistrarPublicidad";
+    }
+
+    public Integer getPublicidadId() {
+        System.out.println("id: " + publicidadId);
+        return publicidadId;
+    }
+
+    public void setPublicidadId(Integer publicidadId) {
+        this.publicidadId = publicidadId;
+    }
 }

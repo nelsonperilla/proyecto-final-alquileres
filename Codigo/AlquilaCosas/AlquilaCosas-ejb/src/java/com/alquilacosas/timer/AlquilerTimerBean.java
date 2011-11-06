@@ -168,8 +168,8 @@ public class AlquilerTimerBean implements AlquilerTimerBeanLocal{
     }
     
     /**
-     * El siguiente método cambia de estado los alquileres confirmados a 
-     * activos
+     * El siguiente método borra los pedidos rechazados y cancelados luego de haber
+     * transcurridos 30 días
      * @param timer
      * @author ignacio Gigante
      */
@@ -191,6 +191,8 @@ public class AlquilerTimerBean implements AlquilerTimerBeanLocal{
         }
         
     }
+    
+    
     
     private GregorianCalendar getCalendarWithoutHour( Date date ){
         GregorianCalendar cal = new GregorianCalendar();
