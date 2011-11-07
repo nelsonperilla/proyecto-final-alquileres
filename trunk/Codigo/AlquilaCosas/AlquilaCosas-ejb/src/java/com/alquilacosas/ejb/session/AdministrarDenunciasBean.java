@@ -4,6 +4,7 @@
  */
 package com.alquilacosas.ejb.session;
 
+import com.alquilacosas.common.NotificacionEmail;
 import com.alquilacosas.dto.DenunciaDTO;
 import com.alquilacosas.ejb.entity.Advertencia;
 import com.alquilacosas.ejb.entity.Comentario;
@@ -32,9 +33,17 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import javax.annotation.Resource;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
+import javax.jms.Connection;
+import javax.jms.MessageProducer;
+import javax.jms.ObjectMessage;
+import javax.jms.Session;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -43,6 +52,10 @@ import javax.ejb.Stateless;
 @Stateless
 public class AdministrarDenunciasBean implements AdministrarDenunciasBeanLocal {
 
+     @Resource(name = "emailConnectionFactory")
+     private ConnectionFactory connectionFactory;
+     @Resource(name = "jms/notificacionEmailQueue")
+     private Destination destination;
      @EJB
      private DenunciaFacade denunciaFacade;
      @EJB
@@ -95,7 +108,7 @@ public class AdministrarDenunciasBean implements AdministrarDenunciasBeanLocal {
           denuncia.agregarDenunciaXEstado(new DenunciaXEstado(denuncia, newEstadoDenuncia));
           denunciaFacade.edit(denuncia);
           //Si es Publicacion
-          if (denuncia.getComentarioFk() == null) {               
+          if (denuncia.getComentarioFk() == null) {
                //Suspender Publicacion
                Publicacion publicacionSuspender = publicacionFacade.find(denuncia.getPulicacionFk().getPublicacionId());
                EstadoPublicacion estadoSuspendidoSuspender = estadoPublicacionFacade.findByNombre(NombreEstadoPublicacion.SUSPENDIDA);
@@ -103,7 +116,7 @@ public class AdministrarDenunciasBean implements AdministrarDenunciasBeanLocal {
                publicacionSuspender.getEstadoPublicacionVigente().setFechaHasta(new Date());
                publicacionSuspender.agregarPublicacionXEstado(newEstadoPublicacionSuspender);
                publicacionFacade.edit(publicacionSuspender);
-               
+
                //Advertir Usuario
                Usuario usuario = usuarioFacade.find(denuncia.getPulicacionFk().getUsuarioFk().getUsuarioId());
                Advertencia advertencia = new Advertencia();
@@ -112,7 +125,7 @@ public class AdministrarDenunciasBean implements AdministrarDenunciasBeanLocal {
                usuario.agregarAdvertencia(advertencia);
                usuarioFacade.edit(usuario);
                usuarioFacade.refresh(usuario);
-               
+
                //Suspender Usuario Si aplica
                if (usuario.getAdvertenciaList().size() % 3 == 0) {
                     //Cambiar Estado Usuario
@@ -121,7 +134,7 @@ public class AdministrarDenunciasBean implements AdministrarDenunciasBeanLocal {
                     usuario.getEstadoVigente().setFechaHasta(new Date());
                     usuario.agregarUsuarioXEstado(newEstadoUsuario);
                     usuarioFacade.edit(usuario);
-                    
+
                     //Agregar Suspencion                    
                     Suspension suspension = new Suspension();
                     suspension.setFechaDesde(new Date());
@@ -130,15 +143,17 @@ public class AdministrarDenunciasBean implements AdministrarDenunciasBeanLocal {
                     cal.add(Calendar.MONTH, 1);
                     suspension.setFechaHasta(cal.getTime());
                     usuario.agregarSuspension(suspension);
-                    
+
                     //Asignar Suspencion a Advertencias
-                    for(Advertencia a : usuario.getAdvertenciaList())
-                         if (a.getSuspensionFk() == null)
+                    for (Advertencia a : usuario.getAdvertenciaList()) {
+                         if (a.getSuspensionFk() == null) {
                               suspension.agregarAdvertencia(a);
+                         }
+                    }
                     usuarioFacade.edit(usuario);
-                    
+
                     //Suspender publicaciones
-                    for(Publicacion p : usuario.getPublicacionList())
+                    for (Publicacion p : usuario.getPublicacionList()) {
                          if (p.getPublicacionId() != denuncia.getPulicacionFk().getPublicacionId()) {
                               if (p.getEstadoPublicacionVigente().getEstadoPublicacion().getNombre().equals(NombreEstadoPublicacion.ACTIVA)) {
                                    Publicacion publicacion = publicacionFacade.find(p.getPublicacionId());
@@ -149,16 +164,16 @@ public class AdministrarDenunciasBean implements AdministrarDenunciasBeanLocal {
                                    publicacionFacade.edit(publicacion);
                               }
                          }
+                    }
+                    enviarEMailAdvertencia(usuario);
                }
-          }
-          
-          //Si es Comentario
+          } //Si es Comentario
           else {
                //Banear Comentario
                Comentario comentario = comentarioFacade.find(denuncia.getComentarioFk().getComentarioId());
                comentario.setBaneado(Boolean.TRUE);
                comentarioFacade.edit(comentario);
-               
+
                //Advertir Usuario
                Usuario usuario = usuarioFacade.find(denuncia.getComentarioFk().getUsuarioFk().getUsuarioId());
                Advertencia advertencia = new Advertencia();
@@ -167,7 +182,7 @@ public class AdministrarDenunciasBean implements AdministrarDenunciasBeanLocal {
                usuario.agregarAdvertencia(advertencia);
                usuarioFacade.edit(usuario);
                usuarioFacade.refresh(usuario);
-               
+
                //Suspender Usuario si aplica
                if (usuario.getAdvertenciaList().size() % 3 == 0) {
                     //Cambiar Estado Usuario
@@ -176,7 +191,7 @@ public class AdministrarDenunciasBean implements AdministrarDenunciasBeanLocal {
                     usuario.getEstadoVigente().setFechaHasta(new Date());
                     usuario.agregarUsuarioXEstado(newEstadoUsuario);
                     usuarioFacade.edit(usuario);
-                    
+
                     //Agregar Suspencion                    
                     Suspension suspension = new Suspension();
                     suspension.setFechaDesde(new Date());
@@ -185,15 +200,17 @@ public class AdministrarDenunciasBean implements AdministrarDenunciasBeanLocal {
                     cal.add(Calendar.MONTH, 1);
                     suspension.setFechaHasta(cal.getTime());
                     usuario.agregarSuspension(suspension);
-                    
+
                     //Asignar Suspencion a Advertencias
-                    for(Advertencia a : usuario.getAdvertenciaList())
-                         if (a.getSuspensionFk() == null)
+                    for (Advertencia a : usuario.getAdvertenciaList()) {
+                         if (a.getSuspensionFk() == null) {
                               suspension.agregarAdvertencia(a);
+                         }
+                    }
                     usuarioFacade.edit(usuario);
-                    
+
                     //Suspender publicaciones
-                    for(Publicacion p : usuario.getPublicacionList()) {
+                    for (Publicacion p : usuario.getPublicacionList()) {
                          if (p.getEstadoPublicacionVigente().getEstadoPublicacion().getNombre().equals(NombreEstadoPublicacion.ACTIVA)) {
                               Publicacion publicacion = publicacionFacade.find(p.getPublicacionId());
                               EstadoPublicacion estadoSuspendido = estadoPublicacionFacade.findByNombre(NombreEstadoPublicacion.SUSPENDIDA);
@@ -203,10 +220,11 @@ public class AdministrarDenunciasBean implements AdministrarDenunciasBeanLocal {
                               publicacionFacade.edit(publicacion);
                          }
                     }
+                    enviarEMailAdvertencia(usuario);
                }
-          }     
+          }
      }
-     
+
      @Override
      @RolesAllowed({"USUARIO", "ADMIN"})
      public void rechazarDenuncia(int denunciaId) {
@@ -222,7 +240,7 @@ public class AdministrarDenunciasBean implements AdministrarDenunciasBeanLocal {
      @RolesAllowed({"USUARIO", "ADMIN"})
      public List<DenunciaDTO> convertirADenunciaDTO(List<Denuncia> denunciasList) {
           List<DenunciaDTO> denunciasDTO = new ArrayList<DenunciaDTO>();
-          for(Denuncia d : denunciasList) {
+          for (Denuncia d : denunciasList) {
                DenunciaDTO denunciaDTO = new DenunciaDTO();
                denunciaDTO.setComentarioId(d.getComentarioFk() == null ? null : d.getComentarioFk().getComentarioId());
                denunciaDTO.setDenunciaId(d.getDenunciaId());
@@ -231,13 +249,68 @@ public class AdministrarDenunciasBean implements AdministrarDenunciasBeanLocal {
                denunciaDTO.setNombreMotivo(d.getMotivoFk().getNombre());
                denunciaDTO.setPublicacionId(d.getComentarioFk() == null ? d.getPulicacionFk().getPublicacionId() : d.getComentarioFk().getPublicacionFk().getPublicacionId());
                denunciaDTO.setTextoComentario(d.getComentarioFk() == null ? null : d.getComentarioFk().getComentario());
-               denunciaDTO.setTextoPublicacion(d.getPulicacionFk() == null ? null : d.getPulicacionFk().getTitulo());
-               
+               denunciaDTO.setTextoPublicacion(d.getComentarioFk() != null ? null : d.getPulicacionFk().getTitulo());
+
                //si viene la lista de denuncias de comentarios, el id
-               denunciaDTO.setUsuarioId(d.getUsuarioFk().getUsuarioId());//denunciaDTO.setUsuarioId(d.getPulicacionFk() == null ? d.getComentarioFk().getUsuarioFk().getUsuarioId() : d.getPulicacionFk().getUsuarioFk().getUsuarioId());
-               denunciaDTO.setUsuarioUsername(d.getUsuarioFk().getNombre()); //denunciaDTO.setUsuarioUsername(d.getPulicacionFk() == null ? d.getComentarioFk().getUsuarioFk().getLoginList().get(0).getUsername() : d.getPulicacionFk().getUsuarioFk().getLoginList().get(0).getUsername());
+               denunciaDTO.setUsuarioId(d.getComentarioFk() != null ? d.getComentarioFk().getUsuarioFk().getUsuarioId() : d.getPulicacionFk().getUsuarioFk().getUsuarioId());
+               denunciaDTO.setUsuarioUsername(d.getComentarioFk() != null ? d.getComentarioFk().getUsuarioFk().getLoginList().get(0).getUsername() : d.getPulicacionFk().getUsuarioFk().getLoginList().get(0).getUsername());
                denunciasDTO.add(denunciaDTO);
           }
           return denunciasDTO;
+     }
+
+     @Override
+     public void enviarEMailAdvertencia(Usuario usuario) {
+          // enviar email
+          String asunto = "Has recibido una Advertencia de AlquilaCosas";
+          String mensaje = "<html>Hola " + usuario.getNombre() + ",<br/><br/>"
+                  + "Has recibido una Advertencia por violar los Terminos y Condiciones de Uso de AlquilaCosas. "
+                  + "Recuerda que al recibir 3 (tres) Advertencias, tu usuario será suspendido, para conocer tus advertencia dirigete a 'Ver Reputacion'<br/><br/>"
+                  + "Atentamente,<br/>"
+                  + "<b>AlquilaCosas</b></html>";
+          NotificacionEmail email = new NotificacionEmail(usuario.getEmail(), asunto, mensaje);
+
+          try {
+               Connection connection = connectionFactory.createConnection();
+               Session session = connection.createSession(true, Session.AUTO_ACKNOWLEDGE);
+               MessageProducer producer = session.createProducer(destination);
+               ObjectMessage message = session.createObjectMessage();
+               message.setObject(email);
+               producer.send(message);
+               session.close();
+               connection.close();
+          } catch (Exception e) {
+               Logger.getLogger(AdministrarDenunciasBean.class).error("enviarEmail(). "
+                       + "Excepcion al enviar email: " + e + ": " + e.getMessage());
+          }
+          if (usuario.getAdvertenciaList().size() % 3 == 0) {
+               enviarEMailSuspencion(usuario);
+          }
+     }
+
+     @Override
+     public void enviarEMailSuspencion(Usuario usuario) {
+          // enviar email
+          String asunto = "Has Suspendido de AlquilaCosas";
+          String mensaje = "<html>Hola " + usuario.getNombre() + ",<br/><br/>"
+                  + "Has sido Suspendido por acumular 3 Advertencia de violacion a los Terminos y Condiciones de Uso de AlquilaCosas. "
+                  + "Por el trascurso de 1 (un) mes no podrás Ingresar con tu login en nuestro sitio<br/><br/>"
+                  + "Atentamente,<br/>"
+                  + "<b>AlquilaCosas</b></html>";
+          NotificacionEmail email = new NotificacionEmail(usuario.getEmail(), asunto, mensaje);
+
+          try {
+               Connection connection = connectionFactory.createConnection();
+               Session session = connection.createSession(true, Session.AUTO_ACKNOWLEDGE);
+               MessageProducer producer = session.createProducer(destination);
+               ObjectMessage message = session.createObjectMessage();
+               message.setObject(email);
+               producer.send(message);
+               session.close();
+               connection.close();
+          } catch (Exception e) {
+               Logger.getLogger(AdministrarDenunciasBean.class).error("enviarEmail(). "
+                       + "Excepcion al enviar email: " + e + ": " + e.getMessage());
+          }
      }
 }

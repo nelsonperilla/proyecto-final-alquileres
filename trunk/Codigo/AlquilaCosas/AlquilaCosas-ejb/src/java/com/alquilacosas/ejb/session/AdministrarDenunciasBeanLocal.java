@@ -31,4 +31,8 @@ public interface AdministrarDenunciasBeanLocal {
 
      List<DenunciaDTO> convertirADenunciaDTO(List<Denuncia> denunciasList);
 
+     void enviarEMailAdvertencia(Usuario usuario);
+
+     void enviarEMailSuspencion(Usuario usuario);
+
 }
