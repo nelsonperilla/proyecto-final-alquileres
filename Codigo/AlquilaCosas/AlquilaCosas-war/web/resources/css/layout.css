@@ -139,9 +139,9 @@ h1, h2, h3 {
 
 #userMenu nav ul li a{
     -webkit-transition: all 0.3s ease-out;    
-    background: #5858FA url(../resources/images/border.png) no-repeat;
-    color: #111111;
-    height: 8px;
+    background: #3E53F6 url(../resources/images/border.png) no-repeat;
+    color: #dddddd;
+    height: 12px;
     margin-bottom: 5px;
     padding: 7px 15px 7px 15px;
     -webkit-border-top-right-radius: 10px;
@@ -150,12 +150,12 @@ h1, h2, h3 {
     display: block;
     text-decoration: none;
     text-align: left !important;
-    -webkit-box-shadow: 2px 2px 4px #0404B4;
+    -webkit-box-shadow: 2px 2px 4px #315EF7;
 }
 
 #userMenu nav ul li a:hover {
     background: #ebebeb url(../resources/images/border.png) no-repeat;
-    color: #222222;
+    color: #5858FA;
     padding: 7px 15px 7px 30px;
 }
 
@@ -482,14 +482,16 @@ h1, h2, h3 {
 .controlPanel {
 /*    background-image: -moz-linear-gradient(top, #0620E2, #384CE2 40px, #6F7DE8 12px, #E0E3F8);
     background-image: -webkit-gradient(linear, left top, left bottom, from(#0620E2), 
-		    color-stop(0.3, #384CE2), color-stop(0.3, #6F7DE8), to(#E0E3F8));   */
+		    color-stop(0.3, #384CE2), color-stop(0.3, #6F7DE8), to(#E0E3F8));   
     background-image: -moz-linear-gradient(top, #0620E2, #384CE2 20px, #6F7DE8 12px, #E0E3F8);
-    background-image: -webkit-gradient(linear, left top, left bottom, from(#0620E2), to(#E0E3F8));
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#0620E2), to(#E0E3F8*/
+    background-image: -moz-linear-gradient(top, #ccc, #fff );
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#3E58F6), to(#fff));
+                    
+                    
     width: 100%; 
     /*height: 30px;*/
     text-align: center;
-    -webkit-transition: all 0.3s ease-out;
-
 }
 
 /*.controlPanel:hover {
@@ -499,6 +501,7 @@ h1, h2, h3 {
 
 .labelBienvenida {
     font-weight: bold;
+    color: #174867;
 }
 
 .panelFiltro {
