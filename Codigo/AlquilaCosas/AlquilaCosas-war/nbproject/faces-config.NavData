@@ -13,8 +13,8 @@
         <Node id="vistas/usuario/misPublicaciones.xhtml" x="150" y="150" zoom="true"/>
         <Node id="vistas/usuarioCreado.xhtml" x="650" y="150" zoom="true"/>
         <Node id="vistas/resultados.xhtml" x="1150" y="600" zoom="true"/>
-        <Node id="vistas/admin/periodosAlquiler.xhtml" x="1150" y="450" zoom="true"/>
         <Node id="vistas/usuario/nuevaPublicacion.xhtml" x="150" y="1200" zoom="true"/>
+        <Node id="vistas/admin/periodosAlquiler.xhtml" x="1150" y="450" zoom="true"/>
         <Node id="vistas/verCategoria.xhtml" x="650" y="750" zoom="true"/>
         <Node id="vistas/activarCuenta.xhtml" x="1150" y="150" zoom="true"/>
         <Node id="vistas/usuarioCreado.xhtml?email=#{regUsuario.email}" x="650" y="450" zoom="true"/>
@@ -35,8 +35,8 @@
         <Node id="vistas/usuario/registrarPublicidad.xhtml?id=#{misPublicidades.publicidadId}" x="1900" y="150" zoom="true"/>
         <Node id="vistas/admin/categorias.xhtml" x="650" y="1050" zoom="true"/>
         <Node id="vistas/pub/registrarPublicidad.xhtml" x="900" y="900" zoom="true"/>
-        <Node id="vistas/comoPublicitar.xhtml" x="400" y="600" zoom="true"/>
         <Node id="resources/comps/itemPedido.xhtml" x="1150" y="300" zoom="true"/>
+        <Node id="vistas/comoPublicitar.xhtml" x="400" y="600" zoom="true"/>
         <Node id="vistas/terminos.html" x="150" y="1350" zoom="true"/>
         <Node id="vistas/usuario/nuevoPublicitante.xhtml" x="150" y="600" zoom="true"/>
         <Node id="vistas/registrarUsuario.xhtml" x="2150" y="300" zoom="true"/>
@@ -47,7 +47,6 @@
         <Node id="vistas/usuario/pruebaCalificar.xhtml" x="900" y="150" zoom="true"/>
         <Node id="vistas/usuario/cambiarContrasena.xhtml" x="1150" y="900" zoom="true"/>
         <Node id="vistas/usuario/misPagos.xhtml" x="900" y="450" zoom="true"/>
-        <Node id="vistas/usuario/denunciaDePregunta.xhtml" x="650" y="900" zoom="true"/>
         <Node id="vistas/usuario/destacarPublicacion.xhtml" x="400" y="1350" zoom="true"/>
         <Node id="vistas/admin/provincias.xhtml" x="400" y="300" zoom="true"/>
         <Node id="vistas/verReputacion.xhtml" x="150" y="900" zoom="true"/>
