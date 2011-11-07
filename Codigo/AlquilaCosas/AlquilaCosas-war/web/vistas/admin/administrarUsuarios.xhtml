@@ -5,7 +5,7 @@
       xmlns:comps="http://java.sun.com/jsf/composite/comps"
       xmlns:p="http://primefaces.prime.com.tr/ui" 
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:f="http://java.sun.com/jsf/core" >
 
     <body>
 
@@ -52,7 +52,7 @@
                                         <h:outputText value="Usuario"/>
                                         <h:selectBooleanCheckbox value="#{usuario.usuarioRol}" disabled="true" />
                                         <p:spacer width="10"/>
-                                        <h:outputText value="Admin"/>
+                                        <h:outputText value="Admini"/>
                                         <h:selectBooleanCheckbox value="#{usuario.adminRol}" disabled="true" />
                                         <p:spacer width="10"/>
                                         <h:outputText value="Publicitante"/>
@@ -80,10 +80,9 @@
             </ui:define>
 
             <ui:define name="right">
-                    <comps:loginBox />
-                    <comps:adminPanel />
-                    <comps:panelPublicitante />
-                    <comps:userPanel />
+                <comps:adminPanel />
+                <comps:panelPublicitante />
+                <comps:userPanel />
             </ui:define>
 
         </ui:composition>

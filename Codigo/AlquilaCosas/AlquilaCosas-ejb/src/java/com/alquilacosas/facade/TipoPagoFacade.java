@@ -44,4 +44,5 @@ public class TipoPagoFacade extends AbstractFacade<TipoPago> {
         }
         return tipoPago;
     }
+    
 }

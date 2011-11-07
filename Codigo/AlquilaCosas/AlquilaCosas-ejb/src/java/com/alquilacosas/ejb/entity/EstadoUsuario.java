@@ -31,7 +31,19 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "EstadoUsuario.findByDescripcion", query = "SELECT e FROM EstadoUsuario e WHERE e.descripcion = :descripcion")})
 public class EstadoUsuario implements Serializable {
     
-    public enum NombreEstadoUsuario {REGISTRADO, ACTIVO, SUSPENDIDO}; 
+    public enum NombreEstadoUsuario {
+        REGISTRADO("Registrado"), 
+        ACTIVO("Activo"), 
+        SUSPENDIDO("Suspendido");
+        String label;
+        NombreEstadoUsuario(String label) {
+            this.label = label;
+        }
+        @Override
+        public String toString() {
+            return label;
+        }
+    }; 
     
     private static final long serialVersionUID = 1L;
     

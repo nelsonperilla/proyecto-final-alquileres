@@ -26,24 +26,26 @@
           <div class="itemDenuncia">
                <h:panelGrid columns="3" >
                     <h:panelGrid columns="1" >
-                         <h:commandLink value="Publicación: #{cc.attrs.var.textoPublicacion}" 
-                                        action="#{cc.attrs.bean[cc.attrs.metodoVerPublicacion]}" 
+                         <h:link value="Publicación: #{cc.attrs.var.textoPublicacion}" 
+                                        outcome="/vistas/mostrarPublicacion" 
                                         rendered="#{cc.attrs.var.isPublicacion}">
-                              <f:setPropertyActionListener value="#{cc.attrs.var.publicacionId}" 
-                                                           target="#{cc.attrs.bean[cc.attrs.propPublicacion]}" />
-                         </h:commandLink>
+                              <f:param name="id" value="#{cc.attrs.var.publicacionId}" />
+                         </h:link>
                          <h:link value="Comentario: #{cc.attrs.var.textoComentario}" 
                                         outcome="/vistas/mostrarPublicacion" 
                                         rendered="#{not cc.attrs.var.isPublicacion}">
                              <f:param name="id" value="#{cc.attrs.var.publicacionId}" /> 
                          </h:link>
-                         <h:link value="Usuario Denunciado: #{cc.attrs.var.usuarioUsername}" outcome="/vistas/usuario/verReputacion" >
+                         <h:link value="Usuario Denunciado: #{cc.attrs.var.usuarioUsername}" 
+                                 outcome="/vistas/verReputacion" >
                              <f:param name="id" value="#{cc.attrs.var.usuarioId}" />
                          </h:link>
                          <h:outputText value="Motivo: #{cc.attrs.var.nombreMotivo}" />
                     </h:panelGrid>
                     <h:panelGrid columns="1" >
-                         <h:outputText value="Fecha: #{cc.attrs.var.fecha}" />
+                        <h:outputText value="Fecha: #{cc.attrs.var.fecha}" >
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
                          <h:outputText id="explicacion" value="Explicación: #{cc.attrs.var.explicacionShort}" />
                          <p:tooltip for="explicacion" value="#{cc.attrs.var.explicacion}"  
                               showEffect="slide" hideEffect="fade" showEffectLength="1000" hideEffectLength="1000"/>

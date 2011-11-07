@@ -23,9 +23,23 @@ public class PagoDTO implements Serializable {
     private NombreTipoPago tipoPago;
     private EstadoPago estado;
     private TipoServicio tipoServicio;
+    private String usuario;
 
-    public PagoDTO(int id, Date fechaIniciado, Date fechaConfirmado, double monto, NombreTipoPago tipoPago, EstadoPago estado, TipoServicio tipoServicio) {
+    public PagoDTO(int id, Date fechaIniciado, Date fechaConfirmado, double monto, 
+            NombreTipoPago tipoPago, EstadoPago estado, TipoServicio tipoServicio) {
         this.id = id;
+        this.fechaIniciado = fechaIniciado;
+        this.fechaConfirmado = fechaConfirmado;
+        this.monto = monto;
+        this.tipoPago = tipoPago;
+        this.estado = estado;
+        this.tipoServicio = tipoServicio;
+    }
+    
+    public PagoDTO(int id, String usuario, Date fechaIniciado, Date fechaConfirmado, double monto, 
+            NombreTipoPago tipoPago, EstadoPago estado, TipoServicio tipoServicio) {
+        this.id = id;
+        this.usuario = usuario;
         this.fechaIniciado = fechaIniciado;
         this.fechaConfirmado = fechaConfirmado;
         this.monto = monto;
@@ -88,6 +102,14 @@ public class PagoDTO implements Serializable {
 
     public void setTipoServicio(TipoServicio tipoServicio) {
         this.tipoServicio = tipoServicio;
+    }
+
+    public String getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
     }
     
 }

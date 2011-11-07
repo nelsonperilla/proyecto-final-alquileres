@@ -36,17 +36,17 @@ import javax.xml.bind.annotation.XmlTransient;
 public class Periodo implements Serializable {
     
     public enum NombrePeriodo{
-        HORA (1), 
-        DIA (24), 
-        SEMANA (168), 
-        MES (720);
-        private final int horas;
-        NombrePeriodo(int horas) {
-            this.horas = horas;
+        HORA ("Hora"), 
+        DIA ("Dia"), 
+        SEMANA ("Semana"), 
+        MES ("Mes");
+        private final String label;
+        NombrePeriodo(String label) {
+            this.label = label;
         }
-        
-        public int getHoras() {
-            return horas;
+        @Override
+        public String toString() {
+            return label;
         }
     };
     

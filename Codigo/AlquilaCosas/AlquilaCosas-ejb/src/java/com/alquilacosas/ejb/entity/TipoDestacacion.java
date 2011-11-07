@@ -24,7 +24,20 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class TipoDestacacion implements Serializable {
     
-    public enum NombreTipoDestacacion {SEMANAL, BISEMANAL, MENSUAL, BIMENSUAL};
+    public enum NombreTipoDestacacion {
+        SEMANAL("Semanal"), 
+        BISEMANAL("Bisemanal"), 
+        MENSUAL("Mensual"), 
+        BIMENSUAL("Bimensual");
+        String label;
+        NombreTipoDestacacion(String label) {
+            this.label = label;
+        }
+        @Override
+        public String toString() {
+            return label;
+        }
+    };
     
     private static final long serialVersionUID = 1L;
     

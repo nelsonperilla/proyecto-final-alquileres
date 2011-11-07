@@ -32,10 +32,10 @@
                         De hacerlo, la misma aparecerá antes que otras publicaciones no destacadas, y de
                         esta forma usted está incrementando las posibilidades de que su producto sea alquilado.
                     </p>
-                    
+
                     <div id="items" >
                         <comps:itemInfo bean="#{destacarBean}" property="publicacionId" 
-                                var="#{destacarBean.publicacion}" />
+                                        var="#{destacarBean.publicacion}" />
                     </div>
                     <br/>
                     <h:panelGrid columns="3" >
@@ -46,7 +46,7 @@
                             <f:selectItem itemLabel="Seleccione una duracion..." />
                             <f:selectItems value="#{destacarBean.tipos}" />
                             <p:ajax event="change" listener="#{destacarBean.tipoSeleccionado}"
-                                    update="precio" />
+                                    update="precio pagoPaypal pagoDm" />
                         </h:selectOneMenu>
                         <p:message for="duracion" />
                         <h:outputLabel value="Precio:" />
@@ -57,22 +57,48 @@
                                           rendered="#{empty destacarBean.tipoSeleccionado}" />
                         </p:outputPanel>
                     </h:panelGrid>
-                    
-                    <h:panelGrid columns="2" columnClasses="leftCol,rightCol" style="width: 100%" >
-                        <p:commandLink actionListener="#{destacarBean.destacar}" >
+
+                    <h:panelGrid columns="3" columnClasses="leftCol,rightCol" style="width: 100%" >
+                        <p:commandLink id="pagoPaypal" actionListener="#{destacarBean.destacar}" 
+                                       disabled="#{empty destacarBean.tipoSeleccionado}" >
                             <h:graphicImage value="#{resource['images:pagoPaypal.gif']}" />
+                        </p:commandLink>
+                        <p:commandLink id="pagoDm" actionListener="#{destacarBean.destacarDm}" 
+                                       update="dm" oncomplete="submitForm()"
+                                       disabled="#{empty destacarBean.tipoSeleccionado}" >
+                            <h:graphicImage value="#{resource['images:pagoDineroMail.gif']}" />
                         </p:commandLink>
                         <p:button value="No, gracias" outcome="/vistas/usuario/misPublicaciones" />
                     </h:panelGrid>
+
                     <p:growl id="growl" globalOnly="true" />
                 </h:form>
+
+                <p:outputPanel id="dm" >
+                    <form id="dmForm" action='https://argentina.dineromail.com/Shop/Shop_Ingreso.asp' method='post'>
+                        <input type='hidden' name='NombreItem' value='#{destacarBean.descripcion}'/>
+                        <input type='hidden' name='TipoMoneda' value='2'/>
+                        <input type='hidden' name='PrecioItem' value='#{destacarBean.precio}'/>
+                        <input type='hidden' name='E_Comercio' value='2421574'/>
+                        <input type='hidden' name='NroItem' value='#{destacarBean.pagoId}'/>
+                        <input type='hidden' name='DireccionExito' value='http://www.alquilacosas.com.ar/pagoConfirmado.xhtml'/>
+                        <input type='hidden' name='DireccionFracaso' value='http://www.alquilacosas.com.ar/pagoCancelado.xhtml'/>
+                        <input type='hidden' name='DireccionEnvio' value='0'/>
+                        <input type='hidden' name='Mensaje' value='0'/>
+                        <input type='hidden' name='MediosPago' value='4,2,7,13'/>
+                    </form>
+                </p:outputPanel>
+                <script type="text/javascript" >
+                    function submitForm() {
+                        document.forms["dmForm"].submit();
+                    }
+                </script>
             </ui:define>
 
             <ui:define name="right">
-                    <comps:loginBox />
-                    <comps:adminPanel />
-                    <comps:panelPublicitante />
-                    <comps:userPanel />
+                <comps:adminPanel />
+                <comps:panelPublicitante />
+                <comps:userPanel />
             </ui:define>
 
         </ui:composition>
