@@ -16,50 +16,51 @@
         <table id="form:panel" width="1024px" align="center" >
             <tr>
                 <td colspan="3" class="encabezado">
-            <ui:insert name="logInfo"/>
-            </td>
+                    <ui:insert name="logInfo"/>
+                </td>
             </tr>
             <tr>
                 <td id="title" colspan="3" >
-            <comps:logoBar />
-            </td>
+                    <comps:logoBar />
+                </td>
             </tr>
             <tr>    
                 <td valign="top" class="columnaIzq">
-            <ui:insert name="left" />
+                    <ui:insert name="left" />
 
-            <ui:repeat value="#{mostrarPublicidad.publicidadesIzq}" var="pub" >
-                <a href="#{pub.url}" >
-                    <f:attribute name="url" value="#{pub.url}" />
-                    <h:graphicImage value="/imagenpub?id=#{pub.id}" width="140"
-                                    alt="#{pub.caption}" />
-                </a>
-            </ui:repeat>
-            <p:outputPanel rendered="#{empty mostrarPublicidad.publicidadesIzq}" >        
-                <h:link outcome="/vistas/comoPublicitar" >
-                    <h:graphicImage value="#{resource['images:publiciteLateral.jpg']}" />
-                </h:link>
-            </p:outputPanel>
-            </td>
-            <td id="principal" valign="top" >
-            <ui:insert name="principal"/>
-            </td>
-            <td width="200px" valign="top">
-            <ui:insert name="right" />
-
-            <ui:repeat value="#{mostrarPublicidad.publicidadesDer}" var="pub" >
-                <a href="#{mostrarPublicidad.navegarUrl}" >
-                    <h:graphicImage value="/imagenpub?id=#{pub.id}"
+                    <ui:repeat value="#{mostrarPublicidad.publicidadesIzq}" var="pub" >
+                        <a href="#{pub.url}" >
+                            <f:attribute name="url" value="#{pub.url}" />
+                            <h:graphicImage value="/imagenpub?id=#{pub.id}" width="140"
+                                    alt="#{pub.caption}" style="margin-top: 10px"/>
+                        </a>
+                    </ui:repeat>
+                    <p:outputPanel rendered="#{empty mostrarPublicidad.publicidadesIzq}" >        
+                        <h:link outcome="/vistas/comoPublicitar" >
+                            <h:graphicImage value="#{resource['images:publicidadLateral.png']}" 
+                                    style="margin-top: 10px"/>
+                        </h:link>
+                    </p:outputPanel>
+                </td>
+                <td id="principal" valign="top" >
+                    <ui:insert name="principal"/>
+                </td>
+                <td width="200px" valign="top">
+                    <ui:insert name="right" />
+                    <ui:repeat value="#{mostrarPublicidad.publicidadesDer}" var="pub" >
+                        <a href="#{mostrarPublicidad.navegarUrl}" >
+                            <h:graphicImage value="/imagenpub?id=#{pub.id}"
                                     alt="#{pub.caption}" width="140" height="200"
                                     style="margin-top: 10px" />
-                </a>
-            </ui:repeat>
-            <p:outputPanel rendered="#{empty mostrarPublicidad.publicidadesDer}" >
-                <h:link outcome="/vistas/comoPublicitar" >
-                    <h:graphicImage value="#{resource['images:publiciteLateral.jpg']}" />
-                </h:link>
-            </p:outputPanel>
-            </td>
+                        </a>
+                    </ui:repeat>
+                    <p:outputPanel rendered="#{empty mostrarPublicidad.publicidadesDer}" >
+                        <h:link outcome="/vistas/comoPublicitar" >
+                            <h:graphicImage value="#{resource['images:publicidadLateral.png']}" 
+                                    style="margin-top: 10px"/>
+                        </h:link>
+                    </p:outputPanel>
+                </td>
             </tr>
             <tr>
                 <td>
