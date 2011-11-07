@@ -15,10 +15,18 @@
         <p:outputPanel rendered="#{login.logueado and login.publicitante}" >
             <p:panel styleClass="controlPanel">
                 <h3 style="color:gainsboro; margin-top: 1px">Publicitante</h3>
-                <h:panelGrid columns="1" cellpadding="2" style="width: 100%; text-align: center">
-                    <h:link value="Nueva publicidad" outcome="/vistas/pub/registrarPublicidad" />
-                    <h:link value="Mis Publicidades" outcome="/vistas/pub/misPublicidades" />
-                </h:panelGrid>
+                   <div id="userMenu">
+                        <nav id="userMenuNav">
+                            <ul>
+                                <li>
+                                    <h:link value="Nueva publicidad" outcome="/vistas/pub/registrarPublicidad" />
+                                </li>
+                                <li>
+                                    <h:link value="Mis Publicidades" outcome="/vistas/pub/misPublicidades" />
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
             </p:panel>
         </p:outputPanel>
     </cc:implementation>

@@ -125,6 +125,40 @@ h1, h2, h3 {
 .ui-timepicker-div td { font-size: 90%; }
 .ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
 
+#userMenu nav ul{
+    list-style: none;
+    display: block;
+    width: 190px;
+    position: relative;
+
+    left: 0px;
+    padding: 10px 0 10px 0;
+    background: url(../resources/images/shadow2.png) no-repeat;
+    -webkit-background-size: 50% 100%;    
+}
+
+#userMenu nav ul li a{
+    -webkit-transition: all 0.3s ease-out;    
+    background: #5858FA url(../resources/images/border.png) no-repeat;
+    color: #111111;
+    height: 8px;
+    margin-bottom: 5px;
+    padding: 7px 15px 7px 15px;
+    -webkit-border-top-right-radius: 10px;
+    -webkit-border-bottom-right-radius: 10px;
+    width: 150px;
+    display: block;
+    text-decoration: none;
+    text-align: left !important;
+    -webkit-box-shadow: 2px 2px 4px #0404B4;
+}
+
+#userMenu nav ul li a:hover {
+    background: #ebebeb url(../resources/images/border.png) no-repeat;
+    color: #222222;
+    padding: 7px 15px 7px 30px;
+}
+
 #login td{
     background: #0182dc;
     padding: 0px 0px 0px 0px; 
@@ -434,9 +468,9 @@ h1, h2, h3 {
     color: chocolate;
 }
 
-.controlPanel a {
+/*.controlPanel a {
     text-decoration: none;
-}
+}*/
 
 .controlPanel {
 /*    background-image: -moz-linear-gradient(top, #0620E2, #384CE2 40px, #6F7DE8 12px, #E0E3F8);
@@ -445,9 +479,16 @@ h1, h2, h3 {
     background-image: -moz-linear-gradient(top, #0620E2, #384CE2 20px, #6F7DE8 12px, #E0E3F8);
     background-image: -webkit-gradient(linear, left top, left bottom, from(#0620E2), to(#E0E3F8));
     width: 100%; 
+    /*height: 30px;*/
     text-align: center;
+    -webkit-transition: all 0.3s ease-out;
 
 }
+
+/*.controlPanel:hover {
+   height: auto;
+ 
+}*/
 
 .labelBienvenida {
     font-weight: bold;

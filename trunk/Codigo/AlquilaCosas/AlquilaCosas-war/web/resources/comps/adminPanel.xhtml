@@ -14,13 +14,21 @@
         <p:outputPanel rendered="#{login.administrador}">
             <p:panel styleClass="controlPanel" >
                 <h3 style="color:gainsboro; margin-top: 1px">Administracion</h3>
-                <h:panelGrid columns="1" cellpadding="2" style="width: 100%; text-align: center">
-                    <h:link value="Categorias" outcome="/vistas/admin/categorias" />
-                    <h:link value="Usuarios" outcome="/vistas/admin/administrarUsuarios" />
-                    <h:link value="Denuncias" outcome="/vistas/admin/administrarDenuncias" />
-                    <!--                       <h:commandLink value="Provincias" action="provincias" />
-                                           <h:commandLink value="Paises" action="paises" />-->
-                </h:panelGrid>
+                   <div id="userMenu">
+                        <nav id="userMenuNav">
+                            <ul>
+                                <li>
+                                    <h:link value="Categorias" outcome="/vistas/admin/categorias" />
+                                </li>
+                                <li>    
+                                    <h:link value="Usuarios" outcome="/vistas/admin/administrarUsuarios" />
+                                </li>
+                                <li>    
+                                    <h:link value="Denuncias" outcome="/vistas/admin/administrarDenuncias" />
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
             </p:panel>
         </p:outputPanel>
     </cc:implementation>
