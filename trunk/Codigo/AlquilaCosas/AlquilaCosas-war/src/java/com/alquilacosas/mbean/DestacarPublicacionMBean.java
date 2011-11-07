@@ -22,6 +22,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 
 /**
@@ -43,6 +44,8 @@ public class DestacarPublicacionMBean implements Serializable {
     private String tituloPublicacion;
     private Date fechaPublicacion, fechaFinalizacion;
     private Double precio;
+    private int pagoId = -1;
+    private String descripcion;
     
     
     /** Creates a new instance of DestacarPublicacionMBean */
@@ -95,14 +98,14 @@ public class DestacarPublicacionMBean implements Serializable {
     }
     
     public void destacar() {
-        Integer pagoId = destacarBean.iniciarCobroDestacacion(login.getUsuarioId(), 
+        pagoId = destacarBean.iniciarCobroDestacacion(login.getUsuarioId(), 
                 publicacionId, tipoSeleccionado,  precio, NombreTipoPago.PAYPAL);
-        if(pagoId == null) {
+        if(pagoId < 0) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
                     "Error al registrar pago.", "");
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
-        String descripcion = "Destacar publicacion:" + publicacion.getTitulo();
+        descripcion = "Destacacion" + tipoSeleccionado.toString() + ". Publicacion: " + publicacion.getTitulo();
         String url = PaypalUtil.setExpressCheckout(descripcion, Integer.toString(pagoId), 
                 Integer.toString(publicacionId), precio.toString());
         if (url != null) {
@@ -111,7 +114,17 @@ public class DestacarPublicacionMBean implements Serializable {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al comunicarse con paypal", "");
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
-
+    }
+    
+    public void destacarDm() {
+        pagoId = destacarBean.iniciarCobroDestacacion(login.getUsuarioId(), 
+                publicacionId, tipoSeleccionado,  precio, NombreTipoPago.DINEROMAIL);
+        if(pagoId < 0) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                    "Error al registrar pago.", "");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+        descripcion = "Destacacion" + tipoSeleccionado.toString() + ". Publicacion: " + publicacion.getTitulo();
     }
     
     public void tipoSeleccionado() {
@@ -192,6 +205,21 @@ public class DestacarPublicacionMBean implements Serializable {
     public void setTipos(List<SelectItem> tipos) {
         this.tipos = tipos;
     }
-    
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public int getPagoId() {
+        return pagoId;
+    }
+
+    public void setPagoId(int pagoId) {
+        this.pagoId = pagoId;
+    }
     
 }

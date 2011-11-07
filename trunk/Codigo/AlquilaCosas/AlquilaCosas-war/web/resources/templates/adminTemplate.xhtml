@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:comps="http://java.sun.com/jsf/composite/comps"
+      xmlns:f="http://java.sun.com/jsf/core" >
+    <h:head>
+
+        <title>Alquila Cosas</title>
+    </h:head>
+    <h:body >
+        <h:outputStylesheet library="css" name="layout.css" />
+        <table id="form:panel" width="1024px" align="center" >
+            <tr>
+                <td colspan="3" class="encabezado">
+            <ui:insert name="logInfo"/>
+            </td>
+            </tr>
+            <tr>
+                <td id="title" colspan="3" >
+                    <comps:logoBar />
+                </td>
+            </tr>
+            <tr>    
+                <td id="adminPrincipal" valign="top" >
+                    <ui:insert name="principal"/>
+                </td>
+                <td width="200px" valign="top">
+                    <ui:insert name="right" />
+                    <br/>
+                    <ui:repeat value="#{mostrarPublicidad.publicidadesDer}" var="pub" >
+                        <a href="#{mostrarPublicidad.navegarUrl}" >
+                            <h:graphicImage value="/imagenpub?id=#{pub.id}"
+                                            alt="#{pub.caption}" width="140" height="200"
+                                            style="margin-top: 10px" />
+                        </a>
+                    </ui:repeat>
+                    <p:outputPanel rendered="#{empty mostrarPublicidad.publicidadesDer}" >
+                        <h:link outcome="/vistas/comoPublicitar" >
+                            <h:graphicImage value="#{resource['images:publiciteLateral.jpg']}" />
+                        </h:link>
+                    </p:outputPanel>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div id="footer"/>
+                </td>
+            </tr>
+        </table>
+    </h:body>
+</html>

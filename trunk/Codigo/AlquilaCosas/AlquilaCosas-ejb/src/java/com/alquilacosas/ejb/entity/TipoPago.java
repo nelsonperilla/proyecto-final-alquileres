@@ -28,7 +28,18 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 public class TipoPago implements Serializable {
     
-    public enum NombreTipoPago {PAYPAL}
+    public enum NombreTipoPago {
+        PAYPAL("PayPal"),
+        DINEROMAIL("DineroMail");
+        String label;
+        NombreTipoPago(String label) {
+            this.label = label;
+        }
+        @Override
+        public String toString() {
+            return label;
+        }
+    }
     
     private static final long serialVersionUID = 1L;
     

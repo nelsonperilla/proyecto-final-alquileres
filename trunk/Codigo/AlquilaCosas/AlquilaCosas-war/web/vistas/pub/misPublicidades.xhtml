@@ -75,7 +75,7 @@
                         <p:column headerText="E">
                             <p:rowEditor rendered="#{not (publicidad.estadoPublicidad eq 'ACTIVA')}" />
 
-                            <h:link value="RP" outcome="/vistas/pub/registrarPublicacion">
+                            <h:link value="RP" outcome="/vistas/pub/registrarPublicidad">
                                 <f:param name="id" value="#{pub.id}" />
                             </h:link>
                         </p:column>
@@ -109,7 +109,6 @@
             </ui:define>
 
                 <ui:define name="right">
-                <comps:loginBox />
                 <comps:adminPanel />
                 <comps:panelPublicitante />
                 <comps:userPanel />

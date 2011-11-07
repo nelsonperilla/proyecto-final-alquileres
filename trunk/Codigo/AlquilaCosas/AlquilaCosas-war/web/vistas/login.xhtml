@@ -4,7 +4,6 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.prime.com.tr/ui" 
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
       xmlns:comps="http://java.sun.com/jsf/composite/comps" >
 
     <body>
@@ -40,10 +39,9 @@
             </ui:define>
 
             <ui:define name="right">
-                    <comps:loginBox />
                     <comps:adminPanel />
                     <comps:panelPublicitante />
-                    <comps:userPanel />               
+                    <comps:userPanel />     
             </ui:define>
 
         </ui:composition>

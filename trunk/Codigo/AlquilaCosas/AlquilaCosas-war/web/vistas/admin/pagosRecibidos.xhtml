@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:comps="http://java.sun.com/jsf/composite/comps"
+      xmlns:p="http://primefaces.prime.com.tr/ui" 
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" >
+
+    <body>
+
+        <ui:composition template="./../../resources/templates/adminTemplate.xhtml">
+
+            <ui:define name="logInfo">
+                <h:link value="inicio" outcome="/vistas/inicio" />
+            </ui:define>
+
+            <ui:define name="principal">
+                <h1>Pagos recibidos</h1>
+                <h:form>
+                    <p:tooltip global="true"/> 
+                    
+                    <p:commandLink id="todos" value="Todos" 
+                                   actionListener="#{pagos.mostrarTodos}"
+                                   disabled="#{pagos.todos}"
+                                   update="todos paypal dm tabla" />
+                    |
+                    <p:commandLink id="paypal" value="Paypal" 
+                                   actionListener="#{pagos.mostrarPagosPaypal}"
+                                   disabled="#{pagos.paypal}"
+                                   update="todos paypal dm tabla" /> 
+                    | 
+                    <p:commandLink id="dm" value="DineroMail" 
+                                   actionListener="#{pagos.mostrarPagosDineroMail}"
+                                   disabled="#{pagos.dm}" 
+                                   update="todos paypal dm tabla" />
+                    <br/><br/>
+                    <p:dataTable id="tabla" value="#{pagos.model}" lazy="true"
+                                 var="pago" paginator="true" 
+                                 rows="20" paginatorPosition="bottom" 
+                                 emptyMessage="No exite ningun pago registrado"
+                                 rowIndexVar="r" rowStyleClass="#{empty r or r mod 2 ne 0 ? 'even-row': 'odd-row'}" >
+                        
+                        <p:column headerText="Id" >
+                            <h:outputText value="#{pago.id}" />
+                        </p:column>
+                        
+                        <p:column headerText="Usuario" >
+                            <h:outputText value="#{pago.usuario}" />
+                        </p:column>
+                        
+                        <p:column headerText="Servicio" >
+                            <h:outputText value="#{pago.tipoServicio}" />
+                        </p:column>
+                        
+                        <p:column headerText="Tipo pago" rendered="#{pagos.todos}" >
+                            <h:outputText value="#{pago.tipoPago}" />
+                        </p:column>
+                        
+                        <p:column headerText="Iniciado" >
+                            <h:outputText value="#{pago.fechaIniciado}" >
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
+                        </p:column>
+                        
+                        <p:column headerText="Confirmado" >
+                            <h:outputText value="#{pago.fechaConfirmado}" >
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
+                        </p:column>
+                        
+                        <p:column headerText="Monto (U$D)" >
+                            <h:outputText value="#{pago.monto}" />
+                        </p:column>
+                        
+                        <p:column headerText="Acciones" >
+                            <p:commandButton image="ui-icon ui-icon-circle-check"
+                                             rendered="#{empty pago.fechaConfirmado}"
+                                             title="Confirmar pago" />
+                        </p:column>
+                        
+                    </p:dataTable>
+                    
+                </h:form>
+            </ui:define>
+
+            <ui:define name="right">
+                <comps:adminPanel />
+                <comps:panelPublicitante />
+                <comps:userPanel />
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

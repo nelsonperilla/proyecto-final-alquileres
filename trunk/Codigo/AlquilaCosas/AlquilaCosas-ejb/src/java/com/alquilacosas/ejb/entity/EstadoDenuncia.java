@@ -28,7 +28,19 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "EstadoDenuncia.findByNombre", query = "SELECT e FROM EstadoDenuncia e WHERE e.nombre = :nombre")})
 public class EstadoDenuncia implements Serializable {
  
-    public enum NombreEstadoDenuncia {PENDIENTE, ACEPTADA, RECHAZADA}; 
+    public enum NombreEstadoDenuncia {
+        PENDIENTE("Pendiente"), 
+        ACEPTADA("Aceptada"), 
+        RECHAZADA("Rechazada");
+        private String label;
+        NombreEstadoDenuncia(String label) {
+            this.label = label;
+        }
+        @Override
+        public String toString() {
+            return label;
+        }
+    }; 
     
     private static final long serialVersionUID = 1L;
     

@@ -24,8 +24,33 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class TipoPublicidad implements Serializable {
     
-    public enum UbicacionPublicidad {CARRUSEL, LATERAL_IZQUIERDA, LATERAL_DERECHA};
-    public enum DuracionPublicidad {SEMANAL, BISEMANAL, MENSUAL, BIMENSUAL};
+    public enum UbicacionPublicidad {
+        CARRUSEL("Carrusel"), 
+        LATERAL_IZQUIERDA("Lateral izquierda"), 
+        LATERAL_DERECHA("Lateral derecha");
+        String label;
+        UbicacionPublicidad(String label) {
+            this.label = label;
+        }
+        @Override
+        public String toString() {
+            return label;
+        }
+    };
+    public enum DuracionPublicidad {
+        SEMANAL("Semanal"), 
+        BISEMANAL("Bisemanal"), 
+        MENSUAL("Mensual"), 
+        BIMENSUAL("Bimensual");
+        String label;
+        DuracionPublicidad(String label) {
+            this.label = label;
+        }
+        @Override
+        public String toString() {
+            return label;
+        }
+    };
     
     private static final long serialVersionUID = 1L;
     
