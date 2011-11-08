@@ -4,6 +4,8 @@
  */
 package com.alquilacosas.dto;
 
+import com.alquilacosas.ejb.entity.TipoPublicidad.DuracionPublicidad;
+import com.alquilacosas.ejb.entity.TipoPublicidad.UbicacionPublicidad;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -22,6 +24,8 @@ public class PublicidadDTO implements Serializable {
     private Date fechaHasta;
     private double costo;
     private EstadoPublicidad estado;
+    private DuracionPublicidad duracion;
+    private UbicacionPublicidad ubicacion;
     
 
     public PublicidadDTO(int id, String titulo, String caption, String url) {
@@ -32,7 +36,8 @@ public class PublicidadDTO implements Serializable {
     }
     
     public PublicidadDTO( Integer id, String titulo, String url, String caption, Date fechaDesde,
-            Date fechaHasta, double costo, EstadoPublicidad estado, byte [] imagen){
+            Date fechaHasta, double costo, EstadoPublicidad estado, byte [] imagen,
+            DuracionPublicidad duracion, UbicacionPublicidad ubicacion){
         this.id = id;
         this.titulo = titulo;
         this.url = url;
@@ -42,6 +47,8 @@ public class PublicidadDTO implements Serializable {
         this.costo = costo;
         this.estado = estado;
         this.imagen = imagen;
+        this.duracion = duracion;
+        this.ubicacion = ubicacion;
     }
 
     public int getId() {
@@ -119,6 +126,22 @@ public class PublicidadDTO implements Serializable {
     public void setFechaHasta(Date fechaHasta) {
         this.fechaHasta = fechaHasta;
     }
-    
+
+    public DuracionPublicidad getDuracion() {
+        return duracion;
+    }
+
+    public void setDuracion(DuracionPublicidad duracion) {
+        this.duracion = duracion;
+    }
+
+    public UbicacionPublicidad getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(UbicacionPublicidad ubicacion) {
+        this.ubicacion = ubicacion;
+    }
+
     
 }

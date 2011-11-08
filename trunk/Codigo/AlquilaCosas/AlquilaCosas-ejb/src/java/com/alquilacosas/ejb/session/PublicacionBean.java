@@ -333,12 +333,12 @@ public class PublicacionBean implements PublicacionBeanLocal {
         }
 
         // Actualizar periodos minimos y maximos de alquiler
-        Periodo periodo1 = periodoFacade.find(periodoMinimoFk);;
+        Periodo periodo1 = periodoFacade.find(periodoMinimoFk);
         publicacion.setMinPeriodoAlquilerFk(periodo1);
         publicacion.setMinValor(periodoMinimo);
 
         if (periodoMaximoFk != null && periodoMaximoFk > 0) {
-            Periodo periodo2 = periodoFacade.find(periodoMaximoFk);;
+            Periodo periodo2 = periodoFacade.find(periodoMaximoFk); 
             publicacion.setMaxPeriodoAlquilerFk(periodo2);
             publicacion.setMaxValor(periodoMaximo);
         }

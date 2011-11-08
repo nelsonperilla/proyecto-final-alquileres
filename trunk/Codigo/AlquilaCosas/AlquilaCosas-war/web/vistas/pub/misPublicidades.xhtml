@@ -26,7 +26,7 @@
 
                     <p:dataTable var="publicidad" value="#{misPublicidades.publicidades}"
                                  selection="#{misPublicidades.selectedPublicidad}" 
-                                 selectionMode="single" 
+                                 selectionMode="single" emptyMessage="No existen publicidades registradas"
                                  style="text-align: center">
 
                         <f:facet name="header">
@@ -72,23 +72,30 @@
                             <h:outputText value="#{publicidad.costo}" />
                         </p:column>
 
-                        <p:column headerText="E">
-                            <p:rowEditor rendered="#{not (publicidad.estadoPublicidad eq 'ACTIVA')}" />
-
-                            <h:link value="RP" outcome="/vistas/pub/registrarPublicidad">
-                                <f:param name="id" value="#{pub.id}" />
+                        <p:column headerText="Acciones">
+                            <h:link value="M" outcome="/vistas/pub/modificarRepublicarPublicidad" title="Modificar"
+                                    rendered="#{not (publicidad.estadoPublicidad eq 'ACTIVA')}" >
+                                <f:param name="id" value="#{publicidad.id}" />
+                                <f:param name="tipo" value="modificar" />
+                            </h:link>    
+                            <p:spacer width="10px"/>
+                            <h:link value="R" outcome="/vistas/pub/modificarRepublicarPublicidad" title="Republicar"
+                                    rendered="#{not (publicidad.estadoPublicidad eq 'ACTIVA')}">
+                                <f:param name="id" value="#{publicidad.id}" />
+                                <f:param name="tipo" value="republicar" />
                             </h:link>
                         </p:column>
 
                         <f:facet name="footer">
                             <p:commandButton value="Ver Publicidad" image="ui-icon ui-icon-search"
-                                             update="form:display" oncomplete="pubDialog.show()"/>
+                                             update="form:display" oncomplete="pubDialog.show()"
+                                             rendered="#{not (publicidad != null)}"/>
                         </f:facet>
 
                     </p:dataTable>
 
                     <p:dialog header="Publicidad" widgetVar="pubDialog" resizable="false"
-                              width="300" height="300" showEffect="clip" hideEffect="fold">
+                              width="600" height="600" showEffect="clip" hideEffect="fold">
 
                         <h:panelGrid id="display" columns="2" cellpadding="4">
 
