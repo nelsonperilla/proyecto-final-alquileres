@@ -55,7 +55,7 @@
                                    <p:separator />
                                    <h:panelGrid columns="2" columnClasses="leftCol,rightCol" style="width:100%" >
                                         <p:commandButton value="Si" actionListener="#{admDenuncias.aceptarDenuncia()}" 
-                                                         update=":denuncias" oncomplete="aceptarDlg.hide()" />
+                                                         update=":denuncias:tabla" oncomplete="aceptarDlg.hide()" />
                                         <p:commandButton value="No" oncomplete="aceptarDlg.hide()" />
                                    </h:panelGrid>
                               </h:form>
@@ -68,7 +68,7 @@
                                    <p:separator />
                                    <h:panelGrid columns="2" columnClasses="leftCol,rightCol" style="width:100%" >
                                         <p:commandButton value="Si" actionListener="#{admDenuncias.rechazarDenuncia()}" 
-                                                         update=":denuncias" oncomplete="rechazarDlg.hide()" />
+                                                         update=":denuncias:tabla" oncomplete="rechazarDlg.hide()" />
                                         <p:commandButton value="No" oncomplete="rechazarDlg.hide()" />
                                    </h:panelGrid>
                               </h:form>
