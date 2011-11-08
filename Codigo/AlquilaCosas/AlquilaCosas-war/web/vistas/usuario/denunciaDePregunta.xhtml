@@ -18,8 +18,12 @@
             </ui:define>
 
             <ui:define name="principal">
-                <h3>Denuncia de Comentarios</h3>
-                <br/>
+                <h:outputText value="Denuncia de Comentario" style="font: normal 1.3em sans-serif;"
+                    rendered="#{denuncia.comentario != null}" />
+                <h:outputText value="Denuncia de Publicación" style="font: normal 1.3em sans-serif;" 
+                    rendered="#{denuncia.comentario == null}" />
+
+                    <br/>
                 
                     <table>
                         <tr>
