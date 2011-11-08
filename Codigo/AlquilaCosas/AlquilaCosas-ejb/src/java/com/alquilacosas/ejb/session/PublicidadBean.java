@@ -105,6 +105,27 @@ public class PublicidadBean implements PublicidadBeanLocal {
             return null;
         }
     }
+    
+    @Override
+    @RolesAllowed({"USUARIO", "ADMIN"})
+    public void actualizarPublicidad(Integer publicidadId, 
+            String titulo, String url, String caption, byte[] imagen)
+            throws AlquilaCosasException {
+        
+        Publicidad p = publicidadFacade.find(publicidadId);
+        
+        if( p == null )
+            throw new AlquilaCosasException("La publicidad no pudo ser encontrada");
+        
+        p.setTitulo(titulo);
+        p.setUrl(url);
+        p.setCaption(caption);
+        p.setImagen(imagen);
+
+        publicidadFacade.edit(p);
+    }
+    
+    
 
     /**
      * Devuelve las publicidadesDTO de un usuario
@@ -123,14 +144,15 @@ public class PublicidadBean implements PublicidadBeanLocal {
             for (Publicidad p : publicidades) {
                 try {
                 Pago pago = p.getPagoList().get(0);
+                TipoPublicidad tp = p.getTipoPublicidadFk();
                 if (pago.getFechaConfirmado() == null) {
                     publicidadDto = new PublicidadDTO(p.getServicioId(), p.getTitulo(), p.getUrl(),
                             p.getCaption(), p.getFechaDesde(), p.getFechaHasta(), pago.getMonto(),
-                            EstadoPublicidad.PENDIENTE, p.getImagen());
+                            EstadoPublicidad.PENDIENTE, p.getImagen(), tp.getDuracion(), tp.getUbicacion());
                 } else {
                     publicidadDto = new PublicidadDTO(p.getServicioId(), p.getTitulo(), p.getUrl(),
                             p.getCaption(), p.getFechaDesde(), p.getFechaHasta(), pago.getMonto(),
-                            EstadoPublicidad.ACTIVA, p.getImagen());
+                            EstadoPublicidad.ACTIVA, p.getImagen(), tp.getDuracion(), tp.getUbicacion());
                 }
                 lista.add(publicidadDto);
                 } catch (Exception e) {
@@ -145,10 +167,11 @@ public class PublicidadBean implements PublicidadBeanLocal {
     public PublicidadDTO getPublicidad(Integer publicidadId) {
 
         Publicidad p = publicidadFacade.find(publicidadId);
-
+        TipoPublicidad tp = p.getTipoPublicidadFk();
+        
         PublicidadDTO publicidad = new PublicidadDTO(publicidadId, p.getTitulo(), p.getUrl(),
                 p.getCaption(), p.getFechaDesde(), p.getFechaHasta(), publicidadId,
-                EstadoPublicidad.ACTIVA, p.getImagen());
+                EstadoPublicidad.ACTIVA, p.getImagen(), tp.getDuracion(), tp.getUbicacion());
 
         return publicidad;
     }

@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://www.zeroturnaround.com http://www.zeroturnaround.com/alderaan/rebel-2_0.xsd">
 
 	<classpath>
-		<dir name="/Users/damiancardozo/NetBeansProjects/AlquilaCosas/Codigo/AlquilaCosas/AlquilaCosas-ejb/build/classes/"/>
+		<dir name="/Users/ignaciogiagante/NetBeansProjects/Codigo/AlquilaCosas/AlquilaCosas-ejb/build/classes/"/>
 	</classpath>
 
 </application>

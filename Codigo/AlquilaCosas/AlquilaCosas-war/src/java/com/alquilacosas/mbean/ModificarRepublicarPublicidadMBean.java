@@ -31,12 +31,13 @@ import org.primefaces.json.JSONObject;
 
 /**
  *
- * @author damiancardozo
+ * @author ignaciogiagante
  */
-@ManagedBean(name = "publicidadBean")
+@ManagedBean ( name="editarMBean" )
 @ViewScoped
-public class RegistrarPublicidadMBean implements Serializable {
+public class ModificarRepublicarPublicidadMBean implements Serializable{
 
+    
     @EJB
     private PublicidadBeanLocal publicidadBean;
     @ManagedProperty(value = "#{login}")
@@ -52,20 +53,26 @@ public class RegistrarPublicidadMBean implements Serializable {
     private String myJson;
     private Date fechaHasta;
     private Integer publicidadId;
-    private static final String CARRUSEL = "La imagen debe ser de 600 x 130 pixels";
-    private static final String LAT_IZQ = "La imagen debe ser de 140 x 400 pixels";
-    private static final String LAT_DER = "La imagen debe ser de 140 x 200 pixels";
-    private String label = "";
-
-    /** Creates a new instance of RegistrarPublicidadMBean */
-    public RegistrarPublicidadMBean() {
+    private Integer imagenId;
+    private boolean existeImagen;
+    private String modificar;
+    
+    
+    /** Creates a new instance of ModificarRepublicarPublicidadMBean */
+    public ModificarRepublicarPublicidadMBean() {
     }
 
     @PostConstruct
     public void init() {
-        Logger.getLogger(RegistrarPublicidadMBean.class).debug("RegistrarPublicidadMBean: postconstruct.");
+        
+        Logger.getLogger(RegistrarPublicidadMBean.class).info("RegistrarPublicidadMBean: postconstruct.");
+        
         String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
+        
+        modificar = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("tipo");
+        
         if(id != null) {
+            
             publicidadId = Integer.parseInt(id);
         
             PublicidadDTO publicidad = publicidadBean.getPublicidad(publicidadId);
@@ -75,6 +82,12 @@ public class RegistrarPublicidadMBean implements Serializable {
             this.setUrl(publicidad.getUrl());
             this.setPrecio(publicidad.getCosto());
             this.setFechaDesde(publicidad.getFechaDesde());
+            this.setDuracionSeleccionada(publicidad.getDuracion());
+            this.setUbicacionSeleccionada(publicidad.getUbicacion());
+            this.setImagen(publicidad.getImagen());
+            this.imagenId = publicidadId;
+            this.existeImagen = true;
+            
         }
         
         fechas = new ArrayList<Date>(); 
@@ -97,7 +110,36 @@ public class RegistrarPublicidadMBean implements Serializable {
 
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
+    
+    public void removerImagen() {
+        this.setImagen(null);
+        imagenId = null;
+        existeImagen = false;
+    }
 
+    public String actualizarPublicidad() {
+        String http = "";
+        if (imagen == null) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Debe cargar una imagen", "");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return "";
+        }
+
+        try {
+            if( !(url.equals("http://")) ){
+                http = "http://" + url;
+            }
+            publicidadBean.actualizarPublicidad(publicidadId, titulo, http, caption, imagen);
+        } catch (Exception e) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "La publicidad no pudo actualizarse", "");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return "";
+        }
+        return "misPublicidades.xhtml?faces-redirect=true";
+    }
+    
     public void registrarPublicidad() {
 
         if (imagen == null) {
@@ -170,7 +212,8 @@ public class RegistrarPublicidadMBean implements Serializable {
         String redirectUrl = PaypalUtil.setExpressCheckout(descripcion, Integer.toString(pagoId), null, precio.toString());
         if (redirectUrl != null) {
             try {
-                FacesContext.getCurrentInstance().getExternalContext().redirect(redirectUrl);
+                FacesContext.getCurrentInstance().getExternalContext().redirect("inicio.xhtml");
+                FacesContext.getCurrentInstance().responseComplete();
             } catch (Exception e) {
                 Logger.getLogger(RegistrarPublicidadMBean.class).error("Excepcion al ejecutar redirect().");
             }
@@ -194,13 +237,6 @@ public class RegistrarPublicidadMBean implements Serializable {
             precio = publicidadBean.getPrecio(duracionSeleccionada, ubicacionSeleccionada);
             fechas = publicidadBean.getFechasSinStock(ubicacionSeleccionada);
             this.createDictionary();
-            if( ubicacionSeleccionada.equals("CARRUSEL") ){
-                label = CARRUSEL;
-            }else if( ubicacionSeleccionada.equals("LATERAL_IZQUIERDA") ){
-                label = LAT_IZQ;
-            }else{
-                label = LAT_DER;
-            }
         } else {
             precio = null;
         }
@@ -350,11 +386,31 @@ public class RegistrarPublicidadMBean implements Serializable {
         this.publicidadId = publicidadId;
     }
 
-    public String getLabel() {
-        return label;
+    public String getModificar() {
+        return modificar;
     }
 
-    public void setLabel(String label) {
-        this.label = label;
+    public void setModificar(String modificar) {
+        this.modificar = modificar;
     }
+
+    
+
+    public Integer getImagenId() {
+        return imagenId;
+    }
+
+    public void setImagenId(Integer imagenId) {
+        this.imagenId = imagenId;
+    }
+
+    public boolean isExisteImagen() {
+        return existeImagen;
+    }
+
+    public void setExisteImagen(boolean existeImagen) {
+        this.existeImagen = existeImagen;
+    }
+    
+    
 }

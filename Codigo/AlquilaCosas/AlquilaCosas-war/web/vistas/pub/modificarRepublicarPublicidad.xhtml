@@ -5,7 +5,7 @@
       xmlns:comps="http://java.sun.com/jsf/composite/comps"
       xmlns:p="http://primefaces.prime.com.tr/ui" 
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core" >
+      xmlns:f="http://java.sun.com/jsf/core">
 
     <body>
 
@@ -25,6 +25,19 @@
 
                 <h:outputScript library="javascript" name="timePicker.js" />
 
+                <p:outputPanel id="script" >
+                    <script type="text/javascript" >
+                        
+                        var name = getUrlVars()["tipo"];
+                         
+                         jQuery( function(){
+                             if( name == 'modificar' ){
+                                 jQuery("h1").html("Modificar Publicidad");
+                             }
+                         })
+                    </script>
+                </p:outputPanel>
+
                 <p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide();"/>
                 <p:dialog modal="true" widgetVar="statusDialog" header="Espere por favor..." 
                           draggable="false" closable="false" resizable="false" >
@@ -33,86 +46,102 @@
 
                 <h:form>
 
-                    <h1>Registrar Publicidad</h1>
+                    <h1>Publicitar Nuevamente</h1>
                     <p:fieldset legend="Datos" styleClass="fieldset" >
-                        <h:panelGrid columns="4" columnClasses="labelColumn" >
-                            
+                        <h:panelGrid columns="3" columnClasses="labelColumn" >
                             <h:outputLabel value="Título" />
-                            <p:inputText id="titulo" value="#{publicidadBean.titulo}" 
+                            <p:inputText id="titulo" value="#{editarMBean.titulo}" 
                                          required="true" requiredMessage="Valor requerido" />
                             <p:message for="titulo" />
-                            <p/>
-                            
                             <h:outputLabel value="URL" />
-                            <p:inputText id="url" value="#{publicidadBean.url}" />
+                            <p:inputText id="url" value="#{editarMBean.url}" />
                             <p:message for="url" />
-                            <p/>
                             <h:outputLabel value="Descripción" />
-                            <p:inputText id="caption" value="#{publicidadBean.caption}" />
+                            <p:inputText id="caption" value="#{editarMBean.caption}" />
                             <p:message for="caption" />
-                            <p/>
-                           
+
                             <h:outputLabel value="Duración" />
-                            <h:selectOneMenu id="duracion" value="#{publicidadBean.duracionSeleccionada}" 
-                                             required="true" requiredMessage="Valor requerido" >
+                            <h:selectOneMenu id="duracion" value="#{editarMBean.duracionSeleccionada}" 
+                                             required="#{not editarMBean.modificar == 'modificar'}" requiredMessage="Valor requerido" 
+                                             disabled="#{editarMBean.modificar == 'modificar'}">
                                 <f:selectItem itemLabel="Seleccione una duracion.." />
-                                <f:selectItems value="#{publicidadBean.duraciones}" />
-                                <p:ajax event="change" update="precio" listener="#{publicidadBean.duracionCambio}" />
+                                <f:selectItems value="#{editarMBean.duraciones}" />
+                                <p:ajax event="change" update="precio" listener="#{editarMBean.duracionCambio}" />
                             </h:selectOneMenu>
                             <p:message for="duracion" />
-                            <p/>
-                            
                             <h:outputLabel value="Ubicación" />
-                            <h:selectOneMenu id="ubicacion" value="#{publicidadBean.ubicacionSeleccionada}"
-                                             required="true" requiredMessage="Valor requerido" >
+                            <h:selectOneMenu id="ubicacion" value="#{editarMBean.ubicacionSeleccionada}"
+                                             required="#{editarMBean.modificar == 'modificar'}" requiredMessage="Valor requerido" 
+                                             disabled="#{editarMBean.modificar == 'modificar'}">
                                 <f:selectItem itemLabel="Seleccione una ubicacion.." />
-                                <f:selectItems value="#{publicidadBean.ubicaciones}" />
-                                <p:ajax event="change" update="fecha script precio" listener="#{publicidadBean.ubicacionCambio}" />
+                                <f:selectItems value="#{editarMBean.ubicaciones}" />
+                                <p:ajax event="change" update="fecha script precio" listener="#{editarMBean.ubicacionCambio}" />
                             </h:selectOneMenu>
                             <p:message for="ubicacion" />
-                            <h:outputLabel value="#{publicidadBean.label}" style="font-size: 10" />
-                            
                             <h:outputLabel value="Precio:" />
                             <p:outputPanel id="precio" >
-                                <h:outputText value="U$D #{publicidadBean.precio}"
+                                <h:outputText value="U$D #{editarMBean.precio}"
                                               rendered="#{not empty publicidadBean.precio}"/>
                                 <h:outputText value="(Seleccione ubicacion y duracion)" 
-                                              rendered="#{empty publicidadBean.precio}"/>
+                                              rendered="#{empty publicidadBean.precio and param.tipo == 'modificar'}"
+                                              />
                             </p:outputPanel>
                             <p:message for="precio" />
-                            <p/>
-                            
                             <h:outputLabel value="Fecha desde" />
-                            <p:calendar id="fecha" value="#{publicidadBean.fechaDesde}" 
+                            <p:calendar id="fecha" value="#{editarMBean.fechaDesde}" 
                                         pattern="dd/MM/yyyy" locale="es"
-                                        required="true" requiredMessage="Valor requerido" />
+                                        required="true" requiredMessage="Valor requerido" 
+                                        disabled="#{editarMBean.modificar == 'modificar'}"/>
                             <p:message for="fecha" />
-                            <p/>
                         </h:panelGrid>
                     </p:fieldset>
 
-                    <p:fieldset legend="Imagen" styleClass="fieldset" >
+                    
 
+                    <p:fieldset legend="Imagen" styleClass="fieldset" >
+                        
+                        <p:outputPanel id="out">
+                        <div id="div1" >
+                            <h:panelGrid id="panelImagen" columns="1" style="width:100%;" rendered="#{editarMBean.existeImagen == true}">
+                                <h:graphicImage id="imgId" value="/imagenpub?id=#{editarMBean.imagenId}" 
+                                                width="200" height="185" styleClass="img"/> 
+                                <p:commandLink title="Eliminar" update="out" 
+                                               actionListener="#{editarMBean.removerImagen}" rendered="#{editarMBean.existeImagen == true}"
+                                               >
+                                    <p:graphicImage value="#{resource['images:icono_borrar.gif']}"/> 
+                                </p:commandLink>
+                            </h:panelGrid>
+                        </div>
+                        </p:outputPanel>
+
+
+                        <h:outputText value="Elija una imagen de hasta 2 MB:" /><br/>
                         <p:fileUpload widgetVar="uploader" height="48" width="48"
-                                      fileUploadListener="#{publicidadBean.handleFileUpload}"
+                                      fileUploadListener="#{editarMBean.handleFileUpload}"
                                       image="./../../resources/images/upload.png" 
                                       cancelImage="./../../resources/images/cancel.png"
                                       allowTypes="*.jpg;*.png;*.gif;" description="Images" 
-                                      customUI="true" label="Subir"/>
-
+                                      customUI="true" label="Subir"  />
                         <h:outputLink value="#" title="Subir archivo" onclick="uploader.upload();" 
                                       style="font-weight:bold;color:#616D7E">
-                            Subir imagen
-                        </h:outputLink>
+                            Cambiar Imagen
+                        </h:outputLink>  
+
                     </p:fieldset>
 
-                    <h:panelGrid columns="2" columnClasses="leftCol,rightCol" style="width: 100%" >
-                        <p:commandLink actionListener="#{publicidadBean.registrarPublicidad}" update="growl">
+                    <h:panelGrid columns="2" columnClasses="leftCol,rightCol" style="width: 100%" 
+                                 rendered="#{not editarMBean.modificar == 'modificar'}">
+                        <p:commandLink actionListener="#{editarMBean.registrarPublicidad}" update="growl">
                             <h:graphicImage value="#{resource['images:pagoPaypal.gif']}" />
                         </p:commandLink>
                         <p:commandButton value="Limpiar" type="reset" />
                     </h:panelGrid>
-                    
+
+                    <h:panelGrid columns="2" columnClasses="leftCol,rightCol" style="width: 100%" >
+                        <p:commandButton value="Guardar" action="#{editarMBean.actualizarPublicidad}" ajax="false" />
+                        <p:commandButton value="Limpiar" type="reset" />
+                    </h:panelGrid>
+
                     <p:growl id="growl" showDetail="true" globalOnly="true" />
 
                     <p:outputPanel id="script" >
@@ -127,8 +156,6 @@
                                                        return highlightCalendar(specialDays, date, 'highlight-calendar');
                                              });
                                      };
-                                     
-
                         </script>
                     </p:outputPanel>
 
@@ -137,9 +164,10 @@
             </ui:define>
 
             <ui:define name="right">
-                <comps:userPanel />
-                <comps:panelPublicitante />
+                <comps:loginBox />
                 <comps:adminPanel />
+                <comps:panelPublicitante />
+                <comps:userPanel />
             </ui:define>
 
         </ui:composition>
