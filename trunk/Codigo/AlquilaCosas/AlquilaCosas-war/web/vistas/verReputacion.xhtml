@@ -36,6 +36,8 @@
                             <h:panelGrid columns="2">
                                 <p:outputPanel>Reputación: </p:outputPanel>
                                 <p:rating value="#{reputacion.usuarioDTO.userRating}" stars="10" disabled="true"/>
+                                <p:outputPanel>Advertencias: #{reputacion.usuarioDTO.cantidadAdvertencia}</p:outputPanel>
+                                <p:outputPanel>Suspensiones: #{reputacion.usuarioDTO.cantidadSuspencion}</p:outputPanel>
                             </h:panelGrid>
                             <h:panelGrid columns="2" columnClasses="repTableColumn,repTableColumn" styleClass="repTable">
                                 <h:outputText value="Ofreciendo Alquileres:" style="font-weight: bold" />
