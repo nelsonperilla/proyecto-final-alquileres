@@ -23,9 +23,9 @@
 
      <!-- IMPLEMENTATION -->
      <cc:implementation>
-          <div class="itemDenuncia">
+          <div class="itemAlquiler">
                <h:panelGrid columns="3" >
-                    <h:panelGrid columns="1" >
+                    <h:panelGrid columns="1" style="text-align:left">
                          <h:link value="Publicación: #{cc.attrs.var.textoPublicacion}" 
                                         outcome="/vistas/mostrarPublicacion" 
                                         rendered="#{cc.attrs.var.isPublicacion}">
@@ -42,15 +42,15 @@
                          </h:link>
                          <h:outputText value="Motivo: #{cc.attrs.var.nombreMotivo}" />
                     </h:panelGrid>
-                    <h:panelGrid columns="1" >
-                        <h:outputText value="Fecha: #{cc.attrs.var.fecha}" >
+                    <h:panelGrid columns="1" style="text-align:right">
+                        <h:outputText value="#{cc.attrs.var.fecha}" >
                             <f:convertDateTime pattern="dd/MM/yyyy" />
                         </h:outputText>
                          <h:outputText id="explicacion" value="Explicación: #{cc.attrs.var.explicacionShort}" />
                          <p:tooltip for="explicacion" value="#{cc.attrs.var.explicacion}"  
                               showEffect="slide" hideEffect="fade" showEffectLength="1000" hideEffectLength="1000"/>
                     </h:panelGrid> 
-                    <h:panelGrid columns="1" >
+                    <h:panelGrid columns="1" style="text-align:right" >
                          <p:commandLink value="Aceptar" title="Aceptar Denuncia"
                                         actionListener="#{cc.attrs.bean[cc.attrs.metodoAceptar]}"
                                         update="#{cc.attrs.panelDialogos}"
