@@ -48,7 +48,7 @@ public class ResponderPreguntasMBean implements Serializable {
     
     @PostConstruct
     public void init(){
-        Logger.getLogger(ResponderPreguntasMBean.class).info("ResponderPreguntasMBean: postconstruct.");
+        Logger.getLogger(ResponderPreguntasMBean.class).debug("ResponderPreguntasMBean: postconstruct.");
         setEffect("fade"); 
 //        String id = FacesContext.getCurrentInstance().getExternalContext()
 //                .getRequestParameterMap().get("id");

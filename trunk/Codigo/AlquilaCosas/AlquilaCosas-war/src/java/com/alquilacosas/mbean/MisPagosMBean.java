@@ -36,7 +36,7 @@ public class MisPagosMBean implements Serializable {
     
     @PostConstruct
     public void init() {
-        Logger.getLogger(MisPagosMBean.class).info("MisPagosMBean: postconstruct."); 
+        Logger.getLogger(MisPagosMBean.class).debug("MisPagosMBean: postconstruct."); 
         usuarioId = loginBean.getUsuarioId();
         if(usuarioId != null) {
             pagos = pagosBean.getMisPagos(usuarioId);

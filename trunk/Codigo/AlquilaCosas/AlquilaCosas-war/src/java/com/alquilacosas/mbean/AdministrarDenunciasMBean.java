@@ -14,6 +14,7 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -23,67 +24,67 @@ import javax.faces.model.SelectItem;
 @ViewScoped
 public class AdministrarDenunciasMBean {
 
-     @EJB
-     private AdministrarDenunciasBeanLocal AdministrarDenunciasBean;
-     private List<SelectItem> filtros;
-     private int filtroSeleccionado;
-     private List<DenunciaDTO> denuncias;
-     private Integer usuarioDenunciadoId;
-     private Integer publicacionId;
-     private Integer denunciaId;
-     
+    @EJB
+    private AdministrarDenunciasBeanLocal AdministrarDenunciasBean;
+    private List<SelectItem> filtros;
+    private int filtroSeleccionado;
+    private List<DenunciaDTO> denuncias;
+    private Integer usuarioDenunciadoId;
+    private Integer publicacionId;
+    private Integer denunciaId;
 
-     /** Creates a new instance of AdministrarDenunciasMBean */
-     public AdministrarDenunciasMBean() {
-     }
+    /** Creates a new instance of AdministrarDenunciasMBean */
+    public AdministrarDenunciasMBean() {
+    }
 
-     @PostConstruct
-     public void init() {
-          filtros = new ArrayList<SelectItem>();
-          filtros.add(new SelectItem(0, "Todos"));
-          filtros.add(new SelectItem(1, "Publicaciones"));
-          filtros.add(new SelectItem(2, "Comentarios"));
-          filtroSeleccionado = 1;
-          actualizarDenuncias();
-     }
+    @PostConstruct
+    public void init() {
+        Logger.getLogger(AdministrarDenunciasMBean.class).debug("AdministrarDenunciasMBean: postconstruct");
+        filtros = new ArrayList<SelectItem>();
+        filtros.add(new SelectItem(0, "Todos"));
+        filtros.add(new SelectItem(1, "Publicaciones"));
+        filtros.add(new SelectItem(2, "Comentarios"));
+        filtroSeleccionado = 1;
+        actualizarDenuncias();
+    }
 
-     public void actualizarDenuncias() {
-          switch (filtroSeleccionado) {
-               /* Carga Todas las Denuncias */
-               case 0: {
-                    denuncias = AdministrarDenunciasBean.getAllDenuncias();
-                    break;
-               }
-               /* Carga Denuncias de Publicaciones */
-               case 1: {
-                    denuncias = AdministrarDenunciasBean.getDenunciasPublicacion();
-                    break;
-               }
-               /* Carga Denuncias de Comentarios */
-               case 2: {
-                    denuncias = AdministrarDenunciasBean.getDenunciasComentario();
-                    break;
-               }
-          }
-     }
-     
-     public void prepararAceptarDenuncia (ActionEvent event) {
-          denunciaId = (Integer) event.getComponent().getAttributes().get("denId");
-     }
+    public void actualizarDenuncias() {
+        switch (filtroSeleccionado) {
+            /* Carga Todas las Denuncias */
+            case 0: {
+                denuncias = AdministrarDenunciasBean.getAllDenuncias();
+                break;
+            }
+            /* Carga Denuncias de Publicaciones */
+            case 1: {
+                denuncias = AdministrarDenunciasBean.getDenunciasPublicacion();
+                break;
+            }
+            /* Carga Denuncias de Comentarios */
+            case 2: {
+                denuncias = AdministrarDenunciasBean.getDenunciasComentario();
+                break;
+            }
+        }
+    }
 
-     public void aceptarDenuncia() {          
-          AdministrarDenunciasBean.aceptarDenuncia(denunciaId);
-          actualizarDenuncias();
-     }
-     
-     public void prepararRechazarDenuncia(ActionEvent event) {
-          denunciaId = (Integer) event.getComponent().getAttributes().get("denId");     
-     }
+    public void prepararAceptarDenuncia(ActionEvent event) {
+        denunciaId = (Integer) event.getComponent().getAttributes().get("denId");
+    }
 
-     public void rechazarDenuncia() {
-          AdministrarDenunciasBean.rechazarDenuncia(denunciaId);
-          actualizarDenuncias();
-     }
+    public void aceptarDenuncia() {
+        AdministrarDenunciasBean.aceptarDenuncia(denunciaId);
+        actualizarDenuncias();
+    }
+
+    public void prepararRechazarDenuncia(ActionEvent event) {
+        denunciaId = (Integer) event.getComponent().getAttributes().get("denId");
+    }
+
+    public void rechazarDenuncia() {
+        AdministrarDenunciasBean.rechazarDenuncia(denunciaId);
+        actualizarDenuncias();
+    }
 
 //     public String verPublicacion() {
 //          return "mostrarPublicacion";
@@ -92,44 +93,43 @@ public class AdministrarDenunciasMBean {
 //     public String verUsuario() {
 //          return "verReputacionUsuario";
 //     }
+    public Integer getPublicacionId() {
+        return publicacionId;
+    }
 
-     public Integer getPublicacionId() {
-          return publicacionId;
-     }
+    public void setPublicacionId(Integer publicacionId) {
+        this.publicacionId = publicacionId;
+    }
 
-     public void setPublicacionId(Integer publicacionId) {
-          this.publicacionId = publicacionId;
-     }
+    public List<DenunciaDTO> getDenuncias() {
+        return denuncias;
+    }
 
-     public List<DenunciaDTO> getDenuncias() {
-          return denuncias;
-     }
+    public void setDenuncias(List<DenunciaDTO> denuncias) {
+        this.denuncias = denuncias;
+    }
 
-     public void setDenuncias(List<DenunciaDTO> denuncias) {
-          this.denuncias = denuncias;
-     }
+    public int getFiltroSeleccionado() {
+        return filtroSeleccionado;
+    }
 
-     public int getFiltroSeleccionado() {
-          return filtroSeleccionado;
-     }
+    public void setFiltroSeleccionado(int filtroSeleccionado) {
+        this.filtroSeleccionado = filtroSeleccionado;
+    }
 
-     public void setFiltroSeleccionado(int filtroSeleccionado) {
-          this.filtroSeleccionado = filtroSeleccionado;
-     }
+    public List<SelectItem> getFiltros() {
+        return filtros;
+    }
 
-     public List<SelectItem> getFiltros() {
-          return filtros;
-     }
+    public void setFiltros(List<SelectItem> filtros) {
+        this.filtros = filtros;
+    }
 
-     public void setFiltros(List<SelectItem> filtros) {
-          this.filtros = filtros;
-     }
+    public Integer getUsuarioDenunciadoId() {
+        return usuarioDenunciadoId;
+    }
 
-     public Integer getUsuarioDenunciadoId() {
-          return usuarioDenunciadoId;
-     }
-
-     public void setUsuarioDenunciadoId(Integer usuarioDenunciadoId) {
-          this.usuarioDenunciadoId = usuarioDenunciadoId;
-     }
+    public void setUsuarioDenunciadoId(Integer usuarioDenunciadoId) {
+        this.usuarioDenunciadoId = usuarioDenunciadoId;
+    }
 }

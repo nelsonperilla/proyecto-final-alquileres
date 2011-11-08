@@ -15,6 +15,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import org.apache.log4j.Logger;
 import org.primefaces.model.LazyDataModel;
 
 /**
@@ -30,7 +31,7 @@ public class PagosRecibidosMBean implements Serializable {
     private LazyDataModel model;
     private List<PagoDTO> pagos;
     private boolean todos, paypal, dm, noBuscarEnModel;
-    private int totalRegistros;
+    private int totalRegistros, pagoElegido, desde;
     private NombreTipoPago tipoPago;
     
     /** Creates a new instance of PagosRecibidosMBean */
@@ -39,6 +40,7 @@ public class PagosRecibidosMBean implements Serializable {
     
     @PostConstruct
     public void init() {
+        Logger.getLogger(PagosRecibidosMBean.class).debug("PagosRecibidosMBean: postconstruct");
         todos = true;
         pagos = new ArrayList<PagoDTO>();
         getPagosRecibidos(20, 0);
@@ -67,6 +69,7 @@ public class PagosRecibidosMBean implements Serializable {
             totalRegistros = n.intValue();
         else
             totalRegistros = 0;
+        this.desde = desde;
     }
     
     public void mostrarTodos() {
@@ -91,6 +94,11 @@ public class PagosRecibidosMBean implements Serializable {
         dm = true;
         tipoPago = NombreTipoPago.DINEROMAIL;
         getPagosRecibidos(20, 0);
+    }
+    
+    public void confirmarPago() {
+        pagosBean.confirmarPago(pagoElegido);
+        getPagosRecibidos(20, desde);
     }
     
     /*
@@ -135,6 +143,14 @@ public class PagosRecibidosMBean implements Serializable {
 
     public void setModel(LazyDataModel model) {
         this.model = model;
+    }
+
+    public int getPagoElegido() {
+        return pagoElegido;
+    }
+
+    public void setPagoElegido(int pagoElegido) {
+        this.pagoElegido = pagoElegido;
     }
     
     

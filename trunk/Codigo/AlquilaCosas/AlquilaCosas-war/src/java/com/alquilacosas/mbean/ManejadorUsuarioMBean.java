@@ -41,7 +41,7 @@ public class ManejadorUsuarioMBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        Logger.getLogger(ManejadorUsuarioMBean.class).info("ManejadorUsuarioMBean: postconstruct."); 
+        Logger.getLogger(ManejadorUsuarioMBean.class).debug("ManejadorUsuarioMBean: postconstruct."); 
         FacesContext context = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
     }

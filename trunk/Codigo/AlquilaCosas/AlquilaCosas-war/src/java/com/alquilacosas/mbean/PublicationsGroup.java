@@ -31,7 +31,7 @@ public class PublicationsGroup implements Serializable {
 
     @PostConstruct
     public void init() {
-        Logger.getLogger(PublicationsGroup.class).info("PublicationsGroup: postconstruct.");
+        Logger.getLogger(PublicationsGroup.class).debug("PublicationsGroup: postconstruct.");
         publicacionesRandom = publicationBean.getPublicacionesRandom(0);
     }
     

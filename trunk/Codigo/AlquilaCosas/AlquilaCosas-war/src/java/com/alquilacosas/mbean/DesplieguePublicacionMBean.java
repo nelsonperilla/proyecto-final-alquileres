@@ -67,7 +67,7 @@ public class DesplieguePublicacionMBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        Logger.getLogger(DesplieguePublicacionMBean.class).info("DesplieguePublicacionMBean: postconstruct.");
+        Logger.getLogger(DesplieguePublicacionMBean.class).debug("DesplieguePublicacionMBean: postconstruct.");
         String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
 
         if (id == null) {

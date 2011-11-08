@@ -64,7 +64,7 @@
                             <h:graphicImage value="#{resource['images:pagoPaypal.gif']}" />
                         </p:commandLink>
                         <p:commandLink id="pagoDm" actionListener="#{destacarBean.destacarDm}" 
-                                       update="dm" oncomplete="submitForm()"
+                                       update="dm growl" oncomplete="submitForm(xhr, status, args)"
                                        disabled="#{empty destacarBean.tipoSeleccionado}" >
                             <h:graphicImage value="#{resource['images:pagoDineroMail.gif']}" />
                         </p:commandLink>
@@ -89,8 +89,9 @@
                     </form>
                 </p:outputPanel>
                 <script type="text/javascript" >
-                    function submitForm() {
-                        document.forms["dmForm"].submit();
+                    function submitForm(xhr, status, args) {
+                        if(args.registrado)
+                            document.forms["dmForm"].submit();
                     }
                 </script>
             </ui:define>

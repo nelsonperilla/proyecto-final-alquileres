@@ -88,7 +88,7 @@ public class ModificarPublicacionMBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        Logger.getLogger(ModificarPublicacionMBean.class).info("ModificarPublicacionMBean: postconstruct.");
+        Logger.getLogger(ModificarPublicacionMBean.class).debug("ModificarPublicacionMBean: postconstruct.");
         String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
         if(id == null) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 

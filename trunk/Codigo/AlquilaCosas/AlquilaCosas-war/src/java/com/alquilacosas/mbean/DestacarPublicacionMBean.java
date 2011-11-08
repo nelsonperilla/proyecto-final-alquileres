@@ -24,6 +24,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -54,12 +55,13 @@ public class DestacarPublicacionMBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        Logger.getLogger(DestacarPublicacionMBean.class).info("DestacarPublicacionMBean: postconstruct."); 
+        Logger.getLogger(DestacarPublicacionMBean.class).debug("DestacarPublicacionMBean: postconstruct."); 
         String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
         if(id == null || id.equals("")) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
                     "La publicacion no se puede destacar", "No se indico ninguna publicacion.");
             FacesContext.getCurrentInstance().addMessage(null, msg);
+            redirect("inicio.xhtml");
             return;
         }
         publicacion = null;
@@ -67,7 +69,7 @@ public class DestacarPublicacionMBean implements Serializable {
             publicacion = destacarBean.getPublicacion(Integer.valueOf(id), login.getUsuarioId());
         } catch(AlquilaCosasException e) {
             Logger.getLogger(DestacarPublicacionMBean.class).error("La publicacion indicada no se puede destacar: " + e.getMessage());
-            redirect();
+            redirect("inicio.xhtml");
             return;
         }
         
@@ -84,10 +86,9 @@ public class DestacarPublicacionMBean implements Serializable {
         }
     }
     
-    public void redirect() {
+    public void redirect(String url) {
         try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("inicio.xhtml");
-            FacesContext.getCurrentInstance().responseComplete();
+            FacesContext.getCurrentInstance().getExternalContext().redirect(url);
         } catch (Exception e) {
             Logger.getLogger(DestacarPublicacionMBean.class).error("Excepcion al ejecutar redirect().");
         }
@@ -109,7 +110,7 @@ public class DestacarPublicacionMBean implements Serializable {
         String url = PaypalUtil.setExpressCheckout(descripcion, Integer.toString(pagoId), 
                 Integer.toString(publicacionId), precio.toString());
         if (url != null) {
-            redirect();
+            redirect(url);
         } else {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al comunicarse con paypal", "");
             FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -123,8 +124,11 @@ public class DestacarPublicacionMBean implements Serializable {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
                     "Error al registrar pago.", "");
             FacesContext.getCurrentInstance().addMessage(null, msg);
+            RequestContext.getCurrentInstance().addCallbackParam("registrado", false);
+            return;
         }
         descripcion = "Destacacion" + tipoSeleccionado.toString() + ". Publicacion: " + publicacion.getTitulo();
+        RequestContext.getCurrentInstance().addCallbackParam("registrado", true);
     }
     
     public void tipoSeleccionado() {

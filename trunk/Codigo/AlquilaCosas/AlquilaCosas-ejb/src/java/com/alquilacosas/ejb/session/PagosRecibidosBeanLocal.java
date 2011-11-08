@@ -22,5 +22,8 @@ public interface PagosRecibidosBeanLocal {
 
     public java.lang.Long getCantidadPagos(TipoPago.NombreTipoPago tipoPago, 
             Date fechaDesde, Boolean confirmado);
+
+    @javax.annotation.security.RolesAllowed(value = {"USUARIO", "ADMIN"})
+    public void confirmarPago(java.lang.Integer pagoId);
     
 }

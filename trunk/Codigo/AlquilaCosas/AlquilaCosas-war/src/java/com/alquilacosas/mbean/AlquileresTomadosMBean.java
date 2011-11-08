@@ -74,7 +74,7 @@ public class AlquileresTomadosMBean implements Serializable {
 
      @PostConstruct
      public void init() {
-         Logger.getLogger(AlquileresTomadosMBean.class).info("AlquileresTomadosMBean: postconstruct."); 
+         Logger.getLogger(AlquileresTomadosMBean.class).debug("AlquileresTomadosMBean: postconstruct."); 
          usuarioLogueadoId = usuarioMBean.getUsuarioId();
           if(usuarioLogueadoId == null)
               return;

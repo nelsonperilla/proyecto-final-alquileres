@@ -40,7 +40,7 @@ public class PeriodoAlquilerMBean implements Serializable {
      
      @PostConstruct
      public void init() {
-         Logger.getLogger(PeriodoAlquilerMBean.class).info("PeriodoAlquilerMBean: postconstruct.");
+         Logger.getLogger(PeriodoAlquilerMBean.class).debug("PeriodoAlquilerMBean: postconstruct.");
           periodosAlquiler = periodoAlquilerBean.getPeriodos();
      }
      

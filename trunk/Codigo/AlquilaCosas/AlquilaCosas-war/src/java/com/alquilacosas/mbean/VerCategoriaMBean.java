@@ -50,7 +50,7 @@ public class VerCategoriaMBean implements Serializable {
     
     @PostConstruct
     public void init() {
-        Logger.getLogger(VerCategoriaMBean.class).info("VerCategoriaMBean: postconstruct.");
+        Logger.getLogger(VerCategoriaMBean.class).debug("VerCategoriaMBean: postconstruct.");
         String param = FacesContext.getCurrentInstance().getExternalContext()
                 .getRequestParameterMap().get("id");
         if(param != null) {

@@ -63,7 +63,7 @@ public class RegistrarUsuarioMBean implements Serializable {
     
     @PostConstruct
     public void init() {
-        Logger.getLogger(RegistrarUsuarioMBean.class).info("RegistrarUsuarioMBean: postconstruct.");
+        Logger.getLogger(RegistrarUsuarioMBean.class).debug("RegistrarUsuarioMBean: postconstruct.");
         paises = new ArrayList<SelectItem>();
         provincias = new ArrayList<SelectItem>();
         List<Pais> listaPais = usuarioBean.getPaises();

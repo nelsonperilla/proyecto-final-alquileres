@@ -53,7 +53,7 @@ public class CategoriaMBean implements Serializable{
      
      @PostConstruct
      public void init() {
-         Logger.getLogger(CategoriaMBean.class).info("CategoriaMBean: postconstruct."); 
+         Logger.getLogger(CategoriaMBean.class).debug("CategoriaMBean: postconstruct."); 
          cargarTrees();
      }
      
