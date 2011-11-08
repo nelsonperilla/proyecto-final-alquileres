@@ -46,6 +46,8 @@ public class VerReputacionBean implements VerReputacionBeanLocal {
           domicilioDTO.setProvincia(usuario.getDomicilioList().get(0).getProvinciaFk().getNombre());
           domicilioDTO.setPais(usuario.getDomicilioList().get(0).getProvinciaFk().getPaisFk().getNombre());
           usuarioDTO.setDomicilio(domicilioDTO);
+          usuarioDTO.setCantidadAdvertencia(usuario.getAdvertenciaList().size());
+          usuarioDTO.setCantidadSuspencion(usuario.getSuspensionList().size());
           double rating =  calificacionFacade.getCalificacionByUsuario(usuarioId);
           rating*=0.5;
           rating+=5;

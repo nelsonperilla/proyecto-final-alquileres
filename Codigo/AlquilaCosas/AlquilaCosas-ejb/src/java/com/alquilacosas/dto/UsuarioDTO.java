@@ -43,6 +43,8 @@ public class UsuarioDTO implements Serializable {
      private Integer userTomaNegativas;
      private double userTomaNegativasPorcentaje;
      private NombreEstadoUsuario estadoUsuario;
+     private Integer cantidadAdvertencia;
+     private Integer cantidadSuspencion;
 
      public UsuarioDTO(Integer id, String nombre, String apellido, String email,
              String telefono, String dni, Date fechaNacimiento) {
@@ -76,21 +78,24 @@ public class UsuarioDTO implements Serializable {
           this.fechaDeRegistro = fechaDeRegistro;
           this.roles = roles;
           this.estadoUsuario = estadoUsuario;
-          
-          for( Rol r : roles ){
-              if( r.getRolId() == 1 )
-                  usuarioRol = true;
-              if( r.getRolId() == 2 )
-                  adminRol = true;
-              if( r.getRolId() == 3 )
-                  publicitanteRol = true;
+
+          for (Rol r : roles) {
+               if (r.getRolId() == 1) {
+                    usuarioRol = true;
+               }
+               if (r.getRolId() == 2) {
+                    adminRol = true;
+               }
+               if (r.getRolId() == 3) {
+                    publicitanteRol = true;
+               }
           }
      }
 
      public UsuarioDTO() {
      }
-     
-     public String getAntiguedad () {
+
+     public String getAntiguedad() {
           Date actual = new Date();
           long antiguedad;
           String unidad;
@@ -98,18 +103,15 @@ public class UsuarioDTO implements Serializable {
           if (antiguedad > 730) {
                unidad = " Años";
                antiguedad = Math.round(antiguedad / 365);
-          }
-          else {
+          } else {
                if (antiguedad > 365) {
                     unidad = " Año";
                     antiguedad = Math.round(antiguedad / 365);
-               }
-               else {
+               } else {
                     if (antiguedad > 30) {
                          unidad = " Meses";
                          antiguedad = Math.round(antiguedad / 30);
-                    }
-                    else {
+                    } else {
                          unidad = " Dias";
                          antiguedad = Math.round(antiguedad);
                     }
@@ -198,15 +200,13 @@ public class UsuarioDTO implements Serializable {
           this.username = username;
      }
 
-    public List<Rol> getRoles() {
-        return roles;
-    }
+     public List<Rol> getRoles() {
+          return roles;
+     }
 
-    public void setRoles(List<Rol> roles) {
-        this.roles = roles;
-    }
-
-     
+     public void setRoles(List<Rol> roles) {
+          this.roles = roles;
+     }
 
      public String getTipoUsuario() {
           return tipoUsuario;
@@ -231,15 +231,15 @@ public class UsuarioDTO implements Serializable {
      public void setUsuarioRol(boolean usuarioRol) {
           this.usuarioRol = usuarioRol;
      }
- 
+
      public boolean isPublicitanteRol() {
-        return publicitanteRol;
+          return publicitanteRol;
      }
 
      public void setPublicitanteRol(boolean publicitanteRol) {
-        this.publicitanteRol = publicitanteRol;
+          this.publicitanteRol = publicitanteRol;
      }
-     
+
      public Integer getUserOfreceNegativas() {
           return userOfreceNegativas;
      }
@@ -344,12 +344,27 @@ public class UsuarioDTO implements Serializable {
           this.userTomaPositivasPorcentaje = userTomaPositivasPorcentaje;
      }
 
-    public String getEstadoUsuario(){
-        return estadoUsuario.name();
-    }
+     public String getEstadoUsuario() {
+          return estadoUsuario.name();
+     }
 
-    public void setEstadoUsuario(NombreEstadoUsuario estadoUsuario) {
-        this.estadoUsuario = estadoUsuario;
-    }
-     
+     public void setEstadoUsuario(NombreEstadoUsuario estadoUsuario) {
+          this.estadoUsuario = estadoUsuario;
+     }
+
+     public Integer getCantidadAdvertencia() {
+          return cantidadAdvertencia;
+     }
+
+     public void setCantidadAdvertencia(Integer cantidadAdvertencia) {
+          this.cantidadAdvertencia = cantidadAdvertencia;
+     }
+
+     public Integer getCantidadSuspencion() {
+          return cantidadSuspencion;
+     }
+
+     public void setCantidadSuspencion(Integer cantidadSuspencion) {
+          this.cantidadSuspencion = cantidadSuspencion;
+     }
 }
