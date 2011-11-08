@@ -67,10 +67,10 @@
                                              required="true" requiredMessage="Valor requerido" >
                                 <f:selectItem itemLabel="Seleccione una ubicacion.." />
                                 <f:selectItems value="#{publicidadBean.ubicaciones}" />
-                                <p:ajax event="change" update="fecha script precio" listener="#{publicidadBean.ubicacionCambio}" />
+                                <p:ajax event="change" update="fecha script precio label" listener="#{publicidadBean.ubicacionCambio}" />
                             </h:selectOneMenu>
                             <p:message for="ubicacion" />
-                            <h:outputLabel value="#{publicidadBean.label}" style="font-size: 10" />
+                            <h:outputLabel id="label" value="#{publicidadBean.label}" style="font-size: 10" />
                             
                             <h:outputLabel value="Precio:" />
                             <p:outputPanel id="precio" >
