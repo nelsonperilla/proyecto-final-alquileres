@@ -38,7 +38,7 @@ public class MostrarPublicidadMBean implements Serializable {
     
     @PostConstruct
     public void init() {
-        Logger.getLogger(MostrarPublicidadMBean.class).info("MostrarPublicidadMBean: postconstruct.");
+        Logger.getLogger(MostrarPublicidadMBean.class).debug("MostrarPublicidadMBean: postconstruct.");
         HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String url = req.getPathInfo();
         if(url.contains("inicio.xhtml")) {

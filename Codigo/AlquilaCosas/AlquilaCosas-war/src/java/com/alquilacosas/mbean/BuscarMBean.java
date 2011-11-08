@@ -26,7 +26,7 @@ public class BuscarMBean {
     
     @PostConstruct
     public void init() {
-        Logger.getLogger(BuscarMBean.class).info("BuscarMBean: postconstruct.");
+        Logger.getLogger(BuscarMBean.class).debug("BuscarMBean: postconstruct.");
         buscar = FacesContext.getCurrentInstance().getExternalContext()
                 .getRequestParameterMap().get("art");
     }

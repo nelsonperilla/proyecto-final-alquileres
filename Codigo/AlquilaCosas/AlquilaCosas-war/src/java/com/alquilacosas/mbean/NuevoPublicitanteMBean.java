@@ -33,7 +33,7 @@ public class NuevoPublicitanteMBean implements Serializable {
     
     @PostConstruct
     public void init() {
-        Logger.getLogger(NuevoPublicitanteMBean.class).info("NuevoPublicitanteMBean: postconstruct.");
+        Logger.getLogger(NuevoPublicitanteMBean.class).debug("NuevoPublicitanteMBean: postconstruct.");
         if(loginBean.isPublicitante()) {
             try {
                 FacesContext.getCurrentInstance().getExternalContext().redirect("inicio.xhtml");
@@ -46,7 +46,6 @@ public class NuevoPublicitanteMBean implements Serializable {
     
     public String registrar() {
         usuarioBean.registrarPublicitante(loginBean.getUsuarioId());
-        loginBean.setPublicitante(true);
         return "pinicio";
     }
 

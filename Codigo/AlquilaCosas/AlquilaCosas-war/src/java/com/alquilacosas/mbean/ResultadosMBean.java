@@ -52,7 +52,7 @@ public class ResultadosMBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        Logger.getLogger(ResultadosMBean.class).info("ResultadosMBean: postconstruct.");
+        Logger.getLogger(ResultadosMBean.class).debug("ResultadosMBean: postconstruct.");
         publicaciones = new ArrayList<PublicacionDTO>();
         busqueda = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("art");
         String cat = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("cat");

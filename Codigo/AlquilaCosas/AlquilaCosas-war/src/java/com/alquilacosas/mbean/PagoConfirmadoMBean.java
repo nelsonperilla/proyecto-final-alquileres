@@ -4,7 +4,7 @@
  */
 package com.alquilacosas.mbean;
 
-import com.alquilacosas.ejb.session.PagoBeanLocal;
+import com.alquilacosas.ejb.session.PagosRecibidosBeanLocal;
 import com.alquilacosas.pagos.PaypalUtil;
 import com.paypal.soap.api.GetExpressCheckoutDetailsResponseDetailsType;
 import java.io.Serializable;
@@ -26,7 +26,7 @@ import org.apache.log4j.Logger;
 public class PagoConfirmadoMBean implements Serializable {
 
     @EJB
-    private PagoBeanLocal pagoBean;
+    private PagosRecibidosBeanLocal pagoBean;
     @ManagedProperty(value = "#{login}")
     private ManejadorUsuarioMBean login;
     private boolean pagoConfirmado;
@@ -37,7 +37,7 @@ public class PagoConfirmadoMBean implements Serializable {
 
     @PostConstruct
     public void confirmar() {
-        Logger.getLogger(PagoConfirmadoMBean.class).info("PagoConfirmadoMBean: postconstruct.");
+        Logger.getLogger(PagoConfirmadoMBean.class).debug("PagoConfirmadoMBean: postconstruct.");
         String token = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("token");
         if (token == null) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al confirmar pago", 
@@ -55,7 +55,7 @@ public class PagoConfirmadoMBean implements Serializable {
         String pagoId = PaypalUtil.doExpressCheckoutService(details);
         if(pagoId != null) {
             pagoConfirmado = true;
-            pagoBean.efectuarServicio(Integer.valueOf(pagoId));
+            pagoBean.confirmarPago(Integer.valueOf(pagoId));
         }
     }
 

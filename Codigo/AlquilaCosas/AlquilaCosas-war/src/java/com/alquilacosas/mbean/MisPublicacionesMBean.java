@@ -40,7 +40,7 @@ public class MisPublicacionesMBean implements Serializable {
     
     @PostConstruct
     public void init() {
-        Logger.getLogger(MisPublicacionesMBean.class).info("MisPublicacionesMBean: postconstruct."); 
+        Logger.getLogger(MisPublicacionesMBean.class).debug("MisPublicacionesMBean: postconstruct."); 
         if( usuarioLogueado.getUsuarioId() != null ){
             publicacionesDto = misPublicacionesBean.getPublicaciones(usuarioLogueado.getUsuarioId());
         }

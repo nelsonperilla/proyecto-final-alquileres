@@ -51,7 +51,7 @@ public class DenunciarPreguntaMBean implements Serializable {
     
     @PostConstruct
     public void init() {
-        Logger.getLogger(DenunciarPreguntaMBean.class).info("DenunciarPreguntaMBean: postconstruct."); 
+        Logger.getLogger(DenunciarPreguntaMBean.class).debug("DenunciarPreguntaMBean: postconstruct."); 
         motivos = new ArrayList<SelectItem>();
         motivoSeleccionado = 0;
 

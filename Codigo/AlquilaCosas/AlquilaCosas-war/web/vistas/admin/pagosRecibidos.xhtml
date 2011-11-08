@@ -75,11 +75,23 @@
                         
                         <p:column headerText="Acciones" >
                             <p:commandButton image="ui-icon ui-icon-circle-check"
+                                             oncomplete="confirmacion.show()"
                                              rendered="#{empty pago.fechaConfirmado}"
-                                             title="Confirmar pago" />
+                                             title="Confirmar pago" >
+                                <f:setPropertyActionListener value="#{pago.id}" 
+                                                             target="#{pagos.pagoElegido}" />
+                            </p:commandButton>
                         </p:column>
                         
                     </p:dataTable>
+                    
+                    <p:confirmDialog message="¿Está seguro que desea confirmar el pago seleccionado?"
+                                     header="Confirmar Pago" widgetVar="confirmacion" severity="alert" >
+                        <p:commandButton value="Si" actionListener="#{pagos.confirmarPago}"
+                                         oncomplete="confirmacion.hide()" update="tabla" />
+                        <p:button value="No" onclick="confirmacion.hide();" />
+                    </p:confirmDialog>
+                                     
                     
                 </h:form>
             </ui:define>

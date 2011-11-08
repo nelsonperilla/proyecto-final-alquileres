@@ -33,7 +33,7 @@ public class MenuCategoriasMBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        Logger.getLogger(MenuCategoriasMBean.class).info("MenuCategoriasMBean: postconstruct."); 
+        Logger.getLogger(MenuCategoriasMBean.class).debug("MenuCategoriasMBean: postconstruct."); 
         cargarMenu();
     }
 

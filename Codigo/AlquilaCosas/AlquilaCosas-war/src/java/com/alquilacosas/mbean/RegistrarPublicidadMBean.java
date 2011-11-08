@@ -59,7 +59,7 @@ public class RegistrarPublicidadMBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        Logger.getLogger(RegistrarPublicidadMBean.class).info("RegistrarPublicidadMBean: postconstruct.");
+        Logger.getLogger(RegistrarPublicidadMBean.class).debug("RegistrarPublicidadMBean: postconstruct.");
         String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
         if(id != null) {
             publicidadId = Integer.parseInt(id);
@@ -166,8 +166,7 @@ public class RegistrarPublicidadMBean implements Serializable {
         String redirectUrl = PaypalUtil.setExpressCheckout(descripcion, Integer.toString(pagoId), null, precio.toString());
         if (redirectUrl != null) {
             try {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("inicio.xhtml");
-                FacesContext.getCurrentInstance().responseComplete();
+                FacesContext.getCurrentInstance().getExternalContext().redirect(redirectUrl);
             } catch (Exception e) {
                 Logger.getLogger(RegistrarPublicidadMBean.class).error("Excepcion al ejecutar redirect().");
             }

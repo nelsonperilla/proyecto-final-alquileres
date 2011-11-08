@@ -42,7 +42,7 @@ public class VerReputacionMBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        Logger.getLogger(VerReputacionMBean.class).info("VerReputacionMBean: postconstruct.");
+        Logger.getLogger(VerReputacionMBean.class).debug("VerReputacionMBean: postconstruct.");
         usuarioCorrecto = true;
         String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
         if (id == null) {

@@ -55,7 +55,7 @@ public class ModificarUsuarioMBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        Logger.getLogger(ModificarUsuarioMBean.class).info("ModificarUsuarioMBean: postconstruct.");
+        Logger.getLogger(ModificarUsuarioMBean.class).debug("ModificarUsuarioMBean: postconstruct.");
         Integer id = usuarioMBean.getUsuarioId();
         usuario = usuarioBean.getDatosUsuario(id);
 

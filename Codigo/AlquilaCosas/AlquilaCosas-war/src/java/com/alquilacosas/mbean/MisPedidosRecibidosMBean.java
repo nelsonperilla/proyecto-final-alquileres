@@ -42,7 +42,7 @@ public class MisPedidosRecibidosMBean implements Serializable {
     
     @PostConstruct
     public void init() {
-        Logger.getLogger(MisPedidosRecibidosMBean.class).info("MisPedidosRecibidosMBean: postconstruct."); 
+        Logger.getLogger(MisPedidosRecibidosMBean.class).debug("MisPedidosRecibidosMBean: postconstruct."); 
         pedidosRecibidos = alquilerBean.getPedidosRecibidos(usuarioLogueado.getUsuarioId());
     }
     

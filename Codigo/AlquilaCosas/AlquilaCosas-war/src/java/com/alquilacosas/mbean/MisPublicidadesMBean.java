@@ -37,7 +37,7 @@ public class MisPublicidadesMBean implements Serializable {
     
     @PostConstruct
     public void init() {
-        Logger.getLogger(MisPublicidadesMBean.class).info("MisPublicidadesMBean: postconstruct."); 
+        Logger.getLogger(MisPublicidadesMBean.class).debug("MisPublicidadesMBean: postconstruct."); 
         if( usuarioLogueado.getUsuarioId() != null ){
            publicidades = publicidadBean.getPublicidades(usuarioLogueado.getUsuarioId());
         }

@@ -72,7 +72,7 @@ public class NuevaPublicacionMBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        Logger.getLogger(NuevaPublicacionMBean.class).info("NuevaPublicacionMBean: postconstruct.");
+        Logger.getLogger(NuevaPublicacionMBean.class).debug("NuevaPublicacionMBean: postconstruct.");
         imagenes = new ArrayList<byte[]>();
         precios = new ArrayList<PrecioDTO>();
         for(PeriodoDTO p: periodosBean.getPeriodos()) {

@@ -37,7 +37,7 @@ public class AdministrarUsuariosMBean implements Serializable {
     
     @PostConstruct
     public void init() {
-        Logger.getLogger(AdministrarUsuariosMBean.class).info("AdministrarUsuariosMBean: postconstruct.");
+        Logger.getLogger(AdministrarUsuariosMBean.class).debug("AdministrarUsuariosMBean: postconstruct.");
         usuarios = usuarioBean.getUsuariosList();
         tipos = new ArrayList<Integer>();
     }
