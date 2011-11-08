@@ -165,8 +165,9 @@ public class AdministrarDenunciasBean implements AdministrarDenunciasBeanLocal {
                               }
                          }
                     }
-                    enviarEMailAdvertencia(usuario);
                }
+               usuarioFacade.refresh(usuario);
+               enviarEMailAdvertencia(usuario);
           } //Si es Comentario
           else {
                //Banear Comentario
@@ -220,8 +221,9 @@ public class AdministrarDenunciasBean implements AdministrarDenunciasBeanLocal {
                               publicacionFacade.edit(publicacion);
                          }
                     }
-                    enviarEMailAdvertencia(usuario);
                }
+               usuarioFacade.refresh(usuario);
+               enviarEMailAdvertencia(usuario);
           }
      }
 
@@ -264,8 +266,8 @@ public class AdministrarDenunciasBean implements AdministrarDenunciasBeanLocal {
           // enviar email
           String asunto = "Has recibido una Advertencia de AlquilaCosas";
           String mensaje = "<html>Hola " + usuario.getNombre() + ",<br/><br/>"
-                  + "Has recibido una Advertencia por violar los Terminos y Condiciones de Uso de AlquilaCosas. "
-                  + "Recuerda que al recibir 3 (tres) Advertencias, tu usuario será suspendido, para conocer tus advertencia dirigete a 'Ver Reputacion'<br/><br/>"
+                  + "Has recibido una advertencia por violar los terminos y condiciones de uso de AlquilaCosas. "
+                  + "Recuerda que al recibir 3 (tres) advertencias, tu usuario será suspendido, para conocer tus advertencias dirigete a 'Ver Reputacion'<br/><br/>"
                   + "Atentamente,<br/>"
                   + "<b>AlquilaCosas</b></html>";
           NotificacionEmail email = new NotificacionEmail(usuario.getEmail(), asunto, mensaje);
@@ -293,8 +295,8 @@ public class AdministrarDenunciasBean implements AdministrarDenunciasBeanLocal {
           // enviar email
           String asunto = "Has Suspendido de AlquilaCosas";
           String mensaje = "<html>Hola " + usuario.getNombre() + ",<br/><br/>"
-                  + "Has sido Suspendido por acumular 3 Advertencia de violacion a los Terminos y Condiciones de Uso de AlquilaCosas. "
-                  + "Por el trascurso de 1 (un) mes no podrás Ingresar con tu login en nuestro sitio<br/><br/>"
+                  + "Has sido Suspendido por acumular 3 (tres) advertencias de violacion a los terminos y condiciones de uso de AlquilaCosas. "
+                  + "Por el trascurso de 1 (un) mes no podrás ingresar con tu login en nuestro sitio<br/><br/>"
                   + "Atentamente,<br/>"
                   + "<b>AlquilaCosas</b></html>";
           NotificacionEmail email = new NotificacionEmail(usuario.getEmail(), asunto, mensaje);
