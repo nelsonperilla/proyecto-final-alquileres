@@ -194,9 +194,9 @@ public class RegistrarPublicidadMBean implements Serializable {
             precio = publicidadBean.getPrecio(duracionSeleccionada, ubicacionSeleccionada);
             fechas = publicidadBean.getFechasSinStock(ubicacionSeleccionada);
             this.createDictionary();
-            if( ubicacionSeleccionada.equals("CARRUSEL") ){
+            if( ubicacionSeleccionada.name().equals("CARRUSEL") ){
                 label = CARRUSEL;
-            }else if( ubicacionSeleccionada.equals("LATERAL_IZQUIERDA") ){
+            }else if( ubicacionSeleccionada.name().equals("LATERAL_IZQUIERDA") ){
                 label = LAT_IZQ;
             }else{
                 label = LAT_DER;
