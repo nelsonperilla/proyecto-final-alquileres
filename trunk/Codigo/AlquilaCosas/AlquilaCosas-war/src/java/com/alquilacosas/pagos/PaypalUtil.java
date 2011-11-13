@@ -184,7 +184,7 @@ public class PaypalUtil {
                 pagoId = response.getInvoiceID();
             } catch(Exception ex) {
                 Logger.getLogger(PagoConfirmadoMBean.class)
-                    .error("doExpressCheckoutService(). Excepcion al conectarse con Paypal: "
+                    .error("doExpressCheckoutService(). Excepcion en getPaymentInfo(0): "
                     + ex + ": " + ex.getMessage());
                 return null;
             }

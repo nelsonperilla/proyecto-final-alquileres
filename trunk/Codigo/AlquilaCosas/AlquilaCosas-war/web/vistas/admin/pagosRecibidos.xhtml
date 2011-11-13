@@ -19,7 +19,7 @@
                 <h1>Pagos recibidos</h1>
                 <h:form>
                     <p:tooltip global="true"/> 
-                    
+                    <div style="position: relative; float: left;" >
                     <p:commandLink id="todos" value="Todos" 
                                    actionListener="#{pagos.mostrarTodos}"
                                    disabled="#{pagos.todos}"
@@ -34,10 +34,35 @@
                                    actionListener="#{pagos.mostrarPagosDineroMail}"
                                    disabled="#{pagos.dm}" 
                                    update="todos paypal dm tabla" />
+                    </div>
+                    <div style="position: relative; float: left; margin-left:20px;" >
+                        <p:commandLink id="tod" value="Todos"
+                                       actionListener="#{pagos.mostrarTodosEstados}" 
+                                       disabled="#{pagos.todosEstados}" 
+                                       update="tod conf pend tabla"/>
+                        |
+                        <p:commandLink id="conf" value="Confirmados"
+                                       actionListener="#{pagos.mostrarConfirmados}" 
+                                       disabled="#{pagos.confirmados}" 
+                                       update="tod conf pend tabla"/>
+                        |
+                        <p:commandLink id="pend" value="Pendientes"
+                                       actionListener="#{pagos.mostrarPendientes}" 
+                                       disabled="#{pagos.pendientes}" 
+                                       update="tod conf pend tabla"/>
+                                       
+                    </div>
+                    <div style="position: relative; float: left; margin-left:20px;" >
+                        <h:selectOneMenu value="#{pagos.periodoSeleccionado}" >
+                            <f:selectItems value="#{pagos.periodos}" />
+                            <p:ajax event="change" listener="#{pagos.elegirPeriodo}"
+                                    update="tabla" />
+                        </h:selectOneMenu>
+                    </div>
                     <br/><br/>
                     <p:dataTable id="tabla" value="#{pagos.model}" lazy="true"
                                  var="pago" paginator="true" 
-                                 rows="20" paginatorPosition="bottom" 
+                                 rows="15" paginatorPosition="bottom" 
                                  emptyMessage="No exite ningun pago registrado"
                                  rowIndexVar="r" rowStyleClass="#{empty r or r mod 2 ne 0 ? 'even-row': 'odd-row'}" >
                         
@@ -50,7 +75,7 @@
                         </p:column>
                         
                         <p:column headerText="Servicio" >
-                            <h:outputText value="#{pago.tipoServicio}" />
+                            <h:outputText value="#{pago.tipoServicio.toString()}" />
                         </p:column>
                         
                         <p:column headerText="Tipo pago" rendered="#{pagos.todos}" >
@@ -81,6 +106,13 @@
                                 <f:setPropertyActionListener value="#{pago.id}" 
                                                              target="#{pagos.pagoElegido}" />
                             </p:commandButton>
+                            <p:commandButton image="ui-icon ui-icon-circle-close"
+                                             oncomplete="confEliminar.show()"
+                                             rendered="#{empty pago.fechaConfirmado}"
+                                             title="Borrar pago" >
+                                <f:setPropertyActionListener value="#{pago.id}"
+                                                             target="#{pagos.pagoElegido}" />
+                            </p:commandButton>
                         </p:column>
                         
                     </p:dataTable>
@@ -89,9 +121,15 @@
                                      header="Confirmar Pago" widgetVar="confirmacion" severity="alert" >
                         <p:commandButton value="Si" actionListener="#{pagos.confirmarPago}"
                                          oncomplete="confirmacion.hide()" update="tabla" />
-                        <p:button value="No" onclick="confirmacion.hide();" />
+                        <p:commandButton value="No" type="button" onclick="confirmacion.hide();" />
                     </p:confirmDialog>
                                      
+                    <p:confirmDialog message="¿Está seguro que desea eliminar el pago seleccionado? Esto borrará también el servicio asociado."
+                                     header="Eliminar Pago" widgetVar="confEliminar" severity="alert" >
+                        <p:commandButton value="Si" actionListener="#{pagos.eliminarPago}"
+                                         oncomplete="confEliminar.hide()" update="tabla" />
+                        <p:commandButton value="No" type="button" onclick="confEliminar.hide();" />
+                    </p:confirmDialog>
                     
                 </h:form>
             </ui:define>

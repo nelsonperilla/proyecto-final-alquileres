@@ -127,10 +127,10 @@ public class ModificarRepublicarPublicidadMBean implements Serializable{
         }
 
         try {
-            if( !(url.equals("http://")) ){
-                http = "http://" + url;
+            if( !(url.startsWith("http://")) ){
+                url = "http://" + url;
             }
-            publicidadBean.actualizarPublicidad(publicidadId, titulo, http, caption, imagen);
+            publicidadBean.actualizarPublicidad(publicidadId, titulo, url, caption, imagen);
         } catch (Exception e) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "La publicidad no pudo actualizarse", "");

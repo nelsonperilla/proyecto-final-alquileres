@@ -130,7 +130,6 @@ h1, h2, h3 {
     display: block;
     width: 190px;
     position: relative;
-
     left: 0px;
     padding: 10px 0 10px 0;
     background: url(../resources/images/shadow2.png) no-repeat;
@@ -150,7 +149,12 @@ h1, h2, h3 {
     display: block;
     text-decoration: none;
     text-align: left !important;
-    -webkit-box-shadow: 2px 2px 4px #315EF7;
+/*    -webkit-box-shadow: 2px 2px 4px #315EF7;*/
+}
+
+#userMenu nav ul li {
+    display: block;
+    background: none;
 }
 
 #userMenu nav ul li a:hover {
@@ -159,7 +163,7 @@ h1, h2, h3 {
     padding: 7px 15px 7px 30px;
 }
 
-#login td{
+#login td {
     background: #0182dc;
     padding: 0px 0px 0px 0px; 
     text-align: center;
