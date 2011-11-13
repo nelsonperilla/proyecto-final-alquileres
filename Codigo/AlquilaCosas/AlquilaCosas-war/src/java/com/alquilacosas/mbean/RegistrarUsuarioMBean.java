@@ -81,7 +81,7 @@ public class RegistrarUsuarioMBean implements Serializable {
         domicilio.setNumero(numero);
         if(piso != null)
             domicilio.setPiso(piso);
-        if(!depto.equals(""))
+        if(depto != null && !depto.equals(""))
             domicilio.setDepto(depto);
         domicilio.setBarrio(barrio);
         domicilio.setCiudad(ciudad);

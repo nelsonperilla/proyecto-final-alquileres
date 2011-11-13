@@ -3,12 +3,12 @@
 	xsi:schemaLocation="http://www.zeroturnaround.com http://www.zeroturnaround.com/alderaan/rebel-2_0.xsd">
 
 	<classpath>
-		<dir name="/Users/ignaciogiagante/NetBeansProjects/Codigo/AlquilaCosas/AlquilaCosas-war/build/web/WEB-INF/classes/"/>
+		<dir name="/Users/damiancardozo/NetBeansProjects/AlquilaCosas/Codigo/AlquilaCosas/AlquilaCosas-war/build/web/WEB-INF/classes/"/>
 	</classpath>
 
 	<web>
 		<link target="/">
-			<dir name="/Users/ignaciogiagante/NetBeansProjects/Codigo/AlquilaCosas/AlquilaCosas-war/web"/>
+			<dir name="/Users/damiancardozo/NetBeansProjects/AlquilaCosas/Codigo/AlquilaCosas/AlquilaCosas-war/web"/>
 		</link>
 	</web>
 </application>

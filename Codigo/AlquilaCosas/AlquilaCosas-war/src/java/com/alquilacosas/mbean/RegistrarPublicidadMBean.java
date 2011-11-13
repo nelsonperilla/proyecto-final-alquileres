@@ -107,6 +107,10 @@ public class RegistrarPublicidadMBean implements Serializable {
             return;
         }
 
+        if(!url.startsWith("http://")) {
+            url = "http://" + url;
+        }
+        
         Integer pagoId = null;
 
         try {
