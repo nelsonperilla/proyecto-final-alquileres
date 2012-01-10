@@ -173,13 +173,14 @@
                                         <p:growl id="grow" showDetail="true" globalOnly="true" />
                                 </h:form>                              
                             </p:dialog>
-                            <p:dialog widgetVar="map" onShow="myMap.checkResize()" modal="true" showEffect="fade" width="425" height="450">
+                            <p:dialog widgetVar="map" onShow="myMap.checkResize()" modal="true" 
+                                      showEffect="fade" width="425" height="450">
                                     <script type="text/javascript"
                                             src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAIvenuSuB8qlfz056q69ddMHJIdqra2sc&amp;sensor=false">
                                     </script> 
                                 <f:view contentType="text/html">
-                                    <p:gmap center="41.381542, 2.122893" zoom="15" type="HYBRID"
-                                              style="width:400px;height:400px;" widgetVar="myMap" />
+                                    <p:gmap center="#{publicacionDesplegada.publicacion.latitud}, #{publicacionDesplegada.publicacion.longitud}"
+                                            zoom="15" type="HYBRID" style="width:400px;height:400px;" widgetVar="myMap" />
                                 </f:view>
                             </p:dialog>  
                             <h:form>
