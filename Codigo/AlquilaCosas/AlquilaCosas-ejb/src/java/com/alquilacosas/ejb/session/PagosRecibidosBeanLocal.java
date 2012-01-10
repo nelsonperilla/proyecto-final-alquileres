@@ -26,4 +26,6 @@ public interface PagosRecibidosBeanLocal {
     @javax.annotation.security.RolesAllowed(value = {"USUARIO", "ADMIN"})
     public void confirmarPago(java.lang.Integer pagoId);
     
+    public void eliminarPago(int pagoId);
+    
 }
