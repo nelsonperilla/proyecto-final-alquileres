@@ -40,6 +40,8 @@ public class PublicacionDTO implements Serializable  {
     private Periodo periodoMaximo;
     private String provincia, ciudad, barrio;
     private UsuarioDTO propietario;
+    private double latitud;
+    private double longitud;
     
     public PublicacionDTO(int id,String titulo,String descripcion, 
             Date fecha_desde, Date fecha_hasta, boolean destacada,
@@ -312,6 +314,34 @@ public class PublicacionDTO implements Serializable  {
      */
     public void setPropietario(UsuarioDTO propietario) {
         this.propietario = propietario;
+    }
+
+    /**
+     * @return the latitud
+     */
+    public double getLatitud() {
+        return latitud;
+    }
+
+    /**
+     * @param latitud the latitud to set
+     */
+    public void setLatitud(double latitud) {
+        this.latitud = latitud;
+    }
+
+    /**
+     * @return the longitud
+     */
+    public double getLongitud() {
+        return longitud;
+    }
+
+    /**
+     * @param longitud the longitud to set
+     */
+    public void setLongitud(double longitud) {
+        this.longitud = longitud;
     }
     
 }
