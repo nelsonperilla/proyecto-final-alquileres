@@ -137,6 +137,7 @@ public class PagosRecibidosBean implements PagosRecibidosBeanLocal {
         }
     }
     
+    @Override
     public void eliminarPago(int pagoId) {
         Pago pago = pagoFacade.find(pagoId);
         pagoFacade.remove(pago);
