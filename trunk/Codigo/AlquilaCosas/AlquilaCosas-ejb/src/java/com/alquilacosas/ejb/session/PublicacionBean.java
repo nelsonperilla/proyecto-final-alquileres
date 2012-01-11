@@ -397,8 +397,8 @@ public class PublicacionBean implements PublicacionBeanLocal {
             resultado.setPrecios(precios);
             resultado.setCategoriaF(new CategoriaDTO(publicacion.getCategoriaFk().getCategoriaId(),
                     publicacion.getCategoriaFk().getNombre()));
-            resultado.setLatitud(-31.424598);
-            resultado.setLongitud(-64.187708);
+            resultado.setLatitud(-31.424598);//-31.4321 / dif: 0.0007502 sumar
+            resultado.setLongitud(-64.187708);//-64.1789 / dif: 0.008808 restar
             
         }
         return resultado;

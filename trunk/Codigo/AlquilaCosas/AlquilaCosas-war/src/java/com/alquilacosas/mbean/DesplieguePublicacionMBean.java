@@ -28,6 +28,10 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.DateSelectEvent;
 import org.primefaces.json.JSONObject;
+import org.primefaces.model.map.DefaultMapModel;  
+import org.primefaces.model.map.LatLng;  
+import org.primefaces.model.map.MapModel;  
+import org.primefaces.model.map.Marker;
 
 /**
  *
@@ -60,6 +64,7 @@ public class DesplieguePublicacionMBean implements Serializable {
     private String horaInicioAlquiler;
     private int denunciaId;   
     private int motivoDenuncia;
+    private MapModel gMap;
 
     /** Creates a new instance of DesplieguePublicacionMBean */
     public DesplieguePublicacionMBean() {
@@ -86,6 +91,10 @@ public class DesplieguePublicacionMBean implements Serializable {
         setPublicacion(publicationBean.getPublicacion(publicationId));
         setNuevaPregunta(new ComentarioDTO());
         setComentarios(publicationBean.getPreguntas(publicationId));
+        setgMap(new DefaultMapModel());  
+        LatLng position = new LatLng(publicacion.getLatitud(), publicacion.getLongitud());  
+        getgMap().addOverlay(new Marker(position, publicacion.getTitulo()));  
+        
         try {
             fechas = publicationBean.getFechasSinStock(publicationId, cantidadProductos);
         } catch (AlquilaCosasException e) {
@@ -655,5 +664,19 @@ public class DesplieguePublicacionMBean implements Serializable {
      */
     public void setMotivoDenuncia(int motivoDenuncia) {
         this.motivoDenuncia = motivoDenuncia;
+    }
+
+    /**
+     * @return the gMap
+     */
+    public MapModel getgMap() {
+        return gMap;
+    }
+
+    /**
+     * @param gMap the gMap to set
+     */
+    public void setgMap(MapModel gMap) {
+        this.gMap = gMap;
     }
 }

@@ -179,8 +179,10 @@
                                             src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAIvenuSuB8qlfz056q69ddMHJIdqra2sc&amp;sensor=false">
                                     </script> 
                                 <f:view contentType="text/html">
-                                    <p:gmap center="#{publicacionDesplegada.publicacion.latitud}, #{publicacionDesplegada.publicacion.longitud}"
-                                            zoom="15" type="HYBRID" style="width:400px;height:400px;" widgetVar="myMap" />
+                                    <p:gmap center="#{publicacionDesplegada.publicacion.latitud + 0.007502},
+                                                    #{publicacionDesplegada.publicacion.longitud - 0.008808} "
+                                            zoom="15" type="HYBRID" style="width:400px;height:400px;"
+                                            widgetVar="myMap" model="#{publicacionDesplegada.gMap}" />
                                 </f:view>
                             </p:dialog>  
                             <h:form>
