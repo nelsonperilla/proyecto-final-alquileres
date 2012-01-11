@@ -27,6 +27,11 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
+import javax.faces.event.ActionEvent;  
+import org.primefaces.model.map.DefaultMapModel;  
+import org.primefaces.model.map.LatLng;  
+import org.primefaces.model.map.MapModel;
+import org.primefaces.model.map.Marker;
 
 @ManagedBean(name = "publicacion")
 @ViewScoped
@@ -64,6 +69,11 @@ public class NuevaPublicacionMBean implements Serializable {
     
     private Date today;
     private List<byte[]> imagenes;
+ 
+    private MapModel gMap;  
+    private double lat;  
+    private double lng;    
+    
     
     private Integer publicacionId;
 
@@ -96,6 +106,7 @@ public class NuevaPublicacionMBean implements Serializable {
             periodoMinimos.add( new SelectItem( p.getId(), p.getNombre().name() ));
             periodoMaximos.add( new SelectItem( p.getId(), p.getNombre().name() ));
         }
+        gMap = new DefaultMapModel();
 
     }
 
@@ -131,7 +142,7 @@ public class NuevaPublicacionMBean implements Serializable {
                     new Date(), hoy.getTime(), destacada, cantidad,
                     login.getUsuarioId(), cat, precios, imagenes,
                     periodoMinimo, selectedPeriodoMinimo, periodoMaximo,
-                    selectedPeriodoMaximo);
+                    selectedPeriodoMaximo,lat,lng);
 
             context.addMessage(null,
                     new FacesMessage("Publicacion Creada"));
@@ -224,6 +235,10 @@ public class NuevaPublicacionMBean implements Serializable {
 
     }
 
+    public void addMarker(ActionEvent actionEvent) {  
+        Marker marker = new Marker(new LatLng(getLat(), getLng()), titulo);  
+        getgMap().addOverlay(marker);  
+    }      
 
     public int getCantidad() {
         return cantidad;
@@ -463,6 +478,48 @@ public class NuevaPublicacionMBean implements Serializable {
 
     public void setSubcategorias3(List<SelectItem> subcategorias3) {
         this.subcategorias3 = subcategorias3;
+    }
+
+    /**
+     * @return the gMap
+     */
+    public MapModel getgMap() {
+        return gMap;
+    }
+
+    /**
+     * @param gMap the gMap to set
+     */
+    public void setgMap(MapModel gMap) {
+        this.gMap = gMap;
+    }
+
+    /**
+     * @return the lat
+     */
+    public double getLat() {
+        return lat;
+    }
+
+    /**
+     * @param lat the lat to set
+     */
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    /**
+     * @return the lng
+     */
+    public double getLng() {
+        return lng;
+    }
+
+    /**
+     * @param lng the lng to set
+     */
+    public void setLng(double lng) {
+        this.lng = lng;
     }
     
      

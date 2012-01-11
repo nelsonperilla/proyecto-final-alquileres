@@ -115,7 +115,8 @@ public class PublicacionBean implements PublicacionBeanLocal {
             Date fechaDesde, Date fechaHasta, boolean destacada, int cantidad,
             int usuarioId, int categoria, List<PrecioDTO> precios,
             List<byte[]> imagenes, int periodoMinimo, int periodoMinimoFk,
-            Integer periodoMaximo, Integer periodoMaximoFk) throws AlquilaCosasException {
+            Integer periodoMaximo, Integer periodoMaximoFk, double latitud, 
+            double longitud) throws AlquilaCosasException {
 
         Publicacion publicacion = new Publicacion();
         publicacion.setTitulo(titulo);
@@ -208,6 +209,8 @@ public class PublicacionBean implements PublicacionBeanLocal {
         usuario.agregarPublicacion(publicacion);
         publicacion = publicacionFacade.create(publicacion);
         return publicacion.getPublicacionId();
+        
+        //TODO: guardar latitud y longitud de la publicacion
     }
 
     @Override

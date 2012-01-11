@@ -27,7 +27,7 @@ public interface PublicacionBeanLocal {
             Date fechaDesde, Date fechaHasta, boolean destacada, int cantidad,
             int usuarioId, int categoria, List<PrecioDTO> precios, 
             List<byte[]> imagenes, int periodoMinimo, int periodoMinimoFK, 
-            Integer periodoMaximo, Integer periodoMaximoFk ) throws AlquilaCosasException;
+            Integer periodoMaximo, Integer periodoMaximoFk, double latitud, double longitud) throws AlquilaCosasException;
 
     public PublicacionDTO getPublicacion(int id);
 
