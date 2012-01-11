@@ -21,7 +21,7 @@
 
             <ui:define name="principal">
                 <h:outputScript library="javascript" name="util.js" />
-                <h:form id="formPublicacion">
+                <h:form id="formPublicacion" prependId="false">
 
                     <h1>Publicar</h1>
                     <p:fieldset legend="Datos del producto" styleClass="fieldset" >
@@ -113,7 +113,34 @@
                         </h:outputLink>
                     <!-- </p:panel> -->
                     </p:fieldset>
-                    
+ 
+                    <!-- <h2>Cargar marcador en mapa</h2> -->
+                    <p:fieldset legend="Ubicación del articulo" styleClass="fieldset" >
+                        <script type="text/javascript"
+                            src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAIvenuSuB8qlfz056q69ddMHJIdqra2sc&amp;sensor=false">
+                        </script>                 
+
+                        <p:gmap center="-31.41,-64.20"
+                                zoom="13" type="HYBRID" style="width:540px;height:400px;"
+                                widgetVar="myMap" model="#{publicacion.gMap}"   
+                                onPointClick="handlePointClick(event);"/>
+                        <p:dialog widgetVar="dlg" showEffect="fade" header="Confirme su marcador"  closable="false">  
+                                <h:panelGrid columns="2">  
+                                    <h:outputLabel for="title" value="La posición del marcador es correcta" />  
+                                    <f:facet name="footer">  
+                                        <p:commandButton value="Confirmar"   
+                                                actionListener="#{publicacion.addMarker}"   
+                                                update="messages"   
+                                                oncomplete="markerAddComplete()"/>  
+                                        <p:commandButton value="Cancelar" onclick="return cancel()"/>  
+                                    </f:facet>  
+                                </h:panelGrid>  
+                                <h:inputHidden id="title" value="#{publicacion.titulo}" />
+                                <h:inputHidden id="lat" value="#{publicacion.lat}" />  
+                                <h:inputHidden id="lng" value="#{publicacion.lng}" />  
+                        </p:dialog> 
+                    </p:fieldset>                    
+                   
                     <!-- <h2>Elije un periodo minimo y maximo de alquiler</h2> -->
                     <p:fieldset legend="Periodo minimo y maximo de alquiler" styleClass="fieldset" >
                     <h:panelGrid columns="4">

@@ -112,13 +112,33 @@ function getUrlVars()
     return vars;
 }
 
-function initialize() 
-{
-    var myOptions = {
-      center: new google.maps.LatLng(-34.397, 150.644),
-      zoom: 8,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
-    var map = new google.maps.Map(document.getElementById("map_canvas"),
-        myOptions);
-}
+    var currentMarker = null;
+    function handlePointClick(event) {  
+        
+        if(currentMarker == null) {  
+            document.getElementById('lat').value = event.latLng.lat();  
+            document.getElementById('lng').value = event.latLng.lng();  
+  
+            currentMarker = new google.maps.Marker({  
+                position:new google.maps.LatLng(event.latLng.lat(), event.latLng.lng())  
+            });  
+                              
+            myMap.addOverlay(currentMarker);  
+        }
+            dlg.show();  
+             
+    }  
+  
+    function markerAddComplete() {  
+        var title = document.getElementById('title');  
+        currentMarker.setTitle(title.value);  
+        dlg.hide();  
+    }  
+  
+    function cancel() {  
+        dlg.hide();  
+        currentMarker.setMap(null);  
+        currentMarker = null;  
+  
+        return false;  
+    }  
