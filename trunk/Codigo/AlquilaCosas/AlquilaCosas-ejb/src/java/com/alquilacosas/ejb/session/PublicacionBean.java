@@ -208,6 +208,9 @@ public class PublicacionBean implements PublicacionBeanLocal {
 
         //TODO: guardar latitud y longitud de la publicacion
         
+        publicacion.setLatitud(latitud);
+        publicacion.setLongitud(longitud);
+        
         usuario.agregarPublicacion(publicacion);
         publicacion = publicacionFacade.create(publicacion);
         return publicacion.getPublicacionId();
@@ -261,8 +264,8 @@ public class PublicacionBean implements PublicacionBeanLocal {
             }
         }
         
-        publicacionDto.setLatitud(-31.424598);
-        publicacionDto.setLongitud(-64.187708);
+        publicacionDto.setLatitud(p.getLatitud());
+        publicacionDto.setLongitud(p.getLongitud());
         
         return publicacionDto;
     }
@@ -367,7 +370,8 @@ public class PublicacionBean implements PublicacionBeanLocal {
             publicacion.agregarImagen(ip);
         }
         
-        //TODO: guardar latitud y longitud de la publicacion
+        publicacion.setLatitud(latitud);
+        publicacion.setLongitud(longitud);
         
         publicacion = publicacionFacade.edit(publicacion);
     }
@@ -410,8 +414,8 @@ public class PublicacionBean implements PublicacionBeanLocal {
             resultado.setPrecios(precios);
             resultado.setCategoriaF(new CategoriaDTO(publicacion.getCategoriaFk().getCategoriaId(),
                     publicacion.getCategoriaFk().getNombre()));
-            resultado.setLatitud(-31.424598);//-31.4321 / dif: 0.0007502 sumar
-            resultado.setLongitud(-64.187708);//-64.1789 / dif: 0.008808 restar
+            resultado.setLatitud(publicacion.getLatitud());//dif: 0.0007502 sumar
+            resultado.setLongitud(publicacion.getLongitud());//dif: 0.008808 restar
             
         }
         return resultado;

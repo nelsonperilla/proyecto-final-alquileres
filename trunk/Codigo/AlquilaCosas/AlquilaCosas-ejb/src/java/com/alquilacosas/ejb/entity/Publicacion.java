@@ -87,6 +87,12 @@ public class Publicacion implements Serializable {
     @ManyToOne(optional = false)
     private Categoria categoriaFk;
     
+    @Column(name = "LATITUD")
+    private double latitud;
+        
+    @Column(name = "LONGITUD")
+    private double longitud;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "publicacionFk")
     private List<ImagenPublicacion> imagenPublicacionList;
     
@@ -362,5 +368,33 @@ public class Publicacion implements Serializable {
                    estado = e;
          }
          return estado;
+    }
+
+    /**
+     * @return the latitud
+     */
+    public double getLatitud() {
+        return latitud;
+    }
+
+    /**
+     * @param latitud the latitud to set
+     */
+    public void setLatitud(double latitud) {
+        this.latitud = latitud;
+    }
+
+    /**
+     * @return the longitud
+     */
+    public double getLongitud() {
+        return longitud;
+    }
+
+    /**
+     * @param longitud the longitud to set
+     */
+    public void setLongitud(double longitud) {
+        this.longitud = longitud;
     }
 }

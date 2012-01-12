@@ -46,7 +46,7 @@
                         <td>
                             <h:form >
                                 <p:galleria effect="#{publicacionDesplegada.effect}" effectSpeed="1000"
-                                            style="height: 350px; width: 300px">  
+                                            style="height: 400px; width: 350px">  
                                     <ui:repeat value="#{publicacionDesplegada.publicacion.imagenIds}" 
                                                var="image">  
                                         <h:graphicImage value="/image?id=#{image}"  
@@ -80,16 +80,14 @@
                                                           styleClass="itemPrice"/>  
                                         </h:column>
                                     </h:dataTable>
-                                    <h:panelGroup>
-                                                <h:outputText value="Origen: #{publicacionDesplegada.publicacion.barrio}, 
-                                                  #{publicacionDesplegada.publicacion.ciudad}" 
-                                                  styleClass="itemInfo"  escape="false" style="padding-right: 5px"/> 
-                                                <p:commandButton value="Ver Mapa" oncomplete="map.show()"/> 
-                                    </h:panelGroup>
+                                        <h:outputText value="Origen: #{publicacionDesplegada.publicacion.barrio}, 
+                                          #{publicacionDesplegada.publicacion.ciudad}" 
+                                          styleClass="itemInfo"  escape="false" style="padding-right: 5px"/> 
                                     <h:outputText value="Finaliza el #{publicacionDesplegada.fecha_hasta}" 
                                                   styleClass="itemInfo" escape="false"/>  
                                     <h:outputText value="Disponibilidad maxima: #{publicacionDesplegada.publicacion.cantidad}" 
                                                   styleClass="itemInfo"/>  
+                                    
                                 </h:panelGrid>                            
                                 <h:panelGrid columns="3" styleClass="dataPrincipal" style="margin-top: 10px; vertical-align: center">
                                     <h:outputLabel   value="Cantidad:" />
@@ -194,14 +192,12 @@
                     </tr>
                     <tr>
                         <td colspan="2">
-                            <h:link value="Denunciar esta publicacion"
-                               outcome="/vistas/usuario/denunciaDePregunta" 
-                               >
-                                <f:param name="motivo" value="1" />
-                                <f:param name="id" value="#{publicacionDesplegada.publicacion.id}" />                        
-                            </h:link>                        
+                            <h:form>
+                                <p:commandButton value="Ver ubicación del articulo" oncomplete="map.show()"/> 
+                            </h:form>
                         </td>                    
                     </tr>
+                    
                     <tr>
                         <td colspan="2"  >
                             <h:panelGrid  styleClass="data" columns="1" >
@@ -256,6 +252,16 @@
                             </h:form>   
                         </td>
                     </tr>
+                    <tr>
+                        <td colspan="2">
+                            <h:link value="Denunciar esta publicacion"
+                               outcome="/vistas/usuario/denunciaDePregunta" 
+                               >
+                                <f:param name="motivo" value="1" />
+                                <f:param name="id" value="#{publicacionDesplegada.publicacion.id}" />                        
+                            </h:link>                        
+                        </td>                    
+                    </tr>                    
                 </table>
             </ui:define>
             <ui:define name="right" >

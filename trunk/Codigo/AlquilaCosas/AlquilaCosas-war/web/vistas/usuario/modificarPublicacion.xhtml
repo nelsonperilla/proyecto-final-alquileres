@@ -21,7 +21,7 @@
 
             <ui:define name="principal">
 
-                <h:form id="formPublicacion" >
+                <h:form id="formPublicacion">
 
                     <h1>Modificar Publicacion</h1>
                     <h:panelGrid columns="3" columnClasses="labelColumn" >                       
@@ -141,9 +141,8 @@
                                             #{modPublicacion.pf.longitud} "
                                     zoom="15" type="HYBRID" style="width:540px;height:400px;"
                                     widgetVar="myMap" model="#{modPublicacion.gMap}"
-                                    onMarkerDragUpdate="updateCoordinates(event)"/>
-                            <h:inputHidden id="lat" value="#{modPublicacion.lat}" />  
-                            <h:inputHidden id="lng" value="#{modPublicacion.lng}" />
+                                    markerDragListener="#{modPublicacion.updateCoordinates}">
+                            </p:gmap>
                     </p:fieldset>
                     
                     <h2>Elije un minimo y maximo</h2>
