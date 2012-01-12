@@ -239,7 +239,7 @@ public class NuevaPublicacionMBean implements Serializable {
         Marker marker = new Marker(new LatLng(getLat(), getLng()), titulo);  
         getgMap().addOverlay(marker);  
     }      
-
+    
     public int getCantidad() {
         return cantidad;
     }
@@ -506,6 +506,7 @@ public class NuevaPublicacionMBean implements Serializable {
      */
     public void setLat(double lat) {
         this.lat = lat;
+        System.out.print(lat + "\n");
     }
 
     /**

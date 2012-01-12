@@ -206,11 +206,13 @@ public class PublicacionBean implements PublicacionBeanLocal {
             publicacion.agregarImagen(ip);
         }
 
+        //TODO: guardar latitud y longitud de la publicacion
+        
         usuario.agregarPublicacion(publicacion);
         publicacion = publicacionFacade.create(publicacion);
         return publicacion.getPublicacionId();
         
-        //TODO: guardar latitud y longitud de la publicacion
+        
     }
 
     @Override
@@ -258,6 +260,10 @@ public class PublicacionBean implements PublicacionBeanLocal {
                         precio.getPeriodoFk().getNombre()));
             }
         }
+        
+        publicacionDto.setLatitud(-31.424598);
+        publicacionDto.setLongitud(-64.187708);
+        
         return publicacionDto;
     }
 
@@ -267,8 +273,9 @@ public class PublicacionBean implements PublicacionBeanLocal {
             Date fechaDesde, Date fechaHasta, boolean destacada, int cantidad,
             int usuarioId, int categoria, List<PrecioDTO> precios,
             List<byte[]> imagenesAgregar, List<Integer> imagenesABorrar,
-            int periodoMinimo, int periodoMinimoFk, Integer periodoMaximo, Integer periodoMaximoFk,
-            NombreEstadoPublicacion estadoPublicacion) throws AlquilaCosasException {
+            int periodoMinimo, int periodoMinimoFk, Integer periodoMaximo, 
+            Integer periodoMaximoFk, NombreEstadoPublicacion estadoPublicacion, 
+            double latitud, double longitud) throws AlquilaCosasException {
 
         Publicacion publicacion = null;
         try {
@@ -359,6 +366,9 @@ public class PublicacionBean implements PublicacionBeanLocal {
             ip.setImagen(imagen);
             publicacion.agregarImagen(ip);
         }
+        
+        //TODO: guardar latitud y longitud de la publicacion
+        
         publicacion = publicacionFacade.edit(publicacion);
     }
 

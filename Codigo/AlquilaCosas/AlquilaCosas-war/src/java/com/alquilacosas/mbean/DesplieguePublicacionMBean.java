@@ -92,7 +92,7 @@ public class DesplieguePublicacionMBean implements Serializable {
         setNuevaPregunta(new ComentarioDTO());
         setComentarios(publicationBean.getPreguntas(publicationId));
         setgMap(new DefaultMapModel());  
-        LatLng position = new LatLng(publicacion.getLatitud(), publicacion.getLongitud());  
+        LatLng position = new LatLng(publicacion.getLatitud(), publicacion.getLongitud()); 
         getgMap().addOverlay(new Marker(position, publicacion.getTitulo()));  
         
         try {
