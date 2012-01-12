@@ -330,6 +330,12 @@ public class ModificarPublicacionMBean implements Serializable {
         imagenesABorrar.add(id);
     }
     
+    public void updateCoordinates(MarkerDragEvent event)
+    {
+        lat = event.getMarker().getLatlng().getLat();
+        lng = event.getMarker().getLatlng().getLng();
+    }
+    
     /*
      * Getters & Setters
      */
