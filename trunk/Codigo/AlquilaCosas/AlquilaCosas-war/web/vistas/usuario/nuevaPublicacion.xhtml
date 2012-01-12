@@ -119,11 +119,11 @@
                         <script type="text/javascript"
                             src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAIvenuSuB8qlfz056q69ddMHJIdqra2sc&amp;sensor=false">
                         </script>                 
-
                         <p:gmap center="-31.41,-64.20"
                                 zoom="13" type="HYBRID" style="width:540px;height:400px;"
                                 widgetVar="myMap" model="#{publicacion.gMap}"   
-                                onPointClick="handlePointClick(event);"/>
+                                onPointClick="handlePointClick(event);"  >
+                        </p:gmap>
                         <p:dialog widgetVar="dlg" showEffect="fade" header="Confirme su marcador"  closable="false">  
                                 <h:panelGrid columns="2">  
                                     <h:outputLabel for="title" value="La posición del marcador es correcta" />  
@@ -135,7 +135,6 @@
                                         <p:commandButton value="Cancelar" onclick="return cancel()"/>  
                                     </f:facet>  
                                 </h:panelGrid>  
-                                <h:inputHidden id="title" value="#{publicacion.titulo}" />
                                 <h:inputHidden id="lat" value="#{publicacion.lat}" />  
                                 <h:inputHidden id="lng" value="#{publicacion.lng}" />  
                         </p:dialog> 

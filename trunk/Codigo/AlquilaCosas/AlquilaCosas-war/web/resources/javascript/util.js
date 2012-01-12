@@ -121,16 +121,15 @@ function getUrlVars()
   
             currentMarker = new google.maps.Marker({  
                 position:new google.maps.LatLng(event.latLng.lat(), event.latLng.lng())  
-            });  
+            }); 
                               
             myMap.addOverlay(currentMarker);  
         }
             dlg.show();  
-             
     }  
   
     function markerAddComplete() {  
-        var title = document.getElementById('title');  
+        var title = "alquilacosas";//document.getElementById('title');  
         currentMarker.setTitle(title.value);  
         dlg.hide();  
     }  
@@ -142,3 +141,14 @@ function getUrlVars()
   
         return false;  
     }  
+
+    function onMarkerDrag(event){
+        currentMarker = event.getMarker();
+        document.getElementById('lat').value = event.latLng.lat();  
+        document.getElementById('lng').value = event.latLng.lng();          
+    }
+    
+    function updateCoordinates(event){
+        document.getElementById('lat').value = event.latLng.lat();  
+        document.getElementById('lng').value = event.latLng.lng();          
+    }

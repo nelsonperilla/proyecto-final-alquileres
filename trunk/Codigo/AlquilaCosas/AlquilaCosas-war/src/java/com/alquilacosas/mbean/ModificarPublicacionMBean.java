@@ -30,6 +30,11 @@ import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.map.MarkerDragEvent;
+import org.primefaces.model.map.DefaultMapModel;  
+import org.primefaces.model.map.LatLng;  
+import org.primefaces.model.map.MapModel;
+import org.primefaces.model.map.Marker;
 
 /**
  *
@@ -83,6 +88,10 @@ public class ModificarPublicacionMBean implements Serializable {
     private List<NombreEstadoPublicacion> estadosPublicaciones;
     private int imagenABorrar;
 
+    private MapModel gMap;  
+    private double lat;  
+    private double lng;     
+    
     public ModificarPublicacionMBean() {
     }
 
@@ -159,6 +168,12 @@ public class ModificarPublicacionMBean implements Serializable {
         }
 
         selectedEstado = pf.getEstado().getNombre();
+        
+        setgMap(new DefaultMapModel());
+        LatLng position = new LatLng(pf.getLatitud(), pf.getLongitud()); 
+        Marker marcador = new Marker(position, pf.getTitulo());
+        marcador.setDraggable(true);
+        getgMap().addOverlay(marcador);         
 
     }
 
@@ -229,7 +244,7 @@ public class ModificarPublicacionMBean implements Serializable {
                     descripcion, fechaDesde, fechaHasta, destacada, cantidad,
                     login.getUsuarioId(), cat, precios, imagenesAgregar,
                     imagenesABorrar, periodoMinimo, selectedPeriodoMinimo, periodoMaximo, 
-                    selectedPeriodoMaximo, selectedEstado);
+                    selectedPeriodoMaximo, selectedEstado,lat,lng);
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage("Los datos fueron guardados correctamente"));
             return "pmisPublicaciones";
@@ -614,6 +629,48 @@ public class ModificarPublicacionMBean implements Serializable {
 
     public void setPeriodoMinimo(int periodoMinimo) {
         this.periodoMinimo = periodoMinimo;
+    }
+
+    /**
+     * @return the gMap
+     */
+    public MapModel getgMap() {
+        return gMap;
+    }
+
+    /**
+     * @param gMap the gMap to set
+     */
+    public void setgMap(MapModel gMap) {
+        this.gMap = gMap;
+    }
+
+    /**
+     * @return the lat
+     */
+    public double getLat() {
+        return lat;
+    }
+
+    /**
+     * @param lat the lat to set
+     */
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    /**
+     * @return the lng
+     */
+    public double getLng() {
+        return lng;
+    }
+
+    /**
+     * @param lng the lng to set
+     */
+    public void setLng(double lng) {
+        this.lng = lng;
     }
 
     
