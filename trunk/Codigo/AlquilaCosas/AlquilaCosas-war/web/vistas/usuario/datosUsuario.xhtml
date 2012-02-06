@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.prime.com.tr/ui" 
+      xmlns:p="http://primefaces.org/ui" 
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:comps="http://java.sun.com/jsf/composite/comps" >
@@ -24,7 +24,7 @@
                 <h:form id="datos">
                     <p:outputPanel >
                         <p:fieldset legend="Datos Personales" styleClass="fieldset" >
-                            <h:panelGrid columns="2" cellpadding="2" columnClasses="labelColumn" >
+                            <h:panelGrid columns="2" cellpadding="2" columnClasses="labelColumn,fieldColumn" >
 
                                 <h:outputLabel value="Nombre" />
                                 <p:inputText value="#{modUsuario.usuario.nombre}"
@@ -60,7 +60,8 @@
                         </p:fieldset>
 
                         <p:fieldset legend="Domicilio" styleClass="fieldset" >
-                        <h:panelGrid columns="3" cellpadding="2" columnClasses="labelColumn" >
+                            <h:panelGrid columns="3" cellpadding="2" columnClasses="labelColumn,fieldColumn" 
+                                         width="100%" style="text-align: center" >
 
                             <h:outputLabel value="Pais" />
                             <h:selectOneMenu id="pais" value="#{modUsuario.domicilio.paisId}" required="true"
@@ -119,17 +120,16 @@
                                          disabled="#{not modUsuario.editando}" />
                             <p:message for="depto" />
 
-                            <p:commandButton value="Editar" actionListener="#{modUsuario.editar}"
-                                             update=":datos :editor"
-                                             rendered="#{not modUsuario.editando}" />
-                            <h:outputText rendered="#{not modUsuario.editando}" />
-                            <h:outputText rendered="#{not modUsuario.editando}" />
                             
-                            <p:commandButton value="Aceptar" actionListener="#{modUsuario.actualizarUsuario}"
-                                             rendered="#{modUsuario.editando}" update=":datos :editor" />
-                            <p:commandButton value="Cancelar" actionListener="#{modUsuario.cancelarEdicion}"
-                                             rendered="#{modUsuario.editando}" update=":datos :editor" />
-                            <h:outputText rendered="#{modUsuario.editando}" />
+                            <f:facet name="footer" >
+                                <p:commandButton value="Editar" actionListener="#{modUsuario.editar}"
+                                             update=":datos"
+                                             rendered="#{not modUsuario.editando}" />
+                                <p:commandButton value="Aceptar" actionListener="#{modUsuario.actualizarUsuario}"
+                                             rendered="#{modUsuario.editando}" update=":datos" />
+                                <p:commandButton value="Cancelar" process="@this" actionListener="#{modUsuario.cancelarEdicion}"
+                                             rendered="#{modUsuario.editando}" update=":datos" />
+                            </f:facet>
                             
                         </h:panelGrid>
                         </p:fieldset>
@@ -141,9 +141,10 @@
 
             <ui:define name="right">
                 <comps:loginBox />
+                <comps:adminPanel />
                 <comps:userPanel />
                 <comps:panelPublicitante />
-                <comps:adminPanel />
+
             </ui:define>
 
         </ui:composition>

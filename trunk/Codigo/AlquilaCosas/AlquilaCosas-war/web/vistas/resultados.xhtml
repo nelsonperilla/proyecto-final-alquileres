@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:comps="http://java.sun.com/jsf/composite/comps"
-      xmlns:p="http://primefaces.prime.com.tr/ui" 
+      xmlns:p="http://primefaces.org/ui" 
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core" >
 
@@ -19,7 +19,7 @@
 
                 <p:panel header="Categoria" styleClass="panelFiltro" >
                     <h:form id="categoriaForm">
-                        <p:commandLink value="Cualquiera" update="@form grid"
+                        <p:commandLink value="Cualquiera" update="@form :tableForm:grid"
                                        actionListener="#{resultadosBean.noFiltrarCategoria}"
                                        styleClass="#{resultadosBean.categoria == null ? 'filtroActual': null}" /> 
                         <br/>
@@ -27,7 +27,7 @@
                             <p:commandLink value="#{cat.nombre}" 
                                            actionListener="#{resultadosBean.filtrarCategoria}"
                                            styleClass="#{resultadosBean.categoria == cat.id ? 'filtroActual': null}"
-                                           update="@form grid" >
+                                           update="@form :tableForm:grid" >
                                 <f:attribute name="cat" value="#{cat.id}" />
                             </p:commandLink>
                             <br />
@@ -38,21 +38,21 @@
                 <p:panel header="Ubicacion" styleClass="panelFiltro" >
                     <h:form>
                         <p:commandLink value="Cualquiera" action="#{resultadosBean.noFiltrarUbicacion}"
-                                       update="@form grid categoriaForm"
+                                       update="@form :tableForm:grid :categoriaForm"
                                        styleClass="#{resultadosBean.ubicacion == null ? 'filtroActual': null}" /> 
                         <br/><br/>
                         <h:panelGrid columns="2" >
                             <p:inputText value="#{resultadosBean.ubicacion}" style="width:130px;" />
                             <p:commandButton actionListener="#{resultadosBean.filtrarUbicacion}"
-                                           update="@form grid categoriaForm" image="ui-icon ui-icon-search" />
+                                           update="@form :tableForm:grid :categoriaForm" icon="ui-icon ui-icon-search" />
                         </h:panelGrid>
                     </h:form>
                 </p:panel>
                 
                 <p:panel header="Precio" styleClass="panelFiltro" >
-                    <h:form>
+                    <h:form id="precioForm">
                         <p:commandLink value="Cualquiera" actionListener="#{resultadosBean.noFiltrarPrecio}"
-                                       update="@form grid categoriaForm"/>
+                                       update="@form :tableForm:grid :categoriaForm"/>
                         <br/><br/>
                         <h:panelGrid columns="2" >
                             <h:outputLabel value="Periodo:" />
@@ -65,7 +65,7 @@
                             <h:outputLabel value="Hasta:" />
                             <p:inputText value="#{resultadosBean.precioHasta}" style="width:90px" />
                             <p:commandButton actionListener="#{resultadosBean.filtrarPrecio}"
-                                           update="@form grid categoriaForm" image="ui-icon ui-icon-search" />
+                                           update="@form :tableForm:grid :categoriaForm" icon="ui-icon ui-icon-search" />
                         </h:panelGrid>
                     </h:form>
                 </p:panel>
@@ -74,10 +74,10 @@
 
             <ui:define name="principal">
                 <div id="items" >
-                    <h:form prependId="false">
+                    <h:form id="tableForm" >
 
                         <p:dataTable id="grid" value="#{resultadosBean.model}" var="pub" 
-                                     rows="10" paginator="true" lazy="true" 
+                                     rows="10" paginator="true" paginatorAlwaysVisible="false"
                                      paginatorPosition="bottom" 
                                      emptyMessage="No se encontraron publicaciones para el criterio de busqueda seleccionado."
                                      styleClass="itemsTable" >
@@ -96,9 +96,9 @@
 
             <ui:define name="right">
                 <comps:loginBox />
+                <comps:adminPanel />
                 <comps:userPanel />
                 <comps:panelPublicitante />
-                <comps:adminPanel />
             </ui:define>
 
         </ui:composition>

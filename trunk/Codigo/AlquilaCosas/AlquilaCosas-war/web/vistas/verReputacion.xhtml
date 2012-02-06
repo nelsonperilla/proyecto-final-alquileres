@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:p="http://primefaces.org/ui"
       xmlns:h="http://java.sun.com/jsf/html" 
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:comps="http://java.sun.com/jsf/composite/comps" >
@@ -66,24 +66,24 @@
                                 </h:panelGrid>
                                 <p:dataTable id="tablaCalificacionesOfrece" value="#{reputacion.calificacionesOfrece}" 
                                              var="calOfrece" styleClass="itemsTable" emptyMessage="No hay calificaciones para mostrar."
-                                             rows="10" paginator="true" paginatorPosition="bottom" >
+                                             rows="10" paginator="true" paginatorPosition="bottom"
+                                             paginatorAlwaysVisible="false" >
                                     <f:facet name="header">  
                                         Calificaciones Recibidas
                                     </f:facet>
                                     <p:column>
-                                        <comps:itemCalificacion var="#{calOfrece}" bean="#{reputacion}"
-                                                                panelDialogo="dialogo" />
+                                        <comps:itemCalificacion var="#{calOfrece}" bean="#{reputacion}" />
                                     </p:column>
                                 </p:dataTable>
                                 <p:dataTable id="tablaCalificacionesToma" value="#{reputacion.calificacionesToma}" 
                                              var="calToma" styleClass="itemsTable" emptyMessage="No hay calificaciones para mostrar."
+                                             paginatorAlwaysVisible="false"
                                              rows="10" paginator="true" paginatorPosition="bottom" >
                                     <f:facet name="header">  
                                         Calificaciones Recibidas
                                     </f:facet>
                                     <p:column>
-                                        <comps:itemCalificacion var="#{calToma}" bean="#{reputacion}"
-                                                                panelDialogo="dialogo" />
+                                        <comps:itemCalificacion var="#{calToma}" bean="#{reputacion}" />
                                     </p:column>
                                 </p:dataTable>
                             </h:panelGrid>
@@ -96,9 +96,9 @@
 
             <ui:define name="right">
                 <comps:loginBox />
+                <comps:adminPanel />
                 <comps:userPanel />
                 <comps:panelPublicitante />
-                <comps:adminPanel />
             </ui:define>
 
         </ui:composition>

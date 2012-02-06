@@ -20,6 +20,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
 import org.apache.log4j.Logger;
 import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortOrder;
 
 /**
  *
@@ -65,7 +66,7 @@ public class PagosRecibidosMBean implements Serializable {
 
             @Override
             public List<PagoDTO> load(int first, int pageSize, String sortFielf,
-                    boolean sort, Map<String, String> filters) {
+                    SortOrder sortOrder, Map<String, String> filters) {
                 if (noBuscarEnModel) {
                     noBuscarEnModel = false;
                 } else {

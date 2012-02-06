@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.prime.com.tr/ui" 
+      xmlns:p="http://primefaces.org/ui" 
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:comps="http://java.sun.com/jsf/composite/comps" 
       xmlns:f="http://java.sun.com/jsf/core">
@@ -41,12 +41,12 @@
 
                 <p:outputPanel rendered="#{not empty verCategoriaBean.model}" >
                     <div id="items" >
-                        <h:form prependId="false">
+                        <h:form id="tableForm">
 
                             <p:dataTable id="grid" value="#{verCategoriaBean.model}" var="pub" 
-                                         rows="10" paginator="true" lazy="true"
+                                         rows="10" paginator="true"
                                          emptyMessage="No hay ninguna publicacion dentro de la categoria seleccionada."
-                                         paginatorPosition="bottom"
+                                         paginatorPosition="bottom" paginatorAlwaysVisible="false"
                                          styleClass="itemsTable" >
 
                                 <p:column>
@@ -63,14 +63,14 @@
                 <p:outputPanel rendered="#{empty verCategoriaBean.model}" >
                     <p>No hay ningun producto en esta categoria.</p>
                 </p:outputPanel>
-
+                
             </ui:define>
 
             <ui:define name="right">
                 <comps:loginBox />
+                <comps:adminPanel />
                 <comps:userPanel />
                 <comps:panelPublicitante />
-                <comps:adminPanel />
             </ui:define>
 
         </ui:composition>

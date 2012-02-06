@@ -4,7 +4,7 @@
       xmlns:cc="http://java.sun.com/jsf/composite"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.prime.com.tr/ui" >
+      xmlns:p="http://primefaces.org/ui" >
 
     <!-- INTERFACE -->
     <cc:interface>
@@ -68,7 +68,7 @@
                                      update="#{cc.attrs.panelDialogos}"
                                      actionListener="#{cc.attrs.bean[cc.attrs.metodoCalificar]}"
                                      rendered="#{cc.attrs.var.calificable and not cc.attrs.var.calificado}"
-                                     oncomplete="#{cc.attrs.dlgCalificar}.show();" >
+                                     oncomplete="#{cc.attrs.dlgCalificar}.show()" >
                         <f:attribute name="alq" value="#{cc.attrs.var.idAlquiler}" />
                     </p:commandLink>
                     <p:commandLink value="Solicitar cambio" title="Solicitar cambio"

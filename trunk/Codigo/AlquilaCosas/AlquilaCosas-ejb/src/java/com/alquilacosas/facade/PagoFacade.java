@@ -48,7 +48,8 @@ public class PagoFacade extends AbstractFacade<Pago> {
      */
     public List<Pago> getPagosPorUsuario(int usuarioId) {
         Query query = em.createQuery("SELECT p FROM Pago p WHERE "
-                + "p.servicioFk.usuarioFk.usuarioId = :id");
+                + "p.servicioFk.usuarioFk.usuarioId = :id "
+                + "ORDER BY p.fechaInicio Desc");
         query.setParameter("id", usuarioId);
         return query.getResultList();
     }

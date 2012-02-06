@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:comps="http://java.sun.com/jsf/composite/comps"
-      xmlns:p="http://primefaces.prime.com.tr/ui" 
+      xmlns:p="http://primefaces.org/ui" 
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core" >
 
@@ -19,39 +19,39 @@
 
             <ui:define name="principal">
                 <h:outputText value="Denuncia de Comentario" style="font: normal 1.3em sans-serif;"
-                    rendered="#{denuncia.comentario != null}" />
+                              rendered="#{denuncia.comentario != null}" />
                 <h:outputText value="Denuncia de Publicación" style="font: normal 1.3em sans-serif;" 
-                    rendered="#{denuncia.comentario == null}" />
+                              rendered="#{denuncia.comentario == null}" />
 
-                    <br/>
-                
-                    <table>
-                        <tr>
-                            <td>
-                                <h:outputLabel value="Publicacion : #{denuncia.publicacion}"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div id="itemPregunta">
-                                    <table cellspacing="0" cellpadding="5">
-                                        <tr>
-                                            <td width="30px">
-                                                <h:outputText value="Comentario:" 
-                                                    rendered="#{denuncia.comentario != null}"/>  
-                                            </td>
-                                            <td>
-                                                <h:outputText value="#{denuncia.comentario.comentario}"
-                                                    rendered="#{denuncia.comentario != null}"/> 
-                                            </td>
-                                        </tr>                                
-                                    </table>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr> 
-                            <td >
-                                <h:form>
+                <br/>
+
+                <table>
+                    <tr>
+                        <td>
+                            <h:outputLabel value="Publicacion : #{denuncia.publicacion}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div id="itemPregunta">
+                                <table cellspacing="0" cellpadding="5">
+                                    <tr>
+                                        <td width="30px">
+                                            <h:outputText value="Comentario:" 
+                                                          rendered="#{not empty denuncia.comentario}"/>  
+                                        </td>
+                                        <td>
+                                            <h:outputText value="#{denuncia.comentario.comentario}"
+                                                          rendered="#{not empty denuncia.comentario}"/> 
+                                        </td>
+                                    </tr>                                
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr> 
+                        <td >
+                            <h:form>
                                 <div class="preguntas" style="text-align: center;">
                                     <table style="width: 600px">
                                         <tr>
@@ -60,7 +60,7 @@
                                             </td>
                                             <td>
                                                 <h:selectOneMenu value="#{denuncia.motivoSeleccionado}"
-                                                    style="width: 150px; margin-left: 40px">
+                                                                 style="width: 150px; margin-left: 40px">
                                                     <f:selectItems value="#{denuncia.motivos}" />
                                                 </h:selectOneMenu>                                            
                                             </td>
@@ -75,18 +75,18 @@
                                     </table>
                                 </div>
                                 <p:growl id="grow" showDetail="true"  globalOnly="true" />
-                                </h:form>
-                            </td>    
-                        </tr>
-                    </table>
-                    
+                            </h:form>
+                        </td>    
+                    </tr>
+                </table>
+
             </ui:define>
             <ui:define name="right" >
                 <p:outputPanel id="paneles" >
-                <comps:loginBox />
-                <comps:userPanel />
-                <comps:panelPublicitante />
-                <comps:adminPanel />
+                    <comps:loginBox />
+                    <comps:userPanel />
+                    <comps:panelPublicitante />
+                    <comps:adminPanel />
                 </p:outputPanel>
             </ui:define>            
         </ui:composition>

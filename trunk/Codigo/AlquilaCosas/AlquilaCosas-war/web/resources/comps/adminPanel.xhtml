@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:cc="http://java.sun.com/jsf/composite"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.prime.com.tr/ui" >
+      xmlns:p="http://primefaces.org/ui" >
 
     <!-- INTERFACE -->
     <cc:interface>
@@ -28,6 +28,11 @@
                                 </li>
                                 <li>    
                                     <h:link value="Denuncias" outcome="/vistas/admin/administrarDenuncias" />
+                                </li>
+                                <li>
+                                    <h:form>
+                                        <h:commandLink value="Salir" action="#{login.logout}" />
+                                    </h:form>
                                 </li>
                             </ul>
                         </nav>

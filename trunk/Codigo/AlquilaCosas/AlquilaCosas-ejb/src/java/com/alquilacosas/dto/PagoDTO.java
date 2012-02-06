@@ -15,7 +15,18 @@ import java.util.Date;
 public class PagoDTO implements Serializable {
     
     public enum EstadoPago {INICIADO, CONFIRMADO};
-    public enum TipoServicio {DESTACACION, PUBLICIDAD};
+    public enum TipoServicio {
+        DESTACACION("Destacacion"), 
+        PUBLICIDAD("Publicidad");
+        String label;
+        TipoServicio(String label) {
+            this.label = label;
+        }
+        @Override
+        public String toString() {
+            return label;
+        }
+    };
     
     private int id;
     private Date fechaIniciado, fechaConfirmado;
