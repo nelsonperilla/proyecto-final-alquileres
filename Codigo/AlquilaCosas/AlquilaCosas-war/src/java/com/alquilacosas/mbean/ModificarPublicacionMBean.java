@@ -637,19 +637,14 @@ public class ModificarPublicacionMBean implements Serializable {
         this.periodoMinimo = periodoMinimo;
     }
 
-    /**
-     * @return the gMap
-     */
     public MapModel getgMap() {
         return gMap;
     }
 
-    /**
-     * @param gMap the gMap to set
-     */
     public void setgMap(MapModel gMap) {
         this.gMap = gMap;
     }
+
 
     /**
      * @return the lat

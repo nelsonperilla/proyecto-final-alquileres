@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:cc="http://java.sun.com/jsf/composite"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.prime.com.tr/ui" 
+      xmlns:p="http://primefaces.org/ui" 
       xmlns:f="http://java.sun.com/jsf/core">
 
     <!-- INTERFACE -->
@@ -14,8 +14,10 @@
 
     <!-- IMPLEMENTATION -->
     <cc:implementation>
-        <p:dialog id="loginDialog" header="Ingreso" widgetVar="loginDlg" >
-                <h:panelGrid columns="2" cellpadding="2" >
+        <p:dialog id="loginDialog" header="Ingreso" widgetVar="loginDlg" 
+                  resizable="false" modal="true" >
+            <h:form>
+                <h:panelGrid columns="2" cellpadding="2" style="text-align: center" >
                     <h:outputLabel  value="Usuario:" />
                     <p:inputText value="#{login.username}" required="true"
                                  style="width:175px" />
@@ -23,12 +25,16 @@
                     <p:password feedback="false" minLength="1" 
                                 value="#{login.password}" required="true"
                                 style="width:175px; " />
+
+                    <f:facet name="footer" >
+                        <p:commandButton value="Entrar" action="#{login.loginEnPagina}"
+                                         oncomplete="revisarLogueo(xhr, status, args)"
+                                         update=":paneles" >
+                            <f:setPropertyActionListener target="#{login.loginOnPageArg}" value="#{cc.attrs.bean[cc.attrs.property]}" />
+                        </p:commandButton>
+                    </f:facet>
                 </h:panelGrid>
-                <p:commandButton value="Entrar" action="#{login.loginEnPagina}"
-                                 oncomplete="revisarLogueo(xhr, status, args)"
-                                 update="paneles" >
-                    <f:setPropertyActionListener target="#{login.loginOnPageArg}" value="#{cc.attrs.bean[cc.attrs.property]}" />
-                </p:commandButton>
+            </h:form>
         </p:dialog>
     </cc:implementation>
 </html>

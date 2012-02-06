@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:p="http://primefaces.org/ui"
       xmlns:h="http://java.sun.com/jsf/html" 
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:comps="http://java.sun.com/jsf/composite/comps" >
@@ -16,7 +16,7 @@
             </ui:define>
 
             <ui:define name="left">
-                <p:outputPanel id="catMenu" >
+                <p:outputPanel id="catMenu" autoUpdate="true" layout="block" >
                     <comps:categoriesMenu />
                 </p:outputPanel> 
             </ui:define>
@@ -27,7 +27,7 @@
 
             <ui:define name="principal">
                 <h:outputScript library="javascript" name="util.js" />
-                <p:tabView>
+                <p:tabView id="tab">
                     <p:tab title="Nuevo">
                         <h:form id="formNuevo">
                             <p:growl id="messages" globalOnly="true" />
@@ -45,7 +45,7 @@
                                     <h:outputText value="#{node}" />  
                                 </p:treeNode>  
                             </p:tree>  
-                            <p:commandButton value="Guardar" update="@form catMenu formModificar"
+                            <p:commandButton value="Guardar" update="@form :tab:formModificar"
                                              action="#{categoria.registrarNuevaCategoria}" /> 
                         </h:form>
                     </p:tab>
@@ -60,24 +60,26 @@
                                     </f:facet>
                                     <h:outputText value="#{cat.nombre}" /> 
                                 </p:column> 
+
                                 <p:column>
                                     <f:facet name="header">
                                         <h:outputText value="Descripcion"/>
                                     </f:facet>
                                     <h:outputText value="#{cat.descripcion}" /> 
                                 </p:column> 
-                                <p:column>  
+
+                                <p:column style="text-align: center">  
                                     <f:facet name="header">
                                         <h:outputText value="Opciones"/>
                                     </f:facet>
-                                    <p:commandButton update="catDialog" oncomplete="dialogoModifCat.show()" 
-                                                     image="ui-icon ui-icon-pencil" title="Modificar" >
+                                    <p:commandButton update=":catDialog" oncomplete="dialogoModifCat.show()" 
+                                                     icon="ui-icon ui-icon-pencil" title="Modificar" >
                                         <f:setPropertyActionListener value="#{cat}" target="#{categoria.categoriaSeleccionadaModificar}" />
                                         <f:setPropertyActionListener value="#{cat.nombre}" target="#{categoria.nombreM}" />
                                         <f:setPropertyActionListener value="#{cat.descripcion}" target="#{categoria.descripcionM}" />
                                     </p:commandButton>
                                     <p:commandButton oncomplete="confirmacion.show()" 
-                                                     image="ui-icon ui-icon-trash" title="Quitar" >
+                                                     icon="ui-icon ui-icon-trash" title="Quitar" >
                                         <f:setPropertyActionListener value="#{cat}" target="#{categoria.categoriaSeleccionadaModificar}" />
                                     </p:commandButton>
                                 </p:column>  
@@ -86,41 +88,43 @@
                         <p:confirmDialog message="Esta seguro?" width="200" header="Confirmar"
                                          severity="alert" widgetVar="confirmacion" >
                             <h:form>
-                                <p:commandButton value="Si" update=":formModificar :formNuevo catMenu" 
+                                <p:commandButton value="Si" update=":tab:formModificar :tab:formNuevo" 
                                                  actionListener="#{categoria.borrarCategoria}"
                                                  oncomplete="confirmacion.hide()" />
                                 <p:commandButton value="No" onclick="confirmacion.hide()" type="button" />
                             </h:form>    
                         </p:confirmDialog>
 
-                        <p:dialog id="dialogo" header="Modificar Categoria" widgetVar="dialogoModifCat" >
-                            <h:form id="catDialog">
-                                <h:panelGrid columns="3" >
-                                    <h:outputLabel value="Nombre" />
-                                    <p:inputText id="nombreModificar" value="#{categoria.nombreM}" required="true"
-                                                 requiredMessage="Valor requerido"/>
-                                    <p:message for="nombreModificar" />
-                                    <h:outputLabel value="Descripcion" />
-                                    <p:inputText id="descModificar" value="#{categoria.descripcionM}" />
-                                    <p:message for="descModificar" />
-                                    <f:facet name="footer" >
-                                        <p:commandButton value="Guardar" actionListener="#{categoria.modificarCategoria}"
-                                                         oncomplete="handleModificarCategoria(xhr, status, args)"
-                                                         update="@form catMenu :formModificar :formNuevo"/>
-                                        <p:commandButton value="Limpiar" type="reset" />
-                                    </f:facet>
-                                </h:panelGrid>
-                            </h:form>
-                        </p:dialog>                              
                     </p:tab>
                 </p:tabView>
+
+                <p:dialog id="dialogo" header="Modificar Categoria" widgetVar="dialogoModifCat" >
+                    <h:form id="catDialog">
+                        <h:panelGrid columns="3" >
+                            <h:outputLabel value="Nombre" />
+                            <p:inputText id="nombreModificar" value="#{categoria.nombreM}" required="true"
+                                         requiredMessage="Valor requerido"/>
+                            <p:message for="nombreModificar" />
+                            <h:outputLabel value="Descripcion" />
+                            <p:inputText id="descModificar" value="#{categoria.descripcionM}" />
+                            <p:message for="descModificar" />
+                            <f:facet name="footer" >
+                                <p:commandButton value="Guardar" actionListener="#{categoria.modificarCategoria}"
+                                                 oncomplete="handleModificarCategoria(xhr, status, args)"
+                                                 update="@form :tab:formModificar :tab:formNuevo"/>
+                                <p:commandButton value="Limpiar" type="reset" />
+                            </f:facet>
+                        </h:panelGrid>
+                    </h:form>
+                </p:dialog>
+
             </ui:define>
 
             <ui:define name="right">
                 <comps:loginBox />
+                <comps:adminPanel />
                 <comps:userPanel />
                 <comps:panelPublicitante />
-                <comps:adminPanel />
             </ui:define>
 
         </ui:composition>

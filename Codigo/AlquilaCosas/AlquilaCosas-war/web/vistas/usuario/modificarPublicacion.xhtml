@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:comps="http://java.sun.com/jsf/composite/comps"
-      xmlns:p="http://primefaces.prime.com.tr/ui" 
+      xmlns:p="http://primefaces.org/ui" 
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core">
 
@@ -120,16 +120,10 @@
                         </p:dataGrid>
 
                         <h:outputText value="Elija una imagen de hasta 2 MB:" /><br/>
-                        <p:fileUpload widgetVar="uploader" height="48" width="48"
+                        <p:fileUpload widgetVar="uploader" mode="advanced" multiple="true"
                                       fileUploadListener="#{modPublicacion.handleFileUpload}"
-                                      image="./../../resources/images/upload.png" 
-                                      cancelImage="./../../resources/images/cancel.png"
-                                      allowTypes="*.jpg;*.png;*.gif;" description="Images" 
-                                      customUI="true" label="Subir"  />
-                        <h:outputLink value="#" title="Subir archivo" onclick="uploader.upload();" 
-                                      style="font-weight:bold;color:#616D7E">
-                            Agregar Imagen
-                        </h:outputLink>  
+                                      allowTypes="/(\.|\/)(gif|jpe?g|png)$/" label="Seleccionar" 
+                                      cancelLabel="Cancelar" uploadLabel="Subir archivo" />
 
                     </p:panel>
                     
@@ -140,12 +134,12 @@
                             <p:gmap center="#{modPublicacion.pf.latitud},
                                             #{modPublicacion.pf.longitud} "
                                     zoom="15" type="HYBRID" style="width:540px;height:400px;"
-                                    widgetVar="myMap" model="#{modPublicacion.gMap}"
-                                    markerDragListener="#{modPublicacion.updateCoordinates}">
+                                    widgetVar="myMap" model="#{modPublicacion.gMap}" >
+                                <p:ajax event="markerDrag" listener="#{modPublicacion.updateCoordinates}" />
                             </p:gmap>
                     </p:fieldset>
                     
-                    <h2>Elije un minimo y maximo</h2>
+                    <h2>Elije un periodo minimo y maximo</h2>
                     
                     <h:panelGrid columns="4">
                         

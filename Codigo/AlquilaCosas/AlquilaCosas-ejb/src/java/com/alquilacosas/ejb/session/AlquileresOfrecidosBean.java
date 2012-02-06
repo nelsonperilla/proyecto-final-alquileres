@@ -413,8 +413,8 @@ public class AlquileresOfrecidosBean implements AlquileresOfrecidosBeanLocal {
                     estado.getNombre(), pub.getTitulo(),
                     alquilador.getUsername(), a.getCantidad(), a.getMonto(), calificado);
             // si el alquiler esta activo o confirmado; revisar si existe un pedido de cambio, y setearle su id al dto
-            if (estado.getNombre() == EstadoAlquiler.NombreEstadoAlquiler.CONFIRMADO
-                    || estado.getNombre() == EstadoAlquiler.NombreEstadoAlquiler.ACTIVO) {
+            if ((estado.getNombre() == EstadoAlquiler.NombreEstadoAlquiler.CONFIRMADO
+                    || estado.getNombre() == EstadoAlquiler.NombreEstadoAlquiler.ACTIVO) && pedidoFacade.hayPedidoEnviado(a)) {
                 PedidoCambio pedido = pedidoFacade.getPedidoEnviado(a);
                 int id = -1;
                 if (pedido != null) {

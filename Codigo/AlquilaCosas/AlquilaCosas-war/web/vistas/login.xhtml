@@ -2,16 +2,17 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.prime.com.tr/ui" 
+      xmlns:p="http://primefaces.org/ui" 
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:comps="http://java.sun.com/jsf/composite/comps" >
+      xmlns:comps="http://java.sun.com/jsf/composite/comps" 
+      xmlns:f="http://java.sun.com/jsf/core">
 
     <body>
 
         <ui:composition template="./../resources/templates/masterPage.xhtml">
 
             <ui:define name="logInfo">
-                
+                <h:link value="inicio" outcome="/vistas/inicio" />
             </ui:define>
             
             <ui:define name="left" >
@@ -20,8 +21,11 @@
 
             <ui:define name="principal">
                 <h:form>
-                    <h1>Login</h1>
-                    <h:panelGrid columns="3" >
+                    <h:panelGrid columns="3" width="100%" columnClasses="labelColumn,fieldColumn" 
+                                 style="text-align: center" >
+                        <f:facet name="header" >
+                            <h1>Login</h1>
+                        </f:facet>
                         <h:outputLabel value="Usuario" />
                         <p:inputText id="j_username" value="#{login.username}" />
                         <p:message for="j_username" />
@@ -31,8 +35,11 @@
                                     feedback="false" minLength="8" />
                         <p:message for="j_password" />
                         
-                        <p:commandButton value="Entrar" action="#{login.login}"
+                        <f:facet name="footer" >
+                            <p:commandButton value="Entrar" action="#{login.login}"
                                          ajax="false" />
+                        </f:facet>
+                        
                     </h:panelGrid>
                     <p:messages globalOnly="true" showDetail="false" />
                 </h:form>

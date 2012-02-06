@@ -2,19 +2,20 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:p="http://primefaces.org/ui"
       xmlns:h="http://java.sun.com/jsf/html" 
       xmlns:comps="http://java.sun.com/jsf/composite/comps" 
-      xmlns:f="http://java.sun.com/jsf/core"
-      >
-   
-
+      xmlns:f="http://java.sun.com/jsf/core" >
 
     <body>
 
-        <title>Alquila Cosas</title>
-
         <ui:composition template="./../resources/templates/masterPage.xhtml">
+
+            <script type="text/javascript"
+                    src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAIvenuSuB8qlfz056q69ddMHJIdqra2sc&amp;sensor=false">
+            </script> 
+            <h:outputScript library="javascript" name="util.js" />
+
             <ui:define name="logInfo">
                 <h:link value="Inicio" outcome="/vistas/inicio" />
             </ui:define>
@@ -23,43 +24,38 @@
             </ui:define>
 
             <ui:define name="principal">
-                <h:outputScript library="javascript" name="util.js" />
-                <h:outputScript library="javascript" name="timePicker.js" />
-  
+                
                 <table id="simpleItem">
                     <tr>
                         <td colspan="2">
                             <h:form>
                                 <h:commandLink value="#{publicacionDesplegada.publicacion.categoriaF.nombre}->  " 
-                                    style="font-size: 18px; text-decoration: none"
-                                    action ="verCategoria">
-                                <f:setPropertyActionListener target="#{menuCatBean.categoriaSeleccionada}" 
-                                                             value="#{publicacionDesplegada.publicacion.categoriaF.id}" />
+                                               style="font-size: 18px; text-decoration: none"
+                                               action ="verCategoria">
+                                    <f:setPropertyActionListener target="#{menuCatBean.categoriaSeleccionada}" 
+                                                                 value="#{publicacionDesplegada.publicacion.categoriaF.id}" />
                                 </h:commandLink>                            
                                 <h:outputText value="#{publicacionDesplegada.publicacion.titulo}" 
                                               styleClass="itemTitle" />                            
-                                
+
                             </h:form>
                         </td>
                     </tr>
                     <tr>
-                        <td>
-                            <h:form >
-                                <p:galleria effect="#{publicacionDesplegada.effect}" effectSpeed="1000"
-                                            style="height: 400px; width: 350px">  
-                                    <ui:repeat value="#{publicacionDesplegada.publicacion.imagenIds}" 
-                                               var="image">  
-                                        <h:graphicImage value="/image?id=#{image}"  
-                                                        alt="Description goes here" 
-                                                        rendered="#{image != -1}"/> 
-                                        <h:graphicImage value="#{resource['images:noImage.png']}"
-                                                        rendered="#{image == -1}" />                                        
-                                    </ui:repeat>  
-                                </p:galleria>  
-                            </h:form>
+                        <td width="440">
+                            <p:galleria value="#{publicacionDesplegada.publicacion.imagenIds}" var="image"
+                                        effect="#{publicacionDesplegada.effect}" effectSpeed="1000" 
+                                        panelWidth="320" panelHeight="300" 
+                                        rendered="#{not empty publicacionDesplegada.publicacion.imagenIds}" >  
+                                <h:graphicImage value="/image?id=#{image}" width="320" height="300"
+                                                rendered="#{image != -1}"/> 
+                                <h:graphicImage value="#{resource['images:noImage.png']}"
+                                                rendered="#{image == -1}" />
+                            </p:galleria>  
+
                         </td>
-                        <td   width="100%">
-                            <h:form>
+                        <td width="310" >
+                            <h:form id="principalForm">
                                 <h:panelGrid  styleClass="dataPrincipal" columns="2"  >
                                     <h:outputText value="Propietario: " styleClass="itemInfo"  escape="false"/>
                                     <h:outputText value="#{publicacionDesplegada.publicacion.propietario.nombre}" 
@@ -68,7 +64,7 @@
                                     <p:rating value="#{publicacionDesplegada.userRating}" stars="10" disabled="true"/> 
                                 </h:panelGrid>                                 
                                 <h:panelGrid  styleClass="dataPrincipal" style="margin-top: 10px;" columns="1"  >
-                                    
+
                                     <h:dataTable value="#{publicacionDesplegada.publicacion.precios}"
                                                  var="precio" style="width: 100%" >
                                         <h:column>
@@ -80,124 +76,34 @@
                                                           styleClass="itemPrice"/>  
                                         </h:column>
                                     </h:dataTable>
-                                        <h:outputText value="Origen: #{publicacionDesplegada.publicacion.barrio}, 
-                                          #{publicacionDesplegada.publicacion.ciudad}" 
-                                          styleClass="itemInfo"  escape="false" style="padding-right: 5px"/> 
+                                    <h:outputText value="Origen: #{publicacionDesplegada.publicacion.barrio}, 
+                                                  #{publicacionDesplegada.publicacion.ciudad}" 
+                                                  styleClass="itemInfo"  escape="false" style="padding-right: 5px"/> 
                                     <h:outputText value="Finaliza el #{publicacionDesplegada.fecha_hasta}" 
                                                   styleClass="itemInfo" escape="false"/>  
                                     <h:outputText value="Disponibilidad maxima: #{publicacionDesplegada.publicacion.cantidad}" 
                                                   styleClass="itemInfo"/>  
-                                    
+
                                 </h:panelGrid>                            
-                                <h:panelGrid columns="3" styleClass="dataPrincipal" style="margin-top: 10px; vertical-align: center">
+                                <h:panelGrid columns="3" styleClass="dataPrincipal" style="margin-top: 10px; vertical-align: middle">
                                     <h:outputLabel   value="Cantidad:" />
                                     <p:inputText value="#{publicacionDesplegada.cantidadProductos}" required="true"
-                                         style="width:30px"/>
+                                                 style="width:30px"/>
                                     <p:commandButton value="Alquilar" action="#{publicacionDesplegada.actualizarFechas}" 
                                                      oncomplete="revisarDisponibilidad(xhr, status, args)" styleClass="buttom"
                                                      update="growl" />
                                 </h:panelGrid>
                                 <p:growl id="growl" showDetail="true" globalOnly="true" />
-                                
-                            </h:form>
-                            <p:dialog  header="Confirmacion de alquiler" widgetVar="confirmRent" modal="true"
-                                  showEffect="fade" width="450" >
-                                <h:form id="rent" prependId="false">
-                                     <script type="text/javascript" >
-                                         jQuery(function () {
-                                                 window.setTimeout('bindEventsHighlights()',500);
-                                         });
 
-                                         function bindEventsHighlights() {
-                                                 var specialDays = <h:outputText value="#{publicacionDesplegada.fechas}" /> ;
-                                                 jQuery(".hasDatepicker").datepicker("option", "beforeShowDay", function (date) {
-                                                           return highlightCalendar(specialDays, date, 'highlight-calendar');
-                                                 });
-                                         };
-
-
-                                      </script>
-
-
-                                        <h:panelGrid  columns="3" cellpadding="2" cellspacing="4" >
-                                            <h:outputLabel value="Periodo minimo:"/>
-                                            <h:panelGroup>
-                                                <h:outputLabel value="#{publicacionDesplegada.publicacion.periodoMinimoValor} "/>
-                                                <h:outputLabel value="#{publicacionDesplegada.publicacion.periodoMinimo.nombre}"/>
-                                            </h:panelGroup>
-                                            <!-- <p:separator style="width: 10px"/> -->
-                                            <h:outputLabel value="Periodo maximo:"/>
-                                            <h:panelGroup>
-                                                <h:outputLabel value="#{publicacionDesplegada.publicacion.periodoMaximoValor} "/>
-                                                <h:outputLabel value="#{publicacionDesplegada.publicacion.periodoMaximo.nombre}"/>
-                                            </h:panelGroup>
-                                            <!-- <p:separator style="width: 10px"/> -->
-
-                                            <h:outputLabel  value="Tiempo solicitado:" />
-                                            <h:panelGroup>
-                                                <p:inputText id="tiempoSolicitado" value="#{publicacionDesplegada.periodoAlquiler}" 
-                                                             required="true"  style="width:40px; text-align: right" 
-                                                             requiredMessage="Valor requerido"/>
-
-
-                                                <h:selectOneMenu value="#{publicacionDesplegada.periodoSeleccionado}"
-                                                                 style="width: 150px; margin-left: 40px" 
-                                                                 >
-                                                    <f:selectItems value="#{publicacionDesplegada.periodos}" />
-                                                    <f:ajax event="change" render="rent" />
-                                                </h:selectOneMenu>                                            
-                                            </h:panelGroup>    
-                                            <p:message for="tiempoSolicitado" />
-                                            <h:outputLabel id="horaInicioLabel" value="Hora de inicio" 
-                                                rendered ="#{publicacionDesplegada.periodoSeleccionado == 1}"/>
-                                            <p:inputText id="horaInicio" required="true"  
-                                                    value="#{publicacionDesplegada.horaInicioAlquiler}" 
-                                                    style="width:50px; text-align: right"
-                                                    requiredMessage="Valor requerido" 
-                                                    rendered ="#{publicacionDesplegada.periodoSeleccionado == 1}"
-                                                    onfocus="jQuery('#horaInicio').timepicker({stepMinute: 15});" />
-                                            <p:message id="horaInicioMessage" for="horaInicio" 
-                                                rendered ="#{publicacionDesplegada.periodoSeleccionado == 1}"/>
-                                            <h:outputLabel value="Fecha de inicio: "/>
-                                            <p:calendar id="rentCalendar" mode="inline" navigator="false" value="#{publicacionDesplegada.fechaInicio}" 
-                                                        pattern="dd/MM/yyyy" mindate="#{publicacionDesplegada.today}" >
-                                                <p:ajax event="dateSelect" listener="#{publicacionDesplegada.seleccionarFecha}"
-                                                    update="panel" oncomplete="absDialog.show()" />
-                                            </p:calendar>
-                                        </h:panelGrid>
-                                        <p:commandButton value="Confirmar" action="#{publicacionDesplegada.confirmarPedido}" 
-                                                         onclick ="confirmRent.hide()" update="grow"/>
-
-                                        <p:growl id="grow" showDetail="true" globalOnly="true" />
-                                </h:form>                              
-                            </p:dialog>
-                            <p:dialog widgetVar="map" onShow="myMap.checkResize()" modal="true" 
-                                      showEffect="fade" width="425" height="450">
-                                    <script type="text/javascript"
-                                            src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAIvenuSuB8qlfz056q69ddMHJIdqra2sc&amp;sensor=false">
-                                    </script> 
-                                <f:view contentType="text/html">
-                                    <p:gmap center="#{publicacionDesplegada.publicacion.latitud + 0.007502},
-                                                    #{publicacionDesplegada.publicacion.longitud - 0.008808} "
-                                            zoom="15" type="HYBRID" style="width:400px;height:400px;"
-                                            widgetVar="myMap" model="#{publicacionDesplegada.gMap}" />
-                                </f:view>
-                            </p:dialog>  
-                            <h:form>
-                                <comps:loginOnPage 
-                                    bean="#{publicacionDesplegada}"
-                                    property="action"/>
                             </h:form>
                         </td>
                     </tr>
                     <tr>
                         <td colspan="2">
-                            <h:form>
-                                <p:commandButton value="Ver ubicación del articulo" oncomplete="map.show()"/> 
-                            </h:form>
+                            <p:commandButton type="button" value="Ver ubicación del articulo" onclick="map.show()"/> 
                         </td>                    
                     </tr>
-                    
+
                     <tr>
                         <td colspan="2"  >
                             <h:panelGrid  styleClass="data" columns="1" >
@@ -208,38 +114,19 @@
                     </tr>
                     <tr>
                         <td colspan="2">
+                            <p:ajaxStatus style="width:16px;height:16px;">  
+                                <f:facet name="start">  
+                                    <h:graphicImage value="#{resource['images:ajax-loader.gif']}" />  
+                                </f:facet>  
+                                <f:facet name="complete">  
+                                    <h:outputText value="" />  
+                                </f:facet>  
+                            </p:ajaxStatus>
                             <h:form id="desplieguePreguntas" style="width: 100%">  
-                                <p:growl id="msgs"/>
-                                <p:dialog header="Ingrese su pregunta" widgetVar="nuevaPregunta" modal="true"
-                                          showEffect="fade" width="280" >
-                                    <h:panelGrid columns="1" id="grid" style="text-align: center; width: 250px">  
-                                        <h:outputLabel value="Pregunta: " for="txt_title" /> 
-                                        <p:inputTextarea id="txt_title" autoResize="false" rows="5"     
-                                                         value="#{publicacionDesplegada.nuevaPregunta.comentario}" 
-                                                         style="width: 200px;" />  
-                                        <h:panelGrid columns="2">
-                                            <p:commandButton value="Limpiar" type="reset"/>  
-                                            <p:commandButton value="Enviar Pregunta" update="preguntas msgs @parent"  
-                                                             action="#{publicacionDesplegada.guardarPregunta}"
-                                                             onclick="nuevaPregunta.hide()">  
-                                                <p:collector value="#{publicacionDesplegada.nuevaPregunta}"   
-                                                            addTo="#{publicacionDesplegada.comentarios}" />  
-                                            </p:commandButton>  
-                                        </h:panelGrid>
-                                    </h:panelGrid>  
-                                </p:dialog>
-                                <p:ajaxStatus style="width:16px;height:16px;">  
-                                    <f:facet name="start">  
-                                        <h:graphicImage value="/resources/images/loading.gif" />  
-                                    </f:facet>  
-                                    <f:facet name="complete">  
-                                        <h:outputText value="" />  
-                                    </f:facet>  
-                                </p:ajaxStatus>
                                 <div class="preguntas">
                                     <p:outputPanel id="preguntas" > 
                                         <p:commandButton style="margin: 10px 10px 0px 5px;" value="Hacer una pregunta" 
-                                                         action="#{publicacionDesplegada.preguntar}" 
+                                                         actionListener="#{publicacionDesplegada.preguntar}" 
                                                          oncomplete="agregarPregunta(xhr, status, args)"/>  
                                         <h:dataTable value="#{publicacionDesplegada.comentarios}" var="pregunta">  
                                             <p:column>  
@@ -255,23 +142,120 @@
                     <tr>
                         <td colspan="2">
                             <h:link value="Denunciar esta publicacion"
-                               outcome="/vistas/usuario/denunciaDePregunta" 
-                               >
+                                    outcome="/vistas/usuario/denunciaDePregunta"  >
                                 <f:param name="motivo" value="1" />
                                 <f:param name="id" value="#{publicacionDesplegada.publicacion.id}" />                        
                             </h:link>                        
                         </td>                    
                     </tr>                    
                 </table>
+
+                <p:dialog header="Ingrese su pregunta" widgetVar="nuevaPregunta" modal="true"
+                          showEffect="fade" width="280" resizable="false" >
+                    <h:form>
+                        <h:panelGrid columns="1" id="grid" style="text-align: center; width: 250px">  
+                            <h:outputLabel value="Pregunta: " for="txt_title" /> 
+                            <p:inputTextarea id="txt_title" autoResize="false" rows="5"    
+                                             value="#{publicacionDesplegada.nuevaPregunta.comentario}" 
+                                             style="width: 200px;" />
+                            <f:facet name="footer" >
+                                <p:commandButton value="Enviar Pregunta" update=":desplieguePreguntas:preguntas :principalForm:growl @parent"  
+                                                 action="#{publicacionDesplegada.guardarPregunta}"
+                                                 onclick="nuevaPregunta.hide()">  
+                                    <p:collector value="#{publicacionDesplegada.nuevaPregunta}"   
+                                                 addTo="#{publicacionDesplegada.comentarios}" />
+                                </p:commandButton>
+                                <p:commandButton value="Cancelar" type="reset" onclick="nuevaPregunta.hide()" />  
+                            </f:facet>
+                        </h:panelGrid>  
+                    </h:form>
+                </p:dialog>
+
+                <p:dialog  header="Confirmacion de alquiler" widgetVar="confirmRent" modal="true"
+                           showEffect="fade" width="450"  dynamic="true" >
+                    <h:form id="rent" prependId="false">
+                        <script type="text/javascript" >
+                            jQuery(function () {
+                                    window.setTimeout('bindEventsHighlights()',500);
+                            });
+
+                            function bindEventsHighlights() {
+                                    var specialDays = <h:outputText value="#{publicacionDesplegada.fechas}" /> ;
+                                    jQuery(".hasDatepicker").datepicker("option", "beforeShowDay", function (date) {
+                                              return highlightCalendar(specialDays, date, 'highlight-calendar');
+                                    });
+                            };
+                        </script>
+                        <h:panelGrid  columns="3" cellpadding="2" cellspacing="4" >
+                            <h:outputLabel value="Periodo minimo:"/>
+                            <h:panelGroup>
+                                <h:outputLabel value="#{publicacionDesplegada.publicacion.periodoMinimoValor} "/>
+                                <h:outputLabel value="#{publicacionDesplegada.publicacion.periodoMinimo.nombre}"/>
+                            </h:panelGroup>
+                            <p/>
+
+                            <h:outputLabel value="Periodo maximo:"/>
+                            <h:panelGroup>
+                                <h:outputLabel value="#{publicacionDesplegada.publicacion.periodoMaximoValor} "/>
+                                <h:outputLabel value="#{publicacionDesplegada.publicacion.periodoMaximo.nombre}"/>
+                            </h:panelGroup>
+                            <p/>
+
+                            <h:outputLabel  value="Tiempo solicitado:" />
+                            <h:panelGroup>
+                                <p:inputText id="tiempoSolicitado" value="#{publicacionDesplegada.periodoAlquiler}" 
+                                             required="true"  style="width:40px; text-align: right" 
+                                             requiredMessage="Valor requerido"/>
+
+                                <p:selectOneMenu value="#{publicacionDesplegada.periodoSeleccionado}"
+                                                 style="width: 100px; margin-left: 10px" >
+                                    <f:selectItems value="#{publicacionDesplegada.periodos}" />
+                                    <p:ajax event="change" update="rent" />
+                                </p:selectOneMenu>                                            
+                            </h:panelGroup>    
+                            <p:message for="tiempoSolicitado" />
+
+                            <h:outputLabel id="horaInicioLabel" value="Hora de inicio" 
+                                           rendered ="#{publicacionDesplegada.periodoSeleccionado == 1}"/>
+                            <p:inputText id="horaInicio" required="true"  
+                                         value="#{publicacionDesplegada.horaInicioAlquiler}" 
+                                         style="width:50px; text-align: right"
+                                         requiredMessage="Valor requerido" 
+                                         rendered ="#{publicacionDesplegada.periodoSeleccionado == 1}"
+                                         onfocus="jQuery('#horaInicio').timepicker({stepMinute: 15});" />
+                            <p:message id="horaInicioMessage" for="horaInicio" 
+                                       rendered ="#{publicacionDesplegada.periodoSeleccionado == 1}"/>
+
+                            <h:outputLabel value="Fecha de inicio: "/>
+                            <p:calendar id="rentCalendar" mode="inline" value="#{publicacionDesplegada.fechaInicio}" 
+                                        pattern="dd/MM/yyyy" mindate="#{publicacionDesplegada.today}" />
+                            <p/>
+                        </h:panelGrid>
+                        <p:commandButton value="Confirmar" action="#{publicacionDesplegada.confirmarPedido}" 
+                                         onclick ="confirmRent.hide()" ajax="false"/>
+                    </h:form>                              
+                </p:dialog>
+
+                <p:dialog widgetVar="map" header="Ubicacion" modal="true" onShow="myMap.checkResize()"
+                          showEffect="fade" width="425" height="450" >
+                    <p:gmap center="#{publicacionDesplegada.publicacion.latitud + 0.007502},
+                            #{publicacionDesplegada.publicacion.longitud - 0.008808}"
+                            zoom="15" type="HYBRID" style="width:400px;height:400px;"
+                            widgetVar="myMap" model="#{publicacionDesplegada.mapModel}" />
+                </p:dialog>
+
+                <comps:loginOnPage bean="#{publicacionDesplegada}" 
+                                   property="action"/>
+
             </ui:define>
             <ui:define name="right" >
                 <p:outputPanel id="paneles" >
-                <comps:loginBox />
-                <comps:userPanel />
-                <comps:panelPublicitante />
-                <comps:adminPanel />
+                    <comps:loginBox />
+                    <comps:adminPanel />
+                    <comps:userPanel />
+                    <comps:panelPublicitante />
                 </p:outputPanel>
-            </ui:define>            
+            </ui:define>
         </ui:composition>       
 
     </body>

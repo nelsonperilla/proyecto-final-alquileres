@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:comps="http://java.sun.com/jsf/composite/comps"
-      xmlns:p="http://primefaces.prime.com.tr/ui" 
+      xmlns:p="http://primefaces.org/ui" 
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core" >
 
@@ -30,7 +30,8 @@
                                       listener="#{admDenuncias.actualizarDenuncias}" />
                          </h:selectOneMenu>
                          <p:dataTable id="tabla" value="#{admDenuncias.denuncias}" var="den"
-                                      styleClass="itemsTable" paginator="true" rows="10" paginatorPosition="bottom"
+                                      styleClass="itemsTable" paginator="true" rows="10" 
+                                      paginatorPosition="bottom" paginatorAlwaysVisible="false"
                                       emptyMessage="No hay denuncias para mostrar.">
                               <p:column>
                                    <comps:itemDenuncias var="#{den}" bean="#{admDenuncias}"
@@ -78,9 +79,9 @@
 
                <ui:define name="right">
                 <comps:loginBox />
+                <comps:adminPanel />
                 <comps:userPanel />
                 <comps:panelPublicitante />
-                <comps:adminPanel />
                </ui:define>
 
           </ui:composition>

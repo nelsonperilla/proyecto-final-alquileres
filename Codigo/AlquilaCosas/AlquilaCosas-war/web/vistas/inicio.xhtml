@@ -2,17 +2,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:p="http://primefaces.org/ui"
       xmlns:h="http://java.sun.com/jsf/html" 
-      xmlns:comps="http://java.sun.com/jsf/composite/comps" 
-      xmlns:f="http://java.sun.com/jsf/core" >
+      xmlns:comps="http://java.sun.com/jsf/composite/comps" >
 
     <body>
 
         <ui:composition template="./../resources/templates/masterPage.xhtml">
 
             <ui:define name="logInfo">
-
+                
             </ui:define>
 
             <ui:define name="left" >
@@ -27,7 +26,7 @@
                             <p:outputPanel rendered="#{not empty mostrarPublicidad.publicidadesCarrusel}" >
                                 <p:carousel value="#{mostrarPublicidad.publicidadesCarrusel}" autoPlayInterval="3500"
                                             var="pub" rows="1" circular="true" itemStyle="height:130px;width:600px;"
-                                            style="width:600px" >
+                                            style="width:600px;" >
                                     <a href="#{pub.url}" >    
                                         <h:graphicImage value="/imagenpub?id=#{pub.id}" 
                                                         alt="#{pub.caption}"
@@ -38,7 +37,7 @@
                             <p:outputPanel rendered="#{empty mostrarPublicidad.publicidadesCarrusel}" >
                                 <p:carousel autoPlayInterval="3500" rows="1"
                                             effect="easeInStrong" circular="true"
-                                            itemStyle="height:130px;width:600px;" >
+                                            itemStyle="height:130px;width:600px;text-align: center" >
                                     <p:tab title="1" >
                                         <div class="carusel">
                                             <br/><br/>
@@ -66,11 +65,6 @@
                             <table >
                                 <tr>
                                     <td>
-                                        <!-- <p:graphicImage  value="./../resources/images/titleBar.png"/> -->
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
                                         <div id="items">
                                             <h:form>
                                                 <p:dataTable  value="#{publicationsGroup.publicacionesRandom}"
@@ -94,9 +88,9 @@
             </ui:define>
             <ui:define name="right" >
                 <comps:loginBox />
+                <comps:adminPanel />
                 <comps:userPanel />
                 <comps:panelPublicitante />
-                <comps:adminPanel />
             </ui:define>
         </ui:composition>
     </body>

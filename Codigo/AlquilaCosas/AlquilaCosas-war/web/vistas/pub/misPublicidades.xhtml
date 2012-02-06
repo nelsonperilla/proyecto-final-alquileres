@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:comps="http://java.sun.com/jsf/composite/comps"
-      xmlns:p="http://primefaces.prime.com.tr/ui" 
+      xmlns:p="http://primefaces.org/ui" 
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core" >
 
@@ -25,8 +25,9 @@
                     <h1>Mis Publicidades</h1>
 
                     <p:dataTable var="publicidad" value="#{misPublicidades.publicidades}"
-                                 selection="#{misPublicidades.selectedPublicidad}" 
+                                 selection="#{misPublicidades.selectedPublicidad}" rowKey="#{publicidad.id}"
                                  selectionMode="single" emptyMessage="No existen publicidades registradas"
+                                 paginatorAlwaysVisible="false"
                                  style="text-align: center">
 
                         <f:facet name="header">
@@ -64,7 +65,7 @@
                                 <f:convertDateTime pattern="dd/MM/yyyy"/>
                             </h:outputText>
                         </p:column>
-                        
+
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="Costo" />
@@ -78,7 +79,7 @@
                                 <f:param name="id" value="#{publicidad.id}" />
                                 <f:param name="tipo" value="modificar" />
                             </h:link>    
-                            <p:spacer width="10px"/>
+<!--                            <p:spacer width="10px"/>-->
                             <h:link value="R" outcome="/vistas/pub/modificarRepublicarPublicidad" title="Republicar"
                                     rendered="#{not (publicidad.estadoPublicidad eq 'ACTIVA')}">
                                 <f:param name="id" value="#{publicidad.id}" />
@@ -87,16 +88,18 @@
                         </p:column>
 
                         <f:facet name="footer">
-                            <p:commandButton value="Ver Publicidad" image="ui-icon ui-icon-search"
-                                             update="form:display" oncomplete="pubDialog.show()"
+                            <p:commandButton value="Ver Publicidad" icon="ui-icon ui-icon-search"
+                                             update=":displayForm:display" oncomplete="pubDialog.show()"
                                              rendered="#{not (publicidad != null)}"/>
                         </f:facet>
 
                     </p:dataTable>
 
-                    <p:dialog header="Publicidad" widgetVar="pubDialog" resizable="false"
-                              width="500" height="350" showEffect="clip" hideEffect="fold">
+                </h:form>
 
+                <p:dialog header="Publicidad" widgetVar="pubDialog" resizable="false"
+                          width="500" height="350" showEffect="clip" hideEffect="fold">
+                    <h:form id="displayForm">
                         <h:panelGrid id="display" columns="2" cellpadding="4">
 
                             <f:facet name="header">
@@ -111,11 +114,12 @@
                             <a href="#{misPublicidades.selectedPublicidad.url}" >#{misPublicidades.selectedPublicidad.url}</a>
 
                         </h:panelGrid>
-                    </p:dialog>
-                </h:form>
+                    </h:form>
+                </p:dialog>
+
             </ui:define>
 
-                <ui:define name="right">
+            <ui:define name="right">
                 <comps:userPanel />
                 <comps:panelPublicitante />
                 <comps:adminPanel />

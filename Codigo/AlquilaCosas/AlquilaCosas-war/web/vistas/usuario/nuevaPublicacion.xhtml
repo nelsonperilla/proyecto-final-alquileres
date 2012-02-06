@@ -3,13 +3,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:comps="http://java.sun.com/jsf/composite/comps"
-      xmlns:p="http://primefaces.prime.com.tr/ui" 
+      xmlns:p="http://primefaces.org/ui" 
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core" >
 
     <body>
 
         <ui:composition template="./../../resources/templates/masterPage.xhtml">
+
+            <script type="text/javascript"
+                    src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAIvenuSuB8qlfz056q69ddMHJIdqra2sc&amp;sensor=false">
+            </script> 
 
             <ui:define name="logInfo">
                 <h:link value="inicio" outcome="/vistas/inicio" />
@@ -23,169 +27,159 @@
                 <h:outputScript library="javascript" name="util.js" />
                 <h:form id="formPublicacion" prependId="false">
 
-                    <h1>Publicar</h1>
-                    <p:fieldset legend="Datos del producto" styleClass="fieldset" >
-                    <h:panelGrid columns="3" columnClasses="labelColumn" >                       
+                    <h:panelGrid columns="1" style="text-align: center" >
 
-                        <h:outputLabel value="Titulo: "/>
-                        <p:inputText id="titulo" value="#{publicacion.titulo}" required="true"
-                                     requiredMessage="Valor requerido" >
-                            <f:validateLength maximum="45" />
-                        </p:inputText>
-                        <p:message id="tituloVal" for="titulo" showSummary="false" />
+                        <f:facet name="header" >
+                            <h1>Publicar</h1>
+                        </f:facet>
+                        <p:fieldset legend="Datos del producto" styleClass="fieldset" >
+                            <h:panelGrid columns="3" columnClasses="labelColumn" >                       
 
-                        <h:outputLabel value="Cantidad: " />
-                        <p:inputText id="cantidad" value="#{publicacion.cantidad}" required ="true"
-                                     requiredMessage="Valor requerido" 
-                                     converterMessage="Debe ingresr un numero"
-                                     style="width: 50px" >
-                        </p:inputText>
-                        <p:message id="cantidadVal" for="cantidad"/>
-                    </h:panelGrid>
-                    <p:outputPanel id="datos" >
-                        <h:panelGrid columns="3" columnClasses="labelColumn" >
-                            
-                            <h:outputLabel value="Categoria: " />
-                            <h:selectOneMenu id="categoria" value="#{publicacion.selectedCategoria}" required ="true"
-                                             requiredMessage="Valor requerido"> 
-                                <f:selectItem itemLabel="Categorias" itemValue=""/>
-                                <f:selectItems value="#{publicacion.categorias}" />
-                                <p:ajax event="change" update="datos growl" 
-                                        listener="#{publicacion.categoriaSeleccionadaCambio}" />
-                            </h:selectOneMenu>
-                            <p/>
+                                <h:outputLabel value="Titulo: "/>
+                                <p:inputText id="titulo" value="#{publicacion.titulo}" required="true"
+                                             requiredMessage="Valor requerido" >
+                                    <f:validateLength maximum="45" />
+                                </p:inputText>
+                                <p:message id="tituloVal" for="titulo" showSummary="false" />
 
-                            <h:outputLabel id="labelSubCategoria1" value="Subcategoria: "
-                                           rendered="#{publicacion.subcategoria1Render}" />
-                            <h:selectOneMenu id="subcategoria1" value="#{publicacion.selectedSubcategoria1}" 
-                                             rendered="#{publicacion.subcategoria1Render}" >
-                                <f:selectItem itemLabel="Seleccione una subcategoria" itemValue="0" />
-                                <f:selectItems value="#{publicacion.subcategorias1}" />
-                                <p:ajax event="change" update="datos growl" 
-                                        listener="#{publicacion.subcategoria1SeleccionadaCambio}" />   
-                            </h:selectOneMenu>
-                            <p/>
+                                <h:outputLabel value="Cantidad: " />
+                                <p:inputText id="cantidad" value="#{publicacion.cantidad}" required ="true"
+                                             requiredMessage="Valor requerido" 
+                                             converterMessage="Debe ingresr un numero"
+                                             style="width: 50px" >
+                                </p:inputText>
+                                <p:message id="cantidadVal" for="cantidad"/>
+                            </h:panelGrid>
+                            <p:outputPanel id="datos" >
+                                <h:panelGrid columns="3" columnClasses="labelColumn" >
 
-                            <h:outputLabel id="labelSubCategoria2" value="Subcategoria: "
-                                           rendered="#{publicacion.subcategoria2Render}" />
-                            <h:selectOneMenu id="subcategoria2" value="#{publicacion.selectedSubcategoria2}" 
-                                             rendered="#{publicacion.subcategoria2Render}" >
-                                <f:selectItem itemLabel="Seleccione una subcategoria" itemValue="0" />
-                                <f:selectItems value="#{publicacion.subcategorias2}" />
-                                <p:ajax event="change" update="datos growl" 
-                                        listener="#{publicacion.subcategoria2SeleccionadaCambio}" />   
-                            </h:selectOneMenu>
-                            <p/>
-                            
-                            <h:outputLabel id="labelSubCategoria3" value="Subcategoria: "
-                                           rendered="#{publicacion.subcategoria3Render}" />
-                            <h:selectOneMenu id="subcategoria3" value="#{publicacion.selectedSubcategoria3}" 
-                                             rendered="#{publicacion.subcategoria3Render}" >
-                                <f:selectItem itemLabel="Seleccione una subcategoria" itemValue="0" />
-                                <f:selectItems value="#{publicacion.subcategorias3}" />
-                            </h:selectOneMenu>
-                            <p/>
+                                    <h:outputLabel value="Categoria: " />
+                                    <h:selectOneMenu id="categoria" value="#{publicacion.selectedCategoria}" required ="true"
+                                                     requiredMessage="Valor requerido"> 
+                                        <f:selectItem itemLabel="Categorias" itemValue=""/>
+                                        <f:selectItems value="#{publicacion.categorias}" />
+                                        <p:ajax event="change" update="datos growl" 
+                                                listener="#{publicacion.categoriaSeleccionadaCambio}" />
+                                    </h:selectOneMenu>
+                                    <p/>
 
-                        </h:panelGrid>
-                    </p:outputPanel>
-                    <br/>
-                    <p:editor id="desc" value="#{publicacion.descripcion}" widgetVar="editor" 
-                              width="540" required="true"/>
-                    <p:message id="descVal" for="desc" />
-                    </p:fieldset>
+                                    <h:outputLabel id="labelSubCategoria1" value="Subcategoria: "
+                                                   rendered="#{publicacion.subcategoria1Render}" />
+                                    <h:selectOneMenu id="subcategoria1" value="#{publicacion.selectedSubcategoria1}" 
+                                                     rendered="#{publicacion.subcategoria1Render}" >
+                                        <f:selectItem itemLabel="Seleccione una subcategoria" itemValue="0" />
+                                        <f:selectItems value="#{publicacion.subcategorias1}" />
+                                        <p:ajax event="change" update="datos growl" 
+                                                listener="#{publicacion.subcategoria1SeleccionadaCambio}" />   
+                                    </h:selectOneMenu>
+                                    <p/>
 
-                    <!-- <h2>Cargar imagenes</h2> -->
-                    <p:fieldset legend="Imagenes" styleClass="fieldset" >
-                    <!-- <p:panel header="Cargar Imagenes"> -->
-                        
-                        <br/>
+                                    <h:outputLabel id="labelSubCategoria2" value="Subcategoria: "
+                                                   rendered="#{publicacion.subcategoria2Render}" />
+                                    <h:selectOneMenu id="subcategoria2" value="#{publicacion.selectedSubcategoria2}" 
+                                                     rendered="#{publicacion.subcategoria2Render}" >
+                                        <f:selectItem itemLabel="Seleccione una subcategoria" itemValue="0" />
+                                        <f:selectItems value="#{publicacion.subcategorias2}" />
+                                        <p:ajax event="change" update="datos growl" 
+                                                listener="#{publicacion.subcategoria2SeleccionadaCambio}" />   
+                                    </h:selectOneMenu>
+                                    <p/>
 
-                        <p:fileUpload widgetVar="uploader" height="48" width="48"
-                                      fileUploadListener="#{publicacion.handleFileUpload}"
-                                      image="./../../resources/images/upload.png" 
-                                      cancelImage="./../../resources/images/cancel.png"
-                                      allowTypes="*.jpg;*.png;*.gif;" description="Images" 
-                                      customUI="true" label="Subir"/>
+                                    <h:outputLabel id="labelSubCategoria3" value="Subcategoria: "
+                                                   rendered="#{publicacion.subcategoria3Render}" />
+                                    <h:selectOneMenu id="subcategoria3" value="#{publicacion.selectedSubcategoria3}" 
+                                                     rendered="#{publicacion.subcategoria3Render}" >
+                                        <f:selectItem itemLabel="Seleccione una subcategoria" itemValue="0" />
+                                        <f:selectItems value="#{publicacion.subcategorias3}" />
+                                    </h:selectOneMenu>
+                                    <p/>
 
-                        <h:outputLink value="#" title="Subir archivo" onclick="uploader.upload();" 
-                                      style="font-weight:bold;color:#616D7E">
-                            Agregar Imagen
-                        </h:outputLink>
-                    <!-- </p:panel> -->
-                    </p:fieldset>
- 
-                    <!-- <h2>Cargar marcador en mapa</h2> -->
-                    <p:fieldset legend="Ubicación del articulo" styleClass="fieldset" >
-                        <script type="text/javascript"
-                            src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAIvenuSuB8qlfz056q69ddMHJIdqra2sc&amp;sensor=false">
-                        </script>                 
-                        <p:gmap center="-31.41,-64.20"
-                                zoom="13" type="HYBRID" style="width:540px;height:400px;"
-                                widgetVar="myMap" model="#{publicacion.gMap}"   
-                                onPointClick="handlePointClick(event);"  >
-                        </p:gmap>
-                        <p:dialog widgetVar="dlg" showEffect="fade" header="Confirme su marcador"  closable="false">  
+                                </h:panelGrid>
+                            </p:outputPanel>
+                            <br/>
+                            <p:editor id="desc" value="#{publicacion.descripcion}" widgetVar="editor" 
+                                      width="540" required="true"/>
+                            <p:message id="descVal" for="desc" />
+                        </p:fieldset>
+
+                        <p:fieldset legend="Imagenes" styleClass="fieldset" >
+
+                            <p:fileUpload widgetVar="uploader" label="Seleccionar"
+                                          fileUploadListener="#{publicacion.handleFileUpload}"
+                                          allowTypes="/(\.|\/)(gif|jpe?g|png)$/" multiple="true" 
+                                          cancelLabel="Cancelar" uploadLabel="Subir" mode="advanced" />
+
+                        </p:fieldset>
+
+                        <p:fieldset legend="Ubicación del articulo" styleClass="fieldset" >
+                            <script type="text/javascript"
+                                    src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAIvenuSuB8qlfz056q69ddMHJIdqra2sc&amp;sensor=false">
+                            </script>                 
+                            <p:gmap center="-31.41,-64.20"
+                                    zoom="13" type="HYBRID" style="width:540px;height:400px;"
+                                    widgetVar="myMap" model="#{publicacion.gMap}"   
+                                    onPointClick="handlePointClick(event);"  >
+                            </p:gmap>
+                            <p:dialog widgetVar="dlg" showEffect="fade" header="Confirme su marcador"  closable="false">  
                                 <h:panelGrid columns="2">  
                                     <h:outputLabel for="title" value="La posición del marcador es correcta" />  
                                     <f:facet name="footer">  
                                         <p:commandButton value="Confirmar"   
-                                                actionListener="#{publicacion.addMarker}"   
-                                                update="messages"   
-                                                oncomplete="markerAddComplete()"/>  
+                                                         actionListener="#{publicacion.addMarker}"  
+                                                         oncomplete="markerAddComplete()"/>  
                                         <p:commandButton value="Cancelar" onclick="return cancel()"/>  
                                     </f:facet>  
                                 </h:panelGrid>  
                                 <h:inputHidden id="lat" value="#{publicacion.lat}" />  
                                 <h:inputHidden id="lng" value="#{publicacion.lng}" />  
-                        </p:dialog> 
-                    </p:fieldset>                    
-                   
-                    <!-- <h2>Elije un periodo minimo y maximo de alquiler</h2> -->
-                    <p:fieldset legend="Periodo minimo y maximo de alquiler" styleClass="fieldset" >
-                    <h:panelGrid columns="4">
-                        
-                        <h:outputLabel value="Minimo: " /> 
-                        <p:inputText id="MinimoId" value="#{publicacion.periodoMinimo}" required="true"
-                                     requiredMessage="Valor requerido"
-                                     style="text-align: right; margin-left: 3px; width: 50px"/>
-                        <h:selectOneMenu id="minimo" value="#{publicacion.selectedPeriodoMinimo}" >
-                                <f:selectItem itemLabel="Seleccione un periodo" itemValue="" />
-                                <f:selectItems value="#{publicacion.periodoMinimos}" />
-                        </h:selectOneMenu>
-                        <p:message id="MinimoVal" for="MinimoId"/>
-                        
-                        <h:outputLabel value="Maximo: " /> 
-                        <p:inputText id="MaximoId" value="#{publicacion.periodoMaximo}" 
-                                     style="text-align: right; margin-left: 3px; width: 50px"/>
-                        <h:selectOneMenu id="maximo" value="#{publicacion.selectedPeriodoMaximo}" >
-                                <f:selectItem itemLabel="Seleccione un periodo" itemValue="" />
-                                <f:selectItems value="#{publicacion.periodoMaximos}" />
-                        </h:selectOneMenu>
-                        <p/>
-                        
-                    </h:panelGrid>
-                    </p:fieldset>
+                            </p:dialog> 
+                        </p:fieldset>                    
 
-                    <!-- <h2>Determina el precio del alquiler del producto</h2> -->
-                    <p:fieldset id="panelPrecios" legend="Precios" styleClass="fieldset" >
-                    <!-- <p:panel id="panelPrecios" styleClass="formPanel"> -->
-                        
-                        <ui:repeat value="#{publicacion.precios}" var="precio">
+                        <!-- <h2>Elije un periodo minimo y maximo de alquiler</h2> -->
+                        <p:fieldset legend="Periodo minimo y maximo de alquiler" styleClass="fieldset" >
+                            <h:panelGrid columns="4">
 
-                            <h:outputText value="#{precio.periodoNombre}"/>
-                            <p:inputText value="#{precio.precio}" 
-                                         style="text-align: right; margin-left: 3px; width: 50px"/>
-                            <p:spacer width="25" />
+                                <h:outputLabel value="Minimo: " /> 
+                                <p:inputText id="MinimoId" value="#{publicacion.periodoMinimo}" required="true"
+                                             requiredMessage="Valor requerido"
+                                             style="text-align: right; margin-left: 3px; width: 50px"/>
+                                <h:selectOneMenu id="minimo" value="#{publicacion.selectedPeriodoMinimo}" >
+                                    <f:selectItem itemLabel="Seleccione un periodo" itemValue="" />
+                                    <f:selectItems value="#{publicacion.periodoMinimos}" />
+                                </h:selectOneMenu>
+                                <p:message id="MinimoVal" for="MinimoId"/>
 
-                        </ui:repeat>
+                                <h:outputLabel value="Maximo: " /> 
+                                <p:inputText id="MaximoId" value="#{publicacion.periodoMaximo}" 
+                                             style="text-align: right; margin-left: 3px; width: 50px"/>
+                                <h:selectOneMenu id="maximo" value="#{publicacion.selectedPeriodoMaximo}" >
+                                    <f:selectItem itemLabel="Seleccione un periodo" itemValue="" />
+                                    <f:selectItems value="#{publicacion.periodoMaximos}" />
+                                </h:selectOneMenu>
+                                <p/>
 
-                    <!-- </p:panel> -->
-                    </p:fieldset>
+                            </h:panelGrid>
+                        </p:fieldset>
 
-                    <h:panelGrid columns="2" columnClasses="labelColumn,null" style="margin-left: 20px; margin-top: 10px" >
-                        <p:commandButton value="Crear" action="#{publicacion.crearPublicacion}" 
-                                         ajax="false" />
-                        <p:commandButton  type="reset" value="Limpiar" action="misPublicaciones"/>
+                        <p:fieldset id="panelPrecios" legend="Precios" styleClass="fieldset" >
+
+                            <ui:repeat value="#{publicacion.precios}" var="precio">
+
+                                <h:outputText value="#{precio.periodoNombre}"/>
+                                <p:inputText value="#{precio.precio}" 
+                                             style="text-align: right; margin-left: 3px; width: 50px"/>
+                                <p:spacer width="25" />
+
+                            </ui:repeat>
+
+                        </p:fieldset>
+
+                        <f:facet name="footer">
+                            <p:commandButton value="Crear" action="#{publicacion.crearPublicacion}" 
+                                             ajax="false" />
+                            <p:commandButton  type="reset" value="Limpiar" action="misPublicaciones"/>
+                        </f:facet>
+
                     </h:panelGrid>
                     <p:growl id="growl" showDetail="true" globalOnly="true" />
                 </h:form>

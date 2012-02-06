@@ -18,6 +18,7 @@ import com.alquilacosas.facade.DestacacionFacade;
 import com.alquilacosas.facade.PagoFacade;
 import com.alquilacosas.facade.PublicacionFacade;
 import com.alquilacosas.facade.PublicidadFacade;
+import com.alquilacosas.facade.ServicioFacade;
 import com.alquilacosas.facade.TipoPagoFacade;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -44,6 +45,8 @@ public class PagosRecibidosBean implements PagosRecibidosBeanLocal {
     private PublicacionFacade publicacionFacade;
     @EJB
     private DestacacionFacade destacacionFacade;
+    @EJB
+    private ServicioFacade servicioFacade;
     
     @Override
     public List<PagoDTO> getPagosRecibidos(NombreTipoPago tipoPago, Date fechaDesde, 
@@ -140,7 +143,9 @@ public class PagosRecibidosBean implements PagosRecibidosBeanLocal {
     @Override
     public void eliminarPago(int pagoId) {
         Pago pago = pagoFacade.find(pagoId);
+        Servicio servicio = pago.getServicioFk();
         pagoFacade.remove(pago);
+        servicioFacade.remove(servicio);
     }
     
 }

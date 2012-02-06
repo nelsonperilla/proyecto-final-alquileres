@@ -64,7 +64,7 @@ public class DesplieguePublicacionMBean implements Serializable {
     private String horaInicioAlquiler;
     private int denunciaId;   
     private int motivoDenuncia;
-    private MapModel gMap;
+    private MapModel mapModel;
 
     /** Creates a new instance of DesplieguePublicacionMBean */
     public DesplieguePublicacionMBean() {
@@ -91,9 +91,9 @@ public class DesplieguePublicacionMBean implements Serializable {
         setPublicacion(publicationBean.getPublicacion(publicationId));
         setNuevaPregunta(new ComentarioDTO());
         setComentarios(publicationBean.getPreguntas(publicationId));
-        setgMap(new DefaultMapModel());  
+        setMapModel(new DefaultMapModel());  
         LatLng position = new LatLng(publicacion.getLatitud(), publicacion.getLongitud()); 
-        getgMap().addOverlay(new Marker(position, publicacion.getTitulo()));  
+        getMapModel().addOverlay(new Marker(position, publicacion.getTitulo()));  
         
         try {
             fechas = publicationBean.getFechasSinStock(publicationId, cantidadProductos);
@@ -120,6 +120,8 @@ public class DesplieguePublicacionMBean implements Serializable {
         for (Periodo periodo : listaPeriodos) {
             periodos.add(new SelectItem(periodo.getPeriodoId(), periodo.getNombre().name()));
         }
+        
+        System.out.println("imagenes: " + publicacion.getImagenIds().size());
     }
 
     public void redirect() {
@@ -669,14 +671,14 @@ public class DesplieguePublicacionMBean implements Serializable {
     /**
      * @return the gMap
      */
-    public MapModel getgMap() {
-        return gMap;
+    public MapModel getMapModel() {
+        return mapModel;
     }
 
     /**
      * @param gMap the gMap to set
      */
-    public void setgMap(MapModel gMap) {
-        this.gMap = gMap;
+    public void setMapModel(MapModel gMap) {
+        this.mapModel = gMap;
     }
 }

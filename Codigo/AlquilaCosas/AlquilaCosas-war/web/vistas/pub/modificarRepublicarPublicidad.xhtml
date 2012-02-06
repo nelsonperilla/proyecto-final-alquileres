@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:comps="http://java.sun.com/jsf/composite/comps"
-      xmlns:p="http://primefaces.prime.com.tr/ui" 
+      xmlns:p="http://primefaces.org/ui" 
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core">
 
@@ -116,16 +116,15 @@
 
 
                         <h:outputText value="Elija una imagen de hasta 2 MB:" /><br/>
-                        <p:fileUpload widgetVar="uploader" height="48" width="48"
+                        <p:fileUpload widgetVar="uploader" 
                                       fileUploadListener="#{editarMBean.handleFileUpload}"
-                                      image="./../../resources/images/upload.png" 
-                                      cancelImage="./../../resources/images/cancel.png"
-                                      allowTypes="*.jpg;*.png;*.gif;" description="Images" 
-                                      customUI="true" label="Subir"  />
-                        <h:outputLink value="#" title="Subir archivo" onclick="uploader.upload();" 
+                                      mode="advanced" cancelLabel="Cancelar" uploadLabel="Subir"
+                                      allowTypes="/(\.|\/)(gif|jpe?g|png)$/" 
+                                        />
+<!--                        <h:outputLink value="#" title="Subir archivo" onclick="uploader.upload();" 
                                       style="font-weight:bold;color:#616D7E">
                             Cambiar Imagen
-                        </h:outputLink>  
+                        </h:outputLink>  -->
 
                     </p:fieldset>
 

@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:comps="http://java.sun.com/jsf/composite/comps"
-      xmlns:p="http://primefaces.prime.com.tr/ui" 
+      xmlns:p="http://primefaces.org/ui" 
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core" >
 
@@ -33,105 +33,102 @@
 
                 <h:form>
 
-                    <h1>Registrar Publicidad</h1>
-                    <p:fieldset legend="Datos" styleClass="fieldset" >
-                        <h:panelGrid columns="4" columnClasses="labelColumn" >
+                    <h:panelGrid columns="1" style="text-align: center" >
 
-                            <h:outputLabel value="Título" />
-                            <p:inputText id="titulo" value="#{publicidadBean.titulo}" 
-                                         required="true" requiredMessage="Valor requerido" />
-                            <p:message for="titulo" />
-                            <p/>
+                        <f:facet name="header" >
+                            <h1>Registrar Publicidad</h1>
+                        </f:facet>
+                        <p:fieldset legend="Datos" styleClass="fieldset" >
+                            <h:panelGrid columns="4" columnClasses="labelColumn" >
 
-                            <h:outputLabel value="URL" />
-                            <p:inputText id="url" value="#{publicidadBean.url}" />
-                            <p:message for="url" />
-                            <p/>
-                            <h:outputLabel value="Descripción" />
-                            <p:inputText id="caption" value="#{publicidadBean.caption}" />
-                            <p:message for="caption" />
-                            <p/>
+                                <h:outputLabel value="Título" />
+                                <p:inputText id="titulo" value="#{publicidadBean.titulo}" 
+                                             required="true" requiredMessage="Valor requerido" />
+                                <p:message for="titulo" />
+                                <p/>
 
-                            <h:outputLabel value="Duración" />
-                            <h:selectOneMenu id="duracion" value="#{publicidadBean.duracionSeleccionada}" 
-                                             required="true" requiredMessage="Valor requerido" >
-                                <f:selectItem itemLabel="Seleccione una duracion.." />
-                                <f:selectItems value="#{publicidadBean.duraciones}" />
-                                <p:ajax event="change" update="precio" listener="#{publicidadBean.duracionCambio}" />
-                            </h:selectOneMenu>
-                            <p:message for="duracion" />
-                            <p/>
+                                <h:outputLabel value="URL" />
+                                <p:inputText id="url" value="#{publicidadBean.url}" />
+                                <p:message for="url" />
+                                <p/>
+                                <h:outputLabel value="Descripción" />
+                                <p:inputText id="caption" value="#{publicidadBean.caption}" />
+                                <p:message for="caption" />
+                                <p/>
 
-                            <h:outputLabel value="Ubicación" />
-                            <h:selectOneMenu id="ubicacion" value="#{publicidadBean.ubicacionSeleccionada}"
-                                             required="true" requiredMessage="Valor requerido" >
-                                <f:selectItem itemLabel="Seleccione una ubicacion.." />
-                                <f:selectItems value="#{publicidadBean.ubicaciones}" />
-                                <p:ajax event="change" update="fecha script precio label" listener="#{publicidadBean.ubicacionCambio}" />
-                            </h:selectOneMenu>
-                            <p:message for="ubicacion" />
-                            <p/>
+                                <h:outputLabel value="Duración" />
+                                <h:selectOneMenu id="duracion" value="#{publicidadBean.duracionSeleccionada}" 
+                                                 required="true" requiredMessage="Valor requerido" >
+                                    <f:selectItem itemLabel="Seleccione una duracion.." />
+                                    <f:selectItems value="#{publicidadBean.duraciones}" />
+                                    <p:ajax event="change" update="precio" listener="#{publicidadBean.duracionCambio}" />
+                                </h:selectOneMenu>
+                                <p:message for="duracion" />
+                                <p/>
 
-                            <h:outputLabel value="Precio:" />
-                            <p:outputPanel id="precio" >
-                                <h:outputText value="U$D #{publicidadBean.precio}"
-                                              rendered="#{not empty publicidadBean.precio}"/>
-                                <h:outputText value="(Seleccione ubicacion y duracion)" 
-                                              rendered="#{empty publicidadBean.precio}"/>
-                            </p:outputPanel>
-                            <p:message for="precio" />
-                            <p/>
+                                <h:outputLabel value="Ubicación" />
+                                <h:selectOneMenu id="ubicacion" value="#{publicidadBean.ubicacionSeleccionada}"
+                                                 required="true" requiredMessage="Valor requerido" >
+                                    <f:selectItem itemLabel="Seleccione una ubicacion.." />
+                                    <f:selectItems value="#{publicidadBean.ubicaciones}" />
+                                    <p:ajax event="change" update="fecha script precio label" listener="#{publicidadBean.ubicacionCambio}" />
+                                </h:selectOneMenu>
+                                <p:message for="ubicacion" />
+                                <p/>
 
-                            <h:outputLabel value="Fecha desde" />
-                            <p:calendar id="fecha" value="#{publicidadBean.fechaDesde}" 
-                                        pattern="dd/MM/yyyy" locale="es"
-                                        required="true" requiredMessage="Valor requerido" />
-                            <p:message for="fecha" />
-                            <p/>
-                        </h:panelGrid>
-                    </p:fieldset>
+                                <h:outputLabel value="Precio:" />
+                                <p:outputPanel id="precio" >
+                                    <h:outputText value="U$D #{publicidadBean.precio}"
+                                                  rendered="#{not empty publicidadBean.precio}"/>
+                                    <h:outputText value="(Seleccione ubicacion y duracion)" 
+                                                  rendered="#{empty publicidadBean.precio}"/>
+                                </p:outputPanel>
+                                <p:message for="precio" />
+                                <p/>
 
-                    <p:fieldset legend="Imagen" styleClass="fieldset" >
-                        <h:panelGrid columns="2" columnClasses="labelColumn" style="" cellpadding="5" cellspacing="10">
-                            <p:fileUpload widgetVar="uploader" height="48" width="48"
+                                <h:outputLabel value="Fecha desde" />
+                                <p:calendar id="fecha" value="#{publicidadBean.fechaDesde}" 
+                                            pattern="dd/MM/yyyy" locale="es"
+                                            required="true" requiredMessage="Valor requerido" />
+                                <p:message for="fecha" />
+                                <p/>
+                            </h:panelGrid>
+                        </p:fieldset>
+
+                        <p:fieldset legend="Imagen" styleClass="fieldset" >
+                            <p:fileUpload widgetVar="uploader" label="Seleccionar" fileLimit="5" 
+                                          uploadLabel="Subir" cancelLabel="Cancelar"
                                           fileUploadListener="#{publicidadBean.handleFileUpload}"
-                                          image="./../../resources/images/upload.png" 
-                                          cancelImage="./../../resources/images/cancel.png"
-                                          allowTypes="*.jpg;*.png;*.gif;" description="Images" 
-                                          customUI="true" label="Subir"/>
-                            <h:outputLabel id="label" value="#{publicidadBean.label}" style="font-size: 10" />
-                            <h:outputLink value="#" title="Subir archivo" onclick="uploader.upload();" 
-                                          style="font-weight:bold;color:#616D7E">
-                                Subir imagen
-                            </h:outputLink>
-                            <p/>
-                        </h:panelGrid>
+                                          allowTypes="/(\.|\/)(gif|jpe?g|png)$/" 
+                                          mode="advanced" multiple="true"
+                                          invalidFileMessage="Archivo inválido"/>
+                            <h:outputLabel id="label" value="#{publicidadBean.label}" style="font-size: 10px" />
 
-                    </p:fieldset>
+                        </p:fieldset>
 
-                    <h:panelGrid columns="2" columnClasses="leftCol,rightCol" style="width: 100%" >
-                        <p:commandLink actionListener="#{publicidadBean.registrarPublicidad}" update="growl">
-                            <h:graphicImage value="#{resource['images:pagoPaypal.gif']}" />
-                        </p:commandLink>
-                        <p:commandButton value="Limpiar" type="reset" />
+                        <f:facet name="footer" >
+                            <p:commandLink actionListener="#{publicidadBean.registrarPublicidad}" update="growl">
+                                <h:graphicImage value="#{resource['images:pagoPaypal.gif']}" />
+                            </p:commandLink>
+                            <p:commandButton value="Limpiar" type="reset" />
+                        </f:facet>
+
                     </h:panelGrid>
 
                     <p:growl id="growl" showDetail="true" globalOnly="true" />
 
                     <p:outputPanel id="script" >
                         <script type="text/javascript" >
-                                     jQuery(function () {
-                                             window.setTimeout('bindEventsHighlights()',500);
+                             jQuery(function () {
+                                     window.setTimeout('bindEventsHighlights()',500);
+                             });
+
+                             function bindEventsHighlights() {
+                                     var specialDays = <h:outputText value="#{publicidadBean.fechas}" /> ;
+                                     jQuery(".hasDatepicker").datepicker("option", "beforeShowDay", function (date) {
+                                               return highlightCalendar(specialDays, date, 'highlight-calendar');
                                      });
-
-                                     function bindEventsHighlights() {
-                                             var specialDays = <h:outputText value="#{publicidadBean.fechas}" /> ;
-                                             jQuery(".hasDatepicker").datepicker("option", "beforeShowDay", function (date) {
-                                                       return highlightCalendar(specialDays, date, 'highlight-calendar');
-                                             });
-                                     };
-                                     
-
+                             };
                         </script>
                     </p:outputPanel>
 

@@ -145,7 +145,7 @@ public class PublicidadBean implements PublicidadBeanLocal {
                 try {
                 Pago pago = p.getPagoList().get(0);
                 TipoPublicidad tp = p.getTipoPublicidadFk();
-                if (pago.getFechaConfirmado() == null) {
+                if (pago.getFechaConfirmado() == null || p.getFechaDesde().after(new Date())) {
                     publicidadDto = new PublicidadDTO(p.getServicioId(), p.getTitulo(), p.getUrl(),
                             p.getCaption(), p.getFechaDesde(), p.getFechaHasta(), pago.getMonto(),
                             EstadoPublicidad.PENDIENTE, p.getImagen(), tp.getDuracion(), tp.getUbicacion());

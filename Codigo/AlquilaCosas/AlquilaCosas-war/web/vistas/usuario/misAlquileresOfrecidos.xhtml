@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:p="http://primefaces.org/ui"
       xmlns:h="http://java.sun.com/jsf/html" 
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:comps="http://java.sun.com/jsf/composite/comps" >
@@ -26,7 +26,7 @@
                 <h1>Mis Alquileres Ofrecidos</h1>
                 <br />
                 <h:form id="alquileresForm">
-                    <p:growl globalOnly="true" showDetail="true" />
+                    <p:growl id="growl" globalOnly="true" showDetail="true" />
                     <h:selectOneMenu value="#{alquileresOfrecidos.filtroSeleccionado}" >
                         <f:selectItems value="#{alquileresOfrecidos.filtros}" />
                         <p:ajax event="change" process="@this" update="@form"
@@ -35,6 +35,7 @@
                     <p:dataTable id="tabla" value="#{alquileresOfrecidos.alquileres}" 
                                  var="alq" styleClass="itemsTable" 
                                  paginator="true" rows="10" paginatorPosition="bottom"
+                                 paginatorAlwaysVisible="false"
                                  emptyMessage="No hay alquileres para mostrar." >
                         <p:column>
 
@@ -44,7 +45,7 @@
                                             dlgCambio="verCambioDlg"
                                             dlgModificar="modificarDlg"
                                             dlgCancelar="cancelarDlg"
-                                            panelDialogos="dialogos"
+                                            panelDialogos=":dialogos"
                                             editable="true"
                                             metodoCalificar="prepararCalificar" 
                                             metodoVerCalif="prepararVerCalificacion"
@@ -78,47 +79,50 @@
                         </h:form>
                     </p:dialog>
 
-                     <p:dialog modal="true" widgetVar="verCalificacionDlg" header="Ver Calificación" 
-                               resizable="false" width="520" >
-                          <h:form id="formVer">
-                               <p:growl id="messagesVer" globalOnly="true" />
-                               <h:panelGrid columns="2" columnClasses="calTableColumn,calTableColumn" style="width:500px">
-                                    <h:panelGrid columns="1">
-                                             <h:outputText value="El Usuario todavia no Calificó" style="font-style: oblique" rendered="#{alquileresOfrecidos.calificacionOfrece.idCalificacion == null}" />
-                                             <h:outputText value="OFRECE el Alquiler: #{alquileresOfrecidos.calificacionOfrece.nombreUsuarioCalificador}" rendered="#{alquileresOfrecidos.calificacionOfrece.idCalificacion != null}" />
-                                             <h:outputText value="Puntuacion: #{alquileresOfrecidos.calificacionOfrece.nombrePuntuacion}" rendered="#{alquileresOfrecidos.calificacionOfrece.idCalificacion != null}"/>
-                                             <h:outputText value="Comentario:" rendered="#{alquileresOfrecidos.calificacionOfrece.idCalificacion != null}"/>
-                                             <h:outputText value="#{alquileresOfrecidos.calificacionOfrece.comentarioCalificacion}" 
-                                                           style="font-style: oblique" rendered="#{alquileresOfrecidos.calificacionOfrece.idCalificacion != null}" />
-                                             <h:outputText value="Replica:" rendered="#{alquileresOfrecidos.calificacionOfrece.idCalificacion != null 
-                                                                          and alquileresOfrecidos.calificacionOfrece.yaReplico}" />
-                                             <h:inputTextarea value="#{alquileresOfrecidos.calificacionOfrece.comentarioReplica}" 
-                                                              disabled="true" 
-                                                              style="max-width:200px; width:200px" 
-                                                              rendered="#{alquileresOfrecidos.calificacionOfrece.idCalificacion != null 
-                                                                          and alquileresOfrecidos.calificacionOfrece.yaReplico}" />
-                                        </h:panelGrid>
-                                        <h:panelGrid columns="1">
-                                             <h:outputText value="El Usuario todavia no Calificó" style="font-style: oblique" rendered="#{alquileresOfrecidos.calificacionToma.idCalificacion == null}" />
-                                             <h:outputText value="TOMA el Alquiler: #{alquileresOfrecidos.calificacionToma.nombreUsuarioCalificador}" rendered="#{alquileresOfrecidos.calificacionToma.idCalificacion != null}" />
-                                             <h:outputText value="Puntuacion: #{alquileresOfrecidos.calificacionToma.nombrePuntuacion}" rendered="#{alquileresOfrecidos.calificacionToma.idCalificacion != null}" />
-                                             <h:outputText value="Comentario:" rendered="#{alquileresOfrecidos.calificacionToma.idCalificacion != null}" />
-                                             <h:outputText value="#{alquileresOfrecidos.calificacionToma.comentarioCalificacion}"
-                                                           style="font-style: oblique" rendered="#{alquileresOfrecidos.calificacionToma.idCalificacion != null}" />
-                                             <h:outputText value="Replica:" rendered="#{alquileresOfrecidos.calificacionToma.idCalificacion != null}" />
-                                             <h:inputTextarea value="#{alquileresOfrecidos.calificacionToma.comentarioReplica}" 
-                                                              disabled="#{alquileresOfrecidos.calificacionToma.yaReplico}"
-                                                              rendered="#{alquileresOfrecidos.calificacionToma.idCalificacion != null}"
-                                                              style="max-width:200px; width:200px"/>
-                                             <p:commandButton value="Enviar Replica" actionListener="#{alquileresOfrecidos.registrarReplicaOfrece}" 
-                                                              rendered="#{not alquileresOfrecidos.calificacionToma.yaReplico
-                                                                          and alquileresOfrecidos.calificacionToma.idCalificacion != null}"
-                                                              update="formVer"/>
-                                        </h:panelGrid>
-                                        <p:commandButton value="Salir" oncomplete="verCalificacionDlg.hide()"/>
-                               </h:panelGrid>
-                          </h:form>
-                     </p:dialog>
+                    <p:dialog modal="true" widgetVar="verCalificacionDlg" header="Ver Calificación" 
+                              resizable="false" width="520" style="text-align: center" >
+                        <h:form id="formVer">
+                            <h:panelGrid columns="2" columnClasses="calTableColumn,calTableColumn" style="width:500px">
+                                <h:panelGrid columns="1">
+                                    <h:outputText value="El Usuario todavia no Calificó" style="font-style: oblique" rendered="#{alquileresOfrecidos.calificacionOfrece.idCalificacion == null}" />
+                                    <h:outputText value="OFRECE el Alquiler: #{alquileresOfrecidos.calificacionOfrece.nombreUsuarioCalificador}" rendered="#{alquileresOfrecidos.calificacionOfrece.idCalificacion != null}" />
+                                    <h:outputText value="Puntuacion: #{alquileresOfrecidos.calificacionOfrece.nombrePuntuacion}" rendered="#{alquileresOfrecidos.calificacionOfrece.idCalificacion != null}"/>
+                                    <h:outputText value="Comentario:" rendered="#{alquileresOfrecidos.calificacionOfrece.idCalificacion != null}"/>
+                                    <h:outputText value="#{alquileresOfrecidos.calificacionOfrece.comentarioCalificacion}" 
+                                                  style="font-style: oblique" rendered="#{alquileresOfrecidos.calificacionOfrece.idCalificacion != null}" />
+                                    <h:outputText value="Replica:" rendered="#{alquileresOfrecidos.calificacionOfrece.idCalificacion != null 
+                                                                               and alquileresOfrecidos.calificacionOfrece.yaReplico}" />
+                                    <h:inputTextarea value="#{alquileresOfrecidos.calificacionOfrece.comentarioReplica}" 
+                                                     disabled="true" 
+                                                     style="max-width:200px; width:200px" 
+                                                     rendered="#{alquileresOfrecidos.calificacionOfrece.idCalificacion != null 
+                                                                 and alquileresOfrecidos.calificacionOfrece.yaReplico}" />
+                                </h:panelGrid>
+                                <h:panelGrid columns="1">
+                                    <h:outputText value="El Usuario todavia no Calificó" style="font-style: oblique" rendered="#{alquileresOfrecidos.calificacionToma.idCalificacion == null}" />
+                                    <h:outputText value="TOMA el Alquiler: #{alquileresOfrecidos.calificacionToma.nombreUsuarioCalificador}" rendered="#{alquileresOfrecidos.calificacionToma.idCalificacion != null}" />
+                                    <h:outputText value="Puntuacion: #{alquileresOfrecidos.calificacionToma.nombrePuntuacion}" rendered="#{alquileresOfrecidos.calificacionToma.idCalificacion != null}" />
+                                    <h:outputText value="Comentario:" rendered="#{alquileresOfrecidos.calificacionToma.idCalificacion != null}" />
+                                    <h:outputText value="#{alquileresOfrecidos.calificacionToma.comentarioCalificacion}"
+                                                  style="font-style: oblique" rendered="#{alquileresOfrecidos.calificacionToma.idCalificacion != null}" />
+                                    <h:outputText value="Replica:" rendered="#{alquileresOfrecidos.calificacionToma.idCalificacion != null}" />
+                                    <h:inputTextarea value="#{alquileresOfrecidos.calificacionToma.comentarioReplica}" 
+                                                     disabled="#{alquileresOfrecidos.calificacionToma.yaReplico}"
+                                                     rendered="#{alquileresOfrecidos.calificacionToma.idCalificacion != null}"
+                                                     style="max-width:200px; width:200px"/>
+                                    <p:commandButton value="Enviar Replica" actionListener="#{alquileresOfrecidos.registrarReplicaOfrece}" 
+                                                     rendered="#{not alquileresOfrecidos.calificacionToma.yaReplico
+                                                                 and alquileresOfrecidos.calificacionToma.idCalificacion != null}"
+                                                     update="formVer"/>
+                                </h:panelGrid>
+
+                                <f:facet name="footer" >
+                                    <p:commandButton value="Salir" type="button" 
+                                                     oncomplete="verCalificacionDlg.hide()"/>
+                                </f:facet>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:dialog>
 
                     <p:dialog widgetVar="verCambioDlg" header="Pedio de Cambio recibido" 
                               width="320" modal="true" resizable="false" >
@@ -134,7 +138,7 @@
                                 <p:commandButton value="Aceptar" actionListener="#{alquileresOfrecidos.responderPedidoCambio(true)}"
                                                  oncomplete="verCambioDlg.hide()" update=":alquileresForm"/>
                                 <p:commandButton value="Rechazar" actionListener="#{alquileresOfrecidos.responderPedidoCambio(false)}"
-                                                 oncomplete="verCambioDlg.hide()" update="tabla" />
+                                                 oncomplete="verCambioDlg.hide()" update=":alquileresForm:tabla" />
                             </h:panelGrid>
                         </h:form>
                     </p:dialog>
@@ -172,7 +176,7 @@
                             <h:panelGrid columns="2" columnClasses="leftCol,rightCol" style="width:100%" >
                                 <p:commandButton value="Aceptar" actionListener="#{alquileresOfrecidos.modificarAlquiler}"
                                                  update="@form :alquileresForm" oncomplete="handleModificarAlquiler(xhr, status, args)" />
-                                <p:commandButton value="Cancelar" oncomplete="modificarDlg.hide();" />
+                                <p:commandButton value="Cancelar" oncomplete="modificarDlg.hide()" />
                             </h:panelGrid>
 
                         </h:form>
@@ -197,9 +201,9 @@
 
             <ui:define name="right">
                 <comps:loginBox />
-                <comps:userPanel />
-                <comps:panelPublicitante />
                 <comps:adminPanel />
+                <comps:userPanel />
+                <comps:panelPublicitante />                
             </ui:define>
 
         </ui:composition>
