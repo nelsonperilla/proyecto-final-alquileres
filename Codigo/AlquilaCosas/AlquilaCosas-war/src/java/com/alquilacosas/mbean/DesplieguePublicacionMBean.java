@@ -61,7 +61,7 @@ public class DesplieguePublicacionMBean implements Serializable {
     private int cantidadProductos;
     private String action;
     private double userRating;
-    private String horaInicioAlquiler;
+    private Date horaInicioAlquiler;
     private int denunciaId;   
     private int motivoDenuncia;
     private MapModel mapModel;
@@ -114,7 +114,7 @@ public class DesplieguePublicacionMBean implements Serializable {
         today = new Date();
         periodos = new ArrayList<SelectItem>();
         periodoAlquiler = 1;
-        horaInicioAlquiler = "00:00";
+        //horaInicioAlquiler = "00:00";
         List<Periodo> listaPeriodos = publicationBean.getPeriodos();
         periodoSeleccionado = 2; //alto hardCode, para que por defecto este seleccionado dia y no hora (Jorge)
         for (Periodo periodo : listaPeriodos) {
@@ -212,13 +212,19 @@ public class DesplieguePublicacionMBean implements Serializable {
                 case 1: //horas
 
                     try {
-                        String[] composicionHoraInicio = horaInicioAlquiler.split(":");
-                        int hora = Integer.parseInt(composicionHoraInicio[0]);
-                        int minuto = Integer.parseInt(composicionHoraInicio[1]);
-                        beginDate.add(Calendar.HOUR_OF_DAY, hora);
-                        beginDate.add(Calendar.MINUTE, minuto);
-                        endDate.add(Calendar.HOUR_OF_DAY, hora);
-                        endDate.add(Calendar.MINUTE, minuto);
+                        Calendar time = Calendar.getInstance();
+                        time.setTime(horaInicioAlquiler);
+                        //String[] composicionHoraInicio = horaInicioAlquiler.split(":");
+                        //int hora = Integer.parseInt(composicionHoraInicio[0]);
+                        //int minuto = Integer.parseInt(composicionHoraInicio[1]);
+                        beginDate.add(Calendar.HOUR_OF_DAY, time.get(Calendar.HOUR_OF_DAY));
+                        beginDate.add(Calendar.MINUTE, time.get(Calendar.MINUTE));
+                        endDate.add(Calendar.HOUR_OF_DAY, time.get(Calendar.HOUR_OF_DAY));
+                        endDate.add(Calendar.MINUTE, time.get(Calendar.MINUTE));
+                        //beginDate.add(Calendar.HOUR_OF_DAY, hora);
+                        //beginDate.add(Calendar.MINUTE, minuto);
+                        //endDate.add(Calendar.HOUR_OF_DAY, hora);
+                        //endDate.add(Calendar.MINUTE, minuto);
 
                     } catch (Exception e) {
                         FacesContext.getCurrentInstance().addMessage(null,
@@ -552,8 +558,8 @@ public class DesplieguePublicacionMBean implements Serializable {
      */
     public void setPeriodoSeleccionado(int periodoSeleccionado) {
         this.periodoSeleccionado = periodoSeleccionado;
-        RequestContext context = RequestContext.getCurrentInstance();
-        context.addCallbackParam("mostrarHoraInicio", (periodoSeleccionado == 1));
+        //RequestContext context = RequestContext.getCurrentInstance();
+        //context.addCallbackParam("mostrarHoraInicio", (periodoSeleccionado == 1));
     }
 
     /**
@@ -629,14 +635,14 @@ public class DesplieguePublicacionMBean implements Serializable {
     /**
      * @return the horaInicioAlquiler
      */
-    public String getHoraInicioAlquiler() {
+    public Date getHoraInicioAlquiler() {
         return horaInicioAlquiler;
     }
 
     /**
      * @param horaInicioAlquiler the horaInicioAlquiler to set
      */
-    public void setHoraInicioAlquiler(String horaInicioAlquiler) {
+    public void setHoraInicioAlquiler(Date horaInicioAlquiler) {
         this.horaInicioAlquiler = horaInicioAlquiler;
     }
 

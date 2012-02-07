@@ -20,11 +20,11 @@
                 <h:panelGrid columns="2" cellpadding="2" style="text-align: center" >
                     <h:outputLabel  value="Usuario:" />
                     <p:inputText value="#{login.username}" required="true"
-                                 style="width:175px" />
+                                 styleClass="passInput" />
                     <h:outputLabel value="Contraseña:" />
-                    <p:password feedback="false" minLength="1" 
-                                value="#{login.password}" required="true"
-                                style="width:175px; " />
+                    <p:password feedback="false" required="true"
+                                value="#{login.password}" 
+                                styleClass="passInput" />
 
                     <f:facet name="footer" >
                         <p:commandButton value="Entrar" action="#{login.loginEnPagina}"
