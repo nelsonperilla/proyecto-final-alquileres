@@ -26,11 +26,10 @@
                                 <h:panelGrid columns="1" cellpadding="2"
                                              style="width:100%;  padding-left: 5px; text-align: left; " >
                                     <h:outputLabel  value="Usuario" />
-                                    <p:inputText value="#{login.username}" style="width:175px" />
+                                    <p:inputText value="#{login.username}" styleClass="passInput" />
                                     <h:outputLabel value="Contraseña" />
-                                    <p:password feedback="false" minLength="1" 
-                                                value="#{login.password}" 
-                                                style="width:175px; " />
+                                    <p:password feedback="false" value="#{login.password}" 
+                                                styleClass="passInput" />
                                 </h:panelGrid>
                                 <p:messages globalOnly="true" showDetail="false" />
                                 <p:commandButton value="Entrar" action="#{login.login}" ajax="false" />

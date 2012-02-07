@@ -11,20 +11,21 @@
 
         <ui:composition template="./../resources/templates/masterPage.xhtml">
 
-            <script type="text/javascript"
-                    src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAIvenuSuB8qlfz056q69ddMHJIdqra2sc&amp;sensor=false">
-            </script> 
-            <h:outputScript library="javascript" name="util.js" />
-
             <ui:define name="logInfo">
                 <h:link value="Inicio" outcome="/vistas/inicio" />
             </ui:define>
+            
             <ui:define name="left" >
                 <comps:categoriesMenu />
             </ui:define>
 
             <ui:define name="principal">
-                
+
+                <script type="text/javascript"
+                        src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAIvenuSuB8qlfz056q69ddMHJIdqra2sc&amp;sensor=false">
+                </script>
+                <h:outputScript library="javascript" name="util.js" />
+
                 <table id="simpleItem">
                     <tr>
                         <td colspan="2">
@@ -217,12 +218,11 @@
 
                             <h:outputLabel id="horaInicioLabel" value="Hora de inicio" 
                                            rendered ="#{publicacionDesplegada.periodoSeleccionado == 1}"/>
-                            <p:inputText id="horaInicio" required="true"  
-                                         value="#{publicacionDesplegada.horaInicioAlquiler}" 
-                                         style="width:50px; text-align: right"
-                                         requiredMessage="Valor requerido" 
-                                         rendered ="#{publicacionDesplegada.periodoSeleccionado == 1}"
-                                         onfocus="jQuery('#horaInicio').timepicker({stepMinute: 15});" />
+                            <p:calendar id="horaInicio" required="true" value="#{publicacionDesplegada.horaInicioAlquiler}" 
+                                        pattern="HH:mm" timeOnly="true" stepHour="1" stepMinute="15"
+                                        style="width:50px; text-align: right"
+                                        requiredMessage="Valor requerido" 
+                                         rendered ="#{publicacionDesplegada.periodoSeleccionado == 1}"/>
                             <p:message id="horaInicioMessage" for="horaInicio" 
                                        rendered ="#{publicacionDesplegada.periodoSeleccionado == 1}"/>
 
