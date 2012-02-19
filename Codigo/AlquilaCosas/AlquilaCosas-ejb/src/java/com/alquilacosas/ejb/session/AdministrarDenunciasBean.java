@@ -34,7 +34,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.jms.ConnectionFactory;
@@ -78,28 +77,24 @@ public class AdministrarDenunciasBean implements AdministrarDenunciasBeanLocal {
      // Add business logic below. (Right-click in editor and choose
      // "Insert Code > Add Business Method")
      @Override
-     @RolesAllowed({"USUARIO", "ADMIN"})
      public List<DenunciaDTO> getAllDenuncias() {
           List<Denuncia> denuncias = denunciaFacade.getAllDenuncias();
           return convertirADenunciaDTO(denuncias);
      }
 
      @Override
-     @RolesAllowed({"USUARIO", "ADMIN"})
      public List<DenunciaDTO> getDenunciasPublicacion() {
           List<Denuncia> denuncias = denunciaFacade.getDenunciasPublicacion();
           return convertirADenunciaDTO(denuncias);
      }
 
      @Override
-     @RolesAllowed({"USUARIO", "ADMIN"})
      public List<DenunciaDTO> getDenunciasComentario() {
           List<Denuncia> denuncias = denunciaFacade.getDenunciasComentario();
           return convertirADenunciaDTO(denuncias);
      }
 
      @Override
-     @RolesAllowed({"USUARIO", "ADMIN"})
      public void aceptarDenuncia(int denunciaId) {
           Denuncia denuncia = denunciaFacade.find(denunciaId);
           // Cambiar de Estado Denuncia
@@ -228,7 +223,6 @@ public class AdministrarDenunciasBean implements AdministrarDenunciasBeanLocal {
      }
 
      @Override
-     @RolesAllowed({"USUARIO", "ADMIN"})
      public void rechazarDenuncia(int denunciaId) {
           // Cambiar de Estado Denuncia
           Denuncia denuncia = denunciaFacade.find(denunciaId);
@@ -239,7 +233,6 @@ public class AdministrarDenunciasBean implements AdministrarDenunciasBeanLocal {
      }
 
      @Override
-     @RolesAllowed({"USUARIO", "ADMIN"})
      public List<DenunciaDTO> convertirADenunciaDTO(List<Denuncia> denunciasList) {
           List<DenunciaDTO> denunciasDTO = new ArrayList<DenunciaDTO>();
           for (Denuncia d : denunciasList) {

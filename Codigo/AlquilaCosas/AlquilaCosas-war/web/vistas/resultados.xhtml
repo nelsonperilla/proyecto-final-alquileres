@@ -34,8 +34,8 @@
                         </ui:repeat>
                     </h:form>
                 </p:panel>
-                
-                <p:panel header="Ubicacion" styleClass="panelFiltro" >
+
+                <p:panel header="Barrio" styleClass="panelFiltro" >
                     <h:form>
                         <p:commandLink value="Cualquiera" action="#{resultadosBean.noFiltrarUbicacion}"
                                        update="@form :tableForm:grid :categoriaForm"
@@ -44,29 +44,44 @@
                         <h:panelGrid columns="2" >
                             <p:inputText value="#{resultadosBean.ubicacion}" style="width:130px;" />
                             <p:commandButton actionListener="#{resultadosBean.filtrarUbicacion}"
-                                           update="@form :tableForm:grid :categoriaForm" icon="ui-icon ui-icon-search" />
+                                             update="@form :tableForm:grid :categoriaForm" icon="ui-icon ui-icon-search" />
                         </h:panelGrid>
                     </h:form>
                 </p:panel>
-                
-                <p:panel header="Precio" styleClass="panelFiltro" >
-                    <h:form id="precioForm">
-                        <p:commandLink value="Cualquiera" actionListener="#{resultadosBean.noFiltrarPrecio}"
-                                       update="@form :tableForm:grid :categoriaForm"/>
-                        <br/><br/>
-                        <h:panelGrid columns="2" >
-                            <h:outputLabel value="Periodo:" />
-                            <h:selectOneMenu value="#{resultadosBean.periodoSeleccionado}" >
-                                <f:selectItem itemLabel="Seleccione..." />
-                                <f:selectItems value="#{resultadosBean.periodos}" />
-                            </h:selectOneMenu>
-                            <h:outputLabel value="Desde:" />
-                            <p:inputText value="#{resultadosBean.precioDesde}" style="width:90px" />
-                            <h:outputLabel value="Hasta:" />
-                            <p:inputText value="#{resultadosBean.precioHasta}" style="width:90px" />
-                            <p:commandButton actionListener="#{resultadosBean.filtrarPrecio}"
-                                           update="@form :tableForm:grid :categoriaForm" icon="ui-icon ui-icon-search" />
-                        </h:panelGrid>
+
+                <p:panel header="Precio por día" styleClass="panelFiltro" >
+                    <h:form id="precioForm" style="margin-top: 10px">
+                        <h:inputText id="range" value="#{resultadosBean.range}" style="display:none" />
+                        <p:commandButton id="filtrar" actionListener="#{resultadosBean.filtrarPrecio}" 
+                                         update=":tableForm:grid :categoriaForm" style="display:none;" />
+                        <div id="slider-range"></div>
+                        <input id="desde" style="float: left;width: 45px;text-align: left;border:none;" disabled="true" />
+                        <input id="hasta" style="float: right;width: 45px;text-align: right;border:none;" disabled="true" />
+                        <br/>
+                        <script>
+                            $(function() {
+                                    var minP = parseFloat('<h:outputText value="#{resultadosBean.precioMin}" />');
+                                    var maxP = parseFloat('<h:outputText value="#{resultadosBean.precioMax}" />');
+                                    $( "#slider-range" ).slider({
+                                            range: true,
+                                            min: minP,
+                                            max: maxP,
+                                            values: [minP, maxP],
+                                            slide: function(event, ui) {
+                                                $("#precioForm\\:range").val(ui.values[0] + "-" + ui.values[1]);
+                                                $("#desde").val("$" + ui.values[0]);
+                                                $("#hasta").val("$" + ui.values[1]);
+                                            },  
+                                            change: function(event, ui) {
+                                                $("#precioForm\\:filtrar").click();
+                                            }
+                                    });
+                                    $("#precioForm\\:range" ).val($("#slider-range").slider("values", 0) +
+                                            "-" + $("#slider-range").slider("values", 1));
+                                    $("#desde" ).val("$" + $("#slider-range").slider("values", 0));
+                                    $("#hasta" ).val("$" + $("#slider-range").slider("values", 1));
+                            });
+                        </script>
                     </h:form>
                 </p:panel>
 

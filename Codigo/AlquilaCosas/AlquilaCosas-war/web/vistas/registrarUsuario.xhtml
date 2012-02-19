@@ -44,10 +44,10 @@
                         </p:inputText>
                         <p:message id="usuarioVal" for="usuario" />
                         <h:outputLabel value="Contraseña" />
-                        <p:password id="password" minLength="8" feedback="true"
+                        <p:password id="password" minLength="4" feedback="true"
                                     value="#{regUsuario.password}" required="true"
-                                    requiredMessage="Valor requerido"
-                                    validatorMessage="maximo 45 caracteres" >
+                                    requiredMessage="Valor requerido" match="password2"
+                                    validatorMessage="Las contraseñas no coinciden" >
                             <f:validateLength maximum="45" />
                             <p:ajax event="blur" update="passwordVal" />
                         </p:password>
@@ -55,7 +55,6 @@
                         <h:outputLabel value="Repita contraseña" />
                         <p:password id="password2" minLength="8" feedback="false" 
                                     value="#{regUsuario.password2}" required="true" 
-                                    validator="#{regUsuario.validarPassword}"
                                     requiredMessage="Valor requerido">
                             <p:ajax event="blur" update="password2Val" />
                         </p:password>
@@ -111,7 +110,7 @@
                                          requiredMessage="Valor requerido" >                                
                             <f:selectItem itemLabel="Seleccione un pais" itemValue="" />
                             <f:selectItems value="#{regUsuario.paises}" />
-                            <p:ajax event="change" update="provincia agregar growl" process="@this"
+                            <p:ajax event="change" update="provincia growl" process="@this"
                                     listener="#{regUsuario.actualizarProvincias}" />
                         </h:selectOneMenu>
                         <p:message for="pais" />
@@ -121,7 +120,7 @@
                                          required="true" requiredMessage="Valor requerido" >
                             <f:selectItem itemLabel="Seleccione una provincia" itemValue="" />
                             <f:selectItems value="#{regUsuario.provincias}" />
-                            <p:ajax event="change" process="@this" update="agregar" 
+                            <p:ajax event="change" process="@this" 
                                     listener="#{regUsuario.prepararDomicilio}" />
                         </h:selectOneMenu>
                         <p:message for="provincia" />

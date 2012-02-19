@@ -7,6 +7,7 @@ package com.alquilacosas.ejb.session;
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.common.Busqueda;
 import com.alquilacosas.dto.PeriodoDTO;
+import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -18,7 +19,7 @@ import javax.ejb.Local;
 public interface BuscarPublicacionBeanLocal {
 
     Busqueda buscar(String palabra, Integer categoriaId,
-            String ubicacion, Integer periodoId, Double precioDesde, Double precioHasta,
+            String ubicacion, NombrePeriodo nombrePeriodo, Double precioDesde, Double precioHasta,
             int registros, int desde);
     
     Busqueda buscarPublicacionesPorCategoria(int categoriaId, int registros, int desde) 

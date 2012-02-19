@@ -94,7 +94,6 @@ public class DestacarPublicacionBean implements DestacarPublicacionBeanLocal {
     }
     
     @Override
-    @RolesAllowed({"USUARIO", "ADMIN"})
     public void efectuarServicio(Integer pagoId) {
 
         Pago pago = pagoFacade.find(pagoId);

@@ -26,17 +26,17 @@
                         <f:facet name="header" >
                             <h1>Login</h1>
                         </f:facet>
-                        <h:outputLabel value="Usuario" />
-                        <p:inputText id="j_username" value="#{login.username}" />
-                        <p:message for="j_username" />
+                        <h:outputLabel value="Usuario" for="username" />
+                        <p:inputText id="username" value="#{login.username}" />
+                        <p:message for="username" />
                         
-                        <h:outputLabel value="Contraseña" />
-                        <p:password id="j_password" value="#{login.password}" 
+                        <h:outputLabel value="Contraseña" for="password" />
+                        <p:password id="password" value="#{login.password}" 
                                     feedback="false" minLength="8" />
-                        <p:message for="j_password" />
+                        <p:message for="password" />
                         
                         <f:facet name="footer" >
-                            <p:commandButton value="Entrar" action="#{login.login}"
+                            <p:commandButton value="Entrar" action="#{login.loguearse}"
                                          ajax="false" />
                         </f:facet>
                         

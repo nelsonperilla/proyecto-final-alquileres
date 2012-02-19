@@ -32,13 +32,13 @@
                                                 styleClass="passInput" />
                                 </h:panelGrid>
                                 <p:messages globalOnly="true" showDetail="false" />
-                                <p:commandButton value="Entrar" action="#{login.login}" ajax="false" />
+                                <p:commandButton value="Entrar" action="#{login.loguearse}" ajax="false" />
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 <div class="footer">
-                                    <h:commandLink value="Registrarse!" action="registrarUsuario" />
+                                    <h:link value="Registrarse!" outcome="/vistas/registrarUsuario" />
                                 </div>
                             </td>
                         </tr>

@@ -14,6 +14,8 @@ import com.alquilacosas.ejb.entity.Categoria;
 import com.alquilacosas.ejb.entity.Domicilio;
 import com.alquilacosas.ejb.entity.ImagenPublicacion;
 import com.alquilacosas.ejb.entity.Periodo;
+import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
+import com.alquilacosas.ejb.entity.Precio;
 import com.alquilacosas.ejb.entity.Publicacion;
 import com.alquilacosas.facade.CategoriaFacade;
 import com.alquilacosas.facade.ImagenPublicacionFacade;
@@ -43,18 +45,35 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
 
     @Override
     public Busqueda buscar(String palabra, Integer categoriaId,
-            String ubicacion, Integer periodoId, Double precioDesde, Double precioHasta,
+            String ubicacion, NombrePeriodo nombrePeriodo, Double precioDesde, Double precioHasta,
             int registros, int desde) {
         List<Publicacion> publicaciones = publicacionFacade.findPublicaciones(palabra, 
-                categoriaId, ubicacion, periodoId, precioDesde, precioHasta, registros, desde);
+                categoriaId, ubicacion, nombrePeriodo, precioDesde, precioHasta, registros, desde);
         
         List<PublicacionDTO> pubFacadeList = new ArrayList<PublicacionDTO>();
         List<Categoria> categorias = new ArrayList<Categoria>();
+        double precioMin = 1000000;
+        double precioMax = 0;
         for (Publicacion p : publicaciones) {
             
             PublicacionDTO facade = crearPublicacionFacade(p);
             pubFacadeList.add(facade);
             
+            // obtener precio diario
+            double pre = 0;
+            for(Precio precio: p.getPrecioList()) {
+                if(precio.getPeriodoFk().getNombre() == Periodo.NombrePeriodo.DIA) {
+                    pre = precio.getPrecio();
+                    break;
+                }
+            }
+            if(pre > precioMax) {
+                precioMax = pre;
+            }
+            if(pre < precioMin) {
+                precioMin = pre;
+            }
+            // agregar categoria a la lista si no esta
             Categoria c = p.getCategoriaFk();
             if (!categorias.contains(c)) {
                 categorias.add(c);
@@ -67,10 +86,10 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
             catFacade.add(categoria);
         }
 
-        Busqueda busqueda = new Busqueda(pubFacadeList, catFacade);
+        Busqueda busqueda = new Busqueda(pubFacadeList, catFacade, precioMin, precioMax);
         if(desde == 0) {
             Long totalRegistros = publicacionFacade.countBusquedaPublicaciones(palabra, 
-                    categoriaId, ubicacion, periodoId, precioDesde, precioHasta);
+                    categoriaId, ubicacion, nombrePeriodo, precioDesde, precioHasta);
             if (totalRegistros != null) {
                 busqueda.setTotalRegistros(totalRegistros.intValue());
             }
@@ -108,17 +127,32 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
         
         List<Publicacion> publicaciones = publicacionFacade.findByCategoria(listaCategorias, registros, desde);
         List<PublicacionDTO> pubFacadeList = new ArrayList<PublicacionDTO>();
+        double precioMin = 1000000;
+        double precioMax = 0;
         for (Publicacion p : publicaciones) {
-            
             PublicacionDTO facade = crearPublicacionFacade(p);
             pubFacadeList.add(facade);
+            // obtener precio diario
+            double pre = 0;
+            for(Precio precio: p.getPrecioList()) {
+                if(precio.getPeriodoFk().getNombre() == Periodo.NombrePeriodo.DIA) {
+                    pre = precio.getPrecio();
+                    break;
+                }
+            }
+            if(pre > precioMax) {
+                precioMax = pre;
+            }
+            if(pre < precioMin) {
+                precioMin = pre;
+            }
         }
 
         List<CategoriaDTO> categorias = new ArrayList<CategoriaDTO>();
         Categoria categoria = categoriaFacade.find(categoriaId);
         categorias.add(new CategoriaDTO(categoriaId, categoria.getNombre()));
 
-        Busqueda busqueda = new Busqueda(pubFacadeList, categorias);
+        Busqueda busqueda = new Busqueda(pubFacadeList, categorias, precioMin, precioMax);
 
         if (desde == 0) {
             Long totalRegistros = publicacionFacade.countByCategoria(listaCategorias);

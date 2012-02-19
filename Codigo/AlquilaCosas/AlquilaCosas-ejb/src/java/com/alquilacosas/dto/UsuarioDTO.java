@@ -4,7 +4,6 @@
  */
 package com.alquilacosas.dto;
 
-import com.alquilacosas.ejb.entity.EstadoUsuario;
 import com.alquilacosas.ejb.entity.EstadoUsuario.NombreEstadoUsuario;
 import com.alquilacosas.ejb.entity.Rol;
 import com.alquilacosas.ejb.entity.Usuario;

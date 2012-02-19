@@ -5,16 +5,21 @@
 package com.alquilacosas.ejb.session;
 
 import com.alquilacosas.common.AlquilaCosasException;
+import com.alquilacosas.common.SeguridadException;
+import com.alquilacosas.common.UsuarioLogueado;
 import com.alquilacosas.ejb.entity.EstadoUsuario;
 import com.alquilacosas.ejb.entity.EstadoUsuario.NombreEstadoUsuario;
 import com.alquilacosas.ejb.entity.Login;
+import com.alquilacosas.ejb.entity.Rol;
 import com.alquilacosas.ejb.entity.Usuario;
 import com.alquilacosas.ejb.entity.UsuarioXEstado;
 import com.alquilacosas.facade.EstadoUsuarioFacade;
 import com.alquilacosas.facade.LoginFacade;
 import com.alquilacosas.facade.UsuarioFacade;
 import com.alquilacosas.facade.UsuarioXEstadoFacade;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
@@ -72,6 +77,25 @@ public class LoginBean implements LoginBeanLocal {
         }
         else {
             return false;
+        }
+    }
+    
+    @Override
+    public UsuarioLogueado login(String username, String password) throws SeguridadException {
+        Login login = loginFacade.login(username, password);
+        if(login == null) {
+            throw new SeguridadException("Credenciales incorrectas.");
+        } else {
+            Usuario usuario = login.getUsuarioFk();
+            String ciudad = null;
+            if(!usuario.getDomicilioList().isEmpty()) {
+                ciudad = usuario.getDomicilioList().get(0).getCiudad();
+            }
+            List<Rol.NombreRol> roles = new ArrayList<Rol.NombreRol>();
+            for(Rol r: login.getRolList()) {
+                roles.add(r.getNombre());
+            }
+            return new UsuarioLogueado(usuario.getUsuarioId(), usuario.getNombre(), usuario.getApellido(), ciudad, null, roles);
         }
     }
     

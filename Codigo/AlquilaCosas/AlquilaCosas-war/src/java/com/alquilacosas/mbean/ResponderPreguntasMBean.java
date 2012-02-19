@@ -31,9 +31,7 @@ public class ResponderPreguntasMBean implements Serializable {
     @EJB
     private PublicacionBeanLocal publicationBean;
     @ManagedProperty (value="#{login}")
-    private ManejadorUsuarioMBean usuarioLogueado;
-    //private CategoriaFacade categoria;
-    //private List<PrecioFacade> precios;
+    private ManejadorUsuarioMBean login;
     private PublicacionDTO publicacion;
     private String effect;
     private List<ComentarioDTO> comentarios;
@@ -50,19 +48,15 @@ public class ResponderPreguntasMBean implements Serializable {
     public void init(){
         Logger.getLogger(ResponderPreguntasMBean.class).debug("ResponderPreguntasMBean: postconstruct.");
         setEffect("fade"); 
-//        String id = FacesContext.getCurrentInstance().getExternalContext()
-//                .getRequestParameterMap().get("id");
             setNuevaRespuesta(new ComentarioDTO());
-            setComentarios(publicationBean.getPreguntasSinResponder(getUsuarioLogueado().getUsuarioId()));
-            setCantidad(comentarios.size());
-
-
+            comentarios = publicationBean.getPreguntasSinResponder(login.getUsuarioId());
+            cantidad = comentarios.size();
         }
 
      public void guardarPregunta() {  
          
-        nuevaRespuesta.setUsuarioId(getUsuarioLogueado().getUsuarioId());
-        nuevaRespuesta.setUsuario(getUsuarioLogueado().getUsername());
+        nuevaRespuesta.setUsuarioId(getLogin().getUsuarioId());
+        nuevaRespuesta.setUsuario(getLogin().getUsername());
         nuevaRespuesta.setFecha(new Date());
         selectedPregunta.setRespuesta(nuevaRespuesta);
          try {
@@ -131,18 +125,12 @@ public class ResponderPreguntasMBean implements Serializable {
         this.selectedPregunta = selectedPregunta;
     }
 
-    /**
-     * @return the usuarioLogueado
-     */
-    public ManejadorUsuarioMBean getUsuarioLogueado() {
-        return usuarioLogueado;
+    public ManejadorUsuarioMBean getLogin() {
+        return login;
     }
 
-    /**
-     * @param usuarioLogueado the usuarioLogueado to set
-     */
-    public void setUsuarioLogueado(ManejadorUsuarioMBean usuarioLogueado) {
-        this.usuarioLogueado = usuarioLogueado;
+    public void setLogin(ManejadorUsuarioMBean usuarioLogueado) {
+        this.login = usuarioLogueado;
     }
 
     /**

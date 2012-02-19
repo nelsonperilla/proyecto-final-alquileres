@@ -74,17 +74,18 @@
                         </p:column>
 
                         <p:column headerText="Acciones">
-                            <h:link value="M" outcome="/vistas/pub/modificarRepublicarPublicidad" title="Modificar"
-                                    rendered="#{not (publicidad.estadoPublicidad eq 'ACTIVA')}" >
+                            <p:button value="M" outcome="/vistas/pub/modificarRepublicarPublicidad" 
+                                      title="Modificar" style="font-size: 10px"
+                                      disabled="#{publicidad.estadoPublicidad eq 'ACTIVA'}" >
                                 <f:param name="id" value="#{publicidad.id}" />
                                 <f:param name="tipo" value="modificar" />
-                            </h:link>    
-<!--                            <p:spacer width="10px"/>-->
-                            <h:link value="R" outcome="/vistas/pub/modificarRepublicarPublicidad" title="Republicar"
-                                    rendered="#{not (publicidad.estadoPublicidad eq 'ACTIVA')}">
+                            </p:button>
+                            <p:button value="R" outcome="/vistas/pub/modificarRepublicarPublicidad" 
+                                      title="Republicar" style="font-size: 10px"
+                                      disabled="#{publicidad.estadoPublicidad eq 'ACTIVA'}">
                                 <f:param name="id" value="#{publicidad.id}" />
                                 <f:param name="tipo" value="republicar" />
-                            </h:link>
+                            </p:button>
                         </p:column>
 
                         <f:facet name="footer">

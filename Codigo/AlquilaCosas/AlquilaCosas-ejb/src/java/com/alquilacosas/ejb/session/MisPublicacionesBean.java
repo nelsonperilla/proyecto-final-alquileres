@@ -19,8 +19,6 @@ import com.alquilacosas.facade.PublicacionFacade;
 import com.alquilacosas.facade.UsuarioFacade;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.security.DeclareRoles;
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
@@ -29,7 +27,6 @@ import javax.ejb.Stateless;
  * @author ignaciogiagante
  */
 @Stateless
-@DeclareRoles({"USUARIO", "ADMIN"})
 public class MisPublicacionesBean implements MisPublicacionesBeanLocal {
     
     @EJB
@@ -43,7 +40,6 @@ public class MisPublicacionesBean implements MisPublicacionesBeanLocal {
     private EstadoPublicacionFacade estadoFacade;
 
     @Override
-    @RolesAllowed({"USUARIO", "ADMIN"})
     public List<PublicacionDTO> getPublicaciones(int usuarioId) {
 
         Usuario usuario = usuarioFacade.find(usuarioId);
@@ -72,7 +68,6 @@ public class MisPublicacionesBean implements MisPublicacionesBeanLocal {
     }
     
     @Override
-    @RolesAllowed({"USUARIO", "ADMIN"})
     public void borrarPublicacion( Integer publicacionId ) throws AlquilaCosasException{
         Publicacion p = publicacionFacade.find(publicacionId);
         Usuario usuario = p.getUsuarioFk();

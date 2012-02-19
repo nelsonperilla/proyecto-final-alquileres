@@ -7,6 +7,7 @@ package com.alquilacosas.facade;
 import com.alquilacosas.ejb.entity.Domicilio;
 import com.alquilacosas.ejb.entity.EstadoPublicacion;
 import com.alquilacosas.ejb.entity.EstadoPublicacion.NombreEstadoPublicacion;
+import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
 import com.alquilacosas.ejb.entity.Precio;
 import com.alquilacosas.ejb.entity.Publicacion;
 import com.alquilacosas.ejb.entity.PublicacionXEstado;
@@ -75,7 +76,7 @@ public class PublicacionFacade extends AbstractFacade<Publicacion> {
      * @return La lista de publicaciones deseadas
      */
     public List<Publicacion> findPublicaciones(String palabra, Integer categoriaId,
-            String ubicacion, Integer periodoId, Double precioDesde, Double precioHasta,
+            String ubicacion, NombrePeriodo nombrePeriodo, Double precioDesde, Double precioHasta,
             int registros, int desde) {
 
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
@@ -105,24 +106,24 @@ public class PublicacionFacade extends AbstractFacade<Publicacion> {
             Join<Usuario, Domicilio> joinDom = joinUser.join("domicilioList");
             Path dom = (Path) joinDom.as(Domicilio.class);
             ubicacion = "%" + ubicacion.toUpperCase() + "%";
-            Path exp0 = dom.get("calle");
-            Predicate p0 = criteriaBuilder.like(criteriaBuilder.upper(exp0), ubicacion);
+//            Path exp0 = dom.get("calle");
+//            Predicate p0 = criteriaBuilder.like(criteriaBuilder.upper(exp0), ubicacion);
             Path exp1 = dom.get("barrio");
             Predicate p1 = criteriaBuilder.like(criteriaBuilder.upper(exp1), ubicacion);
-            Path exp2 = dom.get("ciudad");
-            Predicate p2 = criteriaBuilder.like(criteriaBuilder.upper(exp2), ubicacion);
-            Path exp3 = dom.get("provinciaFk").get("nombre");
-            Predicate p3 = criteriaBuilder.like(criteriaBuilder.upper(exp3), ubicacion);
+//            Path exp2 = dom.get("ciudad");
+//            Predicate p2 = criteriaBuilder.like(criteriaBuilder.upper(exp2), ubicacion);
+//            Path exp3 = dom.get("provinciaFk").get("nombre");
+//            Predicate p3 = criteriaBuilder.like(criteriaBuilder.upper(exp3), ubicacion);
 
-            Predicate pred = criteriaBuilder.or(p0, p1, p2, p3);
-            predicates.add(pred);
+            //Predicate pred = criteriaBuilder.or(p0, p1, p2, p3);
+            predicates.add(p1);
         }
-        if (periodoId != null && periodoId != 0 && (precioDesde != null || precioHasta != null)) {
+        if (nombrePeriodo != null && (precioDesde != null || precioHasta != null)) {
             Join<Publicacion, Precio> joinPrecio = root.join("precioList");
-            Path expPeriod = ((Path) joinPrecio.as(Precio.class)).get("periodoFk").get("periodoId");
+            Path expPeriod = ((Path) joinPrecio.as(Precio.class)).get("periodoFk").get("nombre");
             Path expPrecio = ((Path) joinPrecio.as(Precio.class));
-
-            Predicate pred0 = criteriaBuilder.equal(expPeriod, periodoId);
+            
+            Predicate pred0 = criteriaBuilder.equal(expPeriod, nombrePeriodo);
             Predicate pred1 = criteriaBuilder.isNull(expPrecio.get("fechaHasta"));
             Predicate pred2 = null;
             if (precioDesde != null && precioHasta != null) {
@@ -172,7 +173,7 @@ public class PublicacionFacade extends AbstractFacade<Publicacion> {
      * @return La cantidad de publicaciones que cumplen los filtros
      */ 
     public Long countBusquedaPublicaciones(String palabra, Integer categoriaId,
-            String ubicacion, Integer periodoId, Double precioDesde, Double precioHasta) {
+            String ubicacion, NombrePeriodo nombrePeriodo, Double precioDesde, Double precioHasta) {
 
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
@@ -210,12 +211,12 @@ public class PublicacionFacade extends AbstractFacade<Publicacion> {
             Predicate pred = criteriaBuilder.or(p0, p1, p2, p3);
             predicates.add(pred);
         }
-        if (periodoId != null && periodoId != 0 && (precioDesde != null || precioHasta != null)) {
+        if (nombrePeriodo != null && (precioDesde != null || precioHasta != null)) {
             Join<Publicacion, Precio> joinPrecio = root.join("precioList");
-            Path expPeriod = ((Path) joinPrecio.as(Precio.class)).get("periodoFk").get("periodoId");
+            Path expPeriod = ((Path) joinPrecio.as(Precio.class)).get("periodoFk").get("nombre");
             Path expPrecio = ((Path) joinPrecio.as(Precio.class));
 
-            Predicate pred0 = criteriaBuilder.equal(expPeriod, periodoId);
+            Predicate pred0 = criteriaBuilder.equal(expPeriod, nombrePeriodo);
             Predicate pred1 = criteriaBuilder.isNull(expPrecio.get("fechaHasta"));
             Predicate pred2 = null;
             if (precioDesde != null && precioHasta != null) {

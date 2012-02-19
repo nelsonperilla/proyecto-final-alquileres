@@ -27,7 +27,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
@@ -44,7 +43,6 @@ import javax.ejb.TransactionManagementType;
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-@DeclareRoles({"USUARIO", "ADMIN"})
 public class PublicidadBean implements PublicidadBeanLocal {
 
     @EJB
@@ -59,7 +57,6 @@ public class PublicidadBean implements PublicidadBeanLocal {
     private TipoPagoFacade tipoPagoFacade;
 
     @Override
-    @RolesAllowed({"USUARIO", "ADMIN"})
     public Integer registrarPublicidad(int usuarioId, String titulo, String url, String caption,
             UbicacionPublicidad ubicacion, DuracionPublicidad duracion, byte[] imagen,
             Date fechaDesde, Date fechaHasta, Double precio, NombreTipoPago nombreTipoPago)
@@ -91,7 +88,6 @@ public class PublicidadBean implements PublicidadBeanLocal {
     }
 
     @Override
-    @RolesAllowed({"USUARIO", "ADMIN"})
     public Double getPrecio(DuracionPublicidad duracion, UbicacionPublicidad ubicacion) {
         TipoPublicidad tipo = tipoPubFacade.findByUbicacionYDuracion(ubicacion, duracion);
         if (tipo != null) {

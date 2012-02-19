@@ -72,7 +72,7 @@
         </navigation-case>
         <navigation-case>
             <from-action>#{buscarBean.buscar}</from-action>
-            <to-view-id>/vistas/resultados.xhtml?art=#{buscarBean.buscar}</to-view-id>
+            <to-view-id>/vistas/resultados.xhtml?art=#{buscarBean.criterio}</to-view-id>
             <redirect/>
         </navigation-case>
         <navigation-case>
