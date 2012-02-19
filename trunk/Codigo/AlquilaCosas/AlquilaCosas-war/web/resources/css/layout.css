@@ -91,7 +91,8 @@ h1, h2, h3 {
     border-left:1px solid rgba(0,0,0,0.1); 
     border-right:1px solid rgba(0,0,0,0.1);
 }  
-#menu nav ul ul li a { display:block; padding:10px 20px; border-bottom:1px solid #222;  border-left:none; font-size:14px; }  
+#menu nav ul ul li a { display:block; padding:10px 20px; border-bottom:1px solid #222;  
+                       border-left:none; font-size:14px; }  
 #menu nav ul ul a:hover { 
     background-image:-moz-linear-gradient(0% 100px 90deg, #91A4C9, #043DB0); 
     background-image:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#043DB0), to(#91A4C9));
@@ -153,7 +154,7 @@ h1, h2, h3 {
     display: block;
     text-decoration: none;
     text-align: left !important;
-/*    -webkit-box-shadow: 2px 2px 4px #315EF7;*/
+    /*    -webkit-box-shadow: 2px 2px 4px #315EF7;*/
 }
 
 #userMenu nav ul li {
@@ -165,6 +166,12 @@ h1, h2, h3 {
     background: #ebebeb url(../resources/images/border.png) no-repeat;
     color: #5858FA;
     padding: 7px 15px 7px 30px;
+}
+
+#login a, #login a:hover {
+    text-decoration: underline;
+    color: black;
+    font-family: sans-serif;
 }
 
 #login td {
@@ -179,7 +186,7 @@ h1, h2, h3 {
     height: 50px;
     width: 200px;
     font-size: 24px;
-    font-family: Ubuntu;
+    font-family: sans-serif;
     color: #2c2c2c;  
     text-align: center;
 }
@@ -295,19 +302,27 @@ h1, h2, h3 {
     color: #ffffff;
 }
 
-#searchBar {
-    background-image:url(../resources/images/searchBar.png);
+.searchBar {
+    /*    background-image:url(../resources/images/searchBar.png);*/
+    border-radius: 15px;
+    background: #3E58F6;
     height: 50px;
     width: 659px;
     font-size: 18px;
     font-family: 'Trebuchet MS';
-    color: #2c2c2c;           
+    color: #2c2c2c;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
-#searchBar td {
+.searchBar td {
+    vertical-align: middle;
+}
+
+/*#searchBar td {
     text-align:left; 
     padding: 0px 0px 0px 10px;
-}
+}*/
 
 .ui-widget {
     font-size: 85%;
@@ -431,15 +446,15 @@ h1, h2, h3 {
 }*/
 
 .controlPanel {
-/*    background-image: -moz-linear-gradient(top, #0620E2, #384CE2 40px, #6F7DE8 12px, #E0E3F8);
-    background-image: -webkit-gradient(linear, left top, left bottom, from(#0620E2), 
-		    color-stop(0.3, #384CE2), color-stop(0.3, #6F7DE8), to(#E0E3F8));   
-    background-image: -moz-linear-gradient(top, #0620E2, #384CE2 20px, #6F7DE8 12px, #E0E3F8);
-    background-image: -webkit-gradient(linear, left top, left bottom, from(#0620E2), to(#E0E3F8*/
+    /*    background-image: -moz-linear-gradient(top, #0620E2, #384CE2 40px, #6F7DE8 12px, #E0E3F8);
+        background-image: -webkit-gradient(linear, left top, left bottom, from(#0620E2), 
+                        color-stop(0.3, #384CE2), color-stop(0.3, #6F7DE8), to(#E0E3F8));   
+        background-image: -moz-linear-gradient(top, #0620E2, #384CE2 20px, #6F7DE8 12px, #E0E3F8);
+        background-image: -webkit-gradient(linear, left top, left bottom, from(#0620E2), to(#E0E3F8*/
     background-image: -moz-linear-gradient(top, #ccc, #fff );
     background-image: -webkit-gradient(linear, left top, left bottom, from(#3E58F6), to(#fff));
-                    
-                    
+
+
     width: 100%; 
     /*height: 30px;*/
     text-align: center;
@@ -546,13 +561,13 @@ h1, h2, h3 {
 .item{
     background-image:url(../resources/images/item.png);
     margin-top: 5px;    
-/*    -moz-border-radius: 10px;
-    background: -moz-linear-gradient(top, #E9FDFE, white);
-     Chrome, Safari:
-    background: -webkit-gradient(linear,
-                left top, left bottom, from(#E9FDFE), to(white));
-    border-radius: 10px;
-    border: 1px solid cornflowerblue;*/
+    /*    -moz-border-radius: 10px;
+        background: -moz-linear-gradient(top, #E9FDFE, white);
+         Chrome, Safari:
+        background: -webkit-gradient(linear,
+                    left top, left bottom, from(#E9FDFE), to(white));
+        border-radius: 10px;
+        border: 1px solid cornflowerblue;*/
     padding: 0px 0px 0px 0px; 
     height: 100px;
     width: 600px;
@@ -561,8 +576,8 @@ h1, h2, h3 {
 }
 
 .itemDestacado {
-/*    background: url(../resources/images/item.png) no-repeat;
-    background-size: 600px,120px; */
+    /*    background: url(../resources/images/item.png) no-repeat;
+        background-size: 600px,120px; */
     margin-top: 3px;    
     -moz-border-radius: 10px;
     border-radius: 10px;
@@ -600,7 +615,7 @@ h1, h2, h3 {
     font-family: Trebuchet MS;
     color: #D8BD0B !important;
     text-decoration: underline;
-    
+
 }
 
 /*.itemDestacado .itemTitle {
@@ -633,7 +648,7 @@ h1, h2, h3 {
 
 .precioColDesc {
     text-align: left;
-    
+
 }
 
 .precioColValor {
@@ -644,7 +659,7 @@ h1, h2, h3 {
 
 .itemImgCol {
     width: 50px;
-/*    padding: 2px 2px 2px 5px;*/
+    /*    padding: 2px 2px 2px 5px;*/
 }
 
 .itemContentCol {
@@ -667,7 +682,7 @@ h1, h2, h3 {
     background: -moz-linear-gradient(top, cornflowerblue, white);
     /* Chrome, Safari:*/
     background: -webkit-gradient(linear,
-                left top, left bottom, from(cornflowerblue), to(white));
+        left top, left bottom, from(cornflowerblue), to(white));
     border-radius: 10px;
 }
 
@@ -677,7 +692,7 @@ h1, h2, h3 {
     border: 1px solid black;
 }
 .dataRow {
-    
+
 }
 
 #div1
@@ -736,26 +751,26 @@ h1, h2, h3 {
 /* --------------------- Reputación -------------------- */
 
 .repPuntLabel {
-     width: 100px;
-     text-align: left;
+    width: 100px;
+    text-align: left;
 }
 .repPuntCant {
-     width: 60px;
+    width: 60px;
 }
 .repPuntPorc {
-     width: 60px;
+    width: 60px;
 }
 .repTable {
-     width: 620px;
+    width: 620px;
 }
 .repTableColumn {
-     vertical-align: top;
+    vertical-align: top;
 }
 
 /* --------------------- Ver Calificación -------------------- */
 
 .calTableColumn {
-     vertical-align: top;
+    vertical-align: top;
 }
 
 /* ------ Mis Pagos ---------- */
@@ -795,4 +810,62 @@ h1, h2, h3 {
 
 .ui-datatable .ui-datatable-data .odd-row td{
     height: 30px;
+}
+
+.tituloCol {
+    text-align: center;
+}
+
+.precioCol {
+    width: 50px;
+}
+
+.itemDest {
+    /*    background: #e1d9f7;*/
+    background: -moz-linear-gradient(top, #680271, white);
+    /* Chrome, Safari:*/
+    background: -webkit-gradient(linear, left top, left bottom, from(#680271), to(white));
+}
+
+.imgCol {
+    vertical-align: top;
+}
+
+/* inicio2 */
+
+.ui-datagrid.itemsTable, .itemsTable .ui-datagrid-content.ui-widget-content {
+    border: none !important;
+    border-color: white;
+    border-collapse: separate;
+    text-align: center;
+}
+
+.itemsTable.ui-datagrid .ui-datagrid-data td,
+.itemsTable.ui-datagrid .ui-datagrid-data-empty td{
+    border: none;
+    padding: 1px;
+}
+
+.itemsTable.ui-datagrid .ui-paginator-bottom {
+    background: none;
+}
+
+.itemsTable .ui-widget-header {
+    border: none !important;
+}
+
+.itemsTable .ui-state-default {
+    border: none !important;
+}
+
+.itemsTable tr.ui-widget-content {
+    border: none !important;
+} /* Fin de data table en resultados.xhtml */
+
+.provincia {
+    float: left;
+}
+
+.ciudades li {
+    /*    list-style-type: disc;*/
 }

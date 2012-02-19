@@ -62,7 +62,7 @@ import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
 import javax.persistence.NoResultException;
-import javax.persistence.Query;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -71,7 +71,6 @@ import javax.persistence.Query;
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-@DeclareRoles({"USUARIO", "ADMIN"})
 public class PublicacionBean implements PublicacionBeanLocal {
 
     @Resource(name = "emailConnectionFactory")
@@ -110,12 +109,11 @@ public class PublicacionBean implements PublicacionBeanLocal {
     private ComentarioFacade comentarioFacade;
 
     @Override
-    @RolesAllowed({"USUARIO", "ADMIN"})
     public Integer registrarPublicacion(String titulo, String descripcion,
             Date fechaDesde, Date fechaHasta, boolean destacada, int cantidad,
             int usuarioId, int categoria, List<PrecioDTO> precios,
             List<byte[]> imagenes, int periodoMinimo, int periodoMinimoFk,
-            Integer periodoMaximo, Integer periodoMaximoFk, double latitud, 
+            Integer periodoMaximo, Integer periodoMaximoFk, double latitud,
             double longitud) throws AlquilaCosasException {
 
         Publicacion publicacion = new Publicacion();
@@ -207,15 +205,15 @@ public class PublicacionBean implements PublicacionBeanLocal {
         }
 
         //TODO: guardar latitud y longitud de la publicacion
-        
+
         publicacion.setLatitud(latitud);
         publicacion.setLongitud(longitud);
-        
+
         usuario.agregarPublicacion(publicacion);
         publicacion = publicacionFacade.create(publicacion);
         return publicacion.getPublicacionId();
-        
-        
+
+
     }
 
     @Override
@@ -237,7 +235,8 @@ public class PublicacionBean implements PublicacionBeanLocal {
             }
 
         } catch (Exception e) {
-            System.out.println("el periodo es nulo" + e.getStackTrace());
+            Logger.getLogger(PublicacionBean.class).error("getDatosPublicacion("
+                    + publicacionId + "). El periodo es nulo.");
         }
 
         PublicacionDTO publicacionDto = new PublicacionDTO(
@@ -263,21 +262,20 @@ public class PublicacionBean implements PublicacionBeanLocal {
                         precio.getPeriodoFk().getNombre()));
             }
         }
-        
+
         publicacionDto.setLatitud(p.getLatitud());
         publicacionDto.setLongitud(p.getLongitud());
-        
+
         return publicacionDto;
     }
 
     @Override
-    @RolesAllowed({"USUARIO", "ADMIN"})
     public void actualizarPublicacion(int publicacionId, String titulo, String descripcion,
             Date fechaDesde, Date fechaHasta, boolean destacada, int cantidad,
             int usuarioId, int categoria, List<PrecioDTO> precios,
             List<byte[]> imagenesAgregar, List<Integer> imagenesABorrar,
-            int periodoMinimo, int periodoMinimoFk, Integer periodoMaximo, 
-            Integer periodoMaximoFk, NombreEstadoPublicacion estadoPublicacion, 
+            int periodoMinimo, int periodoMinimoFk, Integer periodoMaximo,
+            Integer periodoMaximoFk, NombreEstadoPublicacion estadoPublicacion,
             double latitud, double longitud) throws AlquilaCosasException {
 
         Publicacion publicacion = null;
@@ -351,7 +349,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
         publicacion.setMinValor(periodoMinimo);
 
         if (periodoMaximoFk != null && periodoMaximoFk > 0) {
-            Periodo periodo2 = periodoFacade.find(periodoMaximoFk); 
+            Periodo periodo2 = periodoFacade.find(periodoMaximoFk);
             publicacion.setMaxPeriodoAlquilerFk(periodo2);
             publicacion.setMaxValor(periodoMaximo);
         }
@@ -369,10 +367,10 @@ public class PublicacionBean implements PublicacionBeanLocal {
             ip.setImagen(imagen);
             publicacion.agregarImagen(ip);
         }
-        
+
         publicacion.setLatitud(latitud);
         publicacion.setLongitud(longitud);
-        
+
         publicacion = publicacionFacade.edit(publicacion);
     }
 
@@ -389,17 +387,16 @@ public class PublicacionBean implements PublicacionBeanLocal {
 
             resultado.setPeriodoMinimoValor(publicacion.getMinValor());
             resultado.setPeriodoMinimo(publicacion.getMinPeriodoAlquilerFk());
-            if(publicacion.getMaxPeriodoAlquilerFk() != null)
-            {
+            if (publicacion.getMaxPeriodoAlquilerFk() != null) {
                 resultado.setPeriodoMaximoValor(publicacion.getMaxValor());
                 resultado.setPeriodoMaximo(publicacion.getMaxPeriodoAlquilerFk());
-            }else{
+            } else {
                 resultado.setPeriodoMaximoValor(100);
                 Periodo temp = new Periodo();
                 temp.setNombre(NombrePeriodo.DIA);
                 resultado.setPeriodoMaximo(temp);
             }
-            
+
             UsuarioDTO propietario = new UsuarioDTO(publicacion.getUsuarioFk());
             resultado.setPropietario(propietario);
 
@@ -416,7 +413,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
                     publicacion.getCategoriaFk().getNombre()));
             resultado.setLatitud(publicacion.getLatitud());//dif: 0.0007502 sumar
             resultado.setLongitud(publicacion.getLongitud());//dif: 0.008808 restar
-            
+
         }
         return resultado;
     }
@@ -425,9 +422,6 @@ public class PublicacionBean implements PublicacionBeanLocal {
         List<Integer> imagenes = new ArrayList<Integer>();
         for (ImagenPublicacion imagen : publicacion.getImagenPublicacionList()) {
             imagenes.add(imagen.getImagenPublicacionId());
-        }
-        if (imagenes.isEmpty()) {
-            imagenes.add(new Integer(-1));
         }
         return imagenes;
     }
@@ -455,14 +449,13 @@ public class PublicacionBean implements PublicacionBeanLocal {
                     comentario.getUsuarioFk().getUsuarioId(),
                     comentario.getUsuarioFk().getNombre(), respuesta);
             pregunta.setBaneado(comentario.getBaneado());
-            
+
             resultado.add(pregunta);
         }
         return resultado;
     }
 
     @Override
-    @RolesAllowed({"USUARIO", "ADMIN"})
     public void setPregunta(int publicacionId, ComentarioDTO nuevaPregunta)
             throws AlquilaCosasException {
         Comentario pregunta = new Comentario();
@@ -503,7 +496,6 @@ public class PublicacionBean implements PublicacionBeanLocal {
     }
 
     @Override
-    @RolesAllowed({"USUARIO", "ADMIN"})
     public List<ComentarioDTO> getPreguntasSinResponder(int usuarioId) {
         Usuario filter = usuarioFacade.find(usuarioId);
         List<Comentario> comentarios = comentarioFacade.findPreguntasSinResponderByUsuario(filter);
@@ -520,7 +512,6 @@ public class PublicacionBean implements PublicacionBeanLocal {
     }
 
     @Override
-    @RolesAllowed({"USUARIO", "ADMIN"})
     public void setRespuesta(ComentarioDTO preguntaConRespuesta)
             throws AlquilaCosasException {
 
@@ -575,10 +566,10 @@ public class PublicacionBean implements PublicacionBeanLocal {
 
     @Override
     @PermitAll
-    public List<Date> getFechasSinStock(int publicationId, int cantidad) 
+    public List<Date> getFechasSinStock(int publicationId, int cantidad)
             throws AlquilaCosasException {
         Publicacion publicacion = publicacionFacade.find(publicationId);
-        if(publicacion == null) {
+        if (publicacion == null) {
             throw new AlquilaCosasException("Publicacion inexistente.");
         }
         List<Date> respuesta = new ArrayList<Date>();
@@ -672,7 +663,6 @@ public class PublicacionBean implements PublicacionBeanLocal {
     }
 
     @Override
-    @RolesAllowed({"USUARIO", "ADMIN"})
     public void crearPedidoAlquiler(int publicationId, int usuarioId,
             Date beginDate, Date endDate, double monto, int cantidad) throws AlquilaCosasException {
         Alquiler nuevoPedido = new Alquiler();

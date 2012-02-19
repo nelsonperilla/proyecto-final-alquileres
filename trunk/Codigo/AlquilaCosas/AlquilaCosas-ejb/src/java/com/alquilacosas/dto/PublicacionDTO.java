@@ -13,13 +13,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
 /**
  *
  * @author jorge
  */
-public class PublicacionDTO implements Serializable  {
-    
+public class PublicacionDTO implements Serializable {
+
     private int id;
     private String titulo;
     private String descripcion;
@@ -30,7 +29,7 @@ public class PublicacionDTO implements Serializable  {
     private int imagenId = -1;
     private List<Integer> imagenIds;
     private Categoria categoria;
-    private CategoriaDTO categoriaF; 
+    private CategoriaDTO categoriaF;
     private List<PrecioDTO> precios;
     private EstadoPublicacion estado;
     private List<ImagenPublicacion> imagenes;
@@ -42,14 +41,13 @@ public class PublicacionDTO implements Serializable  {
     private UsuarioDTO propietario;
     private double latitud;
     private double longitud;
-    
-    public PublicacionDTO(int id,String titulo,String descripcion, 
+
+    public PublicacionDTO(int id, String titulo, String descripcion,
             Date fecha_desde, Date fecha_hasta, boolean destacada,
             int cantidad, Categoria categoria,
-            List<ImagenPublicacion> imagenes, EstadoPublicacion estado, 
-            Integer periodoMinimoValor, Periodo periodoMinimo, 
-            Integer periodoMaximoValor, Periodo periodoMaximo)
-    {
+            List<ImagenPublicacion> imagenes, EstadoPublicacion estado,
+            Integer periodoMinimoValor, Periodo periodoMinimo,
+            Integer periodoMaximoValor, Periodo periodoMaximo) {
         this.id = id;
         this.titulo = titulo;
         this.descripcion = descripcion;
@@ -66,8 +64,8 @@ public class PublicacionDTO implements Serializable  {
         this.periodoMaximoValor = periodoMaximoValor;
         this.periodoMaximo = periodoMaximo;
     }
-    
-    public PublicacionDTO(int id,String titulo,String descripcion, 
+
+    public PublicacionDTO(int id, String titulo, String descripcion,
             Date fecha_desde, Date fecha_hasta, boolean destacada,
             int cantidad) {
         this.id = id;
@@ -86,8 +84,6 @@ public class PublicacionDTO implements Serializable  {
     public void setImagenes(List<ImagenPublicacion> imagenes) {
         this.imagenes = imagenes;
     }
-    
-    
 
     /**
      * @return the titulo
@@ -134,8 +130,8 @@ public class PublicacionDTO implements Serializable  {
     /**
      * @return the fecha_hasta
      */
-   public Date getFechaHasta() {
-       return fechaHasta;
+    public Date getFechaHasta() {
+        return fechaHasta;
     }
 
     /**
@@ -163,7 +159,7 @@ public class PublicacionDTO implements Serializable  {
      * @return the cantidad
      */
     public int getCantidad() {
-        
+
         return cantidad;
     }
 
@@ -173,7 +169,6 @@ public class PublicacionDTO implements Serializable  {
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
     }
-
 
     /**
      * @return the id
@@ -203,8 +198,9 @@ public class PublicacionDTO implements Serializable  {
 
     public void setImagenIds(List<Integer> imagenIds) {
         this.imagenIds = imagenIds;
-        if(imagenIds != null && !imagenIds.isEmpty())
+        if (imagenIds != null && !imagenIds.isEmpty()) {
             imagenId = imagenIds.get(0);
+        }
     }
 
     public String getBarrio() {
@@ -222,7 +218,8 @@ public class PublicacionDTO implements Serializable  {
     public void setCiudad(String ciudad) {
         this.ciudad = ciudad;
     }
-        /**
+
+    /**
      * @return the categoriaF
      */
     public CategoriaDTO getCategoriaF() {
@@ -243,8 +240,6 @@ public class PublicacionDTO implements Serializable  {
     public void setPeriodoMaximoValor(Integer periodoMaximo) {
         this.periodoMaximoValor = periodoMaximo;
     }
-
-
 
     public Integer getPeriodoMinimoValor() {
         return periodoMinimoValor;
@@ -269,7 +264,7 @@ public class PublicacionDTO implements Serializable  {
     public void setPeriodoMaximo(Periodo periodoMaximo) {
         this.periodoMaximo = periodoMaximo;
     }
-    
+
     public Categoria getCategoria() {
         return categoria;
     }
@@ -343,5 +338,4 @@ public class PublicacionDTO implements Serializable  {
     public void setLongitud(double longitud) {
         this.longitud = longitud;
     }
-    
 }

@@ -41,8 +41,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import javax.annotation.Resource;
-import javax.annotation.security.DeclareRoles;
-import javax.annotation.security.RolesAllowed;
+import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.jms.Connection;
@@ -58,7 +57,6 @@ import org.apache.log4j.Logger;
  * @author wilson
  */
 @Stateless
-@DeclareRoles({"USUARIO", "ADMIN"})
 public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
 
     @Resource(name = "emailConnectionFactory")
@@ -87,7 +85,7 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
     private PedidoCambioXEstadoFacade pedidoXEstadoFacade;
 
     @Override
-    @RolesAllowed({"USUARIO", "ADMIN"})
+    @PermitAll
     public List<AlquilerDTO> getAlquileresSinCalificarPorUsuario(int usuarioId) {
         Usuario usuario = usuarioFacade.find(usuarioId);
         List<Alquiler> alquileres = alquilerFacade.getAlquileresTomadosFinalizadosSinCalificar(usuario);
@@ -95,7 +93,7 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
     }
 
     @Override
-    @RolesAllowed({"USUARIO", "ADMIN"})
+    @PermitAll
     public void registrarCalificacion(Integer puntuacion, Integer alquilerId, String comentario, Integer usuarioId) {
         Alquiler alquiler = alquilerFacade.find(alquilerId);
         Usuario usuarioCalificado = alquiler.getPublicacionFk().getUsuarioFk();
@@ -124,14 +122,14 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
     }
 
     @Override
-    @RolesAllowed({"USUARIO", "ADMIN"})
+    @PermitAll
     public List<Puntuacion> getPuntuaciones() {
         List<Puntuacion> puntuaciones = puntuacionFacade.findAll();
         return puntuaciones;
     }
 
     @Override
-    @RolesAllowed({"USUARIO", "ADMIN"})
+    @PermitAll
     public List<AlquilerDTO> getAlquileresActivosPorUsuario(int usuarioId) {
         Usuario usuario = usuarioFacade.find(usuarioId);
         List<Alquiler> alquileres = alquilerFacade.getAlquileresTomadosActivos(usuario);
@@ -139,7 +137,7 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
     }
 
     @Override
-    @RolesAllowed({"USUARIO", "ADMIN"})
+    @PermitAll
     public List<AlquilerDTO> getAlquileresConCalificarPorUsuario(int usuarioId) {
         Usuario usuario = usuarioFacade.find(usuarioId);
         List<Alquiler> alquileres = alquilerFacade.getAlquileresTomadosFinalizadosConCalificacion(usuario);
@@ -147,7 +145,7 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
     }
 
     @Override
-    @RolesAllowed({"USUARIO", "ADMIN"})
+    @PermitAll
     public CalificacionDTO getCalificacionOfrece(Integer alquilerId) throws AlquilaCosasException {
         CalificacionDTO calificacionDTO = new CalificacionDTO();
         Alquiler alquiler = alquilerFacade.find(alquilerId);
@@ -169,7 +167,7 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
     }
 
     @Override
-    @RolesAllowed({"USUARIO", "ADMIN"})
+    @PermitAll
     public CalificacionDTO getCalificacionToma(Integer alquilerId) throws AlquilaCosasException {
         CalificacionDTO calificacionDTO = new CalificacionDTO();
         Alquiler alquiler = alquilerFacade.find(alquilerId);
@@ -191,7 +189,7 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
     }
 
     @Override
-    @RolesAllowed({"USUARIO", "ADMIN"})
+    @PermitAll
     public void registrarReplica(int calificacionId, String comentarioReplica, int usuarioId) throws AlquilaCosasException {
         Calificacion calificacionAReplicar = calificacionFacade.find(calificacionId);
         calificacionAReplicar.setFechaReplica(new Date());
@@ -212,7 +210,7 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
     }
 
     @Override
-    @RolesAllowed({"USUARIO", "ADMIN"})
+    @PermitAll
     public boolean cancelarAlquiler(int alquilerId) throws AlquilaCosasException {
         Alquiler alquiler = alquilerFacade.find(alquilerId);
         if (alquiler == null) {
@@ -245,7 +243,6 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
     }
 
     @Override
-    @RolesAllowed({"USUARIO", "ADMIN"})
     public List<Date> getFechasSinStock(int alquilerId) {
         Alquiler alquiler = alquilerFacade.find(alquilerId);
         Publicacion publicacion = alquiler.getPublicacionFk();
@@ -338,7 +335,6 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
     }
 
     @Override
-    @RolesAllowed({"USUARIO", "ADMIN"})
     public PedidoCambioDTO getPedidoCambio(int pedidoCambioId) {
         PedidoCambio pedido = pedidoFacade.find(pedidoCambioId);
         PedidoCambioDTO dto = new PedidoCambioDTO(pedidoCambioId,
@@ -347,7 +343,6 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
     }
 
     @Override
-    @RolesAllowed({"USUARIO", "ADMIN"})
     public void solicitarCambioAlquiler(int alquilerId, NombrePeriodo periodo, int duracion)
             throws AlquilaCosasException {
 
@@ -417,7 +412,6 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
     }
 
     @Override
-    @RolesAllowed({"USUARIO", "ADMIN"})
     public void cancelarPedidoCambio(int pedidoCambioId) {
         PedidoCambio pedido = pedidoFacade.find(pedidoCambioId);
 

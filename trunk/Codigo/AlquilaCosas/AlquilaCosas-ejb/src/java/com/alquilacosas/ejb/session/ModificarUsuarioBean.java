@@ -16,8 +16,6 @@ import com.alquilacosas.facade.ProvinciaFacade;
 import com.alquilacosas.facade.UsuarioFacade;
 import java.util.Date;
 import java.util.List;
-import javax.annotation.security.DeclareRoles;
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
@@ -26,7 +24,6 @@ import javax.ejb.Stateless;
  * @author damiancardozo
  */
 @Stateless
-@DeclareRoles({"USUARIO", "ADMIN"})
 public class ModificarUsuarioBean implements ModificarUsuarioBeanLocal {
 
     @EJB
@@ -37,7 +34,6 @@ public class ModificarUsuarioBean implements ModificarUsuarioBeanLocal {
     private PaisFacade paisFacade;
     
     @Override
-    @RolesAllowed({"USUARIO", "ADMIN"})
     public UsuarioDTO actualizarUsuario(int idUsuario, String telefono, Date fechaNacimiento, 
              DomicilioDTO dom) throws AlquilaCosasException {
         Usuario usuario = usuarioFacade.find(idUsuario);

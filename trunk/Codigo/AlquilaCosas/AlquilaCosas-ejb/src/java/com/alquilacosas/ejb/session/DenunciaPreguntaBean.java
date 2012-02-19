@@ -6,7 +6,6 @@ package com.alquilacosas.ejb.session;
 
 import com.alquilacosas.dto.ComentarioDTO;
 import com.alquilacosas.dto.DenunciaDTO;
-import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.entity.Comentario;
 import com.alquilacosas.ejb.entity.Denuncia;
 import com.alquilacosas.ejb.entity.EstadoDenuncia;
@@ -19,7 +18,6 @@ import com.alquilacosas.facade.MotivoDenunciaFacade;
 import com.alquilacosas.facade.PublicacionFacade;
 import com.alquilacosas.facade.UsuarioFacade;
 import java.util.List;
-import javax.annotation.security.DeclareRoles;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -34,7 +32,6 @@ import javax.ejb.TransactionManagementType;
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-@DeclareRoles({"USUARIO", "ADMIN"})
 public class DenunciaPreguntaBean implements DenunciaPreguntaBeanLocal
 {
 

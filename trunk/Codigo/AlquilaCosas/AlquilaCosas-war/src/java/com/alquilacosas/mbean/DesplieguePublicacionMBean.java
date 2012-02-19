@@ -65,6 +65,7 @@ public class DesplieguePublicacionMBean implements Serializable {
     private int denunciaId;   
     private int motivoDenuncia;
     private MapModel mapModel;
+    List<Integer> idImagenes;
 
     /** Creates a new instance of DesplieguePublicacionMBean */
     public DesplieguePublicacionMBean() {
@@ -120,14 +121,12 @@ public class DesplieguePublicacionMBean implements Serializable {
         for (Periodo periodo : listaPeriodos) {
             periodos.add(new SelectItem(periodo.getPeriodoId(), periodo.getNombre().name()));
         }
-        
-        System.out.println("imagenes: " + publicacion.getImagenIds().size());
+        idImagenes = publicacion.getImagenIds();
     }
 
     public void redirect() {
         try {
             FacesContext.getCurrentInstance().getExternalContext().redirect("inicio.xhtml");
-            FacesContext.getCurrentInstance().responseComplete();
         } catch (Exception e) {
             Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al ejecutar redirect().");
         }
@@ -686,5 +685,13 @@ public class DesplieguePublicacionMBean implements Serializable {
      */
     public void setMapModel(MapModel gMap) {
         this.mapModel = gMap;
+    }
+
+    public List<Integer> getIdImagenes() {
+        return idImagenes;
+    }
+
+    public void setIdImagenes(List<Integer> idImagenes) {
+        this.idImagenes = idImagenes;
     }
 }

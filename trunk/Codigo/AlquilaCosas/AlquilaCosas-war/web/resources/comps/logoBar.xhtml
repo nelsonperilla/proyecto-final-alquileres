@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:cc="http://java.sun.com/jsf/composite"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
 
     <!-- INTERFACE -->
     <cc:interface>
@@ -11,30 +12,34 @@
 
     <!-- IMPLEMENTATION -->
     <cc:implementation>
-        <h:form>
-            <table>
-                <tr>
-                    <td id="logo">
-                        <h:graphicImage value="/resources/images/logo.png"/>  
-                    </td>
-                    <td >
-                        <table id="searchBar" >
-                            <tr>
-                                <td valign="center" width="550px"  > 
-                                    <p:inputText value="#{buscarBean.buscar}" 
-                                                 required="true"
-                                                 style="width:540px" />
-                                </td>
-                                <td valign="center"> 
-                                    <h:commandButton action="#{buscarBean.buscar}"
-                                                   value="Buscar" />
-                                </td>
-                            </tr>
-                        </table>
-                    </td>   
-                </tr>
-            </table> 
-        </h:form>
+        <table>
+            <tr>
+                <td id="logo">
+                    <h:graphicImage value="#{resource['images:logo2.png']}" height="90" />  
+                </td>
+                <td >
+                    <h:form>
+                        <h:panelGrid columns="3" styleClass="searchBar" cellpadding="0" cellspacing="4" >
+                            <p:inputText value="#{buscarBean.criterio}" 
+                                         required="true" style="width:380px" />
+                            <p:commandButton action="#{buscarBean.buscar}" ajax="false"
+                                             value="Buscar" style="font-size: 14px;" />
+                            <p:commandButton id="ciudad" value="#{buscarBean.ciudad}" 
+                                             style="width: 120px; margin-left: 20px; font-size: 12px" icon="ui-icon-triangle-1-s" />
+                            <p:overlayPanel widgetVar="ciudades" for="ciudad" hideEffect="fade" showEffect="fade" 
+                                            style="background: #333; color: white; width: 400px; text-align: left;" >
+                                <div style="width: 100%; float: left;">
+                                    <p:inputText style="width: 300px; margin-right: 10px" />
+                                    <p:commandButton value="Actualizar" style="font-size: 10px" />
+                                </div>
+                            </p:overlayPanel>
+
+                        </h:panelGrid>
+                    </h:form>
+                </td>   
+            </tr>
+        </table> 
+
 
 
     </cc:implementation>

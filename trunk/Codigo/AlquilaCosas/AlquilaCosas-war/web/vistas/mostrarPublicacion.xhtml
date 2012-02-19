@@ -44,15 +44,16 @@
                     </tr>
                     <tr>
                         <td width="440">
-                            <p:galleria value="#{publicacionDesplegada.publicacion.imagenIds}" var="image"
+                            <p:galleria value="#{publicacionDesplegada.idImagenes}" var="image"
                                         effect="#{publicacionDesplegada.effect}" effectSpeed="1000" 
                                         panelWidth="320" panelHeight="300" 
-                                        rendered="#{not empty publicacionDesplegada.publicacion.imagenIds}" >  
-                                <h:graphicImage value="/image?id=#{image}" width="320" height="300"
-                                                rendered="#{image != -1}"/> 
-                                <h:graphicImage value="#{resource['images:noImage.png']}"
-                                                rendered="#{image == -1}" />
-                            </p:galleria>  
+                                        rendered="#{publicacionDesplegada.idImagenes.size() > 1}" >  
+                                <h:graphicImage value="/image?id=#{image}" width="320" height="300" /> 
+                            </p:galleria>
+                            <h:graphicImage value="/image?id=#{publicacionDesplegada.idImagenes.get(0)}" 
+                                            rendered="#{publicacionDesplegada.idImagenes.size() == 1}" width="320" height="300" /> 
+                            <h:graphicImage value="#{resource['images:noImage.png']}" width="320" height="300"
+                                            rendered="#{empty publicacionDesplegada.idImagenes}" style="border: 1px solid black;" />
 
                         </td>
                         <td width="310" >

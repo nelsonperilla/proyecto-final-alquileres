@@ -31,6 +31,22 @@ public class LoginFacade extends AbstractFacade<Login> {
         super(Login.class);
     }
     
+    public Login login(String username, String password) {
+        Query query = em.createQuery("SELECT l FROM Login l WHERE l.username = :username AND "
+                + "l.password = :password");
+        query.setParameter("username", username);
+        query.setParameter("password", password);
+        Login login = null;
+        try {
+            login = (Login) query.getSingleResult(); 
+        } catch (Exception e) {
+            Logger.getLogger(LoginFacade.class).
+                    error("checkCredentials(). "
+                    + "Credenciales incorrectas.");
+        }
+        return login;
+    }
+    
     public Login findByUsername(String username) {
         Login login = null;
         Query query = em.createNamedQuery("Login.findByUsername");

@@ -15,7 +15,7 @@
         <p:outputPanel  rendered="#{login.logueado}" >
                 <p:panel styleClass="controlPanel">
                     <!--<h3 style="color:#174867; margin-top: 1px">Usuario</h3><br/>-->
-                    <h:outputLabel value="Hola #{login.username}" styleClass="labelBienvenida" />
+                    <h:outputLabel value="Hola #{login.usuario.nombre}" styleClass="labelBienvenida" />
                     <div id="userMenu" >
                         <nav id="userMenuNav">
                             <ul>
@@ -60,7 +60,7 @@
                                 </li>
                                 <li>
                                     <h:form>
-                                        <h:commandLink value="Salir" rendered="#{not login.administrador}" action="#{login.logout}" />
+                                        <h:commandLink value="Salir" rendered="#{not login.administrador}" action="#{login.salir}" />
                                     </h:form>
                                 </li>
                             </ul>

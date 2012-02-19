@@ -8,6 +8,7 @@ import com.alquilacosas.common.Busqueda;
 import com.alquilacosas.dto.CategoriaDTO;
 import com.alquilacosas.dto.PeriodoDTO;
 import com.alquilacosas.dto.PublicacionDTO;
+import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
 import com.alquilacosas.ejb.session.BuscarPublicacionBeanLocal;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -45,7 +46,8 @@ public class ResultadosMBean implements Serializable {
     private int publicacionSeleccionada;
     private int totalRegistros;
     private boolean noBuscarEnModel = true;
-    private Double precioDesde, precioHasta;
+    private Double precioDesde, precioHasta, precioMin, precioMax;
+    private String range;
 
     /** Creates a new instance of BuscarPublicacionMBean */
     public ResultadosMBean() {
@@ -105,6 +107,13 @@ public class ResultadosMBean implements Serializable {
     }
 
     public void filtrarPrecio() {
+        precioDesde = 0D;
+        precioHasta = 1000000D;
+        try {
+            precioDesde = Double.valueOf(range.split("-")[0]);
+            precioHasta = Double.valueOf(range.split("-")[1]);
+        } catch (Exception e) {
+        }
         buscar(0, 10);
         noBuscarEnModel = true;
     }
@@ -129,10 +138,12 @@ public class ResultadosMBean implements Serializable {
     }
 
     public void buscar(int first, int pageSize) {
-        Busqueda b = buscarBean.buscar(busqueda, categoria, ubicacion, periodoSeleccionado,
+        Busqueda b = buscarBean.buscar(busqueda, categoria, ubicacion, NombrePeriodo.DIA,
                 precioDesde, precioHasta, pageSize, first);
         publicaciones = b.getPublicaciones();
         categorias = b.getCategorias();
+        precioMin = precioDesde = b.getPrecioMinimo();
+        precioMax = precioHasta = b.getPrecioMaximo();
         if (first == 0) {
             totalRegistros = b.getTotalRegistros();
             if (model != null) {
@@ -269,5 +280,29 @@ public class ResultadosMBean implements Serializable {
 
     public void setPrecioHasta(Double precioHasta) {
         this.precioHasta = precioHasta;
+    }
+
+    public Double getPrecioMax() {
+        return precioMax;
+    }
+
+    public void setPrecioMax(Double precioMax) {
+        this.precioMax = precioMax;
+    }
+
+    public Double getPrecioMin() {
+        return precioMin;
+    }
+
+    public void setPrecioMin(Double precioMin) {
+        this.precioMin = precioMin;
+    }
+
+    public String getRange() {
+        return range;
+    }
+
+    public void setRange(String range) {
+        this.range = range;
     }
 }

@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
@@ -85,7 +84,6 @@ public class PagosRecibidosBean implements PagosRecibidosBeanLocal {
         return pagoFacade.countPagosRecibidos(null, fechaDesde, confirmado);
     }
     
-    @RolesAllowed({"USUARIO", "ADMIN"})
     @Override
     public void confirmarPago(Integer pagoId) {
 
