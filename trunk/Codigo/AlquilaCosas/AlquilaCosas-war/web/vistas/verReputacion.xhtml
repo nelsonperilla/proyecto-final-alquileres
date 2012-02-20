@@ -32,7 +32,9 @@
                         <h:panelGrid columns="1" styleClass="repTable" rendered="#{reputacion.usuarioCorrecto}" >
                             <p:outputPanel>Usuario: #{reputacion.usuarioDTO.username}</p:outputPanel>
                             <p:outputPanel>Antiguedad: #{reputacion.usuarioDTO.antiguedad}</p:outputPanel>
-                            <p:outputPanel>Ubicación: #{reputacion.usuarioDTO.domicilio.provincia}, #{reputacion.usuarioDTO.domicilio.pais}</p:outputPanel>
+                            <p:outputPanel rendered="#{not empty reputacion.usuarioDTO.domicilio}">
+                                Ubicación: #{reputacion.usuarioDTO.domicilio.provincia}, #{reputacion.usuarioDTO.domicilio.pais}
+                            </p:outputPanel>
                             <h:panelGrid columns="2">
                                 <p:outputPanel>Reputación: </p:outputPanel>
                                 <p:rating value="#{reputacion.usuarioDTO.userRating}" stars="10" disabled="true"/>

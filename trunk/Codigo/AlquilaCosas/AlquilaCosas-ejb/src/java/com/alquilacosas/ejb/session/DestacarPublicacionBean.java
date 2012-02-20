@@ -38,7 +38,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
@@ -149,7 +148,6 @@ public class DestacarPublicacionBean implements DestacarPublicacionBeanLocal {
     }
     
     @Override
-    @RolesAllowed({"USUARIO", "ADMIN"})
     public PublicacionDTO getPublicacion(Integer publicacionId, Integer usuarioId) throws AlquilaCosasException {
         Publicacion publicacion = publicacionFacade.find(publicacionId);
         if(publicacion == null) {

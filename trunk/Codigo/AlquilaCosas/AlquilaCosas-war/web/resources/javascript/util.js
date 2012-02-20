@@ -27,7 +27,7 @@ function agregarPregunta(xhr, status, args) {
         nuevaPregunta.show();
     }
     else {
-        loginDlg.show();
+        login.show();
     }
 }
 
@@ -46,6 +46,13 @@ function revisarLogueo(xhr, status, args) {
             loginDlg.hide();
             confirmRent.show();
         }
+    }
+}
+
+function revisarLogueo2(xhr, status, args) {
+    if(args.logueado) {
+       var url = window.location;
+       window.location = url;
     }
 }
 
@@ -73,7 +80,7 @@ function revisarDisponibilidad(xhr, status, args){
             if(args.logueado)
                 confirmRent.show();
             else
-                loginDlg.show();
+                login.show();
         }
     }
 }
@@ -112,43 +119,43 @@ function getUrlVars()
     return vars;
 }
 
-    var currentMarker = null;
-    function handlePointClick(event) {  
+var currentMarker = null;
+function handlePointClick(event) {  
         
-        if(currentMarker == null) {  
-            document.getElementById('lat').value = event.latLng.lat();  
-            document.getElementById('lng').value = event.latLng.lng();  
+    if(currentMarker == null) {  
+        document.getElementById('lat').value = event.latLng.lat();  
+        document.getElementById('lng').value = event.latLng.lng();  
   
-            currentMarker = new google.maps.Marker({  
-                position:new google.maps.LatLng(event.latLng.lat(), event.latLng.lng())  
-            }); 
+        currentMarker = new google.maps.Marker({  
+            position:new google.maps.LatLng(event.latLng.lat(), event.latLng.lng())  
+        }); 
                               
-            myMap.addOverlay(currentMarker);  
-        }
-            dlg.show();  
-    }  
+        myMap.addOverlay(currentMarker);  
+    }
+    dlg.show();  
+}  
   
-    function markerAddComplete() {  
-        var title = "alquilacosas";//document.getElementById('title');  
-        currentMarker.setTitle(title.value);  
-        dlg.hide();  
-    }  
+function markerAddComplete() {  
+    var title = "alquilacosas";//document.getElementById('title');  
+    currentMarker.setTitle(title.value);  
+    dlg.hide();  
+}  
   
-    function cancel() {  
-        dlg.hide();  
-        currentMarker.setMap(null);  
-        currentMarker = null;  
+function cancel() {  
+    dlg.hide();  
+    currentMarker.setMap(null);  
+    currentMarker = null;  
   
-        return false;  
-    }  
+    return false;  
+}  
 
-    function onMarkerDrag(event){
-        currentMarker = event.getMarker();
-        document.getElementById('lat').value = event.latLng.lat();  
-        document.getElementById('lng').value = event.latLng.lng();          
-    }
+function onMarkerDrag(event){
+    currentMarker = event.getMarker();
+    document.getElementById('lat').value = event.latLng.lat();  
+    document.getElementById('lng').value = event.latLng.lng();          
+}
     
-    function updateCoordinates(event){
-        document.getElementById('lat').value = event.latLng.lat();  
-        document.getElementById('lng').value = event.latLng.lng();          
-    }
+function updateCoordinates(event){
+    document.getElementById('lat').value = event.latLng.lat();  
+    document.getElementById('lng').value = event.latLng.lng();          
+}

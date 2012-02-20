@@ -61,8 +61,7 @@
                         <p:message id="password2Val" for="password2" />
                     </h:panelGrid>
                     </p:fieldset>
-                    <!-- <p:separator /> -->
-                    <!-- <h3>Datos Personales</h3> -->
+
                     <p:fieldset legend="Datos Personales" styleClass="fieldset" >
                     <h:panelGrid columns="3" columnClasses="labelColumn,null,null" >
                         <h:outputLabel value="Nombre" />
@@ -80,7 +79,7 @@
                         </p:inputText>
                         <p:message for="apellido" />
                         <h:outputLabel value="DNI" />
-                        <p:inputText id="dni" value="#{regUsuario.dni}" required="true"
+                        <p:inputText id="dni" value="#{regUsuario.dni}"
                                      requiredMessage="Valor requerido"
                                      validatorMessage="maximo 45 caracteres" >
                             <f:validateLength maximum="45" />
@@ -91,7 +90,7 @@
                         <p:message for="telefono" />
                         <h:outputLabel value="Fecha Nacimiento" />
                         <p:calendar id="fecha" value="#{regUsuario.fechaNacimiento}" navigator="true" 
-                                    maxdate="#{regUsuario.today}" yearRange="c-80:c" required="true"
+                                    maxdate="#{regUsuario.today}" yearRange="c-80:c"
                                     requiredMessage="Valor requerido" pattern="dd/MM/yyyy"
                                     validatorMessage="maximo 45 caracteres" >
                             <f:validateLength maximum="45" />
@@ -99,9 +98,7 @@
                         <p:message for="fecha" />
                     </h:panelGrid>
                     </p:fieldset>
-                    <!-- <p:separator /> -->
-
-                    <!-- <h3>Domicilio</h3> -->
+                    
                     <p:fieldset legend="Domicilio" styleClass="fieldset" >
                     <h:panelGrid columns="3" columnClasses="labelColumn,null,null" >
                         <h:outputLabel value="Pais" />
@@ -169,7 +166,7 @@
                         </h:selectBooleanCheckbox>
                         <h:panelGrid columns="1" >
                             <h:outputText value="Acepto los " />
-                            <p:lightBox iframe="true" width="85%" height="80%" >
+                            <p:lightBox iframe="true" width="800px" height="80%" >
                                 <h:outputLink value="http://localhost:8080/AlquilaCosas-war/vistas/terminos.html" title="Terminos y Condiciones" >
                                     <h:outputText value="terminos y condiciones" />
                                 </h:outputLink>

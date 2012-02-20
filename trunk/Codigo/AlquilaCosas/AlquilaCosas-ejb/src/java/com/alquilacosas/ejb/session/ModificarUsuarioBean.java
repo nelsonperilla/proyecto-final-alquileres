@@ -70,18 +70,30 @@ public class ModificarUsuarioBean implements ModificarUsuarioBeanLocal {
         Usuario u = usuarioFacade.find(id);
         UsuarioDTO userFacade = new UsuarioDTO(u.getUsuarioId(), u.getNombre(), 
                 u.getApellido(), u.getEmail(), u.getTelefono(), u.getDni(), u.getFechaNac());
-        Domicilio d = u.getDomicilioList().get(0);
-        
-        DomicilioDTO dom = new DomicilioDTO(d.getCalle(), d.getNumero(),
+        Domicilio d = null;
+        if(!u.getDomicilioList().isEmpty()) {
+            d = u.getDomicilioList().get(0);
+            DomicilioDTO dom = new DomicilioDTO(d.getCalle(), d.getNumero(),
                 d.getPiso(), d.getDepto(), d.getBarrio(), d.getCiudad());
-        Provincia prov = d.getProvinciaFk();
-        dom.setProvinciaId(prov.getProvinciaId());
-        dom.setProvincia(prov.getNombre());
-        dom.setPaisId(prov.getPaisFk().getPaisId());
-        dom.setPais(prov.getPaisFk().getNombre());
-        
-        userFacade.setDomicilio(dom);
+            Provincia prov = d.getProvinciaFk();
+            dom.setProvinciaId(prov.getProvinciaId());
+            dom.setProvincia(prov.getNombre());
+            dom.setPaisId(prov.getPaisFk().getPaisId());
+            dom.setPais(prov.getPaisFk().getNombre());
+
+            userFacade.setDomicilio(dom);
+        }
         return userFacade;
+    }
+    
+    @Override
+    public void agregarDomicilio(Integer usuarioId, DomicilioDTO dom) {
+        Usuario usuario = usuarioFacade.find(usuarioId);
+        Provincia provincia = provinciaFacade.find(dom.getProvinciaId());
+        Domicilio domicilio = new Domicilio(dom.getCalle(), dom.getNumero(), 
+                dom.getPiso(), dom.getDepto(), dom.getBarrio(), dom.getCiudad(), provincia);
+        usuario.agregarDomicilio(domicilio);
+        usuarioFacade.edit(usuario);
     }
     
     @Override

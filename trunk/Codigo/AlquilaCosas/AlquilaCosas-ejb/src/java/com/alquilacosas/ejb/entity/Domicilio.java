@@ -51,6 +51,12 @@ public class Domicilio implements Serializable {
     @Column(name = "PISO")
     private Integer piso;
     
+    @Column(name = "DEPTO")
+    private String depto;
+    
+    @Column(name = "BARRIO")
+    private String barrio;
+    
     @Size(min = 1, max = 100)
     @Column(name = "CIUDAD")
     private String ciudad;
@@ -58,13 +64,6 @@ public class Domicilio implements Serializable {
     @JoinColumn(name = "PROVINCIA_FK", referencedColumnName = "PROVINCIA_ID")
     @ManyToOne(optional = false)
     private Provincia provinciaFk;
-    
-    
-    @Column(name = "DEPTO")
-    private String depto;
-    
-    @Column(name = "BARRIO")
-    private String barrio;
     
     @JoinColumn(name = "USUARIO_FK", referencedColumnName = "USUARIO_ID")
     @ManyToOne(optional = false)
@@ -77,14 +76,15 @@ public class Domicilio implements Serializable {
         this.domicilioId = domicilioId;
     }
 
-    public Domicilio(Integer domicilioId, String calle, Integer numero, Integer piso, 
-            String depto, String barrio) {
-        this.domicilioId = domicilioId;
+    public Domicilio(String calle, Integer numero, Integer piso, 
+            String depto, String barrio, String ciudad, Provincia provincia) {
         this.calle = calle;
         this.numero = numero;
         this.piso = piso;
         this.depto = depto;
         this.barrio = barrio;
+        this.ciudad = ciudad;
+        this.provinciaFk = provincia;
     }
 
     public Integer getDomicilioId() {

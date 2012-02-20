@@ -61,6 +61,21 @@ public class LoginFacade extends AbstractFacade<Login> {
         return login;
     }
     
+    public Login findByEmail(String email) {
+        Login login = null;
+        Query query = em.createQuery("SELECT l FROM Login l, Usuario u WHERE l.usuarioFk = u "
+                + "AND u.email = :email");
+        query.setParameter("email", email);
+        try {
+            login = (Login) query.getSingleResult();
+        } catch(NoResultException e) {
+            Logger.getLogger(LoginFacade.class).
+                    error("findByEmail(). "
+                    + "Excepcion al ejecutar consulta: " + e);
+        }
+        return login;
+    }
+    
     public Login findByUsuario(Usuario usuario) {
        Query query = em.createNamedQuery("Login.findByUsuarioFk");
        query.setParameter("usuarioFk", usuario);

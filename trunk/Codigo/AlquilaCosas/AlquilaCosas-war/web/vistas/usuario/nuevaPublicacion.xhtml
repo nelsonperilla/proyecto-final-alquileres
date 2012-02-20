@@ -122,7 +122,7 @@
                             </p:gmap>
                             <p:dialog widgetVar="dlg" showEffect="fade" header="Confirme su marcador"  closable="false">  
                                 <h:panelGrid columns="2">  
-                                    <h:outputLabel for="title" value="La posición del marcador es correcta" />  
+                                    <h:outputLabel value="La posición del marcador es correcta" />  
                                     <f:facet name="footer">  
                                         <p:commandButton value="Confirmar"   
                                                          actionListener="#{publicacion.addMarker}"  
@@ -172,6 +172,66 @@
 
                             </ui:repeat>
 
+                        </p:fieldset>
+
+                        <p:fieldset id="panelDireccion" legend="Direccion" styleClass="fieldset" rendered="#{publicacion.pedirDireccion}" >
+
+                            <p>
+                                Aun no has registrado ninguna direccion. Por favor hazlo ahora para poder publicar un producto.
+                            </p>
+                            
+                            <h:panelGrid columns="3" cellpadding="2" columnClasses="labelColumn,fieldColumn" 
+                                         width="100%" style="text-align: center" >
+
+                                <h:outputLabel value="Pais" />
+                                <h:selectOneMenu id="pais" value="#{publicacion.paisSeleccionado}" required="true"
+                                                 requiredMessage="Valor requerido" >
+                                    <f:selectItem itemLabel="Seleccione un pais" itemValue="" />
+                                    <f:selectItems value="#{publicacion.paises}" />
+                                    <p:ajax event="change" update="provincia growl" process="@this"
+                                            listener="#{publicacion.actualizarProvincias}" />
+                                </h:selectOneMenu>
+                                <p:message for="pais" />
+
+                                <h:outputLabel value="Provincia" />
+                                <h:selectOneMenu id="provincia" value="#{publicacion.provinciaSeleccionada}" 
+                                                 required="true" requiredMessage="Valor requerido" >
+                                    <f:selectItem itemLabel="Seleccione una provincia" itemValue="" />
+                                    <f:selectItems value="#{publicacion.provincias}" />
+                                    <p:ajax event="change" process="@this" />
+                                </h:selectOneMenu>
+                                <p:message for="provincia" />
+
+                                <h:outputLabel value="Ciudad" />
+                                <p:inputText id="ciudad" value="#{publicacion.ciudad}" required="true"
+                                             requiredMessage="Valor requerido" styleClass="datosInput" />
+                                <p:message for="ciudad" />
+
+                                <h:outputLabel value="Barrio" />
+                                <p:inputText id="barrio" value="#{publicacion.barrio}" required="true"
+                                             requiredMessage="Valor requerido" styleClass="datosInput" />
+                                <p:message for="barrio" />
+
+                                <h:outputLabel value="Calle" />
+                                <p:inputText id="calle" value="#{publicacion.calle}" required="true"
+                                             requiredMessage="Valor requerido" styleClass="datosInput" />
+                                <p:message for="calle" />
+
+                                <h:outputLabel value="Numero" />
+                                <p:inputText id="numero" value="#{publicacion.numero}" required="true"
+                                             requiredMessage="Valor requerido" styleClass="datosInput" />
+                                <p:message for="numero" />
+
+                                <h:outputLabel value="Piso" />
+                                <p:inputText id="piso" value="#{publicacion.piso}"
+                                             styleClass="datosInput" />
+                                <p:message for="piso" />
+
+                                <h:outputLabel value="Depto" />
+                                <p:inputText id="depto" value="#{publicacion.depto}" 
+                                             styleClass="datosInput" />
+                                <p:message for="depto" />
+                            </h:panelGrid>
                         </p:fieldset>
 
                         <f:facet name="footer">

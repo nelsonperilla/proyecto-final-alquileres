@@ -9,6 +9,7 @@ import com.alquilacosas.dto.CalificacionDTO;
 import com.alquilacosas.dto.DomicilioDTO;
 import com.alquilacosas.dto.UsuarioDTO;
 import com.alquilacosas.ejb.entity.Calificacion;
+import com.alquilacosas.ejb.entity.Domicilio;
 import com.alquilacosas.ejb.entity.Usuario;
 import com.alquilacosas.facade.CalificacionFacade;
 import com.alquilacosas.facade.UsuarioFacade;
@@ -41,11 +42,15 @@ public class VerReputacionBean implements VerReputacionBeanLocal {
           UsuarioDTO usuarioDTO = new UsuarioDTO();
           usuarioDTO.setUsername(usuario.getLoginList().get(0).getUsername());
           usuarioDTO.setFechaDeRegistro(usuario.getLoginList().get(0).getFechaCreacion());
-          DomicilioDTO domicilioDTO = new DomicilioDTO();
-          domicilioDTO.setCiudad(usuario.getDomicilioList().get(0).getCiudad());
-          domicilioDTO.setProvincia(usuario.getDomicilioList().get(0).getProvinciaFk().getNombre());
-          domicilioDTO.setPais(usuario.getDomicilioList().get(0).getProvinciaFk().getPaisFk().getNombre());
-          usuarioDTO.setDomicilio(domicilioDTO);
+          
+          if(!usuario.getDomicilioList().isEmpty()) {
+              Domicilio d = usuario.getDomicilioList().get(0);
+              DomicilioDTO domicilioDTO = new DomicilioDTO();
+              domicilioDTO.setCiudad(d.getCiudad());
+              domicilioDTO.setProvincia(d.getProvinciaFk().getNombre());
+              domicilioDTO.setPais(d.getProvinciaFk().getPaisFk().getNombre());
+              usuarioDTO.setDomicilio(domicilioDTO);
+          }
           usuarioDTO.setCantidadAdvertencia(usuario.getAdvertenciaList().size());
           usuarioDTO.setCantidadSuspencion(usuario.getSuspensionList().size());
           double rating =  calificacionFacade.getCalificacionByUsuario(usuarioId);

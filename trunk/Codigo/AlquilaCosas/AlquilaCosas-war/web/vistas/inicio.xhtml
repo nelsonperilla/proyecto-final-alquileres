@@ -11,7 +11,9 @@
         <ui:composition template="./../resources/templates/masterPage.xhtml">
 
             <ui:define name="logInfo">
-                
+                <p:outputPanel rendered="#{not login.logueado}" >
+                    <a onclick="login.show()" style="cursor:pointer">Acceso/Registrarse</a> 
+                </p:outputPanel>
             </ui:define>
 
             <ui:define name="left" >

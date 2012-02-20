@@ -5,10 +5,13 @@
 package com.alquilacosas.ejb.session;
 
 import com.alquilacosas.common.AlquilaCosasException;
+import com.alquilacosas.dto.DomicilioDTO;
+import com.alquilacosas.ejb.entity.Domicilio;
 import com.alquilacosas.ejb.entity.Pais;
 import com.alquilacosas.ejb.entity.Provincia;
 import com.alquilacosas.facade.PaisFacade;
 import com.alquilacosas.facade.ProvinciaFacade;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -43,7 +46,6 @@ public class ProvinciaBean implements ProvinciaBeanLocal {
      public void borrarProvincia(Provincia provincia) throws AlquilaCosasException {
           Provincia borrarProvincia = provinciaFacade.find(provincia.getProvinciaId());
           provinciaFacade.remove(borrarProvincia);               
-          //     throw new AlquilaCosasException("El Provincia tiene Domicilios Asociados");
      }
 
      @Override
@@ -57,6 +59,12 @@ public class ProvinciaBean implements ProvinciaBeanLocal {
           catch(Exception e){
                throw new AlquilaCosasException("Error al insertar la Provincia - " + e.getMessage());
           }
+     }
+     
+    @Override
+     public List<String> getCiudades() {
+         List<String> ciudades = provinciaFacade.getListaCiudades();
+         return ciudades;
      }
 
      @Override

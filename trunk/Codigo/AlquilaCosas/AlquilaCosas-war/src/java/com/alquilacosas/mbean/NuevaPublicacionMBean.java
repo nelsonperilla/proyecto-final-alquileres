@@ -6,10 +6,14 @@ package com.alquilacosas.mbean;
  */
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.CategoriaDTO;
+import com.alquilacosas.dto.DomicilioDTO;
 import com.alquilacosas.dto.PeriodoDTO;
 import com.alquilacosas.dto.PrecioDTO;
 import com.alquilacosas.ejb.entity.Categoria;
+import com.alquilacosas.ejb.entity.Pais;
+import com.alquilacosas.ejb.entity.Provincia;
 import com.alquilacosas.ejb.session.CategoriaBeanLocal;
+import com.alquilacosas.ejb.session.ModificarUsuarioBeanLocal;
 import com.alquilacosas.ejb.session.PeriodoAlquilerBeanLocal;
 import com.alquilacosas.ejb.session.PublicacionBeanLocal;
 import java.io.Serializable;
@@ -27,9 +31,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
-import javax.faces.event.ActionEvent;  
-import org.primefaces.model.map.DefaultMapModel;  
-import org.primefaces.model.map.LatLng;  
+import javax.faces.event.ActionEvent;
+import org.primefaces.model.map.DefaultMapModel;
+import org.primefaces.model.map.LatLng;
 import org.primefaces.model.map.MapModel;
 import org.primefaces.model.map.Marker;
 
@@ -43,6 +47,8 @@ public class NuevaPublicacionMBean implements Serializable {
     private CategoriaBeanLocal categoriaBean;
     @EJB
     private PeriodoAlquilerBeanLocal periodosBean;
+    @EJB
+    private ModificarUsuarioBeanLocal usuarioBean;
     @ManagedProperty(value = "#{login}")
     private ManejadorUsuarioMBean login;
     //Datos de la publicacion
@@ -66,15 +72,17 @@ public class NuevaPublicacionMBean implements Serializable {
     private int selectedPeriodoMinimo;
     private List<SelectItem> periodoMaximos;
     private Integer selectedPeriodoMaximo;
-    
     private Date today;
     private List<byte[]> imagenes;
- 
-    private MapModel gMap;  
-    private double lat;  
-    private double lng;    
-    
-    
+    private MapModel gMap;
+    private double lat;
+    private double lng;
+    // Direccion (si no tiene ninguna registrada)
+    private boolean pedirDireccion;
+    private String calle, barrio, ciudad, depto;
+    private Integer numero, piso;
+    private int paisSeleccionado, provinciaSeleccionada;
+    private List<SelectItem> paises, provincias;
     private Integer publicacionId;
 
     public NuevaPublicacionMBean() {
@@ -85,7 +93,7 @@ public class NuevaPublicacionMBean implements Serializable {
         Logger.getLogger(NuevaPublicacionMBean.class).debug("NuevaPublicacionMBean: postconstruct.");
         imagenes = new ArrayList<byte[]>();
         precios = new ArrayList<PrecioDTO>();
-        for(PeriodoDTO p: periodosBean.getPeriodos()) {
+        for (PeriodoDTO p : periodosBean.getPeriodos()) {
             precios.add(new PrecioDTO(0, 0.0, p.getNombre()));
         }
         today = new Date();
@@ -93,27 +101,49 @@ public class NuevaPublicacionMBean implements Serializable {
         subcategorias1 = new ArrayList<SelectItem>();
         subcategorias2 = new ArrayList<SelectItem>();
         subcategorias3 = new ArrayList<SelectItem>();
-        
+
         periodoMinimos = new ArrayList<SelectItem>();
         periodoMaximos = new ArrayList<SelectItem>();
-        
+
         List<CategoriaDTO> listaCategoria = categoriaBean.getCategoriasPrincipal();
         for (CategoriaDTO c : listaCategoria) {
             categorias.add(new SelectItem(c.getId(), c.getNombre()));
         }
         List<PeriodoDTO> periodos = periodosBean.getPeriodos();
-        for ( PeriodoDTO p : periodos ){
-            periodoMinimos.add( new SelectItem( p.getId(), p.getNombre().name() ));
-            periodoMaximos.add( new SelectItem( p.getId(), p.getNombre().name() ));
+        for (PeriodoDTO p : periodos) {
+            periodoMinimos.add(new SelectItem(p.getId(), p.getNombre().name()));
+            periodoMaximos.add(new SelectItem(p.getId(), p.getNombre().name()));
         }
         gMap = new DefaultMapModel();
 
+        pedirDireccion = !login.getUsuario().isDireccionRegistrada();
+        if (pedirDireccion) {
+            paises = new ArrayList<SelectItem>();
+            provincias = new ArrayList<SelectItem>();
+            if (paisSeleccionado != 0) {
+                actualizarProvincias();
+            }
+
+            List<Pais> listaPais = usuarioBean.getPaises();
+            if (!listaPais.isEmpty()) {
+                for (Pais p : listaPais) {
+                    paises.add(new SelectItem(p.getPaisId(), p.getNombre()));
+                }
+            }
+        }
     }
 
     public String crearPublicacion() {
-        
+
         FacesContext context = FacesContext.getCurrentInstance();
         FacesMessage msg = null;
+
+        if(pedirDireccion) {
+            DomicilioDTO dom = new DomicilioDTO(calle, numero, piso, depto, barrio, ciudad);
+            dom.setProvinciaId(provinciaSeleccionada);
+            usuarioBean.agregarDomicilio(login.getUsuarioId(), dom);
+            login.getUsuario().setDireccionRegistrada(true);
+        }
         
         int cat = 0;
         if (selectedSubcategoria3 > 0) {
@@ -132,17 +162,18 @@ public class NuevaPublicacionMBean implements Serializable {
             context.addMessage(null, msg);
             return null;
         }
-        
+
         try {
             Calendar hoy = Calendar.getInstance();
             hoy.add(Calendar.DATE, 60);
-             if( selectedPeriodoMaximo == null )
+            if (selectedPeriodoMaximo == null) {
                 selectedPeriodoMaximo = 0;
-            publicacionId = publicacionBean.registrarPublicacion( titulo, descripcion,
+            }
+            publicacionId = publicacionBean.registrarPublicacion(titulo, descripcion,
                     new Date(), hoy.getTime(), destacada, cantidad,
                     login.getUsuarioId(), cat, precios, imagenes,
                     periodoMinimo, selectedPeriodoMinimo, periodoMaximo,
-                    selectedPeriodoMaximo,lat,lng);
+                    selectedPeriodoMaximo, lat, lng);
 
             context.addMessage(null,
                     new FacesMessage("Publicacion Creada"));
@@ -157,7 +188,7 @@ public class NuevaPublicacionMBean implements Serializable {
         }
 
     }
-    
+
     public void categoriaSeleccionadaCambio() {
         subcategorias1.clear();
         subcategorias2.clear();
@@ -194,7 +225,7 @@ public class NuevaPublicacionMBean implements Serializable {
         }
         subcategoria3Render = false;
     }
-    
+
     public void subcategoria2SeleccionadaCambio() {
         subcategorias3.clear();
         selectedSubcategoria3 = 0;
@@ -235,11 +266,24 @@ public class NuevaPublicacionMBean implements Serializable {
 
     }
 
-    public void addMarker(ActionEvent actionEvent) {  
-        Marker marker = new Marker(new LatLng(getLat(), getLng()), titulo);  
-        getgMap().addOverlay(marker);  
-    }      
-    
+    public void addMarker(ActionEvent actionEvent) {
+        Marker marker = new Marker(new LatLng(getLat(), getLng()), titulo);
+        getgMap().addOverlay(marker);
+    }
+
+    public void actualizarProvincias() {
+        provincias.clear();
+        List<Provincia> provList = usuarioBean.getProvincias(paisSeleccionado);
+        if (!provList.isEmpty()) {
+            for (Provincia p : provList) {
+                provincias.add(new SelectItem(p.getProvinciaId(), p.getNombre()));
+            }
+        }
+    }
+
+    /*
+     * Getters & Setters
+     */
     public int getCantidad() {
         return cantidad;
     }
@@ -480,48 +524,119 @@ public class NuevaPublicacionMBean implements Serializable {
         this.subcategorias3 = subcategorias3;
     }
 
-    /**
-     * @return the gMap
-     */
     public MapModel getgMap() {
         return gMap;
     }
 
-    /**
-     * @param gMap the gMap to set
-     */
     public void setgMap(MapModel gMap) {
         this.gMap = gMap;
     }
 
-    /**
-     * @return the lat
-     */
     public double getLat() {
         return lat;
     }
 
-    /**
-     * @param lat the lat to set
-     */
     public void setLat(double lat) {
         this.lat = lat;
         System.out.print(lat + "\n");
     }
 
-    /**
-     * @return the lng
-     */
     public double getLng() {
         return lng;
     }
 
-    /**
-     * @param lng the lng to set
-     */
     public void setLng(double lng) {
         this.lng = lng;
     }
-    
-     
+
+    /*
+     * Gettere & Setters de direccion
+     */
+    public String getBarrio() {
+        return barrio;
+    }
+
+    public void setBarrio(String barrio) {
+        this.barrio = barrio;
+    }
+
+    public String getCalle() {
+        return calle;
+    }
+
+    public void setCalle(String calle) {
+        this.calle = calle;
+    }
+
+    public String getCiudad() {
+        return ciudad;
+    }
+
+    public void setCiudad(String ciudad) {
+        this.ciudad = ciudad;
+    }
+
+    public String getDepto() {
+        return depto;
+    }
+
+    public void setDepto(String depto) {
+        this.depto = depto;
+    }
+
+    public Integer getNumero() {
+        return numero;
+    }
+
+    public void setNumero(Integer numero) {
+        this.numero = numero;
+    }
+
+    public int getPaisSeleccionado() {
+        return paisSeleccionado;
+    }
+
+    public void setPaisSeleccionado(int paisSeleccionado) {
+        this.paisSeleccionado = paisSeleccionado;
+    }
+
+    public boolean isPedirDireccion() {
+        return pedirDireccion;
+    }
+
+    public void setPedirDireccion(boolean pedirDireccion) {
+        this.pedirDireccion = pedirDireccion;
+    }
+
+    public Integer getPiso() {
+        return piso;
+    }
+
+    public void setPiso(Integer piso) {
+        this.piso = piso;
+    }
+
+    public int getProvinciaSeleccionada() {
+        return provinciaSeleccionada;
+    }
+
+    public void setProvinciaSeleccionada(int provinciaSeleccionada) {
+        this.provinciaSeleccionada = provinciaSeleccionada;
+    }
+
+    public List<SelectItem> getPaises() {
+        return paises;
+    }
+
+    public void setPaises(List<SelectItem> paises) {
+        this.paises = paises;
+    }
+
+    public List<SelectItem> getProvincias() {
+        return provincias;
+    }
+
+    public void setProvincias(List<SelectItem> provincias) {
+        this.provincias = provincias;
+    }
 }

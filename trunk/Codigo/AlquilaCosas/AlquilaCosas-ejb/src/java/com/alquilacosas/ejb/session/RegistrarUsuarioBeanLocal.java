@@ -29,5 +29,7 @@ public interface RegistrarUsuarioBeanLocal {
     public List<Pais> getPaises();
     
     public List<Provincia> getProvincias(int paisId);
+
+    public void registrarUsuarioConFacebook(String email, String nombre, String apellido) throws AlquilaCosasException;
     
 }

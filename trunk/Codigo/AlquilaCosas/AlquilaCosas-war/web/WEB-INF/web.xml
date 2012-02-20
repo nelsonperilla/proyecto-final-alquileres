@@ -24,6 +24,14 @@
         <filter-name>SecurityFilter</filter-name>
         <filter-class>com.alquilacosas.servlet.SecurityFilter</filter-class>
     </filter>
+    <filter>
+        <filter-name>FbLoginFilter</filter-name>
+        <filter-class>com.alquilacosas.servlet.FbLoginFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>FbLoginFilter</filter-name>
+        <url-pattern>/fbauth</url-pattern>
+    </filter-mapping>
     <filter-mapping>
         <filter-name>SecurityFilter</filter-name>
         <url-pattern>*.xhtml</url-pattern>
@@ -77,7 +85,7 @@
     <welcome-file-list>
         <welcome-file>index.xhtml</welcome-file>
     </welcome-file-list>
-<!--    <error-page>
+    <!--    <error-page>
         <error-code>403</error-code>
         <location>/vistas/noEncontrado.xhtml</location>
     </error-page>

@@ -152,6 +152,34 @@ public class RegistrarUsuarioBean implements RegistrarUsuarioBeanLocal {
     }
     
     @Override
+    public void registrarUsuarioConFacebook(String email, String nombre, String apellido) throws AlquilaCosasException {
+        Usuario usuario = new Usuario();
+        usuario.setNombre(nombre);
+        usuario.setApellido(apellido);
+        usuario.setEmail(email);
+        
+        Login login = new Login();
+        login.setFechaCreacion(new Date());
+        
+        Rol rol = rolFacade.findByNombre(NombreRol.USUARIO);
+        if(rol == null) {
+            throw new AlquilaCosasException("No se encontro el Rol 'Usuario' en la base de datos.");
+        }
+        
+        login.agregarRol(rol);
+        usuario.agregarLogin(login);
+
+        EstadoUsuario estado = estadoUsuarioFacade.findByNombre(NombreEstadoUsuario.ACTIVO);
+        if(estado == null) {
+            throw new AlquilaCosasException("No se encontro el estado de usuario 'Activo' en la base de datos'");
+        }
+
+        UsuarioXEstado uxe = new UsuarioXEstado(usuario, estado);
+        usuario.agregarUsuarioXEstado(uxe);
+        usuarioFacade.create(usuario);
+    }
+    
+    @Override
     public boolean usernameExistente(String username) {
         Login login = loginFacade.findByUsername(username);
         if(login == null)

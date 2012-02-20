@@ -4,11 +4,13 @@
  */
 package com.alquilacosas.facade;
 
+import com.alquilacosas.ejb.entity.Domicilio;
 import com.alquilacosas.ejb.entity.Provincia;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -39,4 +41,11 @@ public class ProvinciaFacade extends AbstractFacade<Provincia> {
         cq.where(criteriaBuilder.equal(provinciaRoot.get("paisFk").get("paisId"), paisId));
         return em.createQuery(cq).getResultList();
     }
+    
+    public List<String> getListaCiudades() {
+        Query query = em.createQuery("SELECT DISTINCT d.ciudad FROM Domicilio AS d");
+        List<String> ciudades = query.getResultList();
+        return ciudades;
+    } 
+    
 }

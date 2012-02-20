@@ -27,4 +27,6 @@ public interface ProvinciaBeanLocal {
      List<Pais> getPaises();
 
      List<Provincia> getProvinciaByPais(int idPais);
+
+    public List<String> getCiudades();
 }

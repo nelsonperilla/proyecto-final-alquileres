@@ -18,7 +18,6 @@ public class DomicilioDTO implements Serializable {
     private int provinciaId, paisId;
     
     public DomicilioDTO() {
-        
     }
     
     public DomicilioDTO(String calle, Integer numero, Integer piso,

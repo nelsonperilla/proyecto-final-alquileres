@@ -88,14 +88,41 @@ public class LoginBean implements LoginBeanLocal {
         } else {
             Usuario usuario = login.getUsuarioFk();
             String ciudad = null;
+            boolean dir = false;
             if(!usuario.getDomicilioList().isEmpty()) {
                 ciudad = usuario.getDomicilioList().get(0).getCiudad();
+                dir = true;
             }
             List<Rol.NombreRol> roles = new ArrayList<Rol.NombreRol>();
             for(Rol r: login.getRolList()) {
                 roles.add(r.getNombre());
             }
-            return new UsuarioLogueado(usuario.getUsuarioId(), usuario.getNombre(), usuario.getApellido(), ciudad, null, roles);
+            UsuarioLogueado user = new UsuarioLogueado(usuario.getUsuarioId(), usuario.getNombre(), usuario.getApellido(), ciudad, null, roles);
+            user.setDireccionRegistrada(dir);
+            return user;
+        }
+    }
+    
+    @Override
+    public UsuarioLogueado facebookLogin(String email) throws SeguridadException {
+        Login login = loginFacade.findByEmail(email);
+        if(login == null) {
+            throw new SeguridadException("Usuario no registrado.");
+        } else {
+            Usuario usuario = login.getUsuarioFk();
+            String ciudad = null;
+            boolean dir = false;
+            if(!usuario.getDomicilioList().isEmpty()) {
+                ciudad = usuario.getDomicilioList().get(0).getCiudad();
+                dir = true;
+            }
+            List<Rol.NombreRol> roles = new ArrayList<Rol.NombreRol>();
+            for(Rol r: login.getRolList()) {
+                roles.add(r.getNombre());
+            }
+            UsuarioLogueado user = new UsuarioLogueado(usuario.getUsuarioId(), usuario.getNombre(), usuario.getApellido(), ciudad, null, roles);
+            user.setDireccionRegistrada(dir);
+            return user;
         }
     }
     

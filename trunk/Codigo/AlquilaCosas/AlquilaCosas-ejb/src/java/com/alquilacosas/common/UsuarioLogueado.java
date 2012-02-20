@@ -18,6 +18,7 @@ public class UsuarioLogueado implements Serializable {
     private String nombre, apellido, ciudad;
     private byte[] imagen;
     private List<NombreRol> roles;
+    private boolean direccionRegistrada;
 
     public UsuarioLogueado(Integer id, String nombre, String apellido, String ciudad, byte[] imagen, List<NombreRol> roles) {
         this.id = id;
@@ -74,6 +75,14 @@ public class UsuarioLogueado implements Serializable {
 
     public void setRoles(List<NombreRol> roles) {
         this.roles = roles;
+    }
+
+    public boolean isDireccionRegistrada() {
+        return direccionRegistrada;
+    }
+
+    public void setDireccionRegistrada(boolean direccionRegistrada) {
+        this.direccionRegistrada = direccionRegistrada;
     }
     
 }
