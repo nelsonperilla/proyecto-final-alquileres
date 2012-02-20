@@ -28,5 +28,7 @@ public interface ModificarUsuarioBeanLocal {
     public List<Pais> getPaises();
     
     public List<Provincia> getProvincias(int paisId);
+
+    public void agregarDomicilio(Integer usuarioId, DomicilioDTO dom);
     
 }

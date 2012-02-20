@@ -22,7 +22,7 @@
 
                 <p:dataTable id="grid" value="#{misPublicaciones.publicacionesDto}" var="pub" 
                              rows="10" paginator="true" paginatorPosition="bottom"
-                             paginatorAlwaysVisible="false"
+                             paginatorAlwaysVisible="false" emptyMessage="No tienes publicaciones"
                              styleClass="itemsTable" >
 
                     <p:column>
@@ -42,10 +42,10 @@
     </ui:define>
 
     <ui:define name="right">
-                <comps:loginBox />
-                <comps:userPanel />
-                <comps:panelPublicitante />
-                <comps:adminPanel />
+        <comps:loginBox />
+        <comps:userPanel />
+        <comps:panelPublicitante />
+        <comps:adminPanel />
     </ui:define>
 
 </ui:composition>

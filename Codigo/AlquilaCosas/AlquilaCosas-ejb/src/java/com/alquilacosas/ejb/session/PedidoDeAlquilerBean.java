@@ -34,9 +34,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
-import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.ejb.EJB;
 import javax.ejb.SessionContext;
@@ -58,7 +56,6 @@ import org.apache.log4j.Logger;
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-@DeclareRoles({"USUARIO", "ADMIN"})
 public class PedidoDeAlquilerBean implements AlquilerBeanLocal {
 
     @Resource(name = "emailConnectionFactory")
@@ -87,7 +84,6 @@ public class PedidoDeAlquilerBean implements AlquilerBeanLocal {
     
    
     @Override
-    @RolesAllowed({"USUARIO", "ADMIN"})
     public void confirmarPedidoDeAlquiler( int alquilerId ) throws AlquilaCosasException{
         
         try {
@@ -125,7 +121,12 @@ public class PedidoDeAlquilerBean implements AlquilerBeanLocal {
             
             // Se envía un mail al duenio del producto con los datos de la persona que alquilo producto.
             
-            domicilio = usuario.getDomicilioList().get(0);
+            String mensajeDomicilio = "";
+            if(!usuario.getDomicilioList().isEmpty()) {
+                domicilio = usuario.getDomicilioList().get(0);
+                mensajeDomicilio = "<b>Dirección:</b> " + domicilio.getCalle() + " " + domicilio.getNumero() + " " + piso + " " + depto + ", Barrio " + domicilio.getBarrio() + "<br/>"
+                    + "<b>Ciudad: </b>" + domicilio.getCiudad()+ ", " + domicilio.getProvinciaFk().getNombre() + "<br/>";
+            }
             
             asunto = "Usted ha CONFIRMADO el alquiler de " + publicacion.getTitulo();
             p = domicilio.getPiso();
@@ -137,8 +138,7 @@ public class PedidoDeAlquilerBean implements AlquilerBeanLocal {
                     + "hasta la fecha " + fechaFin + ". <br/>"
                     + "Los datos del usuario <b>" + usuario.getLoginList().get(0).getUsername() + "</b> son: <br/>"
                     + "<b>Nombre Completo:</b> " + usuario.getApellido() + ", " + usuario.getNombre() + "<br/>"
-                    + "<b>Dirección:</b> " + domicilio.getCalle() + " " + domicilio.getNumero() + " " + piso + " " + depto + ", Barrio " + domicilio.getBarrio() + "<br/>"
-                    + "<b>Ciudad: </b>" + domicilio.getCiudad()+ ", " + domicilio.getProvinciaFk().getNombre() + "<br/>"
+                    + mensajeDomicilio
                     + "<b>Telefono: </b>" + usuario.getTelefono() + "<br/><br/>"
                     + "Atentamente, <br/> <b>AlquilaCosas </b>";
             email = new NotificacionEmail(usuarioDuenio.getEmail(), asunto, texto);
@@ -147,7 +147,8 @@ public class PedidoDeAlquilerBean implements AlquilerBeanLocal {
             this.revisarPedidos(alquiler); 
         } catch (Exception e) {
             context.getRollbackOnly();
-            System.out.println("La confirmación del alquiler no pudo realizarse" + e.getStackTrace());
+            Logger.getLogger(PedidoDeAlquilerBean.class).error("confirmarPedidoDeAlquiler(). "
+                    + "Error al confirmar alquiler: " + e + ": " + e.getMessage());
         }
         
     }
@@ -159,7 +160,6 @@ public class PedidoDeAlquilerBean implements AlquilerBeanLocal {
      * @throws AlquilaCosasException 
      */
     @Override
-    @RolesAllowed({"USUARIO", "ADMIN"})
     public void rechazarPedidoDeAlquiler(Integer alquilerId) throws AlquilaCosasException{
         
         try {
@@ -178,7 +178,6 @@ public class PedidoDeAlquilerBean implements AlquilerBeanLocal {
      * @throws AlquilaCosasException 
      */
     @Override
-    @RolesAllowed({"USUARIO", "ADMIN"})
     public void cancelarPedidoDeAlquiler(Integer alquilerId) throws AlquilaCosasException{
         
         try {

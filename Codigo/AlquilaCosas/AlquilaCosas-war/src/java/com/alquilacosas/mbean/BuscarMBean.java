@@ -4,12 +4,16 @@
  */
 package com.alquilacosas.mbean;
 
+import com.alquilacosas.dto.DomicilioDTO;
+import com.alquilacosas.ejb.session.ProvinciaBeanLocal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.event.ActionEvent;
+import javax.faces.model.SelectItem;
 import org.apache.log4j.Logger;
 
 /**
@@ -20,23 +24,20 @@ import org.apache.log4j.Logger;
 @SessionScoped
 public class BuscarMBean {
 
+    @EJB
+    private ProvinciaBeanLocal provinciaBean;
     private String criterio, ciudad;
-    private List<String> ciudades;
+    private List<SelectItem> ciudades;
     
     @PostConstruct
     public void init() {
         Logger.getLogger(BuscarMBean.class).debug("BuscarMBean: postconstruct.");
-        ciudades = new ArrayList<String>();
-        ciudades.add("Cordoba");
-        ciudades.add("Rosario");
-        ciudades.add("Buenos Aires");
-        ciudades.add("Mendoza");
-        ciudades.add("Salta");
-        ciudades.add("Neuquen");
-        ciudades.add("Rio Cuarto");
-        ciudades.add("Formosa");
         
-        ciudad = "Cordoba";
+        ciudades = new ArrayList<SelectItem>();
+        for(String s: provinciaBean.getCiudades()) {
+            ciudades.add(new SelectItem(s, s));
+        }
+        ciudad = (String) ciudades.get(0).getValue();
     }
 
     public String buscar() {
@@ -57,11 +58,11 @@ public class BuscarMBean {
         this.criterio = criterio;
     }
 
-    public List<String> getCiudades() {
+    public List<SelectItem> getCiudades() {
         return ciudades;
     }
 
-    public void setCiudades(List<String> ciudades) {
+    public void setCiudades(List<SelectItem> ciudades) {
         this.ciudades = ciudades;
     }
 

@@ -4,51 +4,63 @@
  */
 package com.alquilacosas.dto;
 
+import java.io.Serializable;
+import java.util.List;
+
 /**
  *
  * @author wilson
  */
-public class ProvinciaDTO {
-     private int id, paisId;
-     private String nombre, paisNombre;
+public class ProvinciaDTO implements Serializable {
 
-     public String getPaisNombre() {
-          return paisNombre;
-     }
+    private int id, paisId;
+    private String nombre, paisNombre;
+    private List<String> ciudades;
 
-     public void setPaisNombre(String paisNombre) {
-          this.paisNombre = paisNombre;
-     }
-     
-     public ProvinciaDTO(int Id, String Nombre, int PaisId, String PaisNombre) {
-          id=Id;
-          nombre=Nombre;
-          paisId=PaisId;
-          paisNombre=PaisNombre;
-     }
+    public String getPaisNombre() {
+        return paisNombre;
+    }
 
-     public int getId() {
-          return id;
-     }
+    public void setPaisNombre(String paisNombre) {
+        this.paisNombre = paisNombre;
+    }
 
-     public void setId(int id) {
-          this.id = id;
-     }
+    public ProvinciaDTO(int Id, String Nombre, int PaisId, String PaisNombre) {
+        id = Id;
+        nombre = Nombre;
+        paisId = PaisId;
+        paisNombre = PaisNombre;
+    }
 
-     public String getNombre() {
-          return nombre;
-     }
+    public int getId() {
+        return id;
+    }
 
-     public void setNombre(String nombre) {
-          this.nombre = nombre;
-     }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-     public int getPaisId() {
-          return paisId;
-     }
+    public String getNombre() {
+        return nombre;
+    }
 
-     public void setPaisId(int paisId) {
-          this.paisId = paisId;
-     }
-     
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public int getPaisId() {
+        return paisId;
+    }
+
+    public void setPaisId(int paisId) {
+        this.paisId = paisId;
+    }
+
+    public List<String> getCiudades() {
+        return ciudades;
+    }
+
+    public void setCiudades(List<String> ciudades) {
+        this.ciudades = ciudades;
+    }
 }

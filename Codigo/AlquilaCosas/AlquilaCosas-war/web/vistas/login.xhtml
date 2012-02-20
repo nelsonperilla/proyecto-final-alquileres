@@ -14,35 +14,50 @@
             <ui:define name="logInfo">
                 <h:link value="inicio" outcome="/vistas/inicio" />
             </ui:define>
-            
+
             <ui:define name="left" >
                 <comps:categoriesMenu />
             </ui:define>
 
             <ui:define name="principal">
-                <h:form>
-                    <h:panelGrid columns="3" width="100%" columnClasses="labelColumn,fieldColumn" 
-                                 style="text-align: center" >
-                        <f:facet name="header" >
-                            <h1>Login</h1>
-                        </f:facet>
-                        <h:outputLabel value="Usuario" for="username" />
-                        <p:inputText id="username" value="#{login.username}" />
-                        <p:message for="username" />
-                        
-                        <h:outputLabel value="Contraseña" for="password" />
-                        <p:password id="password" value="#{login.password}" 
-                                    feedback="false" minLength="8" />
-                        <p:message for="password" />
-                        
-                        <f:facet name="footer" >
-                            <p:commandButton value="Entrar" action="#{login.loguearse}"
-                                         ajax="false" />
-                        </f:facet>
-                        
-                    </h:panelGrid>
-                    <p:messages globalOnly="true" showDetail="false" />
-                </h:form>
+                <div style="text-align: center" >
+                    <h:outputText value="Ingresar" style="font-size: 18px; font-weight: bold;margin-top: 15px" />
+                    <br/><br/>
+                    <h:form>
+                        <p:commandLink actionListener="#{login.fbLogin}" >
+                            <h:graphicImage value="#{resource['images:conectarFb_grande.png']}" />
+                        </p:commandLink>
+                    </h:form>
+                    <br/><br/>
+                    <h:outputLabel value="Usar cuenta de AlquilaCosas:" />
+                    <br/><br/>
+                    <h:form>
+                        <h:panelGrid columns="2" >
+                            <h:outputLabel  value="Usuario" for="username" />
+                            <p:inputText id="username" value="#{login.username}" styleClass="passInput" required="true"
+                                         requiredMessage="Ingrese nombre de usuario" />
+                            <h:outputLabel value="Contraseña" for="password" />
+                            <p:password id="password" value="#{login.password}" required="true" feedback="false"
+                                        styleClass="passInput" requiredMessage="Ingrese contraseña" />
+                            <f:facet name="footer" >
+                                <p:commandButton value="Entrar" actionListener="#{login.ajaxLogin}" update="@form"
+                                                 oncomplete="revisarLogueo2(xhr, status, args);" />
+                            </f:facet>
+                        </h:panelGrid>
+                        <p:messages id="msgs" />
+                    </h:form>
+                    <p:separator />
+
+                    <h:outputText value="Registrarse" style="font-size: 18px; font-weight: bold;margin-top: 15px" />
+                    <br/><br/>
+                    <h:form>
+                        <p:commandLink actionListener="#{login.fbLogin}" >
+                            <h:graphicImage value="#{resource['images:registrarFb_grande.png']}" />
+                        </p:commandLink>
+                    </h:form>
+                    <br/><br/>
+                    <h:link value="Crear una cuenta de AlquilaCosas" outcome="/vistas/registrarUsuario" />
+                </div>
             </ui:define>
 
             <ui:define name="right">

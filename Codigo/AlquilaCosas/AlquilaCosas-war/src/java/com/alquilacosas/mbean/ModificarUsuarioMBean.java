@@ -63,9 +63,10 @@ public class ModificarUsuarioMBean implements Serializable {
         fechaNacimiento = usuario.getFechaNacimiento();
         domicilio = usuario.getDomicilio();
         
-        paisSeleccionado = domicilio.getPaisId();
-        provinciaSeleccionada = domicilio.getProvinciaId();
-        
+        if(domicilio != null) {
+            paisSeleccionado = domicilio.getPaisId();
+            provinciaSeleccionada = domicilio.getProvinciaId();
+        }
         
         paises = new ArrayList<SelectItem>();
         provincias = new ArrayList<SelectItem>();

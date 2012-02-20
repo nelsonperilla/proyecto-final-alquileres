@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -103,7 +102,6 @@ public class PublicidadBean implements PublicidadBeanLocal {
     }
     
     @Override
-    @RolesAllowed({"USUARIO", "ADMIN"})
     public void actualizarPublicidad(Integer publicidadId, 
             String titulo, String url, String caption, byte[] imagen)
             throws AlquilaCosasException {

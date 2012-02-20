@@ -23,5 +23,7 @@ public interface LoginBeanLocal {
     public void cambiarPassword(int usuarioId, java.lang.String password, java.lang.String passwordNuevo) throws com.alquilacosas.common.AlquilaCosasException;
 
     public UsuarioLogueado login(java.lang.String username, java.lang.String password) throws SeguridadException;
+
+    public UsuarioLogueado facebookLogin(java.lang.String email) throws com.alquilacosas.common.SeguridadException;
     
 }

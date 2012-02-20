@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core" >
+
+    <!-- INTERFACE -->
+    <cc:interface>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <p:dialog widgetVar="login" modal="true" showHeader="false" style="text-align: center" 
+                  resizable="false" showEffect="fade" hideEffect="fade" onHide="$('.ui-messages').css('display','none');" >
+            <div style="position: absolute; top: 5px; right: 5px">
+                <p:commandButton type="button" onclick="login.hide()" style="font-size: 8px" icon="ui-icon-closethick" />
+            </div>
+            <h:outputText value="Ingresar" style="font-size: 18px; font-weight: bold;margin-top: 15px" />
+            <br/><br/>
+            <h:form>
+                <p:commandLink actionListener="#{login.fbLogin}" >
+                    <h:graphicImage value="#{resource['images:conectarFb_grande.png']}" />
+                </p:commandLink>
+            </h:form>
+            <br/><br/>
+            <h:outputLabel value="Usar cuenta de AlquilaCosas:" />
+            <br/><br/>
+            <h:form>
+                <h:panelGrid columns="2" >
+                    <h:outputLabel  value="Usuario" />
+                    <p:inputText value="#{login.username}" styleClass="passInput" required="true"
+                                 requiredMessage="Ingrese nombre de usuario" />
+                    <h:outputLabel value="Contraseña" />
+                    <p:password value="#{login.password}" required="true" feedback="false"
+                                styleClass="passInput" requiredMessage="Ingrese contraseña" />
+                    <f:facet name="footer" >
+                        <p:commandButton value="Entrar" actionListener="#{login.ajaxLogin}" update="@form"
+                                         oncomplete="revisarLogueo2(xhr, status, args);" />
+                    </f:facet>
+                </h:panelGrid>
+                <p:messages id="msgs" />
+            </h:form>
+            <p:separator />
+
+            <h:outputText value="Registrarse" style="font-size: 18px; font-weight: bold;margin-top: 15px" />
+            <br/><br/>
+            <h:form>
+                <p:commandLink actionListener="#{login.fbLogin}" >
+                    <h:graphicImage value="#{resource['images:registrarFb_grande.png']}" />
+                </p:commandLink>
+            </h:form>
+            <br/><br/>
+            <h:link value="Crear una cuenta de AlquilaCosas" outcome="/vistas/registrarUsuario" />
+            <br/><br/>
+        </p:dialog>
+    </cc:implementation>
+</html>

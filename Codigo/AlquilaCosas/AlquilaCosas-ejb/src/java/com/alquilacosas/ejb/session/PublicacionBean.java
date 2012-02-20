@@ -19,9 +19,11 @@ import com.alquilacosas.ejb.entity.EstadoAlquiler;
 import com.alquilacosas.ejb.entity.EstadoPublicacion;
 import com.alquilacosas.ejb.entity.EstadoPublicacion.NombreEstadoPublicacion;
 import com.alquilacosas.ejb.entity.ImagenPublicacion;
+import com.alquilacosas.ejb.entity.Pais;
 import com.alquilacosas.ejb.entity.Periodo;
 import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
 import com.alquilacosas.ejb.entity.Precio;
+import com.alquilacosas.ejb.entity.Provincia;
 import com.alquilacosas.ejb.entity.Publicacion;
 import com.alquilacosas.ejb.entity.PublicacionXEstado;
 import com.alquilacosas.ejb.entity.Usuario;
@@ -32,8 +34,10 @@ import com.alquilacosas.facade.CategoriaFacade;
 import com.alquilacosas.facade.ComentarioFacade;
 import com.alquilacosas.facade.EstadoPublicacionFacade;
 import com.alquilacosas.facade.ImagenPublicacionFacade;
+import com.alquilacosas.facade.PaisFacade;
 import com.alquilacosas.facade.PeriodoFacade;
 import com.alquilacosas.facade.PrecioFacade;
+import com.alquilacosas.facade.ProvinciaFacade;
 import com.alquilacosas.facade.PublicacionFacade;
 import com.alquilacosas.facade.PublicacionXEstadoFacade;
 import com.alquilacosas.facade.UsuarioFacade;
@@ -45,9 +49,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import javax.annotation.Resource;
-import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
@@ -107,6 +109,10 @@ public class PublicacionBean implements PublicacionBeanLocal {
     private CalificacionFacade calificacionFacade;
     @EJB
     private ComentarioFacade comentarioFacade;
+    @EJB
+    private PaisFacade paisFacade;
+    @EJB
+    private ProvinciaFacade provinciaFacade;
 
     @Override
     public Integer registrarPublicacion(String titulo, String descripcion,
