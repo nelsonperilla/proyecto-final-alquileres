@@ -1,0 +1,100 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:comps="http://java.sun.com/jsf/composite/comps" >
+
+    <body>
+
+        <ui:composition template="./../resources/templates/newTemplate.xhtml">
+
+            <ui:define name="logInfo">
+                <p:outputPanel rendered="#{not login.logueado}" >
+                    <a onclick="login.show()" style="cursor:pointer">Acceso/Registrarse</a> 
+                </p:outputPanel>
+            </ui:define>
+
+            <ui:define name="left" >
+                <comps:categoriesMenu />
+            </ui:define>
+            
+            <ui:define name="Menu" >
+                <comps:menuBar />
+            </ui:define>
+
+            <ui:define name="principal">
+                <table>
+                    <tr>
+                        <td>
+
+                            <p:outputPanel rendered="#{not empty mostrarPublicidad.publicidadesCarrusel}" >
+                                <p:carousel value="#{mostrarPublicidad.publicidadesCarrusel}" autoPlayInterval="3500"
+                                            var="pub" rows="1" circular="true" itemStyle="height:130px;width:600px;"
+                                            style="width:600px;" >
+                                    <a href="#{pub.url}" >    
+                                        <h:graphicImage value="/imagenpub?id=#{pub.id}" 
+                                                        alt="#{pub.caption}"
+                                                        width="600" height="130" />
+                                    </a>
+                                </p:carousel>
+                            </p:outputPanel>        
+                            <p:outputPanel rendered="#{empty mostrarPublicidad.publicidadesCarrusel}" >
+                                <p:carousel autoPlayInterval="3500" rows="1"
+                                            effect="easeInStrong" circular="true"
+                                            itemStyle="height:130px;width:600px;text-align: center" >
+                                    <p:tab title="1" >
+                                        <div class="carusel">
+                                            <br/><br/>
+                                            <h1>Alquilar productos ahora es muy fácil!</h1>
+                                        </div>
+                                    </p:tab>
+                                    <p:tab title="2">
+                                        <div class="carusel">
+                                            <br/><br/>
+                                            <h1>Comienza a publicar y alquilar productos ya mismo</h1>
+                                        </div>
+                                    </p:tab>
+                                    <p:tab title="3">
+                                        <div class="carusel">
+                                            <br/><br/>
+                                            <h1>¡Es totalmente gratis!</h1>
+                                        </div>
+                                    </p:tab>
+                                </p:carousel>
+                            </p:outputPanel>
+                        </td>
+                    </tr>
+                    <tr id="products">
+                        <td>
+                            <table >
+                                <tr>
+                                    <td>
+                                        <div id="items">
+                                            <h:form>
+                                                <p:dataTable  value="#{publicationsGroup.publicacionesRandom}"
+                                                              var="publication" styleClass="itemsTable">
+                                                    <p:column>
+
+                                                        <comps:itemInfo var="#{publication}" bean="#{publicationsGroup}"
+                                                                        property="selectedPublicationId"/>
+                                                    </p:column>
+                                                </p:dataTable>
+
+                                            </h:form>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>              
+            </ui:define>
+            <ui:define name="right" >
+                <comps:loginBox />
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

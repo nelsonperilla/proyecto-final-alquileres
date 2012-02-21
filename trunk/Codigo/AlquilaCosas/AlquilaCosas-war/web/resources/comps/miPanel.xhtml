@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite" 
+      xmlns:h="http://java.sun.com/jsf/html">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>  
+        <div class="inner-content">
+            <div id="dashboard-left-nav">
+                <div class="user-section-new">
+                    <div class="uster-lagrimg">
+                        <h:graphicImage class="image" value="#{resource['images:4chakra.png']}" />
+                    </div>
+                    <div class="user-namedetail">
+                        <p>Ignacio Giagante</p>
+                    </div>
+                    <div id="list">
+                        <ul class="menu" rel="sam1">
+                            <li ><a href="#">Articulos</a></li>
+                            <li><a href="#">Calendario</a></li>
+                            <li ><a href="#">Mensajes</a></li>
+                            <li><a href="#">Perfil</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div id="rnb">
+                <div id="barra">
+                </div>
+                <nav id="nav2">
+                    <ul>
+                        <li>
+                            <h:link value="Publicados" outcome="/vistas/inicio2" ></h:link>
+                        </li>
+                        <li>
+                            <h:link value="Rentados" outcome="/vistas/inicio2" ></h:link>
+                        </li>
+                        <li>
+                            <h:link value="Negociando" outcome="/vistas/inicio2" ></h:link>
+                        </li>
+                        <li>
+                            <h:link value="Solicitados" outcome="/vistas/inicio2" ></h:link>
+                        </li>
+                        <li>
+                            <h:link value="Mis Favoritos" outcome="/vistas/inicio2" ></h:link>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </cc:implementation>
+</html>

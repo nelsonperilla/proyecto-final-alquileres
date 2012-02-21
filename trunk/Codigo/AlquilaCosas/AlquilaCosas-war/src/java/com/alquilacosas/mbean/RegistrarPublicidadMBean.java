@@ -112,7 +112,7 @@ public class RegistrarPublicidadMBean implements Serializable {
         }
         
         Integer pagoId = null;
-
+        String http = "";
         try {
             Calendar cal = Calendar.getInstance();
             cal.setTime(fechaDesde);
@@ -149,8 +149,13 @@ public class RegistrarPublicidadMBean implements Serializable {
                         new FacesMessage(FacesMessage.SEVERITY_ERROR,
                         "Hay fechas sin stock en el periodo seleccionado", ""));
             } else {
+                
+                if( !(url.equals("http://")) ){
+                http = "http://" + url;
+                }
+                
                 pagoId = publicidadBean.registrarPublicidad(loginMBean.getUsuarioId(),
-                        titulo, url, caption, ubicacionSeleccionada,
+                        titulo, http, caption, ubicacionSeleccionada,
                         duracionSeleccionada, imagen, fechaDesde, fechaHasta, precio,
                         NombreTipoPago.PAYPAL);
             }
