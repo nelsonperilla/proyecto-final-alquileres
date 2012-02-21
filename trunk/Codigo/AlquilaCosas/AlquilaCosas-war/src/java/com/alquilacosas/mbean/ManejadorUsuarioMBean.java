@@ -11,7 +11,9 @@ import com.alquilacosas.ejb.entity.Rol.NombreRol;
 import com.alquilacosas.ejb.session.LoginBeanLocal;
 import com.alquilacosas.ejb.session.RegistrarUsuarioBeanLocal;
 import com.visural.common.StringUtil;
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Remove;
@@ -20,6 +22,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -58,10 +61,13 @@ public class ManejadorUsuarioMBean implements Serializable {
     @PostConstruct
     public void init() {
         Logger.getLogger(ManejadorUsuarioMBean.class).debug("ManejadorUsuarioMBean: postconstruct."); 
-        System.out.println("creado loginbean");
     }
     
-    public String loguearse() {
+    /**
+     * Se ingresa al usuario al sistema. Si el login es exitoso y hay un redireccionamiento pendiente,
+     * se envia al usuario a esa pagina. En caso contrario se lo envia a la pagina de inicio.
+     */
+    public void loguearse() {
         FacesContext context = FacesContext.getCurrentInstance();
         try {
             usuario = loginBean.login(username, password);
@@ -69,17 +75,24 @@ public class ManejadorUsuarioMBean implements Serializable {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Credenciales incorrectas", ""));
             username = password = "";
-            return null;
+            return;
         }
         logueado = true;
         usuarioId = usuario.getId();
         administrador = usuario.getRoles().contains(NombreRol.ADMIN);
         publicitante = usuario.getRoles().contains(NombreRol.PUBLICITANTE);
         HttpServletRequest req = (HttpServletRequest) context.getExternalContext().getRequest();
-        String url = (String) req.getSession().getAttribute("redirectUrl");
+        String url = (String) req.getSession(true).getAttribute("redirectUrl");
+        req.getSession(true).removeAttribute("redirectUrl");
         if(url == null)
-            url = "inicio.xhtml";
-        return url;
+            url = "/AlquilaCosas-war/faces/vistas/inicio.xhtml";
+        else
+            url = "/AlquilaCosas-war" + url;
+        try {
+            context.getExternalContext().redirect(url);
+        } catch (IOException e) {
+            Logger.getLogger(ManejadorUsuarioMBean.class).error("loguearse(). Excepcion al ejecutar redirect().");
+        }
     }
     
     public void ajaxLogin() {
@@ -99,11 +112,24 @@ public class ManejadorUsuarioMBean implements Serializable {
         RequestContext.getCurrentInstance().addCallbackParam("logueado", true);
     }
     
+    /**
+     * Comienza a efectuar los pasos para loguear al usuario a traves de Facebook.
+     * El primer paso es redireccionar a una pagina de facebook brindando algunos datos.
+     */
     public void fbLogin() {
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         HttpServletRequest req = (HttpServletRequest) ec.getRequest();
-        String path = req.getPathInfo();
-        ((HttpSession)ec.getSession(true)).setAttribute("redirectUrl", path);
+        String redirect = (String) req.getSession(true).getAttribute("redirectUrl");
+        // si no hay parametro de redireccionamiento, obtener url actual y setearla como parametro de redireccionamiento
+        if(redirect == null || redirect.equals("")) {
+            String path = req.getPathInfo();
+            String param = (String) req.getSession(true).getAttribute("param");
+            if(param != null && !param.equals("")) {
+                path = path + "?" + param;
+            }
+            ((HttpSession)ec.getSession(true)).setAttribute("redirectUrl", "/faces" + path);
+            req.getSession(true).removeAttribute("param");
+        }
         try {
             String url = getLoginRedirectURL();
             ec.redirect(url);
@@ -112,6 +138,13 @@ public class ManejadorUsuarioMBean implements Serializable {
         }
     }
     
+    /**
+     * Se completa el login del usuario a traves de Facebook. Este es el ultimo paso de
+     * la interaccion con Facebook. Se recibe el email del usuario y se utiliza este para
+     * loguear al usuario.
+     * @param email Email del usuario obtenido a traes de Facebook
+     * @return 
+     */
     public boolean completeFbLogin(String email) {
         if(email == null) {
             return false;
@@ -129,6 +162,14 @@ public class ManejadorUsuarioMBean implements Serializable {
         return true;
     }
     
+    /**
+     * Registra un nuevo usuario a traves de los datos obtenidos por facebook. Si el registro
+     * es exitoso, luego efectua el login del usuario.
+     * @param nombre Nombre del usuario obtenido a traves de facebook
+     * @param apellido Apellido del usuario obtenido a traves de facebook
+     * @param email Email del usuario obtenido a traves de facebook
+     * @return 
+     */
     public boolean registrarFb(String nombre, String apellido, String email) {
         try {
             registrarBean.registrarUsuarioConFacebook(email, nombre, apellido);   
@@ -172,9 +213,10 @@ public class ManejadorUsuarioMBean implements Serializable {
         logueado = false;
         administrador = false;
         request.getSession().invalidate();
-        return "pinicio";
+        return "/vistas/inicio.xhtml?faces-redirect=true";
     }
     
+    @Remove
     public String salir() {
         FacesContext context = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
@@ -183,15 +225,24 @@ public class ManejadorUsuarioMBean implements Serializable {
         publicitante = false;
         usuario = null;
         request.getSession().invalidate();
-        return "/vistas/inicio";
+        return "/vistas/inicio.xhtml?faces-redirect=true";
     }
     
+    /**
+     * Devuelve la URL a la cual hay que redireccionar para comenzar la comunicacion con Facebook.
+     * @return 
+     */
     public String getLoginRedirectURL() {
         return "https://graph.facebook.com/oauth/authorize?client_id="
                 + client_id + "&display=page&redirect_uri="
                 + redirect_uri + "&scope=" + StringUtil.delimitObjectsToString(",", perms);
     }
 
+    /**
+     * Devuelve la URL a la cual hay que redireccionar para obtener el access token (2do paso)
+     * @param authCode
+     * @return 
+     */
     public static String getAuthURL(String authCode) {
         return "https://graph.facebook.com/oauth/access_token?client_id="
                 + client_id + "&redirect_uri="

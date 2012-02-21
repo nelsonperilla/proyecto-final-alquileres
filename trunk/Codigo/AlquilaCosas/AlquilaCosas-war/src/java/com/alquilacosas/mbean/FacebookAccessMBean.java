@@ -13,6 +13,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,8 +37,9 @@ public class FacebookAccessMBean {
 
     @PostConstruct
     public void init() {
-        HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        HttpServletResponse resp = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        HttpServletRequest req = (HttpServletRequest) context.getRequest();
+        HttpServletResponse resp = (HttpServletResponse) context.getResponse();
 
         String code = req.getParameter("code");
         if (code != null && !code.equals("")) {
@@ -61,7 +63,6 @@ public class FacebookAccessMBean {
                         }
                     }
                 }
-                System.out.println("access token: " + accessToken);
                 if (accessToken != null && expires != null) {
 
                     try {
@@ -84,20 +85,24 @@ public class FacebookAccessMBean {
                         System.out.println("Exception getting son object!" + e + ": " + e.getMessage());
                     }
                     String redirect = (String) req.getSession(true).getAttribute("redirectUrl");
+                    req.getSession(true).removeAttribute("redirectUrl");
                     if (redirect != null) {
-                        redirect = "/AlquilaCosas-war/faces" + redirect;
+                        redirect = "/AlquilaCosas-war" + redirect;
                     } else {
                         redirect = "/AlquilaCosas-war/faces/vistas/inicio.xhtml";
                     }
-                    resp.sendRedirect(redirect);
+                    context.redirect(redirect);
+                    FacesContext.getCurrentInstance().responseComplete();
+                    //resp.sendRedirect(redirect);
                 } else {
                     System.out.println("access token no recibido");
-                    
-                    resp.sendRedirect("/AlquilaCosas-war/faces/vistas/inicio.xhtml");
+                    context.redirect("/AlquilaCosas-war/faces/vistas/inicio.xhtml");
+                    FacesContext.getCurrentInstance().responseComplete();
                 }
             } catch (IOException e) {
                 try {
-                    resp.sendRedirect("/AlquilaCosas-war/faces/vistas/inicio.xhtml");
+                    context.redirect("/AlquilaCosas-war/faces/vistas/inicio.xhtml");
+                    FacesContext.getCurrentInstance().responseComplete();
                 } catch(IOException ex) {
                     
                 }

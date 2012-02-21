@@ -32,18 +32,19 @@
                     <h:outputLabel value="Usar cuenta de AlquilaCosas:" />
                     <br/><br/>
                     <h:form>
-                        <h:panelGrid columns="2" >
-                            <h:outputLabel  value="Usuario" for="username" />
-                            <p:inputText id="username" value="#{login.username}" styleClass="passInput" required="true"
-                                         requiredMessage="Ingrese nombre de usuario" />
-                            <h:outputLabel value="Contraseña" for="password" />
-                            <p:password id="password" value="#{login.password}" required="true" feedback="false"
-                                        styleClass="passInput" requiredMessage="Ingrese contraseña" />
-                            <f:facet name="footer" >
-                                <p:commandButton value="Entrar" actionListener="#{login.ajaxLogin}" update="@form"
-                                                 oncomplete="revisarLogueo2(xhr, status, args);" />
-                            </f:facet>
-                        </h:panelGrid>
+                        <div  style="width: 300px">
+                            <h:panelGrid columns="2" >
+                                <h:outputLabel  value="Usuario" for="username" />
+                                <p:inputText id="username" value="#{login.username}" styleClass="passInput" required="true"
+                                             requiredMessage="Ingrese nombre de usuario" />
+                                <h:outputLabel value="Contraseña" for="password" />
+                                <p:password id="password" value="#{login.password}" required="true" feedback="false"
+                                            styleClass="passInput" requiredMessage="Ingrese contraseña" />
+                                <f:facet name="footer" >
+                                    <p:commandButton id="login" value="Entrar" actionListener="#{login.loguearse}" update="@form" />
+                                </f:facet>
+                            </h:panelGrid>
+                        </div>
                         <p:messages id="msgs" />
                     </h:form>
                     <p:separator />
@@ -61,9 +62,9 @@
             </ui:define>
 
             <ui:define name="right">
-                <comps:userPanel />
-                <comps:panelPublicitante />
                 <comps:adminPanel />
+                <comps:panelPublicitante />
+                <comps:userPanel />
             </ui:define>
 
         </ui:composition>

@@ -17,6 +17,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 
 /**
@@ -49,6 +50,7 @@ public class VerReputacionMBean implements Serializable {
             usuarioCorrecto = false;
             return;
         }
+        ((HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest()).getSession(true).setAttribute("param", "id=" + id);
         try {
             usuarioId = Integer.parseInt(id);
         } catch (NumberFormatException e) {

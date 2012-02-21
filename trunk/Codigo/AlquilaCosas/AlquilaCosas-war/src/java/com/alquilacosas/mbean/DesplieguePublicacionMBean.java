@@ -24,6 +24,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.DateSelectEvent;
@@ -80,6 +81,9 @@ public class DesplieguePublicacionMBean implements Serializable {
             redirect();
             return;
         }
+        
+        ((HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest()).getSession(true).setAttribute("param", "id=" + id);
+        
         int publicationId = 0;
         int tipoDeDenuncia = -1;
         try {

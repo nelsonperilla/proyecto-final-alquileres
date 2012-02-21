@@ -69,7 +69,10 @@ public class SecurityFilter implements Filter {
         for(String s: patrones.keySet()) {
             if(destino.contains(s)) {
                 if(!logueado) {
-                    destino = destino.contains("/faces") ? destino.substring(destino.indexOf("/faces") + 6): destino;
+//                    destino = destino.contains("/faces") ? destino.substring(destino.indexOf("/faces") + 6): destino;
+                    if(req.getQueryString() != null && !req.getQueryString().equals("")) {
+                        destino += "?" + req.getQueryString();
+                    }
                     req.getSession(true).setAttribute("redirectUrl", destino);
                     resp.sendRedirect("/AlquilaCosas-war/faces/vistas/login.xhtml");
                     return;
