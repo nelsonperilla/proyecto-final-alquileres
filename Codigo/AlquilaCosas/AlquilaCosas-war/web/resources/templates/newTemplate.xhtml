@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:comps="http://java.sun.com/jsf/composite/comps"
+      xmlns:f="http://java.sun.com/jsf/core" >
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <script src="modernizr.js"></script> 
+        <title>Alquila Cosas</title>
+    </h:head>
+    <h:body >
+        <h:outputStylesheet library="css" name="layout.css" />
+        <h:outputStylesheet library="css" name="menu.css" />
+        <table id="form:panel" width="1024px" align="center" >
+            <tr>
+                <td colspan="3" class="encabezado">
+                    <ui:insert name="logInfo"/>
+                </td>
+            </tr>
+            <tr>
+                <td id="title" colspan="3" >
+                    <comps:logoBar />
+                </td>
+            </tr>
+                <td id="BarraMenu" colspan="3">
+                    <ui:insert name="Menu"/>
+                </td>    
+            <tr>
+            </tr>
+            <tr>    
+                <td valign="top" class="columnaIzq">
+                    <ui:insert name="left" />
+                </td>
+                <td id="principal" valign="top" >
+                    <ui:insert name="principal"/>
+                </td>
+                <td width="200px" valign="top">
+                    <ui:insert name="right" />
+                    
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div id="footer"/>
+                </td>
+            </tr>
+        </table>
+    </h:body>
+</html>
