@@ -20,6 +20,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
@@ -55,6 +56,7 @@ public class VerCategoriaMBean implements Serializable {
         String param = FacesContext.getCurrentInstance().getExternalContext()
                 .getRequestParameterMap().get("id");
         if(param != null) {
+            ((HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest()).getSession(true).setAttribute("param", "id=" + param);
             try {
                 id = Integer.valueOf(param);
             } catch (NumberFormatException e) {

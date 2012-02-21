@@ -21,8 +21,8 @@ h1 {font: normal 1.7em sans-serif;}
 h2 {font: normal 1.5em sans-serif;}
 h3 {font: normal 1.3em sans-serif;}
 h4 {font: normal 1.1em sans-serif;}
-h5 {font: bold 0.9em sans-serif;}
-h6 {font: bold 0.8em sans-serif;}
+h5 {font: bold 1em sans-serif; margin-top: 3px; margin-bottom: 6px}
+h6 {font: bold 0.8em sans-serif;margin: 3px}
 
 h1, h2, h3 {
     margin-bottom: 0.2em;
@@ -861,4 +861,46 @@ h1, h2, h3 {
 /* hacer el fondo de la pagina mas oscuro cuando se abre un dialogo modal */ 
 .ui-widget-overlay {
     opacity: 0.7;
+}
+
+/* Pagina Articulos */
+.artImagen {
+    float: left;
+    width: 100px;
+    text-align: center;
+}
+
+.artDescripcion {
+    float: left;
+    width: 230px;
+}
+
+.artDescripcion a {
+    text-decoration: none;
+    color: cornflowerblue;
+}
+
+.artDescContenido {
+    font-size: 11px;
+    color: gray;
+}
+
+.artPrecio {
+    float: left;
+    width: 150px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: right;
+}
+
+.botoncitos {
+    width: 100%;
+    float: left;
+    text-align: right;
+    font-size: 9px;
+}
+
+.artBotones {
+    float: left;
+    width: 100%;
 }

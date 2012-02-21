@@ -46,9 +46,11 @@
                 </h:form>
             </div>
             <br/>
-            <h:outputLink value="#{login.loginRedirectURL}" >
-                <h:graphicImage value="#{resource['images:facebookBtn.png']}" />
-            </h:outputLink>
+            <h:form>
+                <p:commandLink actionListener="#{login.fbLogin}" >
+                    <h:graphicImage value="#{resource['images:conectarFb_grande.png']}" height="22" />
+                </p:commandLink>
+            </h:form>
         </p:outputPanel>
     </cc:implementation>
 </html>

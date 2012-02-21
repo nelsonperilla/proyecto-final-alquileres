@@ -34,8 +34,8 @@ import org.apache.log4j.Logger;
  */
 public class PaypalUtil {
     
-    private static String returnURL = "http://www.alquilacosas.com/pagoConfirmado.xhtml";
-    private static String cancelURL = "http://www.alquilacosas.com/pagoCancelado.xhtml";
+    private static String returnURL = "http://localhost.com:8080/AlquilaCosas-war/faces/vistas/pagoConfirmado.xhtml";
+    private static String cancelURL = "http://localhost.com:8080/AlquilaCosas-war/faces/vistas/pagoCancelado.xhtml";
     private static CurrencyCodeType currencyCodeType = CurrencyCodeType.USD;
     private static PaymentActionCodeType paymentAction = PaymentActionCodeType.Sale;
     private static String paypalUrl = "https://www.sandbox.paypal.com/webscr?cmd=_express-checkout&useraction=commit&token=";
