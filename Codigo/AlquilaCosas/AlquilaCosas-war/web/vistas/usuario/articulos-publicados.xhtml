@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui" >
+
+    <h:body>
+
+        <h:form>
+            <p:dataGrid value="#{misPublicaciones.publicacionesDto}" var="item" columns="1" 
+                        styleClass="itemsTable" id="grid" rowIndexVar="row" paginator="true" 
+                        paginatorPosition="bottom" paginatorAlwaysVisible="false" >
+                <p:column>
+
+                    <div class="artContenedor" >
+                        <div class="artImagen" >
+                            <h:graphicImage value="/image?id=#{item.imagenId}" 
+                                            style="max-width: 120px; max-height: 100px"
+                                            rendered="#{item.imagenId != -1}" />
+                            <h:graphicImage value="#{resource['images:noImage.png']}" 
+                                            style="max-width: 120px; max-height: 100px"
+                                            rendered="#{item.imagenId == -1}" />
+                        </div>
+                        <div class="artDescripcion">
+                            <h5>
+                                <h:link value="#{item.titulo}" outcome="/vistas/mostrarPublicacion.xhtml" >
+                                    <f:param name="id" value="#{item.id}" />
+                                </h:link>
+                            </h5>
+                            <div class="artDescContenido">
+                                <h:outputText value="#{item.ciudad}, #{item.provincia}" />
+                                <br/>
+                                <h:outputText value="Cantidad: #{item.cantidad}" />
+                            </div>
+                            <div class="accionPrincipal">
+                                <p:button value="Destacar" outcome="/vistas/usuario/destacarPublicacion" 
+                                          rendered="#{not item.destacada}" style="background: palegreen" >
+                                    <f:param name="id" value="#{item.id}" />
+                                </p:button>
+                            </div>
+                        </div>  
+                        <div class="artPrecio" >
+                            <div class="accionesContenedor">
+                                <div class="artAcciones">
+                                    <p:button value="Editar" outcome="/vistas/usuario/modificarPublicacion" icon="ui-icon-pencil" >
+                                        <f:param name="id" value="#{item.id}" />
+                                    </p:button>
+                                    <p:commandButton value="Eliminar" icon="ui-icon-close" type="button" onclick="confirmarDlg.show()" />
+                                </div>
+                            </div>
+
+                            <h:outputLabel value="Precio:" styleClass="precioLabel" />
+                            <br/>
+                            <h:outputText value="$ #{item.precios.get(1).precio}" styleClass="precio" />
+                            <a onclick="manejarPopup(jQuery(this).parent('.artPrecio').find('.artPopup'))" >
+                                <p:commandButton type="button" icon="ui-icon-triangle-1-s" style="font-size: 11px"/>
+                            </a>
+                            <br/>
+                            <h:outputText value="por dia" styleClass="precioLabel" />
+                            <div class="artPopup" style="display: none">
+                                <h:panelGrid columns="2" style="text-align: left"  >
+                                    <f:facet name="header" >
+                                        <h:outputText value="Detalle de precios:" style="font-weight: bold; color: cornflowerblue" />
+                                    </f:facet>
+                                    <h:outputText value="$ #{item.precios.get(0).precio}" styleClass="detPrecio" />
+                                    <h:outputLabel value="/Hora" styleClass="detPeriodo" />
+                                    <h:outputText value="$ #{item.precios.get(1).precio}" styleClass="detPrecio" />
+                                    <h:outputLabel value="/Dia" styleClass="detPeriodo"/>
+                                    <h:outputText value="$ #{item.precios.get(2).precio}" styleClass="detPrecio"/>
+                                    <h:outputLabel value="/Semana" styleClass="detPeriodo"/>
+                                    <h:outputText value="$ #{item.precios.get(3).precio}" styleClass="detPrecio" />
+                                    <h:outputLabel value="/Mes" styleClass="detPeriodo"/>
+                                </h:panelGrid>
+                            </div>
+                        </div>
+                    </div>
+
+                </p:column>
+            </p:dataGrid>
+
+            <p:dialog widgetVar="confirmarDlg" header="Eliminar publicacion" modal="true" 
+                      resizable="false" style="text-align: center;" >
+                <p>
+                    Esta seguro que desea eliminar esta publicacion?
+                </p>
+                <br/>
+                <f:facet name="footer" >
+                    <p:commandButton value="Aceptar" action="#{misPublicaciones.borrarPublicacion}"
+                                     oncomplete="confirmarDlg.hide()" ajax="false" >    
+                    </p:commandButton>
+                    <p:commandButton value="Cancelar" onclick="confirmarDlg.hide()" />
+                </f:facet>
+
+
+            </p:dialog>
+
+        </h:form>
+
+    </h:body>
+</html>
+

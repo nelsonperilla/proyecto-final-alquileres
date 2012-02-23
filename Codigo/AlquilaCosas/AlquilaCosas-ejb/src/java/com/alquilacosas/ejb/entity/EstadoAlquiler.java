@@ -31,8 +31,25 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "EstadoAlquiler.findByNombre", query = "SELECT e FROM EstadoAlquiler e WHERE e.nombre = :nombre")})
 public class EstadoAlquiler implements Serializable {
     
-    public enum NombreEstadoAlquiler {PEDIDO, CONFIRMADO, ACTIVO, FINALIZADO, 
-    PEDIDO_CANCELADO, PEDIDO_RECHAZADO, CANCELADO_ALQUILADOR, CANCELADO}
+    public enum NombreEstadoAlquiler {
+        PEDIDO("Pedido"), 
+        CONFIRMADO("Confirmado"), 
+        ACTIVO("Activo"), 
+        FINALIZADO("Finalizado"), 
+        PEDIDO_CANCELADO("Pedido Cancelado"), 
+        PEDIDO_RECHAZADO("Pedido Rechazado"), 
+        CANCELADO_ALQUILADOR("Cancelado"), 
+        CANCELADO("Cancelado");
+        String label;
+
+        private NombreEstadoAlquiler(String label) {
+            this.label = label;
+        }
+        @Override
+        public String toString() {
+            return label;
+        }
+    }
     
     private static final long serialVersionUID = 1L;
     

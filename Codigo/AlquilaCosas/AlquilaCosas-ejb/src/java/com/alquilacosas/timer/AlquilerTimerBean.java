@@ -145,7 +145,7 @@ public class AlquilerTimerBean implements AlquilerTimerBeanLocal{
         List<Publicacion> publicacionesVencidas = null;
         
         try {
-            publicacionesVencidas = publicacionFacade.getPublicacionesInicio();
+            publicacionesVencidas = publicacionFacade.getPublicacionesInicio(12);
         } catch (NoResultException e) {
             System.out.println("No se pudo traer de la BD las publicaciones" + e.getStackTrace());
         }

@@ -9,39 +9,44 @@
       xmlns:f="http://java.sun.com/jsf/core" >
     <h:head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <script src="modernizr.js"></script> 
         <title>Alquila Cosas</title>
     </h:head>
     <h:body >
         <h:outputStylesheet library="css" name="layout.css" />
         <h:outputStylesheet library="css" name="menu.css" />
+        <h:outputScript library="javascript" name="util.js" />
+        <comps:loginDialog />
         <table id="form:panel" width="1024px" align="center" >
             <tr>
-                <td colspan="3" class="encabezado">
-                    <ui:insert name="logInfo"/>
-                </td>
-            </tr>
-            <tr>
                 <td id="title" colspan="3" >
-                    <comps:logoBar />
-                </td>
+            <comps:logoBar />
+            </td>
             </tr>
-                <td id="BarraMenu" colspan="3">
-                    <ui:insert name="Menu"/>
-                </td>    
+            <td id="BarraMenu" colspan="3">
+            <comps:menuBar />
+            </td>    
             <tr>
             </tr>
             <tr>    
-                <td valign="top" class="columnaIzq">
-                    <ui:insert name="left" />
-                </td>
-                <td id="principal" valign="top" >
-                    <ui:insert name="principal"/>
-                </td>
-                <td width="200px" valign="top">
-                    <ui:insert name="right" />
-                    
-                </td>
+                <td valign="top" width="200" class="columnaIzq">
+            <ui:insert name="left" />
+            <ui:repeat value="#{mostrarPublicidad.publicidadesIzq}" var="pub" >
+                <a href="#{pub.url}" >
+                    <f:attribute name="url" value="#{pub.url}" />
+                    <h:graphicImage value="/imagenpub?id=#{pub.id}" width="140"
+                                    alt="#{pub.caption}" style="margin-top: 10px"/>
+                </a>
+            </ui:repeat>
+            <p:outputPanel rendered="#{empty mostrarPublicidad.publicidadesIzq}" >        
+                <h:link outcome="/vistas/comoPublicitar" >
+                    <h:graphicImage value="#{resource['images:publicidadLateral.png']}" 
+                                    style="margin-top: 10px"/>
+                </h:link>
+            </p:outputPanel>
+            </td>
+            <td id="principal" valign="top" >
+            <ui:insert name="principal"/>
+            </td>
             </tr>
             <tr>
                 <td>

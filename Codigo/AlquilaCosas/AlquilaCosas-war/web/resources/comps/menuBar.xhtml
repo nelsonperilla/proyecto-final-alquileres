@@ -1,8 +1,9 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html>
-    <html xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:cc="http://java.sun.com/jsf/composite" 
-        xmlns:h="http://java.sun.com/jsf/html">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite" 
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
 
     <!-- INTERFACE -->
     <cc:interface>
@@ -16,19 +17,35 @@
             <nav id="navTop1">
                 <ul>
                     <li>
-                        <h:link value="Inicio" outcome="/vistas/inicio2" ></h:link>
+                    <h:link value="Inicio" outcome="/vistas/inicio2" ></h:link>
                     </li>
                     <li>
-                        <h:link value="Publicar" outcome="/vistas/usuario/nuevaPublicacion" ></h:link>
+                    <h:link value="Publicar" outcome="/vistas/usuario/nuevaPublicacion" ></h:link>
                     </li>
                     <li>
-                        <h:link value="Mi Panel" outcome="/vistas/usuario/usuarioPanel" ></h:link>
+                    <h:link value="Como funciona" />
                     </li>
                     <li>
-                        <h:link value="Publicitar" outcome="/vistas/inicio2" ></h:link>
+                    <h:link value="Mi Panel" outcome="/vistas/usuario/usuarioPanel" 
+                            rendered="#{login.logueado}" />
                     </li>
                     <li>
-                        <h:link value="Administrar" outcome="/vistas/inicio2" ></h:link>
+                    <h:link value="Publicitar" outcome="/vistas/inicio2" 
+                            rendered="#{login.publicitante}" />
+                    </li>
+                    <li>
+                    <h:link value="Administrar" outcome="/vistas/admin/administrar" 
+                            rendered="#{login.administrador}" />
+                    </li>
+                    <li>
+                    <p:outputPanel rendered="#{not login.logueado}" >
+                        <a onclick="login.show()" style="cursor:pointer">Acceso/Registrarse</a> 
+                    </p:outputPanel>
+                    </li>
+                    <li>
+                    <h:form>
+                        <h:commandLink value="Salir" action="#{login.salir}" rendered="#{login.logueado}" />
+                    </h:form>
                     </li>
                 </ul>
             </nav>

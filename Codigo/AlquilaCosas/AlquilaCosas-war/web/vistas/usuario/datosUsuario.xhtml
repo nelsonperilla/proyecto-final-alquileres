@@ -69,7 +69,7 @@
                                              disabled="#{not modUsuario.editando}" >                                
                                 <f:selectItem itemLabel="Seleccione un pais" itemValue="" />
                                 <f:selectItems value="#{modUsuario.paises}" />
-                                <p:ajax event="change" update="provincia growl" process="@this"
+                                <p:ajax event="change" update="provincia" process="@this"
                                         listener="#{modUsuario.actualizarProvincias}" />
                             </h:selectOneMenu>
                             <p:message for="pais" />

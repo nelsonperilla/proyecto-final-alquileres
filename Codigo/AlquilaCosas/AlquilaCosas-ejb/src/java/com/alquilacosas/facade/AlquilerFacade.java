@@ -99,6 +99,42 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
         return respuesta;
 
     }
+    
+    public List<Alquiler> getAlquileres(Usuario usuario) {
+        List<Alquiler> alquileres = null;
+        Query query = em.createQuery("SELECT a FROM Alquiler a, AlquilerXEstado axe, EstadoAlquiler ea "
+                + "WHERE a.alquilerId = axe.alquilerFk.alquilerId "
+                + "AND axe.estadoAlquilerFk.estadoAlquilerId = ea.estadoAlquilerId "
+                + "AND axe.fechaHasta IS NULL "
+                + "AND ea.nombre <> :estado1 "
+                + "AND ea.nombre <> :estado2 "
+                + "AND ea.nombre <> :estado3 "
+                + "AND (a.publicacionFk.usuarioFk = :usuario "
+                + "OR a.usuarioFk = :usuario) "
+                + "ORDER BY a.fechaInicio DESC");
+        query.setParameter("usuario", usuario);
+        query.setParameter("estado1", NombreEstadoAlquiler.PEDIDO_CANCELADO);
+        query.setParameter("estado2", NombreEstadoAlquiler.PEDIDO);
+        query.setParameter("estado3", NombreEstadoAlquiler.PEDIDO_RECHAZADO);
+        alquileres = query.getResultList();
+        return alquileres;
+    }
+    
+    public List<Alquiler> getPedidos(Usuario usuario) {
+        List<Alquiler> alquileres = null;
+        Query query = em.createQuery("SELECT a FROM Alquiler a, AlquilerXEstado axe, EstadoAlquiler ea "
+                + "WHERE a.alquilerId = axe.alquilerFk.alquilerId "
+                + "AND axe.estadoAlquilerFk.estadoAlquilerId = ea.estadoAlquilerId "
+                + "AND axe.fechaHasta IS NULL "
+                + "AND ea.nombre = :estado "
+                + "AND (a.publicacionFk.usuarioFk = :usuario "
+                + "OR a.usuarioFk = :usuario) "
+                + "ORDER BY a.fechaInicio DESC");
+        query.setParameter("usuario", usuario);
+        query.setParameter("estado", NombreEstadoAlquiler.PEDIDO);
+        alquileres = query.getResultList();
+        return alquileres;
+    }
 
     public List<Alquiler> getAlquilerPorPeriodo(Date fechaInicio, Date fechaFin, Integer alquilerId, Integer idPublicacion) {
 
@@ -128,7 +164,7 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
     public List<Alquiler> getAlquileresPorPublicacion(Publicacion p, EstadoAlquiler.NombreEstadoAlquiler estado) {
 
         Query query = em.createQuery("SELECT a FROM Alquiler a, AlquilerXEstado axe, EstadoAlquiler ea "
-                + "where a.alquilerId = axe.alquilerFk.alquilerId "
+                + "WHERE a.alquilerId = axe.alquilerFk.alquilerId "
                 + "AND axe.estadoAlquilerFk.estadoAlquilerId = ea.estadoAlquilerId "
                 + "AND ea.nombre = :estado "
                 + "AND a.publicacionFk = :publicacion "
@@ -170,7 +206,7 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
         return pedidosDeCambio;
     }
 
-    public List<Alquiler> getAlquileresPorUsuario(Usuario usuario) {
+    public List<Alquiler> getPedidosPorUsuario(Usuario usuario) {
         List<Alquiler> alquileres = null;
         Query query = em.createQuery("SELECT a FROM Alquiler a, AlquilerXEstado axe, EstadoAlquiler ea "
                 + "WHERE a.alquilerId = axe.alquilerFk.alquilerId "

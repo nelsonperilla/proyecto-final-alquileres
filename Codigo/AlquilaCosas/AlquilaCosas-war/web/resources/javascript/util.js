@@ -159,3 +159,14 @@ function updateCoordinates(event){
     document.getElementById('lat').value = event.latLng.lat();  
     document.getElementById('lng').value = event.latLng.lng();          
 }
+
+function manejarPopup(comp) {
+    var detalle = comp[0];
+    if(detalle.style.display == 'none') {
+        $('.artPopup').css('display', 'none');
+        detalle.style.display = 'block';
+    } else {
+        $('.artPopup').css('display', 'none');
+        //detalle.style.display = 'none';
+    }
+}

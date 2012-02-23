@@ -32,7 +32,7 @@ public class PublicationsGroup implements Serializable {
     @PostConstruct
     public void init() {
         Logger.getLogger(PublicationsGroup.class).debug("PublicationsGroup: postconstruct.");
-        publicacionesRandom = publicationBean.getPublicacionesRandom(0);
+        publicacionesRandom = publicationBean.getPublicacionesRandom(12);
     }
     
     public String seleccionarPublicacion() {

@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" 
+      xmlns:comps="http://java.sun.com/jsf/composite/comps" >
+
+    <body>
+
+        <ui:composition template="./../../resources/templates/newTemplate.xhtml">
+            <ui:define name="left">
+                <comps:miPanel />
+            </ui:define>
+
+            <ui:define name="principal">
+
+                <p:tabView dynamic="true" id="tab" >
+
+                    <p:tab title="Publicados">
+                        <ui:include src="articulos-publicados.xhtml" />
+                    </p:tab>
+
+                    <p:tab title="Negociando" >
+                        <ui:include src="articulos-negociando.xhtml" />
+                    </p:tab>
+
+                    <p:tab title="Alquilados" >
+
+                        <ui:include src="articulos-alquilados.xhtml" />
+
+                    </p:tab>
+
+                </p:tabView>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

@@ -4,31 +4,24 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
       xmlns:h="http://java.sun.com/jsf/html" 
-      xmlns:comps="http://java.sun.com/jsf/composite/comps" >
+      xmlns:comps="http://java.sun.com/jsf/composite/comps"
+      xmlns:f="http://java.sun.com/jsf/core">
 
     <body>
 
         <ui:composition template="./../resources/templates/newTemplate.xhtml">
 
             <ui:define name="logInfo">
-                <p:outputPanel rendered="#{not login.logueado}" >
-                    <a onclick="login.show()" style="cursor:pointer">Acceso/Registrarse</a> 
-                </p:outputPanel>
             </ui:define>
 
             <ui:define name="left" >
                 <comps:categoriesMenu />
-            </ui:define>
-            
-            <ui:define name="Menu" >
-                <comps:menuBar />
             </ui:define>
 
             <ui:define name="principal">
                 <table>
                     <tr>
                         <td>
-
                             <p:outputPanel rendered="#{not empty mostrarPublicidad.publicidadesCarrusel}" >
                                 <p:carousel value="#{mostrarPublicidad.publicidadesCarrusel}" autoPlayInterval="3500"
                                             var="pub" rows="1" circular="true" itemStyle="height:130px;width:600px;"
@@ -36,14 +29,14 @@
                                     <a href="#{pub.url}" >    
                                         <h:graphicImage value="/imagenpub?id=#{pub.id}" 
                                                         alt="#{pub.caption}"
-                                                        width="600" height="130" />
+                                                        width="780" height="130" />
                                     </a>
                                 </p:carousel>
                             </p:outputPanel>        
                             <p:outputPanel rendered="#{empty mostrarPublicidad.publicidadesCarrusel}" >
                                 <p:carousel autoPlayInterval="3500" rows="1"
                                             effect="easeInStrong" circular="true"
-                                            itemStyle="height:130px;width:600px;text-align: center" >
+                                            itemStyle="height:130px;width:780px;text-align: center" >
                                     <p:tab title="1" >
                                         <div class="carusel">
                                             <br/><br/>
@@ -73,14 +66,38 @@
                                     <td>
                                         <div id="items">
                                             <h:form>
-                                                <p:dataTable  value="#{publicationsGroup.publicacionesRandom}"
-                                                              var="publication" styleClass="itemsTable">
-                                                    <p:column>
+                                                <p:dataGrid value="#{publicationsGroup.publicacionesRandom}" var="pub"
+                                                            columns="3" styleClass="itemsTable"  >
+                                                    <p:column >
+                                                        <h:link outcome="/vistas/mostrarPublicacion" >
+                                                            <f:param name="id" value="#{pub.id}" />
+                                                            <p:panel style="width: 250px" styleClass="#{pub.destacada ? 'itemDest': null}" >
+                                                                <div style="float: left; width:230px; height: 200px; text-align: center; overflow: hidden; vertical-align: middle">
+                                                                    <h:graphicImage value="/image?id=#{pub.imagenId}"
+                                                                                    style="max-width: 220px; max-height: 190px;"
+                                                                                    rendered="#{pub.imagenId != -1}"/>
+                                                                    <h:graphicImage value="#{resource['images:noImage.png']}"
+                                                                                    width="150" height="150"
+                                                                                    rendered="#{pub.imagenId == -1}"/>
+                                                                </div>
+                                                                <h:panelGrid columns="2" styleClass="tituloCol,precioCol" width="100%" >
+                                                                    <h:outputText value="#{pub.titulo}" 
+                                                                                  style="text-decoration: none; font-weight: bold; color: blue" >
 
-                                                        <comps:itemInfo var="#{publication}" bean="#{publicationsGroup}"
-                                                                        property="selectedPublicationId"/>
+                                                                    </h:outputText>
+                                                                    <h:panelGrid columns="1" width="100%" style="text-align: right" cellpadding="0" cellspacing="0" >
+                                                                        <h:outputText value="$ #{pub.precios.get(1).precio}"
+                                                                                      style="font-size: 18px; font-weight: bold"/>
+                                                                        <h:outputLabel value="por dia" style="font-size: 10px" />
+                                                                    </h:panelGrid>
+
+                                                                </h:panelGrid>
+
+                                                            </p:panel>
+                                                        </h:link>
                                                     </p:column>
-                                                </p:dataTable>
+
+                                                </p:dataGrid>
 
                                             </h:form>
 
@@ -92,9 +109,7 @@
                     </tr>
                 </table>              
             </ui:define>
-            <ui:define name="right" >
-                <comps:loginBox />
-            </ui:define>
+
         </ui:composition>
     </body>
 </html>

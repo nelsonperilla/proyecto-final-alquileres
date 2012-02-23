@@ -1,0 +1,133 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:comps="http://java.sun.com/jsf/composite/comps" 
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../../resources/templates/masterPage.xhtml">
+
+            <ui:define name="logInfo">
+                <h:link value="Inicio" outcome="/vistas/inicio" />
+            </ui:define>
+
+            <ui:define name="left">
+                <comps:categoriesMenu />
+            </ui:define>
+
+            <ui:define name="principal">
+                <h:outputScript library="javascript" name="util.js" />
+
+                <h:form id="rent" prependId="false">
+
+                    <h:panelGrid columns="2" >
+                        <f:facet name="header" >
+                            <h:outputText value="Usted esta enviando un pedido de alquiler para el articulo:" 
+                                          style="font-size: 14px; font-weight: bold;"/>
+                        </f:facet>
+
+                        <h:graphicImage value="/image?id=#{alquilarBean.publicacion.imagenId}"
+                                        rendered="#{alquilarBean.publicacion.imagenId != -1}"
+                                        width="80" />
+                        <h:graphicImage value="/image?id=#{alquilarBean.publicacion.imagenId}" 
+                                        rendered="#{alquilarBean.publicacion.imagenId == -1}"
+                                        width="80" />
+
+                        <h:panelGrid columns="1" >
+                            <h:outputText value="#{alquilarBean.publicacion.titulo}" />
+                            <h:outputText value="#{alquilarBean.publicacion.categoriaF.nombre}" />
+                            <h:outputText value="De: #{alquilarBean.publicacion.propietario.username}" />
+                        </h:panelGrid>
+
+                    </h:panelGrid>
+
+                    <h:panelGrid  columns="3" cellpadding="2" cellspacing="4" >
+
+                        <f:facet name="header" >
+                            <h:outputText value="Datos del pedido:" 
+                                          style="font-size: 14px; font-weight: bold;"/>
+                        </f:facet>
+
+                        <h:outputLabel  value="Cantidad" for="cantidad" />
+                        <p:spinner id="cantidad" value="#{alquilarBean.cantidadProductos}" required="true" 
+                                   validatorMessage="Cantidad invalida" 
+                                   requiredMessage="Valor requerido" >
+                            <f:validateLongRange minimum="1" maximum="#{alquilarBean.publicacion.cantidad}" />
+                        </p:spinner>
+                        <p:message for="cantidad" />
+                        
+                        <h:outputLabel  value="Fecha desde" for="fechaDesde" />
+                        <p:calendar id="fechaDesde" showOn="button" navigator="true" pattern="dd/MM/yyyy HH:mm"
+                                    stepMinute="31" minMinute="1" mindate="#{alquilarBean.hoy}" required="true"
+                                    requiredMessage="Valor requerido" 
+                                    validatorMessage="Fecha invalida. Debe tener el formato dd/MM/yyyy HH:mm" />
+                        <p:message for="fechaDesde" />
+
+                        <h:outputLabel value="Fecha hasta" for="fechaHasta" />
+                        <p:calendar id="fechaHasta" showOn="button" navigator="true" pattern="dd/MM/yyyy HH:mm"
+                                    stepMinute="31" mindate="#{alquilarBean.hoy}" required="true" minMinute="1" 
+                                    requiredMessage="Valor requerido" 
+                                    validatorMessage="Fecha invalida. Debe tener el formato dd/MM/yyyy HH:mm"/>
+                        <p:message for="fechaHasta" />
+
+                        <f:facet name="footer" >
+                            <p:commandButton value="Confirmar" action="#{alquilarBean.confirmarPedido}" ajax="false"/>
+                        </f:facet>
+
+                    </h:panelGrid>
+
+                    <p:panel style="width: 300px" >
+                        <h:panelGrid columns="2" >
+                            <h:outputLabel value="Periodo minimo:"/>
+                            <h:panelGroup style="vertical-align: middle">
+                                <h:outputLabel value="#{alquilarBean.publicacion.periodoMinimoValor} "/>
+                                <h:outputLabel value="#{alquilarBean.publicacion.periodoMinimo.nombre}"/>
+                            </h:panelGroup>
+
+                            <h:outputLabel value="Periodo maximo:"/>
+                            <h:panelGroup style="vertical-align: middle">
+                                <h:outputLabel value="#{alquilarBean.publicacion.periodoMaximoValor} "/>
+                                <h:outputLabel value="#{alquilarBean.publicacion.periodoMaximo.nombre}"/>
+                            </h:panelGroup>
+                        </h:panelGrid>
+                        <h:outputLabel value="Disponibilidad:"/>
+                        <p:calendar id="rentCalendar" mode="inline" 
+                                    pattern="dd/MM/yyyy" mindate="#{alquilarBean.hoy}" />
+                    </p:panel>
+                </h:form>
+
+                <script type="text/javascript" >
+                        jQuery(function () {
+                                window.setTimeout('bindEventsHighlights()',500);
+                        });
+
+                        function bindEventsHighlights() {
+                                var specialDays = <h:outputText value="#{alquilarBean.fechas}" /> ;
+                                jQuery(".hasDatepicker").datepicker("option", "beforeShowDay", function (date) {
+                                          return highlightCalendar(specialDays, date, 'highlight-calendar');
+                                });
+                        };
+                </script>
+
+                <comps:loginOnPage bean="#{alquilarBean}" 
+                                   property="action"/>
+
+            </ui:define>
+
+            <ui:define name="right">
+                <p:outputPanel id="paneles" >
+                    <comps:loginBox />
+                    <comps:adminPanel />
+                    <comps:userPanel />
+                    <comps:panelPublicitante />
+                </p:outputPanel>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

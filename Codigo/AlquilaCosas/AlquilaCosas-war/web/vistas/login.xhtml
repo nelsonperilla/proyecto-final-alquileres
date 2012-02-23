@@ -32,21 +32,20 @@
                     <h:outputLabel value="Usar cuenta de AlquilaCosas:" />
                     <br/><br/>
                     <h:form>
-                        <div  style="width: 300px">
-                            <h:panelGrid columns="2" >
-                                <h:outputLabel  value="Usuario" for="username" />
-                                <p:inputText id="username" value="#{login.username}" styleClass="passInput" required="true"
-                                             requiredMessage="Ingrese nombre de usuario" />
-                                <h:outputLabel value="Contraseña" for="password" />
-                                <p:password id="password" value="#{login.password}" required="true" feedback="false"
-                                            styleClass="passInput" requiredMessage="Ingrese contraseña" />
-                                <f:facet name="footer" >
-                                    <p:commandButton id="login" value="Entrar" actionListener="#{login.loguearse}" update="@form" />
-                                </f:facet>
-                            </h:panelGrid>
-                        </div>
+                        <h:panelGrid columns="2" style="margin-left: auto;margin-right: auto;" >
+                            <h:outputLabel  value="Usuario" for="username" />
+                            <p:inputText id="username" value="#{login.username}" styleClass="passInput" required="true"
+                                         requiredMessage="Ingrese nombre de usuario" />
+                            <h:outputLabel value="Contraseña" for="password" />
+                            <p:password id="password" value="#{login.password}" required="true" feedback="false"
+                                        styleClass="passInput" requiredMessage="Ingrese contraseña" />
+                            <f:facet name="footer" >
+                                <p:commandButton id="login" value="Entrar" actionListener="#{login.loguearse}" update="@form" />
+                            </f:facet>
+                        </h:panelGrid>
                         <p:messages id="msgs" />
                     </h:form>
+
                     <p:separator />
 
                     <h:outputText value="Registrarse" style="font-size: 18px; font-weight: bold;margin-top: 15px" />
@@ -58,7 +57,9 @@
                     </h:form>
                     <br/><br/>
                     <h:link value="Crear una cuenta de AlquilaCosas" outcome="/vistas/registrarUsuario" />
+
                 </div>
+
             </ui:define>
 
             <ui:define name="right">

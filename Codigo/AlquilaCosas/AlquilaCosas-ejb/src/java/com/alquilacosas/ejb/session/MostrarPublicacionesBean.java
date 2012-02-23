@@ -30,8 +30,8 @@ public class MostrarPublicacionesBean implements MostrarPublicacionesBeanLocal {
     private PrecioFacade precioFacade;
 
     @Override
-    public List<PublicacionDTO> getPublicacionesRandom(int pagina) {
-        List<Publicacion> publicaciones = publicacionFacade.getPublicacionesInicio();
+    public List<PublicacionDTO> getPublicacionesRandom(int filas) {
+        List<Publicacion> publicaciones = publicacionFacade.getPublicacionesInicio(filas);
         List<PublicacionDTO> resultado = new ArrayList<PublicacionDTO>();
         for (Publicacion publicacion : publicaciones) {
             PublicacionDTO tempPublication = new PublicacionDTO(publicacion.getPublicacionId(), publicacion.getTitulo(),
