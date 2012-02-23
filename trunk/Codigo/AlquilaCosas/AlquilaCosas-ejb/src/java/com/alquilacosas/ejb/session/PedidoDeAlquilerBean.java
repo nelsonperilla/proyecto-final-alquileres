@@ -232,7 +232,7 @@ public class PedidoDeAlquilerBean implements AlquilerBeanLocal {
     public List<AlquilerDTO> getPedidosRealizados(Integer usuarioId) {
         
         Usuario usuario = usuariofacade.find(usuarioId);
-        List<Alquiler> alquileres = alquilerFacade.getAlquileresPorUsuario(usuario);
+        List<Alquiler> alquileres = alquilerFacade.getPedidosPorUsuario(usuario);
         List<AlquilerDTO> pedidos = new ArrayList<AlquilerDTO>();
         
         for( Alquiler a : alquileres ){

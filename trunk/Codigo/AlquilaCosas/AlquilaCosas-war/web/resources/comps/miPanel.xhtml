@@ -2,7 +2,8 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:cc="http://java.sun.com/jsf/composite" 
-      xmlns:h="http://java.sun.com/jsf/html">
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
 
     <!-- INTERFACE -->
     <cc:interface>
@@ -10,48 +11,38 @@
 
     <!-- IMPLEMENTATION -->
     <cc:implementation>  
-        <div class="inner-content">
-            <div id="dashboard-left-nav">
-                <div class="user-section-new">
-                    <div class="uster-lagrimg">
-                        <h:graphicImage class="image" value="#{resource['images:4chakra.png']}" />
-                    </div>
-                    <div class="user-namedetail">
-                        <p>Ignacio Giagante</p>
-                    </div>
-                    <div id="list">
-                        <ul class="menu" rel="sam1">
-                            <li ><a href="#">Articulos</a></li>
-                            <li><a href="#">Calendario</a></li>
-                            <li ><a href="#">Mensajes</a></li>
-                            <li><a href="#">Perfil</a></li>
-                        </ul>
-                    </div>
+        <p:panel style="width: 200px; background: aliceblue" >
+                <div class="uster-lagrimg">
+                    <h:graphicImage styleClass="image" value="#{resource['images:4chakra.png']}" />
                 </div>
-            </div>
-            <div id="rnb">
-                <div id="barra">
+                <div class="user-namedetail">
+                    <p>Ignacio Giagante</p>
                 </div>
-                <nav id="nav2">
-                    <ul>
+                <div id="list">
+                    <ul class="menu" rel="sam1">
                         <li>
-                            <h:link value="Publicados" outcome="/vistas/inicio2" ></h:link>
+                            <h:link value="Publicar" />
+                        </li>
+                        <li >
+                            <h:link value="Articulos" outcome="/vistas/usuario/articulos" />
                         </li>
                         <li>
-                            <h:link value="Rentados" outcome="/vistas/inicio2" ></h:link>
+                            <h:link value="Mis Datos" />
+                        </li>
+                        <li >
+                        <h:link value="Preguntas" />
                         </li>
                         <li>
-                            <h:link value="Negociando" outcome="/vistas/inicio2" ></h:link>
+                        <h:link value="Cambiar contraseña" />
                         </li>
                         <li>
-                            <h:link value="Solicitados" outcome="/vistas/inicio2" ></h:link>
+                        <h:link value="Pagos" />
                         </li>
                         <li>
-                            <h:link value="Mis Favoritos" outcome="/vistas/inicio2" ></h:link>
+                        <h:link value="Mi reputacion" />
                         </li>
                     </ul>
-                </nav>
-            </div>
-        </div>
+                </div>
+            </p:panel>
     </cc:implementation>
 </html>

@@ -48,7 +48,7 @@ public class PublicacionFacade extends AbstractFacade<Publicacion> {
         super(Publicacion.class);
     }
 
-    public List<Publicacion> getPublicacionesInicio() {
+    public List<Publicacion> getPublicacionesInicio(int filas) {
         String q = "SELECT p FROM Publicacion p, PublicacionXEstado pxe, EstadoPublicacion e "
                 + "WHERE pxe.publicacion = p "
                 + "AND pxe.estadoPublicacion = e "
@@ -56,7 +56,7 @@ public class PublicacionFacade extends AbstractFacade<Publicacion> {
                 + "AND e.nombre = :estado ORDER BY p.destacada DESC, p.fechaDesde DESC ";
         TypedQuery<Publicacion> query = em.createQuery(q, Publicacion.class);
         query.setParameter("estado", NombreEstadoPublicacion.ACTIVA);
-        query.setMaxResults(10);
+        query.setMaxResults(filas);
         return query.getResultList();
     }
 

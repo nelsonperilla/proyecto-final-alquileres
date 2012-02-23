@@ -1,0 +1,114 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui" 
+      xmlns:f="http://java.sun.com/jsf/core" >
+
+    <h:body>
+
+        <h:form>
+            <p:dataGrid value="#{alquileresBean.alquileres}" var="alq" columns="1" 
+                        styleClass="itemsTable" id="grid" rowIndexVar="row" paginator="true" 
+                        paginatorPosition="bottom" paginatorAlwaysVisible="false" >
+                <p:column>
+
+                    <div class="artContenedor" >
+                        <div class="artImagen" >
+                            <h:graphicImage value="/image?id=#{alq.imagenId}" 
+                                            style="max-width: 120px; max-height: 100px"
+                                            rendered="#{alq.imagenId != -1}" />
+                            <h:graphicImage value="#{resource['images:noImage.png']}" 
+                                            style="max-width: 120px; max-height: 100px"
+                                            rendered="#{alq.imagenId == -1}" />
+                        </div>
+                        <div class="artDescripcionAlq">
+                            <h5>
+                                <h:link value="#{alq.titulo}" outcome="/vistas/mostrarPublicacion.xhtml" >
+                                    <f:param name="id" value="#{alq.idPublicacion}" />
+                                </h:link>
+                            </h5>
+                            <div class="artDescContenido">
+                                <div class="artDescCol1">
+                                    <h:outputText value="#{alq.tomado ? 'De: ': 'Alquilador: '} #{alq.usuario}" />
+                                    <br/>
+                                    <h:outputText value="Cantidad: #{alq.cantidad}" />
+                                </div>
+                                <div class="artDescCol2" >
+                                    <h:outputText value="Desde: #{alq.fechaDesde}" />
+                                    <br/>
+                                    <h:outputText value="Hasta: #{alq.fechaHasta}" />
+                                </div>
+                            </div>
+                            <div class="accionPrincipal">
+                                <p:commandButton value="Calificar" onclick="calificarDlg.show()"
+                                                 rendered="#{alq.calificable and not alq.calificado}" 
+                                                 type="button" style="background: yellow" />
+                                <p:commandButton value="Ver Calificacion" onclick="verCalificacionDlg.show()" 
+                                                 rendered="#{alq.calificable and alq.calificado}" 
+                                                 type="button" style="background: yellow" />
+                            </div>
+                        </div>  
+                        <div class="artPrecio" >
+                            <div class="accionesContenedor">
+                                <div class="artAcciones">
+                                    <p:button value="Modificar" outcome="/vistas/usuario/modificarPublicacion" icon="ui-icon-pencil"
+                                              rendered="#{not alq.tomado and alq.cancelable}">
+                                        <f:param name="id" value="#{alq.idAlquiler}" />
+                                    </p:button>
+                                    <p:button value="Pedir Cambio" outcome="/vistas/usuario/modificarPublicacion" icon="ui-icon-pencil"
+                                              rendered="#{alq.tomado and alq.cancelable and alq.idPedidoCambio == -1}">
+                                        <f:param name="id" value="#{alq.idAlquiler}" />
+                                    </p:button>
+                                    <p:commandButton value="Cancelar" icon="ui-icon-close" type="button" 
+                                                     rendered="#{alq.cancelable}" onclick="cancelarDlg.show()" />
+                                </div>
+                            </div>
+
+                            <h:outputLabel value="Precio:" styleClass="precioLabel" />
+                            <br/>
+                            <h:outputText value="$ #{alq.monto}" styleClass="precio" />
+                            <br/>
+                            <div class="artEstado" >
+                                <h:outputText value="#{alq.estadoAlquiler.toString()}" />
+                            </div>
+                            
+                        </div>
+                        <div class="artNotificaciones" >
+                            <div class="accionesContenedor"></div>
+                                <a onclick="manejarPopup(jQuery(this).parent('.artNotificaciones').find('.artPopup'))"
+                                   style="display: #{(alq.idPedidoCambio != -1 and not alq.tomado and alq.cancelable) ? 'block' : 'none'}">
+                                    <p:commandButton type="button" icon="ui-icon-notice" style="font-size: 11px; background: yellow;"/>
+                                </a>
+
+                            <div class="artPopup" style="display: none">
+                                <h:panelGrid columns="2" style="text-align: left"  >
+                                    <f:facet name="header" >
+                                        <h:outputText value="Pedido de cambio recibido" 
+                                                      style="font-weight: bold; color: cornflowerblue" />
+                                    </f:facet>
+                                </h:panelGrid>
+                            </div>
+                        </div>
+                    </div>
+
+                </p:column>
+            </p:dataGrid>
+        </h:form>
+
+        <p:dialog widgetVar="cancelarDlg" header="Cancelar Alquiler"
+                  modal="true" resizable="false" >
+            <h:form >
+                <h:outputText value="Esta seguro que desea cancelar el alquiler seleccionado?" />
+                <p:separator />
+                <h:panelGrid columns="2" columnClasses="leftCol,rightCol" style="width:100%" >
+                    <p:commandButton value="Si" actionListener="#{alquileresBean.cancelarAlquiler}" 
+                                     oncomplete="cancelarDlg.hide()" />
+                    <p:commandButton value="No" oncomplete="cancelarDlg.hide()" />
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+
+    </h:body>
+</html>
+

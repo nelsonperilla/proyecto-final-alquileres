@@ -32,6 +32,7 @@ public class AlquilerDTO implements Serializable {
     private NombreEstadoAlquiler estadoAlquiler;
     private SimpleDateFormat formatoDia = new SimpleDateFormat("dd/MM/yyyy");
     private SimpleDateFormat formatoCompleto = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+    private boolean tomado;
 
     public AlquilerDTO() {
     }
@@ -249,5 +250,17 @@ public class AlquilerDTO implements Serializable {
             return false;
         else
             return true;
+    }
+
+    /**
+     * Indica si en el alquiler, el usuario fue alquilador (true) o dueño (false)
+     * @return 
+     */
+    public boolean isTomado() {
+        return tomado;
+    }
+
+    public void setTomado(boolean tomado) {
+        this.tomado = tomado;
     }
 }
