@@ -56,7 +56,7 @@ import org.apache.log4j.Logger;
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-public class PedidoDeAlquilerBean implements AlquilerBeanLocal {
+public class PedidosBean implements PedidosBeanLocal {
 
     @Resource(name = "emailConnectionFactory")
     private ConnectionFactory connectionFactory;
@@ -147,7 +147,7 @@ public class PedidoDeAlquilerBean implements AlquilerBeanLocal {
             this.revisarPedidos(alquiler); 
         } catch (Exception e) {
             context.getRollbackOnly();
-            Logger.getLogger(PedidoDeAlquilerBean.class).error("confirmarPedidoDeAlquiler(). "
+            Logger.getLogger(PedidosBean.class).error("confirmarPedidoDeAlquiler(). "
                     + "Error al confirmar alquiler: " + e + ": " + e.getMessage());
         }
         

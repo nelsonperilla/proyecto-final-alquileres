@@ -8,7 +8,6 @@ import com.alquilacosas.dto.AlquilerDTO;
 import com.alquilacosas.ejb.entity.Alquiler;
 import com.alquilacosas.ejb.entity.EstadoAlquiler;
 import com.alquilacosas.ejb.entity.ImagenPublicacion;
-import com.alquilacosas.ejb.entity.Login;
 import com.alquilacosas.ejb.entity.PedidoCambio;
 import com.alquilacosas.ejb.entity.Publicacion;
 import com.alquilacosas.ejb.entity.Usuario;
@@ -57,27 +56,27 @@ public class AlquileresBean implements AlquileresBeanLocal {
     private EstadoPedidoCambioFacade estadoPedidoFacade;
     @EJB
     private PublicacionFacade publicacionFacade;
-    
+
     @Override
     public List<AlquilerDTO> getAlquileres(int usuarioId) {
         Usuario usuario = usuarioFacade.find(usuarioId);
         List<Alquiler> alquileres = alquilerFacade.getAlquileres(usuario);
         return convertirAlquileres(alquileres, usuario);
     }
-    
+
     @Override
     public List<AlquilerDTO> getPedidos(int usuarioId) {
         Usuario usuario = usuarioFacade.find(usuarioId);
         List<Alquiler> alquileres = alquilerFacade.getPedidos(usuario);
         return convertirAlquileres(alquileres, usuario);
     }
-    
+
     private List<AlquilerDTO> convertirAlquileres(List<Alquiler> alquileres, Usuario usuario) {
         List<AlquilerDTO> listaAlquileres = new ArrayList<AlquilerDTO>();
         for (Alquiler a : alquileres) {
             boolean tomado = false;
-            if(a.getUsuarioFk().equals(usuario)) {
-               tomado = true; 
+            if (a.getUsuarioFk().equals(usuario)) {
+                tomado = true;
             }
             boolean calificado = calificacionFacade.isCalificacionExistente(usuario, a);
             Publicacion pub = a.getPublicacionFk();
@@ -89,7 +88,7 @@ public class AlquileresBean implements AlquileresBeanLocal {
             }
             int usuarioId = 0;
             String username = "";
-            if(tomado) {
+            if (tomado) {
                 usuarioId = pub.getUsuarioFk().getUsuarioId();
                 username = pub.getUsuarioFk().getLoginList().get(0).getUsername();
             } else {
@@ -115,5 +114,6 @@ public class AlquileresBean implements AlquileresBeanLocal {
         }
         return listaAlquileres;
     }
-    
+
+   
 }

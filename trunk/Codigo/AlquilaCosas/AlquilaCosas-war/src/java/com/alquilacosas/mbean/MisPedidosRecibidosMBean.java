@@ -6,7 +6,7 @@ package com.alquilacosas.mbean;
 
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.AlquilerDTO;
-import com.alquilacosas.ejb.session.AlquilerBeanLocal;
+import com.alquilacosas.ejb.session.PedidosBeanLocal;
 import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -28,7 +28,7 @@ import org.apache.log4j.Logger;
 public class MisPedidosRecibidosMBean implements Serializable {
     
     @EJB
-    private AlquilerBeanLocal alquilerBean;
+    private PedidosBeanLocal alquilerBean;
     @ManagedProperty(value = "#{login}")
     private ManejadorUsuarioMBean usuarioLogueado;
     
@@ -88,14 +88,6 @@ public class MisPedidosRecibidosMBean implements Serializable {
         }
     }
     
-//    public String mostrarPublicacion(){
-//        return "mostrarPublicacion";    
-//    }
-//    
-//    public String mostrarUsuario(){
-//        return "verReputacionUsuario";    
-//    }
-    
     /**
      * @return the usuarioLogueado
      */
@@ -110,11 +102,11 @@ public class MisPedidosRecibidosMBean implements Serializable {
         this.usuarioLogueado = usuarioLogueado;
     }
 
-    public AlquilerBeanLocal getAlquilerBean() {
+    public PedidosBeanLocal getAlquilerBean() {
         return alquilerBean;
     }
 
-    public void setAlquilerBean(AlquilerBeanLocal alquilerBean) {
+    public void setAlquilerBean(PedidosBeanLocal alquilerBean) {
         this.alquilerBean = alquilerBean;
     }
 

@@ -10,7 +10,8 @@
         <h:form>
             <p:dataGrid value="#{misPublicaciones.publicacionesDto}" var="item" columns="1" 
                         styleClass="itemsTable" id="grid" rowIndexVar="row" paginator="true" 
-                        paginatorPosition="bottom" paginatorAlwaysVisible="false" >
+                        paginatorPosition="bottom" paginatorAlwaysVisible="false"
+                        emptyMessage="No hay articulos publicados." >
                 <p:column>
 
                     <div class="artContenedor" >
@@ -46,7 +47,9 @@
                                     <p:button value="Editar" outcome="/vistas/usuario/modificarPublicacion" icon="ui-icon-pencil" >
                                         <f:param name="id" value="#{item.id}" />
                                     </p:button>
-                                    <p:commandButton value="Eliminar" icon="ui-icon-close" type="button" onclick="confirmarDlg.show()" />
+                                    <p:commandButton value="Eliminar" icon="ui-icon-close" onclick="confirmarDlg.show()" process="@this" >
+                                        <f:setPropertyActionListener value="#{item.id}" target="#{misPublicaciones.publicacionId}" />
+                                    </p:commandButton>
                                 </div>
                             </div>
 
