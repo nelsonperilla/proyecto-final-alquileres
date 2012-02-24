@@ -48,7 +48,6 @@ public class MostrarPublicacionesBean implements MostrarPublicacionesBeanLocal {
             tempPublication.setPrecios(getPrecios(publicacion));
             resultado.add(tempPublication);
         }
-
         return resultado;
     }
 
@@ -66,7 +65,7 @@ public class MostrarPublicacionesBean implements MostrarPublicacionesBeanLocal {
 
     private List<PrecioDTO> getPrecios(Publicacion filter) {
         List<PrecioDTO> resultado = new ArrayList<PrecioDTO>();
-        List<Precio> precios = precioFacade.findByPublicacion(filter);
+        List<Precio> precios = precioFacade.buscarActualesPorPublicacion(filter);
 
         for (Precio precio : precios) {
             PrecioDTO dto = new PrecioDTO(precio.getPrecio(), precio.getPeriodoFk().getNombre());

@@ -181,7 +181,7 @@ public class DestacarPublicacionBean implements DestacarPublicacionBeanLocal {
         dto.setCiudad(d.getCiudad());
         
         List<PrecioDTO> precios = new ArrayList<PrecioDTO>();
-        for (Precio precio : precioPublicacionFacade.getUltimoPrecios(publicacion)) {
+        for (Precio precio : precioPublicacionFacade.buscarActualesPorPublicacion(publicacion)) {
             precios.add(new PrecioDTO(precio.getPrecio(), precio.getPeriodoFk().getNombre()));
         }
         dto.setPrecios(precios);

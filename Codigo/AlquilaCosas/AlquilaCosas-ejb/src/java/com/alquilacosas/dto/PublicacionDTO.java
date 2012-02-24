@@ -5,9 +5,10 @@
 package com.alquilacosas.dto;
 
 import com.alquilacosas.ejb.entity.Categoria;
-import com.alquilacosas.ejb.entity.EstadoPublicacion;
+import com.alquilacosas.ejb.entity.EstadoPublicacion.NombreEstadoPublicacion;
 import com.alquilacosas.ejb.entity.ImagenPublicacion;
 import com.alquilacosas.ejb.entity.Periodo;
+import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,10 +21,8 @@ import java.util.List;
 public class PublicacionDTO implements Serializable {
 
     private int id;
-    private String titulo;
-    private String descripcion;
-    private Date fechaDesde;
-    private Date fechaHasta;
+    private String titulo, descripcion;
+    private Date fechaDesde, fechaHasta;
     private boolean destacada;
     private int cantidad;
     private int imagenId = -1;
@@ -31,28 +30,26 @@ public class PublicacionDTO implements Serializable {
     private Categoria categoria;
     private CategoriaDTO categoriaF;
     private List<PrecioDTO> precios;
-    private EstadoPublicacion estado;
+    private NombreEstadoPublicacion estado;
     private List<ImagenPublicacion> imagenes;
-    private Integer periodoMinimoValor;
-    private Integer periodoMaximoValor;
-    private Periodo periodoMinimo;
-    private Periodo periodoMaximo;
+    private Integer periodoMinimoValor, periodoMaximoValor;
+    private Periodo periodoMinimo, periodoMaximo;
     private String provincia, ciudad, barrio;
     private UsuarioDTO propietario;
-    private double latitud;
-    private double longitud;
+    private double latitud, longitud;
+    private Double precioHora, precioDia, precioSemana, precioMes;
 
     public PublicacionDTO(int id, String titulo, String descripcion,
-            Date fecha_desde, Date fecha_hasta, boolean destacada,
+            Date fechaDesde, Date fechaHasta, boolean destacada,
             int cantidad, Categoria categoria,
-            List<ImagenPublicacion> imagenes, EstadoPublicacion estado,
+            List<ImagenPublicacion> imagenes, NombreEstadoPublicacion estado,
             Integer periodoMinimoValor, Periodo periodoMinimo,
             Integer periodoMaximoValor, Periodo periodoMaximo) {
         this.id = id;
         this.titulo = titulo;
         this.descripcion = descripcion;
-        this.fechaDesde = fecha_desde;
-        this.fechaHasta = fecha_hasta;
+        this.fechaDesde = fechaDesde;
+        this.fechaHasta = fechaHasta;
         this.destacada = destacada;
         this.cantidad = cantidad;
         this.categoria = categoria;
@@ -66,13 +63,13 @@ public class PublicacionDTO implements Serializable {
     }
 
     public PublicacionDTO(int id, String titulo, String descripcion,
-            Date fecha_desde, Date fecha_hasta, boolean destacada,
+            Date fechaDesde, Date fechaHasta, boolean destacada,
             int cantidad) {
         this.id = id;
         this.titulo = titulo;
         this.descripcion = descripcion;
-        this.fechaDesde = fecha_desde;
-        this.fechaHasta = fecha_hasta;
+        this.fechaDesde = fechaDesde;
+        this.fechaHasta = fechaHasta;
         this.destacada = destacada;
         this.cantidad = cantidad;
     }
@@ -273,11 +270,11 @@ public class PublicacionDTO implements Serializable {
         this.categoria = categoria;
     }
 
-    public EstadoPublicacion getEstado() {
+    public NombreEstadoPublicacion getEstado() {
         return estado;
     }
 
-    public void setEstado(EstadoPublicacion estado) {
+    public void setEstado(NombreEstadoPublicacion estado) {
         this.estado = estado;
     }
 
@@ -287,6 +284,17 @@ public class PublicacionDTO implements Serializable {
 
     public void setPrecios(List<PrecioDTO> precios) {
         this.precios = precios;
+        for(PrecioDTO p: precios) {
+            if(p.getPeriodoNombre() == NombrePeriodo.HORA) {
+                precioHora = p.getPrecio();
+            } else if(p.getPeriodoNombre() == NombrePeriodo.DIA) {
+                precioDia = p.getPrecio();
+            } else if(p.getPeriodoNombre() == NombrePeriodo.SEMANA) {
+                precioSemana = p.getPrecio();
+            } else if(p.getPeriodoNombre() == NombrePeriodo.MES) {
+                precioMes = p.getPrecio();
+            }
+        }
     }
 
     public String getProvincia() {
@@ -337,5 +345,37 @@ public class PublicacionDTO implements Serializable {
      */
     public void setLongitud(double longitud) {
         this.longitud = longitud;
+    }
+
+    public Double getPrecioDia() {
+        return precioDia;
+    }
+
+    public void setPrecioDia(Double precioDia) {
+        this.precioDia = precioDia;
+    }
+
+    public Double getPrecioHora() {
+        return precioHora;
+    }
+
+    public void setPrecioHora(Double precioHora) {
+        this.precioHora = precioHora;
+    }
+
+    public Double getPrecioMes() {
+        return precioMes;
+    }
+
+    public void setPrecioMes(Double precioMes) {
+        this.precioMes = precioMes;
+    }
+
+    public Double getPrecioSemana() {
+        return precioSemana;
+    }
+
+    public void setPrecioSemana(Double precioSemana) {
+        this.precioSemana = precioSemana;
     }
 }

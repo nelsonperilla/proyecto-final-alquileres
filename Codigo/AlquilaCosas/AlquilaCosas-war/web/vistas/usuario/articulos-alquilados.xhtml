@@ -8,6 +8,11 @@
     <h:body>
 
         <h:form id="formAlquilados" >
+            <div class="leyendaTipoImg" style="background: lightgreen" /> 
+            <div class="leyendaTipoTxt" ><h:outputText value="Tomados" /></div>
+            <div class="leyendaTipoImg" style="background: orange" /> 
+            <div class="leyendaTipoTxt"><h:outputText value="Ofrecidos" /></div>
+            
             <p:dataGrid id="grid" value="#{alquileresBean.alquileres}" var="alq" columns="1" 
                         styleClass="itemsTable" rowIndexVar="row" paginator="true" 
                         paginatorPosition="bottom" paginatorAlwaysVisible="false" 
@@ -15,6 +20,7 @@
                 <p:column>
 
                     <div class="artContenedor" >
+                        <div class="artTipo" style="background: #{alq.tomado ? 'lightgreen':'orange'}" ></div>
                         <div class="artImagen" >
                             <h:graphicImage value="/image?id=#{alq.imagenId}" 
                                             style="max-width: 120px; max-height: 100px"

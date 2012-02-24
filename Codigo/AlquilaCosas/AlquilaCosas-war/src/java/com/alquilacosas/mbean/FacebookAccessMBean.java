@@ -69,7 +69,6 @@ public class FacebookAccessMBean {
                         String res = IOUtil.urlToString(new URL("https://graph.facebook.com/me?access_token=" + accessToken));
                         System.out.println("fb resp:" + res);
                         JSONObject json = new JSONObject(res);
-                        //String id = json.getString("id");
                         String nombre = json.getString("first_name");
                         String apellido = json.getString("last_name");
                         String email = json.getString("email");
@@ -84,6 +83,7 @@ public class FacebookAccessMBean {
                         Logger.getLogger(FacebookAccessMBean.class).error("Exception reading response from facebook: " + e + ": " + e.getMessage());
                         System.out.println("Exception getting son object!" + e + ": " + e.getMessage());
                     }
+                    
                     String redirect = (String) req.getSession(true).getAttribute("redirectUrl");
                     req.getSession(true).removeAttribute("redirectUrl");
                     if (redirect != null) {
@@ -93,7 +93,6 @@ public class FacebookAccessMBean {
                     }
                     context.redirect(redirect);
                     FacesContext.getCurrentInstance().responseComplete();
-                    //resp.sendRedirect(redirect);
                 } else {
                     System.out.println("access token no recibido");
                     context.redirect("/AlquilaCosas-war/faces/vistas/inicio.xhtml");

@@ -15,6 +15,10 @@ import com.alquilacosas.ejb.entity.Usuario;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -34,6 +38,8 @@ import javax.persistence.metamodel.Metamodel;
  * @author damiancardozo
  */
 @Stateless
+@TransactionManagement(TransactionManagementType.CONTAINER)
+@TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class PublicacionFacade extends AbstractFacade<Publicacion> {
 
     @PersistenceContext(unitName = "AlquilaCosas-ejbPU")

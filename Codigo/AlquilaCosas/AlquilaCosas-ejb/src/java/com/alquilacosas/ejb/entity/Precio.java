@@ -63,8 +63,10 @@ public class Precio implements Serializable {
     public Precio() {
     }
 
-    public Precio(Integer precioId) {
-        this.precioId = precioId;
+    public Precio(Double precio, Periodo periodoFk) {
+        this.precio = precio;
+        this.periodoFk = periodoFk;
+        fechaDesde = new Date();
     }
 
     public Integer getPrecioId() {

@@ -867,13 +867,30 @@ h1, h2, h3 {
 
 /* Pagina Articulos 
     ------------------------------------------------- */
+.leyendaTipoImg {
+    float: left;
+    width: 15px; 
+    height: 15px; 
+    border-radius: 5px; 
+    moz-border-radius: 5px;
+}
+.leyendaTipoTxt {
+    float: left; 
+    margin: 0 4px;
+    color: gray;
+    font-size: 12px;
+}
+
+
 .artContenedor {
     width: 700px; 
-    height: 100px;
+    height: 105px;
     border-radius: 10px;
     moz-border-radius: 10px;
     border: 1px solid lightgrey;
     padding: 10px;
+    margin: 1px 0;
+    position: relative;
 }
 
 .artContenedor:hover {
@@ -882,6 +899,15 @@ h1, h2, h3 {
 
 .artContenedor:hover .artAcciones {
     display: block;
+}
+
+.artTipo {
+    width:15px;
+    height: 15px;
+    border-radius: 5px;
+    position: absolute; 
+    top: 40px; 
+    right: -30px; 
 }
 
 .artImagen {

@@ -7,6 +7,10 @@ package com.alquilacosas.facade;
 import com.alquilacosas.ejb.entity.Publicacion;
 import com.alquilacosas.ejb.entity.PublicacionXEstado;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -18,6 +22,8 @@ import org.apache.log4j.Logger;
  * @author damiancardozo
  */
 @Stateless
+@TransactionManagement(TransactionManagementType.CONTAINER)
+@TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class PublicacionXEstadoFacade extends AbstractFacade<PublicacionXEstado> {
 
     @PersistenceContext(unitName = "AlquilaCosas-ejbPU")

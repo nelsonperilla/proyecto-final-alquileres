@@ -7,13 +7,10 @@ package com.alquilacosas.ejb.session;
 
 import com.alquilacosas.dto.ComentarioDTO;
 import com.alquilacosas.common.AlquilaCosasException;
-import com.alquilacosas.dto.PrecioDTO;
 import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.dto.UsuarioDTO;
 import com.alquilacosas.ejb.entity.EstadoPublicacion.NombreEstadoPublicacion;
-import com.alquilacosas.ejb.entity.Pais;
 import com.alquilacosas.ejb.entity.Periodo;
-import com.alquilacosas.ejb.entity.Provincia;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
@@ -27,7 +24,8 @@ public interface PublicacionBeanLocal {
     
     public Integer registrarPublicacion( String titulo, String descripcion, 
             Date fechaDesde, Date fechaHasta, boolean destacada, int cantidad,
-            int usuarioId, int categoria, List<PrecioDTO> precios, 
+            int usuarioId, int categoria, Double precioHora, Double precioDia,
+            Double precioSemana, Double precioMes,  
             List<byte[]> imagenes, int periodoMinimo, int periodoMinimoFK, 
             Integer periodoMaximo, Integer periodoMaximoFk, double latitud, double longitud) throws AlquilaCosasException;
 
@@ -45,13 +43,14 @@ public interface PublicacionBeanLocal {
 
     public PublicacionDTO getDatosPublicacion(int publicacionId) throws AlquilaCosasException;
 
-    public void actualizarPublicacion( int publicacionId, String titulo, String descripcion, 
+    public void actualizarPublicacion(int publicacionId, String titulo, String descripcion, 
             Date fecha_desde, Date fecha_hasta, boolean destacada, int cantidad,
-            int usuarioId, int categoria, List<PrecioDTO> precios, 
+            int usuarioId, int categoria, Double precioHora, Double precioDia,
+            Double precioSemana, Double precioMes, 
             List<byte[]> imagenesAgregar, List<Integer> imagenesABorrar, 
             int periodoMinimo, int periodoMinimoFk, Integer periodoMaximo, Integer periodoMaximoFk,
             NombreEstadoPublicacion estadoPublicacion, 
-            double latitud, double longitud  ) throws AlquilaCosasException;
+            double latitud, double longitud) throws AlquilaCosasException;
     
 
     public List<Periodo> getPeriodos();

@@ -29,7 +29,6 @@
                         <h:outputLabel value="Estado: " />
                         <h:selectOneMenu id="estado" value="#{modPublicacion.selectedEstado}" required ="true"
                                          requiredMessage="Valor requerido"> 
-                            <f:selectItem itemLabel="Estados" itemValue="" />
                             <f:selectItems value="#{modPublicacion.estados}" />
                         </h:selectOneMenu>
                         <p/>
@@ -82,7 +81,7 @@
                                         listener="#{modPublicacion.subcategoria2SeleccionadaCambio}" />   
                             </h:selectOneMenu>
                             <p/>
-                            
+
                             <h:outputLabel id="labelSubCategoria3" value="Subcategoria: "
                                            rendered="#{modPublicacion.subcategoria3Render}" />
                             <h:selectOneMenu id="subcategoria3" value="#{modPublicacion.selectedSubcategoria3}" 
@@ -101,7 +100,7 @@
 
                     <br/>
 
-                    <p:panel id="panelImagenes" header="Imagenes del producto" styleClass="formPanel" >
+                    <p:fieldset legend="Imagenes" styleClass="fieldset" >
 
                         <p:dataGrid id="imagenes" var="img" value="#{modPublicacion.imagenIds}" columns="3">
                             <p:column>
@@ -125,59 +124,74 @@
                                       allowTypes="/(\.|\/)(gif|jpe?g|png)$/" label="Seleccionar" 
                                       cancelLabel="Cancelar" uploadLabel="Subir archivo" />
 
-                    </p:panel>
-                    
+                    </p:fieldset>
+
                     <p:fieldset legend="Ubicación del articulo" styleClass="fieldset" >
                         <script type="text/javascript"
-                            src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAIvenuSuB8qlfz056q69ddMHJIdqra2sc&amp;sensor=false">
+                                src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAIvenuSuB8qlfz056q69ddMHJIdqra2sc&amp;sensor=false">
                         </script> 
-                            <p:gmap center="#{modPublicacion.pf.latitud},
-                                            #{modPublicacion.pf.longitud} "
-                                    zoom="15" type="HYBRID" style="width:540px;height:400px;"
-                                    widgetVar="myMap" model="#{modPublicacion.gMap}" >
-                                <p:ajax event="markerDrag" listener="#{modPublicacion.updateCoordinates}" />
-                            </p:gmap>
+                        <p:gmap center="#{modPublicacion.pf.latitud},
+                                #{modPublicacion.pf.longitud} "
+                                zoom="15" type="HYBRID" style="width:540px;height:400px;"
+                                widgetVar="myMap" model="#{modPublicacion.gMap}" >
+                            <p:ajax event="markerDrag" listener="#{modPublicacion.updateCoordinates}" />
+                        </p:gmap>
                     </p:fieldset>
-                    
-                    <h2>Elije un periodo minimo y maximo</h2>
-                    
-                    <h:panelGrid columns="4">
-                        
-                        <h:outputLabel value="Minimo: " /> 
-                        <p:inputText id="MinimoId" value="#{modPublicacion.periodoMinimo}" required="true"
-                                     requiredMessage="Valor requerido"/>
-                        <h:selectOneMenu id="minimo" value="#{modPublicacion.selectedPeriodoMinimo}" >
+
+                    <p:fieldset legend="Periodos minimo y maximo" styleClass="fieldset" >
+                        <h:panelGrid columns="4">
+
+                            <h:outputLabel value="Minimo: " /> 
+                            <p:inputText id="MinimoId" value="#{modPublicacion.periodoMinimo}" required="true"
+                                         requiredMessage="Valor requerido"/>
+                            <h:selectOneMenu id="minimo" value="#{modPublicacion.selectedPeriodoMinimo}" >
                                 <f:selectItem itemLabel="Seleccione un periodo" itemValue="" />
                                 <f:selectItems value="#{modPublicacion.periodoMinimos}" />
-                        </h:selectOneMenu>
-                        <p:message id="MinimoVal" for="MinimoId"/>
-                        
-                        <h:outputLabel value="Maximo: " /> 
-                        <p:inputText id="MaximoId" value="#{modPublicacion.periodoMaximo}"  />
-                        <h:selectOneMenu id="manimo" value="#{modPublicacion.selectedPeriodoMaximo}" >
+                            </h:selectOneMenu>
+                            <p:message id="MinimoVal" for="MinimoId"/>
+
+                            <h:outputLabel value="Maximo: " /> 
+                            <p:inputText id="MaximoId" value="#{modPublicacion.periodoMaximo}"  />
+                            <h:selectOneMenu id="manimo" value="#{modPublicacion.selectedPeriodoMaximo}" >
                                 <f:selectItem itemLabel="Seleccione un periodo" itemValue="" />
                                 <f:selectItems value="#{modPublicacion.periodoMaximos}" />
-                        </h:selectOneMenu>
-                        <p/>
-                        
-                    </h:panelGrid>
+                            </h:selectOneMenu>
+                            <p/>
 
-                    <h2>Determina el precio del alquiler del producto</h2>
+                        </h:panelGrid>
+                    </p:fieldset>
 
-                    <p:panel id="panelPrecios" header="Precios" styleClass="formPanel">
-                        <ui:repeat value="#{modPublicacion.precios}" var="precio">
 
-                            <h:outputText value="#{precio.periodoNombre}" />
-                            <p:inputText value="#{precio.precio}" style="text-align: right; margin-left: 3px; width: 50px"/>
-                            <p:spacer width="25" />
+                    <p:fieldset legend="Precios" styleClass="fieldset" >
 
-                        </ui:repeat>
-                    </p:panel>
+                        <h:outputLabel value="Hora" for="hora" />
+                        <p:inputText id="hora" value="#{modPublicacion.precioHora}" style="text-align: right; margin-left: 3px; width: 50px"/>
+                        <p:spacer width="25" />
+
+                        <h:outputLabel value="Dia" for="dia" />
+                        <p:inputText id="dia" value="#{modPublicacion.precioDia}" required="true" requiredMessage="Precio diario requerido"
+                                     style="text-align: right; margin-left: 3px; width: 50px"/>
+                        <p:spacer width="25" />
+
+                        <h:outputLabel value="Semana" for="semana" />
+                        <p:inputText id="semana" value="#{modPublicacion.precioSemana}"
+                                     title="Si no ingresas un valor se calculara como Precio Diario * 7"
+                                     style="text-align: right; margin-left: 3px; width: 50px"/>
+                        <p:tooltip for="semana" showEvent="focus" hideEvent="blur" />
+                        <p:spacer width="25" />
+
+                        <h:outputLabel value="Mes" for="mes" />
+                        <p:inputText id="mes" value="#{modPublicacion.precioMes}" 
+                                     style="text-align: right; margin-left: 3px; width: 50px"
+                                     title="Si no ingresas un valor se calculara como Precio Diario * 30" />
+                        <p:tooltip for="mes" showEvent="focus" hideEvent="blur" />
+
+                    </p:fieldset>
 
                     <br/>
 
-                    <p:commandButton value="Guardar" action="#{modPublicacion.actualizarPublicacion}" 
-                                     ajax="false" />
+                    <p:commandButton value="Guardar" ajax="false"
+                                     action="#{modPublicacion.actualizarPublicacion}"  />
                     <p:button value="Cancelar" outcome="/vistas/usuario/misPublicaciones" />
                     <p:growl id="growl" showDetail="true" globalOnly="true" />
 

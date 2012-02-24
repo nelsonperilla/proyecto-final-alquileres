@@ -43,26 +43,26 @@ public class MisPublicacionesBean implements MisPublicacionesBeanLocal {
     public List<PublicacionDTO> getPublicaciones(int usuarioId) {
 
         Usuario usuario = usuarioFacade.find(usuarioId);
-        usuarioFacade.refresh(usuario);
         List<Publicacion> listaPublicaciones = usuario.getPublicacionList();
         List<PublicacionDTO> listaFacade = new ArrayList<PublicacionDTO>();
         for (Publicacion p : listaPublicaciones) {
-            PublicacionDTO facade = new PublicacionDTO(p.getPublicacionId(), p.getTitulo(),
+            PublicacionDTO dto = new PublicacionDTO(p.getPublicacionId(), p.getTitulo(),
                     p.getDescripcion(), p.getFechaDesde(), p.getFechaHasta(), p.getDestacada(),
                     p.getCantidad());
             List<Integer> imagenes = new ArrayList<Integer>();
             for (ImagenPublicacion ip : p.getImagenPublicacionList()) {
                 imagenes.add(ip.getImagenPublicacionId());
             }
-            facade.setImagenIds(imagenes);
+            dto.setImagenIds(imagenes);
+            dto.setEstado(p.getEstadoPublicacionVigente().getEstadoPublicacion().getNombre());
 
             Domicilio d = p.getUsuarioFk().getDomicilioList().get(0);
-            facade.setProvincia(d.getProvinciaFk().getNombre());
-            facade.setCiudad(d.getCiudad());
+            dto.setProvincia(d.getProvinciaFk().getNombre());
+            dto.setCiudad(d.getCiudad());
 
-            facade.setPrecios(getPrecios(p));
+            dto.setPrecios(getPrecios(p));
 
-            listaFacade.add(facade);
+            listaFacade.add(dto);
         }
         return listaFacade;
     }
@@ -77,7 +77,7 @@ public class MisPublicacionesBean implements MisPublicacionesBeanLocal {
 
     private List<PrecioDTO> getPrecios(Publicacion publicacion) {
         List<PrecioDTO> resultado = new ArrayList<PrecioDTO>();
-        List<Precio> precios = precioFacade.getUltimoPrecios(publicacion);
+        List<Precio> precios = precioFacade.buscarActualesPorPublicacion(publicacion);
 
         for (Precio precio : precios) {
             resultado.add(new PrecioDTO(precio.getPrecio(), precio.getPeriodoFk().getNombre()));

@@ -194,7 +194,7 @@ public class AlquileresOfrecidosBean implements AlquileresOfrecidosBeanLocal {
 
         alquiler.setFechaFin(fechaFin);
 
-        List<Precio> precios = precioFacade.findByPublicacion(publicacion);
+        List<Precio> precios = precioFacade.buscarActualesPorPublicacion(publicacion);
         double monto = calcularMonto(fechaInicio, fechaFin, precios);
         alquiler.setMonto(monto);
 

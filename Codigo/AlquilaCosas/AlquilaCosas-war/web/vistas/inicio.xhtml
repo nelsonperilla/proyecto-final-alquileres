@@ -69,11 +69,11 @@
                                     <td>
                                         <div id="items">
                                             <h:form>
-                                                <p:dataTable  value="#{publicationsGroup.publicacionesRandom}"
+                                                <p:dataTable  value="#{inicioBean.publicacionesRandom}"
                                                               var="publication" styleClass="itemsTable">
                                                     <p:column>
 
-                                                        <comps:itemInfo var="#{publication}" bean="#{publicationsGroup}"
+                                                        <comps:itemInfo var="#{publication}" bean="#{publicacionesInicioMBean}"
                                                                         property="selectedPublicationId"/>
                                                     </p:column>
                                                 </p:dataTable>
