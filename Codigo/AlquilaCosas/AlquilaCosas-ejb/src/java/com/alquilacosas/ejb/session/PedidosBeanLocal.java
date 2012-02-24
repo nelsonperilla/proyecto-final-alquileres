@@ -14,7 +14,7 @@ import javax.ejb.Local;
  * @author ignaciogiagante
  */
 @Local
-public interface AlquilerBeanLocal {
+public interface PedidosBeanLocal {
     
     public void confirmarPedidoDeAlquiler( int alquilerId )throws AlquilaCosasException;
     

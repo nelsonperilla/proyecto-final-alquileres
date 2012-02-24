@@ -7,10 +7,11 @@
 
     <h:body>
 
-        <h:form>
-            <p:dataGrid value="#{alquileresBean.alquileres}" var="alq" columns="1" 
-                        styleClass="itemsTable" id="grid" rowIndexVar="row" paginator="true" 
-                        paginatorPosition="bottom" paginatorAlwaysVisible="false" >
+        <h:form id="formAlquilados" >
+            <p:dataGrid id="grid" value="#{alquileresBean.alquileres}" var="alq" columns="1" 
+                        styleClass="itemsTable" rowIndexVar="row" paginator="true" 
+                        paginatorPosition="bottom" paginatorAlwaysVisible="false" 
+                        emptyMessage="No hay articulos alquilados." >
                 <p:column>
 
                     <div class="artContenedor" >
@@ -30,7 +31,11 @@
                             </h5>
                             <div class="artDescContenido">
                                 <div class="artDescCol1">
-                                    <h:outputText value="#{alq.tomado ? 'De: ': 'Alquilador: '} #{alq.usuario}" />
+                                    <h:outputText value="#{alq.tomado ? 'De: ': 'Alquilador: '}" />
+                                    <h:link value="#{alq.usuario}" outcome="/vistas/verReputacion"
+                                            style="color: black; font-size: 13px" >
+                                        <f:param name="id" value="#{alq.idUsuario}" />
+                                    </h:link>
                                     <br/>
                                     <h:outputText value="Cantidad: #{alq.cantidad}" />
                                 </div>
@@ -61,7 +66,9 @@
                                         <f:param name="id" value="#{alq.idAlquiler}" />
                                     </p:button>
                                     <p:commandButton value="Cancelar" icon="ui-icon-close" type="button" 
-                                                     rendered="#{alq.cancelable}" onclick="cancelarDlg.show()" />
+                                                     rendered="#{alq.cancelable}" onclick="cancelarDlg.show()" >
+                                        <f:setPropertyActionListener value="#{alq.idAlquiler}" target="#{alquileresBean.alquilerId}" />
+                                    </p:commandButton>
                                 </div>
                             </div>
 
@@ -91,7 +98,6 @@
                             </div>
                         </div>
                     </div>
-
                 </p:column>
             </p:dataGrid>
         </h:form>
@@ -103,7 +109,7 @@
                 <p:separator />
                 <h:panelGrid columns="2" columnClasses="leftCol,rightCol" style="width:100%" >
                     <p:commandButton value="Si" actionListener="#{alquileresBean.cancelarAlquiler}" 
-                                     oncomplete="cancelarDlg.hide()" />
+                                     oncomplete="cancelarDlg.hide()" update=":tab:formAlquilados:grid" />
                     <p:commandButton value="No" oncomplete="cancelarDlg.hide()" />
                 </h:panelGrid>
             </h:form>

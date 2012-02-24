@@ -6,10 +6,11 @@
       xmlns:f="http://java.sun.com/jsf/core" >
 
     <h:body>
-        <h:form>
-            <p:dataGrid value="#{pedidosBean.pedidos}" var="alq" columns="1" 
-                        styleClass="itemsTable" id="grid" rowIndexVar="row" paginator="true" 
-                        paginatorPosition="bottom" paginatorAlwaysVisible="false" >
+        <h:form id="formNegociando">
+            <p:dataGrid id="grid" value="#{pedidosBean.pedidos}" var="alq" columns="1" 
+                        styleClass="itemsTable" rowIndexVar="row" paginator="true" 
+                        paginatorPosition="bottom" paginatorAlwaysVisible="false"
+                        emptyMessage="No hay articulos siendo negociados" >
                 <p:column>
 
                     <div class="artContenedor" >
@@ -29,7 +30,11 @@
                             </h5>
                             <div class="artDescContenido">
                                 <div class="artDescCol1">
-                                    <h:outputText value="#{alq.tomado ? 'De: ': 'Alquilador: '} #{alq.usuario}" />
+                                    <h:outputText value="#{alq.tomado ? 'De: ': 'Alquilador: '}" />
+                                    <h:link value="#{alq.usuario}" outcome="/vistas/verReputacion"
+                                            style="color: black; font-size: 13px" >
+                                        <f:param name="id" value="#{alq.idUsuario}" />
+                                    </h:link>
                                     <br/>
                                     <h:outputText value="Cantidad: #{alq.cantidad}" />
                                 </div>
@@ -40,15 +45,21 @@
                                 </div>
                             </div>
                             <div class="accionPrincipal">
-                                <p:commandButton value="Aceptar" onclick="calificarDlg.show()"
-                                                 rendered="#{not alq.tomado}" 
-                                                 type="button" style="background: palegreen" />
-                                <p:commandButton value="Rechazar" onclick="verCalificacionDlg.show()" 
-                                                 rendered="#{not alq.tomado}" 
-                                                 type="button" style="background: red; color: white" />
-                                <p:commandButton value="Cancelar" onclick="calificarDlg.show()"
-                                                 rendered="#{alq.tomado}"
-                                                 type="button" style="background: red; color: white" />
+                                <p:commandButton value="Aceptar" actionListener="#{pedidosBean.confirmarPedido}"
+                                                 rendered="#{not alq.tomado}" update=":tab:formNegociando:grid :growl"
+                                                 style="background: palegreen" >
+                                    <f:attribute name="alq" value="#{alq.idAlquiler}" />
+                                </p:commandButton>
+                                <p:commandButton value="Rechazar" actionListener="#{pedidosBean.rechazarPedido}"
+                                                 rendered="#{not alq.tomado}" update=":tab:formNegociando:grid :growl"
+                                                 style="background: red; color: white" >
+                                    <f:attribute name="alq" value="#{alq.idAlquiler}" />
+                                </p:commandButton>
+                                <p:commandButton value="Cancelar" actionListener="#{pedidosBean.cancelarPedido}"
+                                                 rendered="#{alq.tomado}" update=":tab:formNegociando:grid :growl"
+                                                 style="background: red; color: white" >
+                                    <f:attribute name="alq" value="#{alq.idAlquiler}" />
+                                </p:commandButton>
                             </div>
                         </div>  
                         <div class="artPrecio" >

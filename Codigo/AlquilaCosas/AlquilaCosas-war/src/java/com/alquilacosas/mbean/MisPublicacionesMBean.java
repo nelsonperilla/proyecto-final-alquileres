@@ -47,16 +47,12 @@ public class MisPublicacionesMBean implements Serializable {
   
     }
     
-    public void prepararBorrar() {
-        //publicacionId = (Integer) event.getComponent().getAttributes().get("id");
-    }
-    
     public String borrarPublicacion(){
+        System.out.println("publicacionId: " + publicacionId);
         try {
             misPublicacionesBean.borrarPublicacion(publicacionId);
             FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage("La publicacion fue eliminada correctamente"));
-            //publicacionesFacade = misPublicacionesBean.getPublicaciones(usuarioMBean.getUsuarioId());
             return "misPublicaciones.xhtml";
         } catch( AlquilaCosasException e ){
             FacesContext.getCurrentInstance().addMessage(null,
@@ -65,18 +61,6 @@ public class MisPublicacionesMBean implements Serializable {
         }
         return null;
     }
-    
-//    public String editarPublicacion(){
-//        return "modificarPublicacion";
-//    }
-//    
-//    public String destacarPublicacion() {
-//        return "destacarPublicacion";
-//    }
-    
-//    public String mostrarPublicacion(){
-//        return "mostrarPublicacion";
-//    }
 
     public List<PublicacionDTO> getPublicacionesDto() {
         return publicacionesDto;

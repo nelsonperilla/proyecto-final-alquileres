@@ -16,7 +16,7 @@
                     <h:graphicImage styleClass="image" value="#{resource['images:4chakra.png']}" />
                 </div>
                 <div class="user-namedetail">
-                    <p>Ignacio Giagante</p>
+                    <p>#{login.usuario.nombre} #{login.usuario.apellido}</p>
                 </div>
                 <div id="list">
                     <ul class="menu" rel="sam1">
@@ -27,7 +27,7 @@
                             <h:link value="Articulos" outcome="/vistas/usuario/articulos" />
                         </li>
                         <li>
-                            <h:link value="Mis Datos" />
+                        <h:link value="Mis Perfil" outcome="/vistas/usuario/miPerfil" />
                         </li>
                         <li >
                         <h:link value="Preguntas" />

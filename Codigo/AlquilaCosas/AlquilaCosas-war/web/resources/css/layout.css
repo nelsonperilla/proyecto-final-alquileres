@@ -903,7 +903,7 @@ h1, h2, h3 {
 .artDescripcionAlq {
     float: left;
     margin-top: 5px;
-    width: 390px;
+    width: 370px;
     padding: 0 5px 0 20px;
     text-align: left;
 }
@@ -936,7 +936,7 @@ h1, h2, h3 {
 
 .artPrecio {
     float: left;
-    width: 120px;
+    width: 140px;
     text-align: center;
     position: relative;
 }
