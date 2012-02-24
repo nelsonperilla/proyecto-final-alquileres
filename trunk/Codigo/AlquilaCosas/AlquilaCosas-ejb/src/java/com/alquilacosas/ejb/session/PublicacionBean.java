@@ -19,11 +19,9 @@ import com.alquilacosas.ejb.entity.EstadoAlquiler;
 import com.alquilacosas.ejb.entity.EstadoPublicacion;
 import com.alquilacosas.ejb.entity.EstadoPublicacion.NombreEstadoPublicacion;
 import com.alquilacosas.ejb.entity.ImagenPublicacion;
-import com.alquilacosas.ejb.entity.Pais;
 import com.alquilacosas.ejb.entity.Periodo;
 import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
 import com.alquilacosas.ejb.entity.Precio;
-import com.alquilacosas.ejb.entity.Provincia;
 import com.alquilacosas.ejb.entity.Publicacion;
 import com.alquilacosas.ejb.entity.PublicacionXEstado;
 import com.alquilacosas.ejb.entity.Usuario;
@@ -34,10 +32,8 @@ import com.alquilacosas.facade.CategoriaFacade;
 import com.alquilacosas.facade.ComentarioFacade;
 import com.alquilacosas.facade.EstadoPublicacionFacade;
 import com.alquilacosas.facade.ImagenPublicacionFacade;
-import com.alquilacosas.facade.PaisFacade;
 import com.alquilacosas.facade.PeriodoFacade;
 import com.alquilacosas.facade.PrecioFacade;
-import com.alquilacosas.facade.ProvinciaFacade;
 import com.alquilacosas.facade.PublicacionFacade;
 import com.alquilacosas.facade.PublicacionXEstadoFacade;
 import com.alquilacosas.facade.UsuarioFacade;
@@ -109,15 +105,12 @@ public class PublicacionBean implements PublicacionBeanLocal {
     private CalificacionFacade calificacionFacade;
     @EJB
     private ComentarioFacade comentarioFacade;
-    @EJB
-    private PaisFacade paisFacade;
-    @EJB
-    private ProvinciaFacade provinciaFacade;
 
     @Override
     public Integer registrarPublicacion(String titulo, String descripcion,
             Date fechaDesde, Date fechaHasta, boolean destacada, int cantidad,
-            int usuarioId, int categoria, List<PrecioDTO> precios,
+            int usuarioId, int categoria, Double precioHora, Double precioDia,
+            Double precioSemana, Double precioMes, 
             List<byte[]> imagenes, int periodoMinimo, int periodoMinimoFk,
             Integer periodoMaximo, Integer periodoMaximoFk, double latitud,
             double longitud) throws AlquilaCosasException {
@@ -170,38 +163,74 @@ public class PublicacionBean implements PublicacionBeanLocal {
         publicacion.setMinPeriodoAlquilerFk(periodo1);
         publicacion.setMinValor(periodoMinimo);
 
+        int maxCantidadDias = -1;
         if (periodoMaximoFk != null && periodoMaximoFk > 0) {
             Periodo periodo2 = periodoFacade.find(periodoMaximoFk);;
             publicacion.setMaxPeriodoAlquilerFk(periodo2);
             publicacion.setMaxValor(periodoMaximo);
+            if(periodo2.getNombre() == NombrePeriodo.HORA) {
+                maxCantidadDias = periodoMaximo > 24 ? 1: 0;
+            } else if(periodo2.getNombre() == NombrePeriodo.DIA) {
+                maxCantidadDias = periodoMaximo;
+            } else if(periodo2.getNombre() == NombrePeriodo.SEMANA) {
+                maxCantidadDias = periodoMaximo * 7;
+            } else if(periodo2.getNombre() == NombrePeriodo.MES) {
+                maxCantidadDias = periodoMaximo * 30;
+            }
         }
+        
         // Registrar precios
         Precio precio = null;
         Periodo periodo = null;
-        double precioDiario = precios.get(1).getPrecio();
-
-        for (PrecioDTO p : precios) {
-
-            periodo = periodoBean.getPeriodo(p.getPeriodoNombre());
-            precio = new Precio();
-
-            if (p.getPrecio() == 0) {
-                if (p.getPeriodoNombre() == NombrePeriodo.HORA) {
-                    precio.setPrecio(redondearDecimal(precioDiario / 24.0, 2));
-                } else if (p.getPeriodoNombre() == NombrePeriodo.SEMANA) {
-                    precio.setPrecio(precioDiario * 7.0);
-                } else if (p.getPeriodoNombre() == NombrePeriodo.MES) {
-                    precio.setPrecio(precioDiario * 30.0);
-                }
-            } else {
-                precio.setPrecio(p.getPrecio());
-            }
-
-            precio.setFechaDesde(new Date());
-            precio.setPeriodoFk(periodo);
-            precio.setFechaDesde(new Date());
+        if(precioHora != null) {
+            periodo = periodoBean.getPeriodo(NombrePeriodo.HORA);
+            precio = new Precio(precioHora, periodo);
             publicacion.agregarPrecio(precio);
         }
+        periodo = periodoBean.getPeriodo(NombrePeriodo.DIA);
+        precio = new Precio(precioDia, periodo);
+        publicacion.agregarPrecio(precio);
+        if(maxCantidadDias >= 7) {
+            if(precioSemana == null) {
+                precioSemana = precioDia * 7;
+            }
+            periodo = periodoBean.getPeriodo(NombrePeriodo.SEMANA);
+            precio = new Precio(precioSemana, periodo);
+            publicacion.agregarPrecio(precio);
+        }
+        if(maxCantidadDias >= 30) {
+            if(precioMes == null) {
+                precioMes = precioSemana * 4;
+            }
+            periodo = periodoBean.getPeriodo(NombrePeriodo.MES);
+            precio = new Precio(precioMes, periodo);
+            publicacion.agregarPrecio(precio);
+        }        
+        
+//        double precioDiario = precios.get(1).getPrecio();
+//
+//        for (PrecioDTO p : precios) {
+//
+//            periodo = periodoBean.getPeriodo(p.getPeriodoNombre());
+//            precio = new Precio();
+//
+//            if (p.getPrecio() == 0) {
+//                if (p.getPeriodoNombre() == NombrePeriodo.HORA) {
+//                    precio.setPrecio(redondearDecimal(precioDiario / 24.0, 2));
+//                } else if (p.getPeriodoNombre() == NombrePeriodo.SEMANA) {
+//                    precio.setPrecio(precioDiario * 7.0);
+//                } else if (p.getPeriodoNombre() == NombrePeriodo.MES) {
+//                    precio.setPrecio(precioDiario * 30.0);
+//                }
+//            } else {
+//                precio.setPrecio(p.getPrecio());
+//            }
+//
+//            precio.setFechaDesde(new Date());
+//            precio.setPeriodoFk(periodo);
+//            precio.setFechaDesde(new Date());
+//            publicacion.agregarPrecio(precio);
+//        }
 
         // Agregar imagenes
         for (byte[] bytes : imagenes) {
@@ -210,16 +239,12 @@ public class PublicacionBean implements PublicacionBeanLocal {
             publicacion.agregarImagen(ip);
         }
 
-        //TODO: guardar latitud y longitud de la publicacion
-
         publicacion.setLatitud(latitud);
         publicacion.setLongitud(longitud);
 
         usuario.agregarPublicacion(publicacion);
         publicacion = publicacionFacade.create(publicacion);
         return publicacion.getPublicacionId();
-
-
     }
 
     @Override
@@ -249,20 +274,13 @@ public class PublicacionBean implements PublicacionBeanLocal {
                 p.getPublicacionId(), p.getTitulo(), p.getDescripcion(),
                 p.getFechaDesde(), p.getFechaHasta(), p.getDestacada(),
                 p.getCantidad(), p.getCategoriaFk(), p.getImagenPublicacionList(),
-                pxe.getEstadoPublicacion(), p.getMinValor(), periodo1,
+                pxe.getEstadoPublicacion().getNombre(), p.getMinValor(), periodo1,
                 p.getMaxValor(), periodo2);
 
-        publicacionDto.getPrecios().add(new PrecioDTO());
-        publicacionDto.getPrecios().add(new PrecioDTO());
-        publicacionDto.getPrecios().add(new PrecioDTO());
-        publicacionDto.getPrecios().add(new PrecioDTO());
 
-
-        for (Precio precio : precioFacade.getUltimoPrecios(p)) {
+        for (Precio precio : precioFacade.buscarActualesPorPublicacion(p)) {
             if (precio != null) {
-                publicacionDto.getPrecios().set(
-                        precio.getPeriodoFk().getPeriodoId() - 1,
-                        new PrecioDTO(precio.getPrecioId(),
+                publicacionDto.getPrecios().add(new PrecioDTO(precio.getPrecioId(),
                         precio.getPeriodoFk().getPeriodoId(),
                         precio.getPrecio(),
                         precio.getPeriodoFk().getNombre()));
@@ -278,7 +296,8 @@ public class PublicacionBean implements PublicacionBeanLocal {
     @Override
     public void actualizarPublicacion(int publicacionId, String titulo, String descripcion,
             Date fechaDesde, Date fechaHasta, boolean destacada, int cantidad,
-            int usuarioId, int categoria, List<PrecioDTO> precios,
+            int usuarioId, int categoria, Double precioHora, Double precioDia,
+            Double precioSemana, Double precioMes, 
             List<byte[]> imagenesAgregar, List<Integer> imagenesABorrar,
             int periodoMinimo, int periodoMinimoFk, Integer periodoMaximo,
             Integer periodoMaximoFk, NombreEstadoPublicacion estadoPublicacion,
@@ -314,51 +333,135 @@ public class PublicacionBean implements PublicacionBeanLocal {
             pxe.setFechaHasta(hoy.getTime());
             EstadoPublicacion ep = null;
 
-            try {
-
-                ep = estadoPublicacionFacade.findByNombre(estadoPublicacion);
-
-            } catch (NoResultException e) {
-                throw new AlquilaCosasException("No se encontro el Estado en la "
-                        + "base de datos." + e.getMessage());
+            
+            ep = estadoPublicacionFacade.findByNombre(estadoPublicacion);
+            if(ep == null) {
+                throw new AlquilaCosasException("No se encontro el Estado en la base de datos.");
             }
 
             PublicacionXEstado pxeNuevo = new PublicacionXEstado(publicacion, ep);
             publicacion.agregarPublicacionXEstado(pxeNuevo);
         }
 
-        // Actualizar precios
-        double precioDiario = precios.get(1).getPrecio();
-        DecimalFormat formatter = new DecimalFormat();
-        formatter.applyPattern("0.0#");
-        String precioHora = formatter.format(precioDiario / 24.0);
-        for (PrecioDTO precioDto : precios) {
-
-            if (precioDto.getPrecio() == 0.0) {
-
-                if (precioDto.getPeriodoNombre() == NombrePeriodo.HORA) {
-                    precioDto.setPrecio(Double.valueOf(precioHora));
-                } else if (precioDto.getPeriodoNombre() == NombrePeriodo.SEMANA) {
-                    precioDto.setPrecio(precioDiario * 7.0);
-                } else if (precioDto.getPeriodoNombre() == NombrePeriodo.MES) {
-                    precioDto.setPrecio(precioDiario * 30.0);
-                }
-
-            }
-            Periodo periodo = periodoBean.getPeriodo(precioDto.getPeriodoNombre());
-            publicacion.actualizarPrecio(precioDto.getPrecioId(), precioDto.getPrecio(), periodo);
-        }
-
         // Actualizar periodos minimos y maximos de alquiler
         Periodo periodo1 = periodoFacade.find(periodoMinimoFk);
         publicacion.setMinPeriodoAlquilerFk(periodo1);
         publicacion.setMinValor(periodoMinimo);
-
+        int maxCantidadDias = -1;
         if (periodoMaximoFk != null && periodoMaximoFk > 0) {
             Periodo periodo2 = periodoFacade.find(periodoMaximoFk);
             publicacion.setMaxPeriodoAlquilerFk(periodo2);
             publicacion.setMaxValor(periodoMaximo);
+            if(periodo2.getNombre() == NombrePeriodo.HORA) {
+                maxCantidadDias = periodoMaximo > 24 ? 1: 0;
+            } else if(periodo2.getNombre() == NombrePeriodo.DIA) {
+                maxCantidadDias = periodoMaximo;
+            } else if(periodo2.getNombre() == NombrePeriodo.SEMANA) {
+                maxCantidadDias = periodoMaximo * 7;
+            } else if(periodo2.getNombre() == NombrePeriodo.MES) {
+                maxCantidadDias = periodoMaximo * 31;
+            }
         }
+        
+        if(maxCantidadDias <= 7) {
+            precioSemana = null;
+            precioMes = null;
+        } else {
+            if(precioSemana == null)
+                precioSemana = precioDia * 7;
+            if(maxCantidadDias <= 31) {
+                precioMes = null;
+            } else if(precioMes == null) {
+                    precioMes = precioSemana * 4;
+            }
+        }
+        
+        Precio precio = null;
+        Periodo periodo = null;
+        List<Precio> precios = precioFacade.buscarActualesPorPublicacion(publicacion);
+        List<Precio> agregar = new ArrayList<Precio>();
+        for(Precio p: precios) {
+            if(p.getPeriodoFk().getNombre() == NombrePeriodo.HORA) {
+                if(precioHora == null) {
+                    p.setFechaHasta(new Date());
+                }
+                else if(p.getPrecio() != precioHora) {
+                    p.setFechaHasta(new Date());
+                    periodo = periodoFacade.findByNombre(NombrePeriodo.HORA);
+                    precio = new Precio(precioHora, periodo);
+                    agregar.add(precio);
+                }
+                precioHora = -1D;
+            } else if(p.getPeriodoFk().getNombre() == NombrePeriodo.DIA) {
+                if(p.getPrecio() != precioDia) {
+                    p.setFechaHasta(new Date());
+                    periodo = periodoFacade.findByNombre(NombrePeriodo.DIA);
+                    precio = new Precio(precioDia, periodo);
+                    agregar.add(precio);
+                }
+                precioDia = -1D;
+            }else if(p.getPeriodoFk().getNombre() == NombrePeriodo.SEMANA) {
+                if(precioSemana == null) {
+                    p.setFechaHasta(new Date());
+                }
+                else if(p.getPrecio() != precioSemana) {
+                    p.setFechaHasta(new Date());
+                    periodo = periodoFacade.findByNombre(NombrePeriodo.SEMANA);
+                    precio = new Precio(precioSemana, periodo);
+                    agregar.add(precio);
+                }
+                precioSemana = -1D;
+            } else if(p.getPeriodoFk().getNombre() == NombrePeriodo.MES) {
+                if(precioMes == null) {
+                    p.setFechaHasta(new Date());
+                }
+                else if(p.getPrecio() != precioMes) {
+                    p.setFechaHasta(new Date());
+                    periodo = periodoFacade.findByNombre(NombrePeriodo.MES);
+                    precio = new Precio(precioMes, periodo);
+                    agregar.add(precio);
+                }
+                precioMes = -1D;
+            }
+        }
+        for(Precio p: agregar) {
+            publicacion.agregarPrecio(p);
+        }
+        if(precioHora != null && precioHora != -1) {
+            periodo = periodoFacade.findByNombre(NombrePeriodo.HORA);
+            precio = new Precio(precioHora, periodo);
+            publicacion.agregarPrecio(precio);
+        }
+        if(precioSemana != null && precioSemana != -1) {
+            periodo = periodoFacade.findByNombre(NombrePeriodo.SEMANA);
+            precio = new Precio(precioSemana, periodo);
+            publicacion.agregarPrecio(precio);
+        }
+        if(precioMes != null && precioMes != -1) {
+            periodo = periodoFacade.findByNombre(NombrePeriodo.MES);
+            precio = new Precio(precioMes, periodo);
+            publicacion.agregarPrecio(precio);
+        }
+        
+        // Actualizar precios
+//        double precioDiario = precios.get(1).getPrecio();
+//        DecimalFormat formatter = new DecimalFormat();
+//        formatter.applyPattern("0.00#");
+//        String precioHora = formatter.format(precioDiario / 24.0);
+//        for (PrecioDTO precioDto : precios) {
+//
+//            if (precioDto.getPrecio() == 0.0) {
+//                if (precioDto.getPeriodoNombre() == NombrePeriodo.HORA) {
+//                    precioDto.setPrecio(Double.valueOf(precioHora));
+//                } else if (precioDto.getPeriodoNombre() == NombrePeriodo.SEMANA) {
+//                    precioDto.setPrecio(precioDiario * 7.0);
+//                } else if (precioDto.getPeriodoNombre() == NombrePeriodo.MES) {
+//                    precioDto.setPrecio(precioDiario * 30.0);
+//                }
+//            }
+//            Periodo periodo = periodoBean.getPeriodo(precioDto.getPeriodoNombre());
+//            publicacion.actualizarPrecio(precioDto.getPrecioId(), precioDto.getPrecio(), periodo);
+//        }
 
         // Borrar imagenes removidas
         if (imagenesABorrar != null) {

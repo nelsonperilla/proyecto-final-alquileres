@@ -11,6 +11,7 @@ import com.alquilacosas.dto.PeriodoDTO;
 import com.alquilacosas.dto.PrecioDTO;
 import com.alquilacosas.ejb.entity.Categoria;
 import com.alquilacosas.ejb.entity.Pais;
+import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
 import com.alquilacosas.ejb.entity.Provincia;
 import com.alquilacosas.ejb.session.CategoriaBeanLocal;
 import com.alquilacosas.ejb.session.ModificarUsuarioBeanLocal;
@@ -64,8 +65,7 @@ public class NuevaPublicacionMBean implements Serializable {
     private int selectedCategoria, selectedSubcategoria1, selectedSubcategoria2, selectedSubcategoria3;
     private boolean subcategoria1Render, subcategoria2Render, subcategoria3Render;
     //Precios y Periodos
-    private List<PrecioDTO> precios;
-    private PrecioDTO precioFacade;
+    private Double precioHora, precioDia, precioSemana, precioMes;
     private int periodoMinimo;
     private int periodoMaximo;
     private List<SelectItem> periodoMinimos;
@@ -92,10 +92,7 @@ public class NuevaPublicacionMBean implements Serializable {
     public void init() {
         Logger.getLogger(NuevaPublicacionMBean.class).debug("NuevaPublicacionMBean: postconstruct.");
         imagenes = new ArrayList<byte[]>();
-        precios = new ArrayList<PrecioDTO>();
-        for (PeriodoDTO p : periodosBean.getPeriodos()) {
-            precios.add(new PrecioDTO(0, 0.0, p.getNombre()));
-        }
+        
         today = new Date();
         categorias = new ArrayList<SelectItem>();
         subcategorias1 = new ArrayList<SelectItem>();
@@ -156,13 +153,6 @@ public class NuevaPublicacionMBean implements Serializable {
             cat = selectedCategoria;
         }
 
-        if (precios.get(1).getPrecio() == 0) {
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Error al crear publicacion", "El precio por día es obligatorio");
-            context.addMessage(null, msg);
-            return null;
-        }
-
         try {
             Calendar hoy = Calendar.getInstance();
             hoy.add(Calendar.DATE, 60);
@@ -171,7 +161,7 @@ public class NuevaPublicacionMBean implements Serializable {
             }
             publicacionId = publicacionBean.registrarPublicacion(titulo, descripcion,
                     new Date(), hoy.getTime(), destacada, cantidad,
-                    login.getUsuarioId(), cat, precios, imagenes,
+                    login.getUsuarioId(), cat, precioHora, precioDia, precioSemana, precioMes, imagenes,
                     periodoMinimo, selectedPeriodoMinimo, periodoMaximo,
                     selectedPeriodoMaximo, lat, lng);
 
@@ -338,22 +328,6 @@ public class NuevaPublicacionMBean implements Serializable {
 
     public void setImagenes(List<byte[]> imagenes) {
         this.imagenes = imagenes;
-    }
-
-    public PrecioDTO getPrecioFacade() {
-        return precioFacade;
-    }
-
-    public void setPrecioFacade(PrecioDTO precioFacade) {
-        this.precioFacade = precioFacade;
-    }
-
-    public List<PrecioDTO> getPrecios() {
-        return precios;
-    }
-
-    public void setPrecios(List<PrecioDTO> precios) {
-        this.precios = precios;
     }
 
     public int getSelectedCategoria() {
@@ -547,6 +521,38 @@ public class NuevaPublicacionMBean implements Serializable {
 
     public void setLng(double lng) {
         this.lng = lng;
+    }
+
+    public Double getPrecioDia() {
+        return precioDia;
+    }
+
+    public void setPrecioDia(Double precioDia) {
+        this.precioDia = precioDia;
+    }
+
+    public Double getPrecioHora() {
+        return precioHora;
+    }
+
+    public void setPrecioHora(Double precioHora) {
+        this.precioHora = precioHora;
+    }
+
+    public Double getPrecioMes() {
+        return precioMes;
+    }
+
+    public void setPrecioMes(Double precioMes) {
+        this.precioMes = precioMes;
+    }
+
+    public Double getPrecioSemana() {
+        return precioSemana;
+    }
+
+    public void setPrecioSemana(Double precioSemana) {
+        this.precioSemana = precioSemana;
     }
 
     /*

@@ -22,13 +22,13 @@ public abstract class AbstractFacade<T> {
 
     public T create(T entity) {
         getEntityManager().persist(entity);
-        getEntityManager().flush();
+        flush();
         return entity;
     }
 
     public T edit(T entity) {
-        getEntityManager().merge(entity);
-        getEntityManager().flush();
+        entity = getEntityManager().merge(entity);
+        flush();
         return entity;
     }
     

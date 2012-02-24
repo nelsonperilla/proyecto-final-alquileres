@@ -55,30 +55,38 @@
 
                             <h:outputLabel value="Precio:" styleClass="precioLabel" />
                             <br/>
-                            <h:outputText value="$ #{item.precios.get(1).precio}" styleClass="precio" />
+                            <h:outputText value="$ #{item.precioDia}" styleClass="precio" />
                             <a onclick="manejarPopup(jQuery(this).parent('.artPrecio').find('.artPopup'))" >
                                 <p:commandButton type="button" icon="ui-icon-triangle-1-s" style="font-size: 11px"/>
                             </a>
                             <br/>
                             <h:outputText value="por dia" styleClass="precioLabel" />
+                            <div class="artEstado" >
+                                <h:outputText value="#{item.estado.toString()}" />
+                            </div>
                             <div class="artPopup" style="display: none">
                                 <h:panelGrid columns="2" style="text-align: left"  >
                                     <f:facet name="header" >
                                         <h:outputText value="Detalle de precios:" style="font-weight: bold; color: cornflowerblue" />
                                     </f:facet>
-                                    <h:outputText value="$ #{item.precios.get(0).precio}" styleClass="detPrecio" />
-                                    <h:outputLabel value="/Hora" styleClass="detPeriodo" />
-                                    <h:outputText value="$ #{item.precios.get(1).precio}" styleClass="detPrecio" />
+                                    <h:outputText value="$ #{item.precioHora}" styleClass="detPrecio" 
+                                                  rendered="#{not empty item.precioHora}" />
+                                    <h:outputLabel value="/Hora" styleClass="detPeriodo" 
+                                                   rendered="#{not empty item.precioHora}" />
+                                    <h:outputText value="$ #{item.precioDia}" styleClass="detPrecio" />
                                     <h:outputLabel value="/Dia" styleClass="detPeriodo"/>
-                                    <h:outputText value="$ #{item.precios.get(2).precio}" styleClass="detPrecio"/>
-                                    <h:outputLabel value="/Semana" styleClass="detPeriodo"/>
-                                    <h:outputText value="$ #{item.precios.get(3).precio}" styleClass="detPrecio" />
-                                    <h:outputLabel value="/Mes" styleClass="detPeriodo"/>
+                                    <h:outputText value="$ #{item.precioSemana}" styleClass="detPrecio"
+                                                  rendered="#{not empty item.precioSemana}" />
+                                    <h:outputLabel value="/Semana" styleClass="detPeriodo" 
+                                                   rendered="#{not empty item.precioSemana}" />
+                                    <h:outputText value="$ #{item.precioMes}" styleClass="detPrecio" 
+                                                  rendered="#{not empty item.precioMes}" />
+                                    <h:outputLabel value="/Mes" styleClass="detPeriodo"
+                                                   rendered="#{not empty item.precioMes}" />
                                 </h:panelGrid>
                             </div>
                         </div>
                     </div>
-
                 </p:column>
             </p:dataGrid>
 

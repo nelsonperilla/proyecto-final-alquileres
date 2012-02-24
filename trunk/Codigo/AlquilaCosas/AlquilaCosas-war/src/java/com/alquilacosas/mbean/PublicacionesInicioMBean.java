@@ -18,20 +18,20 @@ import org.apache.log4j.Logger;
  *
  * @author jorge
  */
-@ManagedBean
+@ManagedBean(name="inicioBean")
 @ViewScoped
-public class PublicationsGroup implements Serializable {
+public class PublicacionesInicioMBean implements Serializable {
     @EJB
     private MostrarPublicacionesBeanLocal publicationBean;
     private List<PublicacionDTO> publicacionesRandom;
     private int selectedPublicationId;
 
-    public PublicationsGroup() {
+    public PublicacionesInicioMBean() {
     }
 
     @PostConstruct
     public void init() {
-        Logger.getLogger(PublicationsGroup.class).debug("PublicationsGroup: postconstruct.");
+        Logger.getLogger(PublicacionesInicioMBean.class).debug("PublicationsGroup: postconstruct.");
         publicacionesRandom = publicationBean.getPublicacionesRandom(12);
     }
     

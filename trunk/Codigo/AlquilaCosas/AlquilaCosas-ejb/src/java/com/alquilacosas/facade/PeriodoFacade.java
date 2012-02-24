@@ -8,6 +8,10 @@ import com.alquilacosas.ejb.entity.Periodo;
 import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
 import java.util.List;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -19,6 +23,8 @@ import org.apache.log4j.Logger;
  * @author damiancardozo
  */
 @Stateless
+@TransactionManagement(TransactionManagementType.CONTAINER)
+@TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class PeriodoFacade extends AbstractFacade<Periodo> {
     @PersistenceContext(unitName = "AlquilaCosas-ejbPU")
     private EntityManager em;

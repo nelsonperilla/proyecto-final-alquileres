@@ -12,6 +12,7 @@ import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.entity.Categoria;
 import com.alquilacosas.ejb.entity.EstadoPublicacion.NombreEstadoPublicacion;
 import com.alquilacosas.ejb.entity.ImagenPublicacion;
+import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
 import com.alquilacosas.ejb.session.CategoriaBeanLocal;
 import com.alquilacosas.ejb.session.PeriodoAlquilerBeanLocal;
 import com.alquilacosas.ejb.session.PublicacionBeanLocal;
@@ -48,17 +49,15 @@ public class ModificarPublicacionMBean implements Serializable {
     private PublicacionBeanLocal publicacionBean;
     @EJB
     private CategoriaBeanLocal categoriaBean;
-    @ManagedProperty(value = "#{login}")
-    private ManejadorUsuarioMBean login;
     @EJB
     private PeriodoAlquilerBeanLocal periodosBean;
+    @ManagedProperty(value = "#{login}")
+    private ManejadorUsuarioMBean login;
     
     private PublicacionDTO pf;
     //Datos de la publicacion
-    private String titulo;
-    private String descripcion;
-    private Date fechaDesde;
-    private Date fechaHasta;
+    private String titulo, descripcion;
+    private Date fechaDesde, fechaHasta;
     private boolean destacada;
     private int cantidad;
     private Categoria categoria;
@@ -70,8 +69,7 @@ public class ModificarPublicacionMBean implements Serializable {
     private List<SelectItem> estados;
     private NombreEstadoPublicacion selectedEstado;
     //Object Precio
-    private List<PrecioDTO> precios;
-    private PrecioDTO precioFacade;
+    private Double precioHora, precioDia, precioSemana, precioMes;
     private int periodoMinimo;
     private Integer periodoMaximo;
     private List<SelectItem> periodoMinimos;
@@ -122,13 +120,24 @@ public class ModificarPublicacionMBean implements Serializable {
         destacada = pf.getDestacada();
         cantidad = pf.getCantidad();
         categoria = pf.getCategoria();
-        precios = pf.getPrecios();
         imagenes = pf.getImagenes();
         imagenIds = new ArrayList<Integer>();
         imagenesAgregar = new ArrayList<byte[]>();
         imagenesABorrar = new ArrayList<Integer>();
         for (ImagenPublicacion ip : imagenes) {
             imagenIds.add(ip.getImagenPublicacionId());
+        }
+        
+        for(PrecioDTO p: pf.getPrecios()) {
+            if(p.getPeriodoNombre() == NombrePeriodo.HORA) {
+                precioHora = p.getPrecio();
+            } else if(p.getPeriodoNombre() == NombrePeriodo.DIA) {
+                precioDia = p.getPrecio();
+            } else if(p.getPeriodoNombre() == NombrePeriodo.SEMANA) {
+                precioSemana = p.getPrecio();
+            } else if(p.getPeriodoNombre() == NombrePeriodo.MES) {
+                precioMes = p.getPrecio();
+            }
         }
 
         today = new Date();
@@ -164,10 +173,12 @@ public class ModificarPublicacionMBean implements Serializable {
         inicializarCategorias(categoriaId);
 
         for(NombreEstadoPublicacion ep: NombreEstadoPublicacion.values()) {
-            estados.add( new SelectItem( ep, ep.toString() ));
+            if(ep != NombreEstadoPublicacion.SUSPENDIDA) {
+                estados.add( new SelectItem( ep, ep.toString() ));
+            }
         }
 
-        selectedEstado = pf.getEstado().getNombre();
+        selectedEstado = pf.getEstado();
         
         setgMap(new DefaultMapModel());
         LatLng position = new LatLng(pf.getLatitud(), pf.getLongitud()); 
@@ -242,7 +253,7 @@ public class ModificarPublicacionMBean implements Serializable {
         try {
             publicacionBean.actualizarPublicacion(publicacionId, titulo,
                     descripcion, fechaDesde, fechaHasta, destacada, cantidad,
-                    login.getUsuarioId(), cat, precios, imagenesAgregar,
+                    login.getUsuarioId(), cat, precioHora, precioDia, precioSemana, precioMes, imagenesAgregar,
                     imagenesABorrar, periodoMinimo, selectedPeriodoMinimo, periodoMaximo, 
                     selectedPeriodoMaximo, selectedEstado,lat,lng);
             FacesContext.getCurrentInstance().addMessage(null,
@@ -330,8 +341,7 @@ public class ModificarPublicacionMBean implements Serializable {
         imagenesABorrar.add(id);
     }
     
-    public void updateCoordinates(MarkerDragEvent event)
-    {
+    public void updateCoordinates(MarkerDragEvent event) {
         lat = event.getMarker().getLatlng().getLat();
         lng = event.getMarker().getLatlng().getLng();
     }
@@ -458,22 +468,6 @@ public class ModificarPublicacionMBean implements Serializable {
 
     public void setPf(PublicacionDTO pf) {
         this.pf = pf;
-    }
-
-    public PrecioDTO getPrecioFacade() {
-        return precioFacade;
-    }
-
-    public void setPrecioFacade(PrecioDTO precioFacade) {
-        this.precioFacade = precioFacade;
-    }
-
-    public List<PrecioDTO> getPrecios() {
-        return precios;
-    }
-
-    public void setPrecios(List<PrecioDTO> precios) {
-        this.precios = precios;
     }
 
     public int getSelectedCategoria() {
@@ -645,34 +639,52 @@ public class ModificarPublicacionMBean implements Serializable {
         this.gMap = gMap;
     }
 
-
-    /**
-     * @return the lat
-     */
     public double getLat() {
         return lat;
     }
 
-    /**
-     * @param lat the lat to set
-     */
     public void setLat(double lat) {
         this.lat = lat;
     }
 
-    /**
-     * @return the lng
-     */
     public double getLng() {
         return lng;
     }
 
-    /**
-     * @param lng the lng to set
-     */
     public void setLng(double lng) {
         this.lng = lng;
     }
 
+    public Double getPrecioDia() {
+        return precioDia;
+    }
+
+    public void setPrecioDia(Double precioDia) {
+        this.precioDia = precioDia;
+    }
+
+    public Double getPrecioHora() {
+        return precioHora;
+    }
+
+    public void setPrecioHora(Double precioHora) {
+        this.precioHora = precioHora;
+    }
+
+    public Double getPrecioMes() {
+        return precioMes;
+    }
+
+    public void setPrecioMes(Double precioMes) {
+        this.precioMes = precioMes;
+    }
+
+    public Double getPrecioSemana() {
+        return precioSemana;
+    }
+
+    public void setPrecioSemana(Double precioSemana) {
+        this.precioSemana = precioSemana;
+    }
     
 }
