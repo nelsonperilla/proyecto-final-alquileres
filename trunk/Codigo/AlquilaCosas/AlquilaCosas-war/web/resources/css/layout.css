@@ -697,24 +697,18 @@ h1, h2, h3 {
 
 }
 
-#div1
-{
+.imagenesEdit {
     margin:2px;
-    border:1px solid #0000ff;
+    border:1px solid steelblue;
     height:auto;
     width:auto;
     float:left;
     text-align:center;
 }
-#div1 img
-{
+.imagenesEdit img {
     display:inline;
     margin:3px;
     border:1px solid #ffffff;
-}
-#div1 a:hover img
-{
-    border:1px solid #0000ff;
 }
 
 .borrarBoton{
@@ -868,6 +862,7 @@ h1, h2, h3 {
 /* Pagina Articulos 
     ------------------------------------------------- */
 .leyendaTipoImg {
+    position: relative;
     float: left;
     width: 15px; 
     height: 15px; 
@@ -875,6 +870,7 @@ h1, h2, h3 {
     moz-border-radius: 5px;
 }
 .leyendaTipoTxt {
+    position: relative;
     float: left; 
     margin: 0 4px;
     color: gray;
@@ -947,17 +943,21 @@ h1, h2, h3 {
 
 .artDescCol1 {
     width: 150px; 
-    float: left
+    float: left;
+    position: relative;
 }
 
 .artDescCol2 {
     width: 220px; 
-    float: left
+    float: left;
+    position: relative;
 }
 
 .accionPrincipal {
-    margin-top: 5px;
+    padding-top: 10px;
     font-size: 14px;
+    position: relative;
+    float: left
 }
 
 .artPrecio {

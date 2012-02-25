@@ -347,8 +347,8 @@ public class PublicacionBean implements PublicacionBeanLocal {
         Periodo periodo1 = periodoFacade.find(periodoMinimoFk);
         publicacion.setMinPeriodoAlquilerFk(periodo1);
         publicacion.setMinValor(periodoMinimo);
-        int maxCantidadDias = -1;
-        if (periodoMaximoFk != null && periodoMaximoFk > 0) {
+        int maxCantidadDias = Integer.MAX_VALUE;
+        if (periodoMaximoFk != null && periodoMaximoFk > 0 && periodoMaximo != null && periodoMaximo > 0 ) {
             Periodo periodo2 = periodoFacade.find(periodoMaximoFk);
             publicacion.setMaxPeriodoAlquilerFk(periodo2);
             publicacion.setMaxValor(periodoMaximo);
@@ -474,6 +474,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
         for (byte[] imagen : imagenesAgregar) {
             ImagenPublicacion ip = new ImagenPublicacion();
             ip.setImagen(imagen);
+            imagenPublicacionFacade.create(ip);
             publicacion.agregarImagen(ip);
         }
 
@@ -507,6 +508,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
             }
 
             UsuarioDTO propietario = new UsuarioDTO(publicacion.getUsuarioFk());
+            propietario.setUsername(publicacion.getUsuarioFk().getLoginList().get(0).getUsername());
             resultado.setPropietario(propietario);
 
             Domicilio domicilio = publicacion.getUsuarioFk().getDomicilioList().get(0);
@@ -670,7 +672,6 @@ public class PublicacionBean implements PublicacionBeanLocal {
     @PermitAll
     public List<Periodo> getPeriodos() {
         return periodoFacade.getPeriodosOrderByHoras();
-
     }
 
     @Override

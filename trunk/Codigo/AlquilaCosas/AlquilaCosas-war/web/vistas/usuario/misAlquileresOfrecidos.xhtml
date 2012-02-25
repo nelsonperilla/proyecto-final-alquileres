@@ -67,7 +67,7 @@
                                 </h:selectOneMenu>                                   
                                 <h:outputText value="Comentario:" />
                                 <p:inputTextarea id="comentario" value="#{alquileresOfrecidos.comentario}" 
-                                                 style="width:200px;height:100px;" effectDuration="100" maxHeight="255" />
+                                                 style="width:200px;height:100px;" />
                                 <f:facet name="footer" >
                                     <h:panelGrid columns="2" columnClasses="leftCol,rightCol" style="width:100%" >
                                         <p:commandButton value="Calificar" actionListener="#{alquileresOfrecidos.registrarCalificacion}" 
@@ -147,16 +147,16 @@
                               width="280" modal="true" resizable="false" >
                         <h:form>
                             <script type="text/javascript" >
-                                         jQuery(function () {
-                                                 window.setTimeout('bindEventsHighlights()',500);
-                                         });
+                                 jQuery(function () {
+                                         window.setTimeout('bindEventsHighlights()',500);
+                                 });
 
-                                         function bindEventsHighlights() {
-                                                 var specialDays = <h:outputText value="#{alquileresOfrecidos.fechas}" /> ;
-                                                 jQuery(".hasDatepicker").datepicker("option", "beforeShowDay", function (date) {
-                                                           return highlightCalendar(specialDays, date, 'highlight-calendar');
-                                                 });
-                                        }
+                                 function bindEventsHighlights() {
+                                         var specialDays = <h:outputText value="#{alquileresOfrecidos.fechas}" /> ;
+                                         jQuery(".hasDatepicker").datepicker("option", "beforeShowDay", function (date) {
+                                                   return highlightCalendar(specialDays, date, 'highlight-calendar');
+                                         });
+                                }
                             </script>
 
                             <h:panelGrid columns="3" >

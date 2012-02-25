@@ -158,7 +158,7 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
             calificacionDTO.setIdCalificacion(calificacion.getCalificacionId());
             calificacionDTO.setNombrePuntuacion(calificacion.getPuntuacionFk().getNombre());
             calificacionDTO.setNombreUsuarioCalificador(calificacion.getUsuarioCalificadorFk().getNombre() + " " + calificacion.getUsuarioCalificadorFk().getApellido());
-            calificacionDTO.setIdUsuarioCalidicador(calificacion.getUsuarioCalificadorFk().getUsuarioId());
+            calificacionDTO.setIdUsuarioCalificador(calificacion.getUsuarioCalificadorFk().getUsuarioId());
             calificacionDTO.setNombreUsuarioReplica(calificacion.getUsuarioCalificadoFk() != null ? calificacion.getUsuarioCalificadoFk().getNombre() + " " + calificacion.getUsuarioCalificadoFk().getApellido() : null);
             calificacionDTO.setIdUsuarioReplicador(calificacion.getUsuarioCalificadoFk() != null ? calificacion.getUsuarioCalificadoFk().getUsuarioId() : null);
             calificacionDTO.setYaReplico(calificacion.getFechaReplica() != null);
@@ -180,7 +180,7 @@ public class AlquileresTomadosBean implements AlquileresTomadosBeanLocal {
             calificacionDTO.setIdCalificacion(calificacion.getCalificacionId());
             calificacionDTO.setNombrePuntuacion(calificacion.getPuntuacionFk().getNombre());
             calificacionDTO.setNombreUsuarioCalificador(calificacion.getUsuarioCalificadorFk().getNombre() + " " + calificacion.getUsuarioCalificadorFk().getApellido());
-            calificacionDTO.setIdUsuarioCalidicador(calificacion.getUsuarioCalificadorFk().getUsuarioId());
+            calificacionDTO.setIdUsuarioCalificador(calificacion.getUsuarioCalificadorFk().getUsuarioId());
             calificacionDTO.setNombreUsuarioReplica(calificacion.getUsuarioCalificadoFk() != null ? calificacion.getUsuarioCalificadoFk().getNombre() + " " + calificacion.getUsuarioCalificadoFk().getApellido() : null);
             calificacionDTO.setIdUsuarioReplicador(calificacion.getUsuarioCalificadoFk() != null ? calificacion.getUsuarioCalificadoFk().getUsuarioId() : null);
             calificacionDTO.setYaReplico(calificacion.getFechaReplica() != null);

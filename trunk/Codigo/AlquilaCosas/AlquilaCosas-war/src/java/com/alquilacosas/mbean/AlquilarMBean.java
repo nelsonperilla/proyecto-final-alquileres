@@ -24,226 +24,249 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
+import org.primefaces.event.DateSelectEvent;
 import org.primefaces.json.JSONObject;
 
 /**
  *
  * @author damiancardozo
  */
-@ManagedBean(name="alquilarBean")
+@ManagedBean(name = "alquilarBean")
 @ViewScoped
 public class AlquilarMBean {
-    
+
     @EJB
-    private PublicacionBeanLocal publicationBean;
+    private PublicacionBeanLocal publicacionBean;
     @ManagedProperty(value = "#{login}")
     private ManejadorUsuarioMBean login;
     private PublicacionDTO publicacion;
-    private String fecha_hasta;
     private List<Date> fechas;
     private String myJson;
-    private Date fechaInicio;
+    private Date fechaInicio, fechaDevolucion;
+    private Integer publicacionId;
     private int periodoAlquiler;
     private List<SelectItem> periodos;
     private int periodoSeleccionado;
     private Date hoy;
     private int cantidadProductos;
-    private double userRating;
-    
+    private double userRating, monto;
 
     @PostConstruct
     public void init() {
         Logger.getLogger(DesplieguePublicacionMBean.class).debug("DesplieguePublicacionMBean: postconstruct.");
-        String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
+        //String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
 
-        if (id == null) {
-            redirect();
-            return;
-        }
-        ((HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest()).getSession(true).setAttribute("param", "id=" + id);
-        
-        int publicationId = 0;
-        try {
-            publicationId = Integer.parseInt(id);
-        } catch (NumberFormatException e) {
-            Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al parsear ID de parametro.");
-            redirect();
-            return;
-        }
-        publicacion = publicationBean.getPublicacion(publicationId);
-        
-        try {
-            fechas = publicationBean.getFechasSinStock(publicationId, cantidadProductos);
-        } catch (AlquilaCosasException e) {
-            Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al ejecutar getFechasSinStock(): " + e.getMessage());
-            redirect();
-            return;
-        }
-        if (publicacion != null && publicacion.getFechaHasta() != null) {
-            setFecha_hasta(DateFormat.getDateInstance(DateFormat.SHORT).format(publicacion.getFechaHasta()));
-        }
-        userRating = publicationBean.getUserRate(publicacion.getPropietario());
+//        if (id == null) {
+//            redirect();
+//            return;
+//        }
+//        ((HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest()).getSession(true).setAttribute("param", "id=" + id);
+//        
+//        int publicationId = 0;
+//        try {
+//            publicationId = Integer.parseInt(id);
+//        } catch (NumberFormatException e) {
+//            Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al parsear ID de parametro.");
+//            redirect();
+//            return;
+//        }
+//        publicacion = publicationBean.getPublicacion(publicationId);
 
-        createDictionary();
+//        try {
+//            fechas = publicationBean.getFechasSinStock(publicationId, cantidadProductos);
+//        } catch (AlquilaCosasException e) {
+//            Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al ejecutar getFechasSinStock(): " + e.getMessage());
+//            redirect();
+//            return;
+//        }
+//        if (publicacion != null && publicacion.getFechaHasta() != null) {
+//            setFecha_hasta(DateFormat.getDateInstance(DateFormat.SHORT).format(publicacion.getFechaHasta()));
+//        }
+//        userRating = publicationBean.getUserRate(publicacion.getPropietario());
+//
+//        createDictionary();
         cantidadProductos = 1;
         fechaInicio = hoy = new Date();
         periodos = new ArrayList<SelectItem>();
         periodoAlquiler = 1;
-        List<Periodo> listaPeriodos = publicationBean.getPeriodos();
+        List<Periodo> listaPeriodos = publicacionBean.getPeriodos();
         periodoSeleccionado = 2; //alto hardCode, para que por defecto este seleccionado dia y no hora (Jorge)
         for (Periodo periodo : listaPeriodos) {
             periodos.add(new SelectItem(periodo.getPeriodoId(), periodo.getNombre().name()));
         }
     }
-    
+
+    public void cargarPublicacion() {
+        if (publicacionId == null) {
+            redirect();
+            return;
+        }
+        publicacion = publicacionBean.getPublicacion(publicacionId);
+        if (login.getUsuarioId() == publicacion.getPropietario().getId()) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "No esta permitido alquilar sus propios productos", ""));
+            redirect();
+        }
+        ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getSession(true).setAttribute("param", "id=" + publicacionId);
+        try {
+            fechas = publicacionBean.getFechasSinStock(publicacionId, cantidadProductos);
+        } catch (AlquilaCosasException e) {
+            Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al ejecutar getFechasSinStock(): " + e.getMessage());
+            redirect();
+            return;
+        }
+        userRating = publicacionBean.getUserRate(publicacion.getPropietario());
+
+        createDictionary();
+    }
+
     public void redirect() {
         try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("inicio.xhtml");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("../inicio.xhtml");
         } catch (Exception e) {
             Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al ejecutar redirect().");
         }
     }
     
+    public void actualizarMonto(DateSelectEvent event) {
+        fechaDevolucion = event.getDate();
+        calcularMonto();
+    }
+
     public String confirmarPedido() {
-        String redireccion = null;
-        if (login.getUsuarioId() == publicacion.getPropietario().getId()) {
+        String redireccion = "";
+        Calendar beginDate = Calendar.getInstance();
+        beginDate.setTime(fechaInicio);
+        Calendar endDate = Calendar.getInstance();
+        endDate.setTime(fechaDevolucion);
+
+        long minDuration = calcularDuracion(
+                publicacion.getPeriodoMinimo().getPeriodoId(),
+                publicacion.getPeriodoMinimoValor());
+
+        long maxDuration;
+        try {
+            maxDuration = calcularDuracion(
+                    publicacion.getPeriodoMaximo().getPeriodoId(),
+                    publicacion.getPeriodoMaximoValor());
+        } catch (NullPointerException e) {
+            //si no hay un periodo maximo, le pongo el mayor valor posible.
+            maxDuration = Long.MAX_VALUE;
+        }
+
+        long periodoAlquilerEnMillis = endDate.getTimeInMillis() - beginDate.getTimeInMillis();
+        if (periodoAlquilerEnMillis < minDuration || periodoAlquilerEnMillis > maxDuration) {
+            StringBuilder mensaje = new StringBuilder();
+            mensaje.append("El periodo minimo de alquiler es de ");
+            mensaje.append(publicacion.getPeriodoMinimoValor());
+            mensaje.append(" ");
+            mensaje.append(publicacion.getPeriodoMinimo().getNombre());
+            mensaje.append("/s ");
+            if (maxDuration != Long.MAX_VALUE) {
+                mensaje.append("y el maximo de ");
+                mensaje.append(publicacion.getPeriodoMaximoValor());
+                mensaje.append(" ");
+                mensaje.append(publicacion.getPeriodoMaximo().getNombre());
+                mensaje.append("/s ");
+            }
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "No esta permitido alquilar sus propios productos", ""));
+                    mensaje.toString(), ""));
         } else {
-            Calendar beginDate = Calendar.getInstance();
-            beginDate.setTime(fechaInicio);
-            Calendar endDate = Calendar.getInstance();
-            endDate.setTime(fechaInicio);
-
-            switch (periodoSeleccionado) {
-                case 1: //horas
-                    break;
-                case 2: //dias
-                    endDate.add(Calendar.DATE, periodoAlquiler);
-                    break;
-                case 3: //semanas
-                    endDate.add(Calendar.WEEK_OF_YEAR, periodoAlquiler);
-                    break;
-                case 4: //meses
-                    endDate.add(Calendar.MONTH, periodoAlquiler);
-            }
-
-            long minDuration = calcularDuracion(
-                    publicacion.getPeriodoMinimo().getPeriodoId(),
-                    publicacion.getPeriodoMinimoValor());
-
-            long maxDuration;
-            try {
-                maxDuration = calcularDuracion(
-                        publicacion.getPeriodoMaximo().getPeriodoId(),
-                        publicacion.getPeriodoMaximoValor());
-            } catch (NullPointerException e) {
-                //si no hay un periodo maximo, le pongo el mayor valor posible.
-                maxDuration = Long.MAX_VALUE;
-            }
-
-            long periodoAlquilerEnMillis = endDate.getTimeInMillis() - beginDate.getTimeInMillis();
-            if (periodoAlquilerEnMillis < minDuration || periodoAlquilerEnMillis > maxDuration) {
-                StringBuilder mensaje = new StringBuilder();
-                mensaje.append("El periodo minimo de alquiler es de ");
-                mensaje.append(publicacion.getPeriodoMinimoValor());
-                mensaje.append(" ");
-                mensaje.append(publicacion.getPeriodoMinimo().getNombre());
-                mensaje.append("/s ");
-                if (maxDuration != Long.MAX_VALUE) {
-                    mensaje.append("y el maximo de ");
-                    mensaje.append(publicacion.getPeriodoMaximoValor());
-                    mensaje.append(" ");
-                    mensaje.append(publicacion.getPeriodoMaximo().getNombre());
-                    mensaje.append("/s ");
+            Iterator<Date> itFechasSinStock = fechas.iterator();
+            boolean noStockFlag = false;
+            Calendar temp = Calendar.getInstance();
+            //Recorro la lista de fechas sin stock fijandome si alguna cae
+            //en el periodo seleccionado
+            while (!noStockFlag && itFechasSinStock.hasNext()) {
+                temp.setTime(itFechasSinStock.next());
+                if (beginDate.before(temp) && endDate.after(temp)) {//la fecha sin stock cae en el periodo
+                    noStockFlag = true;
                 }
+            }
+            if (noStockFlag) {
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        mensaje.toString(), ""));
+                        "Hay fechas sin stock en el periodo seleccionado", ""));
             } else {
-                Iterator<Date> itFechasSinStock = fechas.iterator();
-                boolean noStockFlag = false;
-                Calendar temp = Calendar.getInstance();
-                //Recorro la lista de fechas sin stock fijandome si alguna cae
-                //en el periodo seleccionado
-                while (!noStockFlag && itFechasSinStock.hasNext()) {
-                    temp.setTime(itFechasSinStock.next());
-                    if (beginDate.before(temp) && endDate.after(temp))//la fecha sin stock cae en el periodo
-                    {
-                        noStockFlag = true;
-                    }
-                }
-                if (noStockFlag) {
+                //calculo el monto
+                monto = calcularMonto();
+
+                try {
+                    publicacionBean.crearPedidoAlquiler(publicacion.getId(),
+                            login.getUsuarioId(), fechaInicio,
+                            fechaDevolucion, monto, cantidadProductos);
+                    redireccion = "pmisPedidosRealizados";
+                } catch (AlquilaCosasException ex) {
                     FacesContext.getCurrentInstance().addMessage(null,
                             new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                            "Hay fechas sin stock en el periodo seleccionado", ""));
-                } else {
-                    //calculo el monto
-                    double monto = calcularMonto(beginDate, endDate);
-
-
-                    try {
-                        publicationBean.crearPedidoAlquiler(publicacion.getId(),
-                                login.getUsuarioId(), beginDate.getTime(),
-                                endDate.getTime(), monto, cantidadProductos);
-                        redireccion = "pmisPedidosRealizados";
-                    } catch (AlquilaCosasException ex) {
-                        FacesContext.getCurrentInstance().addMessage(null,
-                                new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                                "El pedido de alquiler no se ha concretado, por favor intente de nuevo", ""));
-                        Logger.getLogger(AlquilarMBean.class).error("Excepcion al crear pedido de alquiler: " + ex + ": " + ex.getMessage());
-                        redireccion = null;
-                    }
-
+                            "Ha ocurrido un error al registrar pedido.", ex.getMessage()));
+                    Logger.getLogger(AlquilarMBean.class).error(
+                            "Excepcion al crear pedido de alquiler: " + ex + ": " + ex.getMessage());
                 }
             }
         }
         return redireccion;
     }
 
-    private double calcularMonto(Calendar beginDate, Calendar endDate) {
-        double monto = 0;
+    private double calcularMonto() {
+        Calendar endDate = Calendar.getInstance();
+        endDate.setTime(fechaDevolucion);
+        Calendar beginDate = Calendar.getInstance();
+        beginDate.setTime(fechaInicio);
+        monto = 0D;
         Calendar temp = Calendar.getInstance();
         temp.setTime(beginDate.getTime());
         temp.add(Calendar.MONTH, 1);
         endDate.add(Calendar.SECOND, 1);
         int second = endDate.get(Calendar.SECOND);
-        while (endDate.after(temp)) {
-            //hardCode muy duro, se el orden porque hice la consulta con orderby
-            //si se agregan periodos nuevos corregir esto
-            monto += publicacion.getPrecios().get(3).getPrecio();
+        while (endDate.after(temp) || endDate.equals(temp)) {
+            if(publicacion.getPrecioMes() != null) {
+                monto += publicacion.getPrecioMes();
+            } else if(publicacion.getPrecioSemana() != null) {
+                monto += publicacion.getPrecioSemana() * 4;
+            } else {
+                monto += publicacion.getPrecioDia() * 30;
+            }
             temp.add(Calendar.MONTH, 1);
         }
 
         temp.add(Calendar.MONTH, -1);
-        temp.add(Calendar.WEEK_OF_YEAR, 1);
-        while (endDate.after(temp)) {
-            //hardCode muy duro, se el orden porque hice la consulta con orderby
-            //si se agregan periodos nuevos corregir esto
-            monto += publicacion.getPrecios().get(2).getPrecio();
+        temp.add(Calendar.DATE, 7);
+        while (endDate.after(temp) || endDate.equals(temp)) {
+            if(publicacion.getPrecioSemana() != null) {
+                monto += publicacion.getPrecioSemana();
+            } else {
+                monto += publicacion.getPrecioDia() * 7;
+            }
             temp.add(Calendar.WEEK_OF_YEAR, 1);
-
-
         }
 
-        temp.add(Calendar.WEEK_OF_YEAR, -1);
+        temp.add(Calendar.DATE, -7);
         temp.add(Calendar.DATE, 1);
-        while (endDate.after(temp)) {
-            //hardCode muy duro, se el orden porque hice la consulta con orderby
-            //si se agregan periodos nuevos corregir esto
-            monto += publicacion.getPrecios().get(1).getPrecio();
+        while (endDate.after(temp) || endDate.equals(temp)) {
+            monto += publicacion.getPrecioDia();
             temp.add(Calendar.DATE, 1);
         }
-
         temp.add(Calendar.DATE, -1);
         temp.add(Calendar.HOUR_OF_DAY, 1);
-        while (endDate.after(temp)) {
-            //hardCode muy duro, se el orden porque hice la consulta con orderby
-            //si se agregan periodos nuevos corregir esto
-            monto += publicacion.getPrecios().get(0).getPrecio();
+        double precioHoras = 0D;
+        while (endDate.after(temp) || endDate.equals(temp)) {
             temp.add(Calendar.HOUR_OF_DAY, 1);
+            if(publicacion.getPrecioHora() != null) {
+                precioHoras = publicacion.getPrecioHora();
+            } else {
+                precioHoras = publicacion.getPrecioDia();
+                break;
+            }
         }
+        // evitar que el precio de horas sea superior al precio de un dia.
+        if(precioHoras > publicacion.getPrecioDia()) {
+            precioHoras = publicacion.getPrecioDia();
+        }
+        monto += precioHoras;
+        temp.add(Calendar.HOUR_OF_DAY, -1);
         endDate.add(Calendar.SECOND, -1);
         return monto;
     }
@@ -303,7 +326,6 @@ public class AlquilarMBean {
     }
 
     /* Getters & Setters */
-    
     public String getFechas() {
         return myJson;
     }
@@ -316,12 +338,12 @@ public class AlquilarMBean {
         this.fechaInicio = fechaInicio;
     }
 
-    public String getFecha_hasta() {
-        return fecha_hasta;
+    public Date getFechaDevolucion() {
+        return fechaDevolucion;
     }
 
-    public void setFecha_hasta(String fecha_hasta) {
-        this.fecha_hasta = fecha_hasta;
+    public void setFechaDevolucion(Date fechaDevolucion) {
+        this.fechaDevolucion = fechaDevolucion;
     }
 
     public String getMyJson() {
@@ -395,5 +417,20 @@ public class AlquilarMBean {
     public void setUserRating(double userRating) {
         this.userRating = userRating;
     }
-    
+
+    public Integer getPublicacionId() {
+        return publicacionId;
+    }
+
+    public void setPublicacionId(Integer publicacionId) {
+        this.publicacionId = publicacionId;
+    }
+
+    public double getMonto() {
+        return monto;
+    }
+
+    public void setMonto(double monto) {
+        this.monto = monto;
+    }
 }
