@@ -53,7 +53,7 @@ public class AlquileresOfrecidosMBean implements Serializable {
     private AlquilerDTO alquilerSeleccionado;
     private List<Date> fechas;
     private String myJson;
-    private Boolean ofrece;
+    private Boolean ofrece; 
     private Boolean toma;
     private CalificacionDTO calificacionOfrece;
     private CalificacionDTO calificacionToma;
@@ -123,13 +123,13 @@ public class AlquileresOfrecidosMBean implements Serializable {
             calificacionOfrece = alquileresBean.getCalificacionOfrece(alquilerId);
             calificacionToma = alquileresBean.getCalificacionToma(alquilerId);
             // Lo siguiente sirve para mostrar los campos permitidos
-            if (calificacionOfrece.getIdUsuarioCalidicador() != null) {
-                ofrece = calificacionOfrece.getIdUsuarioCalidicador() == usuarioLogueado;
+            if (calificacionOfrece.getIdUsuarioCalificador() != null) {
+                ofrece = calificacionOfrece.getIdUsuarioCalificador() == usuarioLogueado;
             } else {
                 ofreceCalifico = false;
             }
-            if (calificacionToma.getIdUsuarioCalidicador() != null) {
-                toma = calificacionToma.getIdUsuarioCalidicador() == usuarioLogueado;
+            if (calificacionToma.getIdUsuarioCalificador() != null) {
+                toma = calificacionToma.getIdUsuarioCalificador() == usuarioLogueado;
             } else {
                 tomaCalifico = false;
             }

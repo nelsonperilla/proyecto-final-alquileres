@@ -125,7 +125,7 @@ public class VerReputacionBean implements VerReputacionBeanLocal {
                calificacion.setComentarioReplica(c.getComentarioReplica());
                calificacion.setFechaCalificacion(c.getFechaCalificacion());
                calificacion.setFechaReplica(c.getFechaReplica());
-               calificacion.setIdUsuarioCalidicador(c.getUsuarioCalificadorFk().getUsuarioId());
+               calificacion.setIdUsuarioCalificador(c.getUsuarioCalificadorFk().getUsuarioId());
                calificacion.setNombreUsuarioCalificador(c.getUsuarioCalificadorFk().getLoginList().get(0).getUsername());
                calificacion.setNombrePuntuacion(c.getPuntuacionFk().getNombre());
                calificacion.setYaReplico(c.getFechaReplica() == null ? Boolean.FALSE : Boolean.TRUE);
@@ -145,7 +145,7 @@ public class VerReputacionBean implements VerReputacionBeanLocal {
                calificacion.setComentarioReplica(c.getComentarioReplica());
                calificacion.setFechaCalificacion(c.getFechaCalificacion());
                calificacion.setFechaReplica(c.getFechaReplica());
-               calificacion.setIdUsuarioCalidicador(c.getUsuarioCalificadorFk().getUsuarioId());
+               calificacion.setIdUsuarioCalificador(c.getUsuarioCalificadorFk().getUsuarioId());
                calificacion.setNombreUsuarioCalificador(c.getUsuarioCalificadorFk().getLoginList().get(0).getUsername());
                calificacion.setNombrePuntuacion(c.getPuntuacionFk().getNombre());
                calificacion.setYaReplico(c.getFechaReplica() == null ? Boolean.FALSE : Boolean.TRUE);

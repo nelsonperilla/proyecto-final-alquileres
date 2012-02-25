@@ -9,7 +9,7 @@
 
     <body>
 
-        <ui:composition template="./../../resources/templates/masterPage.xhtml">
+        <ui:composition template="./../../resources/templates/newTemplate.xhtml">
 
             <ui:define name="logInfo">
                 <h:link value="Inicio" outcome="/vistas/inicio" />
@@ -20,111 +20,125 @@
             </ui:define>
 
             <ui:define name="principal">
+
+                <f:metadata>
+                    <f:viewParam name="id" value="#{alquilarBean.publicacionId}" required="true" requiredMessage="error"  >
+                        <f:convertNumber />
+                    </f:viewParam>
+                    <f:event type="preRenderView" listener="#{alquilarBean.cargarPublicacion}" />
+                </f:metadata>
+
                 <h:outputScript library="javascript" name="util.js" />
 
-                <h:form id="rent" prependId="false">
+                <div style="margin: 0 30px">
+                    <h:form id="rent" prependId="false">
 
-                    <h:panelGrid columns="2" >
-                        <f:facet name="header" >
-                            <h:outputText value="Usted esta enviando un pedido de alquiler para el articulo:" 
-                                          style="font-size: 14px; font-weight: bold;"/>
-                        </f:facet>
+                        <div style="float: left; width: 450px">
+                            <h:panelGrid columns="2" >
+                                <f:facet name="header" >
+                                    <h:outputText value="Usted esta enviando un pedido de alquiler para el articulo:" 
+                                                  style="font-size: 14px; font-weight: bold;"/>
+                                </f:facet>
 
-                        <h:graphicImage value="/image?id=#{alquilarBean.publicacion.imagenId}"
-                                        rendered="#{alquilarBean.publicacion.imagenId != -1}"
-                                        width="80" />
-                        <h:graphicImage value="/image?id=#{alquilarBean.publicacion.imagenId}" 
-                                        rendered="#{alquilarBean.publicacion.imagenId == -1}"
-                                        width="80" />
+                                <h:graphicImage value="/image?id=#{alquilarBean.publicacion.imagenId}"
+                                                rendered="#{alquilarBean.publicacion.imagenId != -1}"
+                                                width="100" />
+                                <h:graphicImage value="/image?id=#{alquilarBean.publicacion.imagenId}" 
+                                                rendered="#{alquilarBean.publicacion.imagenId == -1}"
+                                                width="100" />
 
-                        <h:panelGrid columns="1" >
-                            <h:outputText value="#{alquilarBean.publicacion.titulo}" />
-                            <h:outputText value="#{alquilarBean.publicacion.categoriaF.nombre}" />
-                            <h:outputText value="De: #{alquilarBean.publicacion.propietario.username}" />
-                        </h:panelGrid>
+                                <h:panelGrid columns="1" >
+                                    <h:outputText value="#{alquilarBean.publicacion.titulo}" />
+                                    <h:outputText value="#{alquilarBean.publicacion.categoriaF.nombre}" />
+                                    <h:outputText value="Cantidad disponible: #{alquilarBean.publicacion.cantidad}" />
+                                    <h:outputText value="De: #{alquilarBean.publicacion.propietario.username}" />
+                                </h:panelGrid>
 
-                    </h:panelGrid>
+                            </h:panelGrid>
 
-                    <h:panelGrid  columns="3" cellpadding="2" cellspacing="4" >
+                            <h:panelGrid  columns="3" cellpadding="2" cellspacing="4" >
 
-                        <f:facet name="header" >
-                            <h:outputText value="Datos del pedido:" 
-                                          style="font-size: 14px; font-weight: bold;"/>
-                        </f:facet>
+                                <f:facet name="header" >
+                                    <h:outputText value="Datos del pedido:" 
+                                                  style="font-size: 14px; font-weight: bold;"/>
+                                </f:facet>
 
-                        <h:outputLabel  value="Cantidad" for="cantidad" />
-                        <p:spinner id="cantidad" value="#{alquilarBean.cantidadProductos}" required="true" 
-                                   validatorMessage="Cantidad invalida" 
-                                   requiredMessage="Valor requerido" >
-                            <f:validateLongRange minimum="1" maximum="#{alquilarBean.publicacion.cantidad}" />
-                        </p:spinner>
-                        <p:message for="cantidad" />
-                        
-                        <h:outputLabel  value="Fecha desde" for="fechaDesde" />
-                        <p:calendar id="fechaDesde" showOn="button" navigator="true" pattern="dd/MM/yyyy HH:mm"
-                                    stepMinute="31" minMinute="1" mindate="#{alquilarBean.hoy}" required="true"
-                                    requiredMessage="Valor requerido" 
-                                    validatorMessage="Fecha invalida. Debe tener el formato dd/MM/yyyy HH:mm" />
-                        <p:message for="fechaDesde" />
+                                <h:outputLabel  value="Cantidad" for="cantidad" />
+                                <p:spinner id="cantidad" value="#{alquilarBean.cantidadProductos}" required="true" 
+                                           min="1" max="#{alquilarBean.publicacion.cantidad}" 
+                                           validatorMessage="Cantidad invalida" 
+                                           requiredMessage="Valor requerido" >
+                                    <f:validateLongRange minimum="1" maximum="#{alquilarBean.publicacion.cantidad}" />
+                                </p:spinner>
+                                <p:message for="cantidad" />
 
-                        <h:outputLabel value="Fecha hasta" for="fechaHasta" />
-                        <p:calendar id="fechaHasta" showOn="button" navigator="true" pattern="dd/MM/yyyy HH:mm"
-                                    stepMinute="31" mindate="#{alquilarBean.hoy}" required="true" minMinute="1" 
-                                    requiredMessage="Valor requerido" 
-                                    validatorMessage="Fecha invalida. Debe tener el formato dd/MM/yyyy HH:mm"/>
-                        <p:message for="fechaHasta" />
+                                <h:outputLabel  value="Fecha desde" for="fechaDesde" />
+                                <p:calendar id="fechaDesde" value="#{alquilarBean.fechaInicio}" showOn="button" pattern="dd/MM/yyyy HH:mm"
+                                            stepMinute="31" minMinute="1" mindate="#{alquilarBean.hoy}" required="true"
+                                            requiredMessage="Valor requerido" 
+                                            validatorMessage="Fecha invalida. Debe tener el formato dd/MM/yyyy HH:mm" />
+                                <p:message for="fechaDesde" />
 
-                        <f:facet name="footer" >
-                            <p:commandButton value="Confirmar" action="#{alquilarBean.confirmarPedido}" ajax="false"/>
-                        </f:facet>
+                                <h:outputLabel value="Fecha hasta" for="fechaHasta" />
+                                <p:calendar id="fechaHasta" value="#{alquilarBean.fechaDevolucion}" showOn="button" pattern="dd/MM/yyyy HH:mm"
+                                            stepMinute="31" required="true" minMinute="1" 
+                                            requiredMessage="Valor requerido" 
+                                            validatorMessage="Fecha invalida. Debe tener el formato dd/MM/yyyy HH:mm" >
+                                    <p:ajax event="dateSelect" listener="#{alquilarBean.actualizarMonto}" update="monto" />
+                                </p:calendar>
+                                <p:message for="fechaHasta" />
+                                
+                                <h:outputLabel value="Monto" for="monto" />
+                                <h:outputText id="monto" value="$ #{alquilarBean.monto}" />
+                                <p/>
 
-                    </h:panelGrid>
+                                <f:facet name="footer" >
+                                    <p:commandButton value="Confirmar" action="#{alquilarBean.confirmarPedido}" ajax="false"/>
+                                    <p:button value="Cancelar" outcome="/vistas/mostrarPublicacion" >
+                                        <f:param name="id" value="#{alquilarBean.publicacionId}" />
+                                    </p:button>
+                                </f:facet>
 
-                    <p:panel style="width: 300px" >
-                        <h:panelGrid columns="2" >
+                            </h:panelGrid>
+                        </div>
+
+                        <p:panel style="float: left; width: 260px" >
+                            
+                            <h:outputLabel value="Precios:" style="margin-top: 5px; font-weight: bold; color: steelblue" /> <br/>
+                            <ui:repeat value="#{alquilarBean.publicacion.precios}" var="precio" >
+                                <h:outputText value="$ #{precio.precio}" style="font-weight: bold" />
+                                <h:outputText value=" /#{precio.periodoNombre.toString()}" />
+                                <br/>
+                            </ui:repeat>
+                            <br/>
+                            
                             <h:outputLabel value="Periodo minimo:"/>
-                            <h:panelGroup style="vertical-align: middle">
-                                <h:outputLabel value="#{alquilarBean.publicacion.periodoMinimoValor} "/>
-                                <h:outputLabel value="#{alquilarBean.publicacion.periodoMinimo.nombre}"/>
-                            </h:panelGroup>
-
+                            <h:outputLabel value="#{alquilarBean.publicacion.periodoMinimoValor} "/>
+                            <h:outputLabel value="#{alquilarBean.publicacion.periodoMinimo.nombre.toString()}"/>
+                            <br/>
                             <h:outputLabel value="Periodo maximo:"/>
-                            <h:panelGroup style="vertical-align: middle">
-                                <h:outputLabel value="#{alquilarBean.publicacion.periodoMaximoValor} "/>
-                                <h:outputLabel value="#{alquilarBean.publicacion.periodoMaximo.nombre}"/>
-                            </h:panelGroup>
-                        </h:panelGrid>
-                        <h:outputLabel value="Disponibilidad:"/>
-                        <p:calendar id="rentCalendar" mode="inline" 
-                                    pattern="dd/MM/yyyy" mindate="#{alquilarBean.hoy}" />
-                    </p:panel>
-                </h:form>
+                            <h:outputLabel value="#{alquilarBean.publicacion.periodoMaximoValor} "/>
+                            <h:outputLabel value="#{alquilarBean.publicacion.periodoMaximo.nombre.toString()}"/>
+                            <br/><br/>
+                            <h:outputLabel value="Disponibilidad:" style="font-weight: bold;color: steelblue"/>
+                            <p:calendar id="rentCalendar" mode="inline" 
+                                        pattern="dd/MM/yyyy" mindate="#{alquilarBean.hoy}" />
+                        </p:panel>
+                    </h:form>
 
-                <script type="text/javascript" >
-                        jQuery(function () {
-                                window.setTimeout('bindEventsHighlights()',500);
-                        });
+                    <script type="text/javascript" >
+                            jQuery(function () {
+                                    window.setTimeout('bindEventsHighlights()',500);
+                            });
 
-                        function bindEventsHighlights() {
-                                var specialDays = <h:outputText value="#{alquilarBean.fechas}" /> ;
-                                jQuery(".hasDatepicker").datepicker("option", "beforeShowDay", function (date) {
-                                          return highlightCalendar(specialDays, date, 'highlight-calendar');
-                                });
-                        };
-                </script>
-
-                <comps:loginOnPage bean="#{alquilarBean}" 
-                                   property="action"/>
-
-            </ui:define>
-
-            <ui:define name="right">
-                <p:outputPanel id="paneles" >
-                    <comps:loginBox />
-                    <comps:adminPanel />
-                    <comps:userPanel />
-                    <comps:panelPublicitante />
-                </p:outputPanel>
+                            function bindEventsHighlights() {
+                                    var specialDays = <h:outputText value="#{alquilarBean.fechas}" /> ;
+                                    jQuery(".hasDatepicker").datepicker("option", "beforeShowDay", function (date) {
+                                              return highlightCalendar(specialDays, date, 'highlight-calendar');
+                                    });
+                            };
+                    </script>
+                </div>
             </ui:define>
 
         </ui:composition>

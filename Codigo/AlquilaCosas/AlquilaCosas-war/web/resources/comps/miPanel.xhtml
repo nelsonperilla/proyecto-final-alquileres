@@ -12,8 +12,11 @@
     <!-- IMPLEMENTATION -->
     <cc:implementation>  
         <p:panel style="width: 200px; background: aliceblue" >
-                <div class="uster-lagrimg">
-                    <h:graphicImage styleClass="image" value="#{resource['images:4chakra.png']}" />
+                <div class="user-image">
+                    <h:graphicImage styleClass="image" rendered="#{login.fbLogin}" 
+                                    value="https://graph.facebook.com/#{login.fbId}/picture?type=large" />
+                    <h:graphicImage styleClass="image" rendered="#{not login.fbLogin}"
+                                    value="#{resource['images:no_user.jpg']}" />
                 </div>
                 <div class="user-namedetail">
                     <p>#{login.usuario.nombre} #{login.usuario.apellido}</p>
@@ -21,19 +24,16 @@
                 <div id="list">
                     <ul class="menu" rel="sam1">
                         <li>
-                            <h:link value="Publicar" />
+                        <h:link value="Publicar" outcome="/vistas/usuario/nuevaPublicacion" />
                         </li>
                         <li >
                             <h:link value="Articulos" outcome="/vistas/usuario/articulos" />
                         </li>
                         <li>
-                        <h:link value="Mis Perfil" outcome="/vistas/usuario/miPerfil" />
+                        <h:link value="Mi Perfil" outcome="/vistas/usuario/miPerfil" />
                         </li>
                         <li >
                         <h:link value="Preguntas" />
-                        </li>
-                        <li>
-                        <h:link value="Cambiar contraseña" />
                         </li>
                         <li>
                         <h:link value="Pagos" />

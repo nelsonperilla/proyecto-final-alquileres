@@ -16,7 +16,7 @@ public class CalificacionDTO implements Serializable {
      private Integer idCalificacion;
      private Date fechaCalificacion;
      private Date fechaReplica;
-     private Integer idUsuarioCalidicador;
+     private Integer idUsuarioCalificador;
      private Integer idUsuarioReplicador;
      private String comentarioCalificacion;
      private String comentarioReplica;
@@ -29,11 +29,13 @@ public class CalificacionDTO implements Serializable {
      public CalificacionDTO() {
      }
 
-     public CalificacionDTO(int idCalificacion, Date fechaCalificacion, Date fechaReplica, int idUsuarioCalidicador, int idUsuarioReplicador, String comentarioCalificacion, String comentarioReplica, int idPuntuacion, String nombreUsuarioCalificador, String nombreUsuarioReplica, String nombrePuntuacion, Boolean yaReplico) {
+     public CalificacionDTO(int idCalificacion, Date fechaCalificacion, Date fechaReplica, int idUsuarioCalificador, 
+             int idUsuarioReplicador, String comentarioCalificacion, String comentarioReplica, int idPuntuacion, 
+             String nombreUsuarioCalificador, String nombreUsuarioReplica, String nombrePuntuacion, Boolean yaReplico) {
           this.idCalificacion = idCalificacion;
           this.fechaCalificacion = fechaCalificacion;
           this.fechaReplica = fechaReplica;
-          this.idUsuarioCalidicador = idUsuarioCalidicador;
+          this.idUsuarioCalificador = idUsuarioCalificador;
           this.idUsuarioReplicador = idUsuarioReplicador;
           this.comentarioCalificacion = comentarioCalificacion;
           this.comentarioReplica = comentarioReplica;
@@ -92,12 +94,12 @@ public class CalificacionDTO implements Serializable {
           this.idPuntuacion = idPuntuacion;
      }
 
-     public Integer getIdUsuarioCalidicador() {
-          return idUsuarioCalidicador;
+     public Integer getIdUsuarioCalificador() {
+          return idUsuarioCalificador;
      }
 
-     public void setIdUsuarioCalidicador(Integer idUsuarioCalidicador) {
-          this.idUsuarioCalidicador = idUsuarioCalidicador;
+     public void setIdUsuarioCalificador(Integer idUsuarioCalidicador) {
+          this.idUsuarioCalificador = idUsuarioCalidicador;
      }
 
      public Integer getIdUsuarioReplicador() {

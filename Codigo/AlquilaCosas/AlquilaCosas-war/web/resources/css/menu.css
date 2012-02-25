@@ -20,7 +20,7 @@ header#page_header nav ul, #page_footer nav ul{
     border: none; 
     position: relative; 
     background-color: #4682B4; 
-    font: 16px Tahoma, Sans-serif;
+    font: 14px Tahoma, Sans-serif;
     -moz-box-shadow:2px 2px 2px rgba(0,0,0,.75); 
     -webkit-box-shadow:2px 2px 2px rgba(0,0,0,.75); 
     box-shadow:2px 2px 2px rgba(0,0,0,.75);
@@ -69,27 +69,8 @@ header#page_header nav ul, #page_footer nav ul{
 #navTop1 a span { 
     display:block; 
     float:right; 
-    margin-left:5px; }
-
-/*#navTop1 ul ul { 
-    display:none; 
-    width:100%; 
-    position:absolute; 
-    left:0; 
-    background: #6a6a6a; }
-
-#navTop1 ul ul li { float:none; }
-
-#navTop1 ul ul a { 
-    padding:5px 10px; 
-    border-left:none; 
-    border-right:none; 
-    font-size:14px; }
-
-#navTop1 ul ul a:hover { 
-    background-color: #555; 
-}*/
-
+    margin-left:5px; 
+}
 
 #navTop1 { 
     /*    background-image:-moz-linear-gradient(0% 22px 90deg, #222, #999); 
@@ -106,64 +87,31 @@ header#page_header nav ul, #page_footer nav ul{
     color: steelblue;
 }
 
-/*#navTop1 ul ul { 
-    -moz-border-radius-bottomleft:4px; 
-    -moz-border-radius-bottomright:4px; 
-    -webkit-border-bottom-left-radius:4px; 
-    -webkit-border-bottom-right-radius:4px; 
-    border-bottom-left-radius:4px; 
-    border-bottom-right-radius:4px; }
-
-#navTop1 ul ul { 
-    background-color:rgba(0, 0, 255, 0.7); 
-    -moz-box-shadow:2px 2px 2px rgba(0,0,0,.8); 
-    -webkit-box-shadow:2px 2px 2px rgba(0,0,0,.8); 
-    box-shadow:2px 2px 2px rgba(0,0,0,.8); }
-
-#navTop1 ul ul li { 
-    border-left:1px solid rgba(0,0,0,0.1); 
-    border-right:1px solid rgba(0,0,0,0.1); }
-
-#navTop1 ul ul a:hover { background-color:rgba(85,85,85,.9); }
-
-#navTop1 ul ul li.last { 
-    border-left:1px solid rgba(0,0,0,0.1); 
-    border-bottom:1px solid rgba(0,0,0,0.1); 
-    -moz-border-radius-bottomleft:4px; 
-    -moz-border-radius-bottomright:4px; 
-    -webkit-border-bottom-left-radius:4px; 
-    -webkit-border-bottom-right-radius:4px;
-    border-bottom-left-radius:4px; 
-    border-bottom-right-radius:4px; }*/
-
 #navTop1 ul a span { 
     -moz-transform:rotate(-180deg);
     -webkit-transform:rotate(-180deg); }
 
 
 /* ------- User Section ---------- */
-
-.user-namedetail {
-    text-align: center;
-    font-size: 14px;
-    font-weight: bold;
-    color: steelblue;
-    
-}
-
-.uster-lagrimg {
+.user-image {
     float:left;
     min-height:60px;
     text-align:center;
     width:150px;
     padding: 15px
-    
 }
 
 .image {
     height:auto;
     max-width:150px;
     width:auto;
+}
+
+.user-namedetail {
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    color: steelblue;   
 }
 
 #list {

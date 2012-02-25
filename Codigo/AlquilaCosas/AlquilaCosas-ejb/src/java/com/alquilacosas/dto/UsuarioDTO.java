@@ -64,7 +64,6 @@ public class UsuarioDTO implements Serializable {
           this.telefono = usuario.getTelefono();
           this.dni = usuario.getDni();
           this.fechaNacimiento = usuario.getFechaNac();
-
      }
 
      public UsuarioDTO(Integer id, String username, String email, String nombre, String apellido,

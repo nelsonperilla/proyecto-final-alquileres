@@ -8,11 +8,11 @@
     <h:body>
 
         <h:form id="formAlquilados" >
-            <div class="leyendaTipoImg" style="background: lightgreen" /> 
+            <div class="leyendaTipoImg" style="background: green" /> 
             <div class="leyendaTipoTxt" ><h:outputText value="Tomados" /></div>
             <div class="leyendaTipoImg" style="background: orange" /> 
             <div class="leyendaTipoTxt"><h:outputText value="Ofrecidos" /></div>
-            
+            <br/><br/>
             <p:dataGrid id="grid" value="#{alquileresBean.alquileres}" var="alq" columns="1" 
                         styleClass="itemsTable" rowIndexVar="row" paginator="true" 
                         paginatorPosition="bottom" paginatorAlwaysVisible="false" 
@@ -20,7 +20,7 @@
                 <p:column>
 
                     <div class="artContenedor" >
-                        <div class="artTipo" style="background: #{alq.tomado ? 'lightgreen':'orange'}" ></div>
+                        <div class="artTipo" style="background: #{alq.tomado ? 'green':'orange'}" ></div>
                         <div class="artImagen" >
                             <h:graphicImage value="/image?id=#{alq.imagenId}" 
                                             style="max-width: 120px; max-height: 100px"
@@ -52,22 +52,28 @@
                                 </div>
                             </div>
                             <div class="accionPrincipal">
-                                <p:commandButton value="Calificar" onclick="calificarDlg.show()"
+                                <p:commandButton value="Calificar" actionListener="#{alquileresBean.prepararCalificar}"
+                                                 oncomplete="calificarDlg.show()"
                                                  rendered="#{alq.calificable and not alq.calificado}" 
-                                                 type="button" style="background: yellow" />
-                                <p:commandButton value="Ver Calificacion" onclick="verCalificacionDlg.show()" 
+                                                 style="background: #F2E603; color: black" >
+                                    <f:attribute name="alq" value="#{alq.idAlquiler}" />
+                                </p:commandButton>
+                                <p:commandButton value="Ver Calificacion" actionListener="#{alquileresBean.prepararVerCalificacion}"
+                                                 oncomplete="verCalificacionDlg.show()" update=":growl :tab:formVer"
                                                  rendered="#{alq.calificable and alq.calificado}" 
-                                                 type="button" style="background: yellow" />
+                                                 style="background: #F2E603; color: black" >
+                                    <f:attribute name="alq" value="#{alq.idAlquiler}" />
+                                </p:commandButton>
                             </div>
                         </div>  
                         <div class="artPrecio" >
                             <div class="accionesContenedor">
                                 <div class="artAcciones">
-                                    <p:button value="Modificar" outcome="/vistas/usuario/modificarPublicacion" icon="ui-icon-pencil"
+                                    <p:button value="Modificar" outcome="/vistas/usuario/modificarAlquiler" icon="ui-icon-pencil"
                                               rendered="#{not alq.tomado and alq.cancelable}">
                                         <f:param name="id" value="#{alq.idAlquiler}" />
                                     </p:button>
-                                    <p:button value="Pedir Cambio" outcome="/vistas/usuario/modificarPublicacion" icon="ui-icon-pencil"
+                                    <p:button value="Pedir Cambio" outcome="/vistas/usuario/modificarAlquiler" icon="ui-icon-pencil"
                                               rendered="#{alq.tomado and alq.cancelable and alq.idPedidoCambio == -1}">
                                         <f:param name="id" value="#{alq.idAlquiler}" />
                                     </p:button>
@@ -85,14 +91,14 @@
                             <div class="artEstado" >
                                 <h:outputText value="#{alq.estadoAlquiler.toString()}" />
                             </div>
-                            
+
                         </div>
                         <div class="artNotificaciones" >
                             <div class="accionesContenedor"></div>
-                                <a onclick="manejarPopup(jQuery(this).parent('.artNotificaciones').find('.artPopup'))"
-                                   style="display: #{(alq.idPedidoCambio != -1 and not alq.tomado and alq.cancelable) ? 'block' : 'none'}">
-                                    <p:commandButton type="button" icon="ui-icon-notice" style="font-size: 11px; background: yellow;"/>
-                                </a>
+                            <a onclick="manejarPopup(jQuery(this).parent('.artNotificaciones').find('.artPopup'))"
+                               style="display: #{(alq.idPedidoCambio != -1 and not alq.tomado and alq.cancelable) ? 'block' : 'none'}">
+                                <p:commandButton type="button" icon="ui-icon-notice" style="font-size: 11px; background: yellow;"/>
+                            </a>
 
                             <div class="artPopup" style="display: none">
                                 <h:panelGrid columns="2" style="text-align: left"  >
@@ -118,6 +124,75 @@
                                      oncomplete="cancelarDlg.hide()" update=":tab:formAlquilados:grid" />
                     <p:commandButton value="No" oncomplete="cancelarDlg.hide()" />
                 </h:panelGrid>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog widgetVar="calificarDlg" header="Calificar" modal="true" resizable="false" width="240" >
+            <h:form id="calificarForm" >
+                <h:panelGrid columns="1" >  
+                    <h:outputText value="Puntuación:" />
+                    <h:selectOneMenu id="puntuacion" value="#{alquileresBean.puntuacionId}" >
+                        <f:selectItems id="itemsPuntuacion" value="#{alquileresBean.puntuaciones}" />
+                    </h:selectOneMenu>                                   
+                    <h:outputText value="Comentario:" />
+                    <p:inputTextarea id="comentario" value="#{alquileresBean.comentario}" 
+                                     style="width:200px;height:100px;" />
+                    <f:facet name="footer" >
+                        <h:panelGrid columns="2" columnClasses="leftCol,rightCol" style="width:100%" >
+                            <p:commandButton value="Calificar" actionListener="#{alquileresBean.registrarCalificacion}" 
+                                             oncomplete="calificarDlg.hide()" update=":tab:formAlquilados" />
+                            <p:commandButton value="Cancelar" type="reset" onclick="calificarDlg.hide()" />
+                        </h:panelGrid>
+                    </f:facet>
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog modal="true" widgetVar="verCalificacionDlg" header="Ver Calificación"  dynamic="true"
+                  resizable="false" width="550" style="text-align: center" >
+            <h:form id="formVer">
+                <div style="float: left; width: 250px; vertical-align: middle; text-align: left">
+                    <h:outputText value="El Usuario todavia no Calificó" style="font-style: oblique" 
+                                      rendered="#{alquileresBean.calificacionOfrece == null}" />
+                    <h:panelGrid columns="1" rendered="#{alquileresBean.calificacionOfrece != null}">
+                        <h:outputText value="Calificacion del dueno (
+                                      #{alquileresBean.calificacionOfrece.idUsuarioCalificador eq alquileresBean.usuarioLogueado ?
+                                       'Tu': alquileresBean.calificacionOfrece.nombreUsuarioCalificador})" />
+                        <h:outputText value="Puntuacion: #{alquileresBean.calificacionOfrece.nombrePuntuacion}" />
+                        <h:outputText value="Comentario:" />
+                        <h:outputText value="#{alquileresBean.calificacionOfrece.comentarioCalificacion}" style="font-style: oblique"  />
+                        <h:outputText value="Replica:" rendered="#{alquileresBean.tomado or alquileresBean.calificacionOfrece.yaReplico}" />
+                        <h:outputText value="#{alquileresBean.calificacionOfrece.comentarioReplica}" style="font-style: oblique" 
+                                      rendered="#{alquileresBean.calificacionOfrece.yaReplico}" />
+                        <h:inputTextarea value="#{alquileresBean.calificacionOfrece.comentarioReplica}" 
+                                         style="max-width:200px; width:200px; resize: none" 
+                                         rendered="#{alquileresBean.tomado and not alquileresBean.calificacionOfrece.yaReplico}" />
+                        <p:commandButton value="Enviar Replica" actionListener="#{alquileresBean.registrarReplicaOfrece}" 
+                                         rendered="#{alquileresBean.tomado and not alquileresBean.calificacionOfrece.yaReplico}"
+                                         update="@form" />
+                    </h:panelGrid>
+                </div>
+                <div style="float: left; width: 250px; vertical-align: middle; text-align: left">
+                     <h:outputText value="El Usuario todavia no Calificó" style="font-style: oblique" 
+                                      rendered="#{alquileresBean.calificacionToma == null}" />
+                    <h:panelGrid columns="1" rendered="#{alquileresBean.calificacionToma != null}">
+                        <h:outputText value="Calificacion del alquilador (
+                                      #{alquileresBean.calificacionToma.idUsuarioCalificador eq alquileresBean.usuarioLogueado ?
+                                       'Tu': alquileresBean.calificacionToma.nombreUsuarioCalificador})" />
+                        <h:outputText value="Puntuacion: #{alquileresBean.calificacionToma.nombrePuntuacion}" />
+                        <h:outputText value="Comentario:" />
+                        <h:outputText value="#{alquileresBean.calificacionToma.comentarioCalificacion}" style="font-style: oblique"  />
+                        <h:outputText value="Replica:" rendered="#{not alquileresBean.tomado or alquileresBean.calificacionOfrece.yaReplico}" />
+                        <h:outputText value="#{alquileresBean.calificacionToma.comentarioReplica}" style="font-style: oblique" 
+                                      rendered="#{alquileresBean.calificacionToma.yaReplico}" />
+                        <h:inputTextarea value="#{alquileresBean.calificacionToma.comentarioReplica}" 
+                                         rendered="#{not alquileresBean.tomado and not alquileresBean.calificacionOfrece.yaReplico}"
+                                         style="max-width:200px; width:200px; resize: none"/>
+                        <p:commandButton value="Enviar Replica" actionListener="#{alquileresBean.registrarReplicaToma}" 
+                                         rendered="#{not alquileresBean.tomado and not alquileresBean.calificacionOfrece.yaReplico}"
+                                         update="@form" />
+                    </h:panelGrid>
+                </div>
             </h:form>
         </p:dialog>
 

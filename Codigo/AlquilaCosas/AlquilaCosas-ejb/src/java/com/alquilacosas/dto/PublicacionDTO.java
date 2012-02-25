@@ -196,7 +196,7 @@ public class PublicacionDTO implements Serializable {
     public void setImagenIds(List<Integer> imagenIds) {
         this.imagenIds = imagenIds;
         if (imagenIds != null && !imagenIds.isEmpty()) {
-            imagenId = imagenIds.get(0);
+            imagenId = imagenIds.get(0) != null ? imagenIds.get(0): -1;
         }
     }
 

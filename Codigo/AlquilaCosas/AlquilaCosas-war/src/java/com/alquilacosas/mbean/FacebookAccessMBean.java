@@ -69,14 +69,15 @@ public class FacebookAccessMBean {
                         String res = IOUtil.urlToString(new URL("https://graph.facebook.com/me?access_token=" + accessToken));
                         System.out.println("fb resp:" + res);
                         JSONObject json = new JSONObject(res);
+                        String id = json.getString("id");
                         String nombre = json.getString("first_name");
                         String apellido = json.getString("last_name");
                         String email = json.getString("email");
                         //String ubicacion = json.getString("location");
                         
-                        boolean loggedIn = login.completeFbLogin(email);
+                        boolean loggedIn = login.completeFbLogin(email, id);
                         if (!loggedIn) {
-                            login.registrarFb(nombre, apellido, email);
+                            login.registrarFb(nombre, apellido, email, id);
                         }
                         System.out.println("Hello " + nombre + " " + apellido + ", email: " + email);
                     } catch (Exception e) {

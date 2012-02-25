@@ -133,13 +133,13 @@ public class AlquileresTomadosMBean implements Serializable {
                calificacionOfrece = alquileresTomadosBean.getCalificacionOfrece(alquilerId);
                calificacionToma = alquileresTomadosBean.getCalificacionToma(alquilerId);
                // Lo siguiente sirve para mostrar los campos permitidos
-               if (calificacionOfrece.getIdUsuarioCalidicador() != null) {
-                    ofrece = calificacionOfrece.getIdUsuarioCalidicador() == usuarioLogueadoId;
+               if (calificacionOfrece.getIdUsuarioCalificador() != null) {
+                    ofrece = calificacionOfrece.getIdUsuarioCalificador() == usuarioLogueadoId;
                } else {
                     ofreceCalifico = false;
                }
-               if (calificacionToma.getIdUsuarioCalidicador() != null) {
-                    toma = calificacionToma.getIdUsuarioCalidicador() == usuarioLogueadoId;
+               if (calificacionToma.getIdUsuarioCalificador() != null) {
+                    toma = calificacionToma.getIdUsuarioCalificador() == usuarioLogueadoId;
                } else {
                     tomaCalifico = false;
                }
