@@ -8,6 +8,7 @@ import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.common.NotificacionEmail;
 import com.alquilacosas.dto.AlquilerDTO;
 import com.alquilacosas.dto.CalificacionDTO;
+import com.alquilacosas.dto.PedidoCambioDTO;
 import com.alquilacosas.ejb.entity.Alquiler;
 import com.alquilacosas.ejb.entity.AlquilerXEstado;
 import com.alquilacosas.ejb.entity.Calificacion;
@@ -299,7 +300,7 @@ public class AlquileresBean implements AlquileresBeanLocal {
             duracion = cal2.get(Calendar.HOUR) - cal1.get(Calendar.HOUR);
         } else {
             periodo = NombrePeriodo.DIA;
-            duracion = cal2.get(Calendar.DATE) - cal1.get(Calendar.DATE);
+            duracion = cal2.get(Calendar.DAY_OF_YEAR) - cal1.get(Calendar.DAY_OF_YEAR);
         }
         
         Periodo period = periodoFacade.findByNombre(periodo);
@@ -328,6 +329,49 @@ public class AlquileresBean implements AlquileresBeanLocal {
                 + "<b>AlquilaCosas</b>";
         NotificacionEmail email = new NotificacionEmail(dueno.getEmail(), asunto, mensaje);
         enviarEmail(email);
+    }
+    
+    @Override
+    public PedidoCambioDTO getPedidoCambio(int pedidoCambioId) {
+        PedidoCambio pedido = pedidoFacade.find(pedidoCambioId);
+        return new PedidoCambioDTO(pedido.getPedidoCambioId(), pedido.getPeriodoFk().getNombre(), pedido.getDuracion());
+    }
+
+    @Override
+    public AlquilerDTO responderPedidoCambio(int pedidoCambioId, AlquilerDTO alquilerDTO, Date fechaHasta, double monto, boolean aceptado) throws AlquilaCosasException {
+        PedidoCambio pedido = pedidoFacade.find(pedidoCambioId);
+
+        PedidoCambioXEstado pcxe = pcxeFacade.getPedidoCambioXEstadoActual(pedido);
+        pcxe.setFechaHasta(new Date());
+
+        PedidoCambioXEstado pcxeNuevo = new PedidoCambioXEstado();
+        EstadoPedidoCambio estado = null;
+        if (aceptado) {
+            estado = estadoPedidoFacade.findByNombre(NombreEstadoPedidoCambio.ACEPTADO);
+            alquilerDTO = modificarAlquiler(alquilerDTO, fechaHasta, monto);
+        } else {
+            estado = estadoPedidoFacade.findByNombre(NombreEstadoPedidoCambio.RECHAZADO);
+        }
+        pcxeNuevo.setEstadoPedidoCambioFk(estado);
+        pcxeNuevo.setFechaDesde(new Date());
+        pedido.agregarPedidoCambioXEstado(pcxeNuevo);
+        
+        pedidoFacade.edit(pedido);
+        
+        // enviar email
+        Usuario alquilador = usuarioFacade.find(alquilerDTO.getIdUsuario());
+        Publicacion pub = publicacionFacade.find(alquilerDTO.getIdPublicacion());
+        String palabra = aceptado ? "aceptado" : "rechazado";
+        String asunto = "Han " + palabra + " tu pedido de cambio";
+        String mensaje = "<html>Hola " + alquilador.getNombre() + ",<br/><br/>"
+                + "El dueño del producto <b>" + pub.getTitulo() + "</b> ha " + palabra
+                + " tu pedido de alquiler. <br/><br/> "
+                + "Atentamente,<br/>"
+                + "<b>AlquilaCosas</b>";
+        NotificacionEmail email = new NotificacionEmail(alquilador.getEmail(), asunto, mensaje);
+        enviarEmail(email);
+        
+        return alquilerDTO;
     }
     
     @Override

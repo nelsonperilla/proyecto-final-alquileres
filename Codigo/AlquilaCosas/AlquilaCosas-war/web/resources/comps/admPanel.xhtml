@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite" 
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>  
+        <p:panel style="width: 200px; background: aliceblue" >
+                <div class="user-namedetail">
+                    <p>#{login.usuario.nombre} #{login.usuario.apellido}</p>
+                </div>
+                <div id="list">
+                    <ul class="menu" rel="sam1">
+                        <li>
+                        <h:link value="Usuarios" outcome="/vistas/admin/administrarUsuarios" />
+                        </li>
+                        <li >
+                            <h:link value="Denuncias" outcome="/vistas/admin/administrarDenuncias" />
+                        </li>
+                        <li>
+                        <h:link value="Pagos recibidos" outcome="/vistas/admin/pagosRecibidos" />
+                        </li>
+                        <li >
+                        <h:link value="Categorias" outcome="/vistas/admin/categorias" />
+                        </li>
+                    </ul>
+                </div>
+            </p:panel>
+    </cc:implementation>
+</html>

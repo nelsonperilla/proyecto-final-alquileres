@@ -9,135 +9,130 @@
 
     <body>
 
-        <ui:composition template="./../../resources/templates/adminTemplate.xhtml">
+        <ui:composition template="./../../resources/templates/newTemplate.xhtml">
 
-            <ui:define name="logInfo">
-                <h:link value="inicio" outcome="/vistas/inicio" />
+            <ui:define name="left">
+                <comps:admPanel />
             </ui:define>
-
+            
             <ui:define name="principal">
-                <h1>Pagos recibidos</h1>
-                <h:form>
-                    <div style="position: relative; float: left;" >
-                    <p:commandLink id="todos" value="Todos" 
-                                   actionListener="#{pagos.mostrarTodos}"
-                                   disabled="#{pagos.todos}"
-                                   update="todos paypal dm tabla" />
-                    |
-                    <p:commandLink id="paypal" value="Paypal" 
-                                   actionListener="#{pagos.mostrarPagosPaypal}"
-                                   disabled="#{pagos.paypal}"
-                                   update="todos paypal dm tabla" /> 
-                    | 
-                    <p:commandLink id="dm" value="DineroMail" 
-                                   actionListener="#{pagos.mostrarPagosDineroMail}"
-                                   disabled="#{pagos.dm}" 
-                                   update="todos paypal dm tabla" />
-                    </div>
-                    <div style="position: relative; float: left; margin-left:20px;" >
-                        <p:commandLink id="tod" value="Todos"
-                                       actionListener="#{pagos.mostrarTodosEstados}" 
-                                       disabled="#{pagos.todosEstados}" 
-                                       update="tod conf pend tabla"/>
-                        |
-                        <p:commandLink id="conf" value="Confirmados"
-                                       actionListener="#{pagos.mostrarConfirmados}" 
-                                       disabled="#{pagos.confirmados}" 
-                                       update="tod conf pend tabla"/>
-                        |
-                        <p:commandLink id="pend" value="Pendientes"
-                                       actionListener="#{pagos.mostrarPendientes}" 
-                                       disabled="#{pagos.pendientes}" 
-                                       update="tod conf pend tabla"/>
-                                       
-                    </div>
-                    <div style="position: relative; float: left; margin-left:20px;" >
-                        <h:selectOneMenu value="#{pagos.periodoSeleccionado}" >
-                            <f:selectItems value="#{pagos.periodos}" />
-                            <p:ajax event="change" listener="#{pagos.elegirPeriodo}"
-                                    update="tabla" />
-                        </h:selectOneMenu>
-                    </div>
-                    <br/><br/>
-                    <p:dataTable id="tabla" value="#{pagos.model}"
-                                 var="pago" paginator="true" 
-                                 rows="15" paginatorPosition="bottom" 
-                                 paginatorAlwaysVisible="false"
-                                 emptyMessage="No exite ningun pago registrado"
-                                 rowIndexVar="r" rowStyleClass="#{empty r or r mod 2 ne 0 ? 'even-row': 'odd-row'}" >
-                        
-                        <p:column headerText="Id" >
-                            <h:outputText value="#{pago.id}" />
-                        </p:column>
-                        
-                        <p:column headerText="Usuario" >
-                            <h:outputText value="#{pago.usuario}" />
-                        </p:column>
-                        
-                        <p:column headerText="Servicio" >
-                            <h:outputText value="#{pago.tipoServicio.toString()}" />
-                        </p:column>
-                        
-                        <p:column headerText="Tipo pago" rendered="#{pagos.todos}" >
-                            <h:outputText value="#{pago.tipoPago}" />
-                        </p:column>
-                        
-                        <p:column headerText="Iniciado" >
-                            <h:outputText value="#{pago.fechaIniciado}" >
-                                <f:convertDateTime pattern="dd/MM/yyyy" />
-                            </h:outputText>
-                        </p:column>
-                        
-                        <p:column headerText="Confirmado" >
-                            <h:outputText value="#{pago.fechaConfirmado}" >
-                                <f:convertDateTime pattern="dd/MM/yyyy" />
-                            </h:outputText>
-                        </p:column>
-                        
-                        <p:column headerText="Monto (U$D)" >
-                            <h:outputText value="#{pago.monto}" />
-                        </p:column>
-                        
-                        <p:column headerText="Acciones" >
-                            <p:commandButton icon="ui-icon ui-icon-circle-check"
-                                             oncomplete="confirmacion.show()"
-                                             rendered="#{empty pago.fechaConfirmado}"
-                                             title="Confirmar pago" >
-                                <f:setPropertyActionListener value="#{pago.id}" 
-                                                             target="#{pagos.pagoElegido}" />
-                            </p:commandButton>
-                            <p:commandButton icon="ui-icon ui-icon-circle-close"
-                                             oncomplete="confEliminar.show()"
-                                             rendered="#{empty pago.fechaConfirmado}"
-                                             title="Borrar pago" >
-                                <f:setPropertyActionListener value="#{pago.id}"
-                                                             target="#{pagos.pagoElegido}" />
-                            </p:commandButton>
-                        </p:column>
-                        
-                    </p:dataTable>
-                    
-                    <p:confirmDialog message="¿Está seguro que desea confirmar el pago seleccionado?"
-                                     header="Confirmar Pago" widgetVar="confirmacion" severity="alert" >
-                        <p:commandButton value="Si" actionListener="#{pagos.confirmarPago}"
-                                         oncomplete="confirmacion.hide()" update="tabla" />
-                        <p:commandButton value="No" type="button" onclick="confirmacion.hide();" />
-                    </p:confirmDialog>
-                                     
-                    <p:confirmDialog message="¿Está seguro que desea eliminar el pago seleccionado? Esto borrará también el servicio asociado."
-                                     header="Eliminar Pago" widgetVar="confEliminar" severity="alert" >
-                        <p:commandButton value="Si" actionListener="#{pagos.eliminarPago}"
-                                         oncomplete="confEliminar.hide()" update="tabla" />
-                        <p:commandButton value="No" type="button" onclick="confEliminar.hide();" />
-                    </p:confirmDialog>
-                    
-                </h:form>
-            </ui:define>
+                <div style="margin: 0 30px">
+                    <h:form>
+                        <div style="position: relative; float: left;" >
+                            <p:commandLink id="todos" value="Todos" 
+                                           actionListener="#{pagos.mostrarTodos}"
+                                           disabled="#{pagos.todos}"
+                                           update="todos paypal dm tabla" />
+                            |
+                            <p:commandLink id="paypal" value="Paypal" 
+                                           actionListener="#{pagos.mostrarPagosPaypal}"
+                                           disabled="#{pagos.paypal}"
+                                           update="todos paypal dm tabla" /> 
+                            | 
+                            <p:commandLink id="dm" value="DineroMail" 
+                                           actionListener="#{pagos.mostrarPagosDineroMail}"
+                                           disabled="#{pagos.dm}" 
+                                           update="todos paypal dm tabla" />
+                        </div>
+                        <div style="position: relative; float: left; margin-left:20px;" >
+                            <p:commandLink id="tod" value="Todos"
+                                           actionListener="#{pagos.mostrarTodosEstados}" 
+                                           disabled="#{pagos.todosEstados}" 
+                                           update="tod conf pend tabla"/>
+                            |
+                            <p:commandLink id="conf" value="Confirmados"
+                                           actionListener="#{pagos.mostrarConfirmados}" 
+                                           disabled="#{pagos.confirmados}" 
+                                           update="tod conf pend tabla"/>
+                            |
+                            <p:commandLink id="pend" value="Pendientes"
+                                           actionListener="#{pagos.mostrarPendientes}" 
+                                           disabled="#{pagos.pendientes}" 
+                                           update="tod conf pend tabla"/>
 
-            <ui:define name="right">
-                <comps:adminPanel />
-                <comps:panelPublicitante />
-                <comps:userPanel />
+                        </div>
+                        <div style="position: relative; float: left; margin-left:20px;" >
+                            <h:selectOneMenu value="#{pagos.periodoSeleccionado}" >
+                                <f:selectItems value="#{pagos.periodos}" />
+                                <p:ajax event="change" listener="#{pagos.elegirPeriodo}"
+                                        update="tabla" />
+                            </h:selectOneMenu>
+                        </div>
+                        <br/><br/>
+                        <p:dataTable id="tabla" value="#{pagos.model}"
+                                     var="pago" paginator="true" 
+                                     rows="15" paginatorPosition="bottom" 
+                                     paginatorAlwaysVisible="false"
+                                     emptyMessage="No exite ningun pago registrado"
+                                     rowIndexVar="r" rowStyleClass="#{empty r or r mod 2 ne 0 ? 'even-row': 'odd-row'}" >
+
+                            <p:column headerText="Id" >
+                                <h:outputText value="#{pago.id}" />
+                            </p:column>
+
+                            <p:column headerText="Usuario" >
+                                <h:outputText value="#{pago.usuario}" />
+                            </p:column>
+
+                            <p:column headerText="Servicio" >
+                                <h:outputText value="#{pago.tipoServicio.toString()}" />
+                            </p:column>
+
+                            <p:column headerText="Tipo pago" rendered="#{pagos.todos}" >
+                                <h:outputText value="#{pago.tipoPago}" />
+                            </p:column>
+
+                            <p:column headerText="Iniciado" >
+                                <h:outputText value="#{pago.fechaIniciado}" >
+                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column headerText="Confirmado" >
+                                <h:outputText value="#{pago.fechaConfirmado}" >
+                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column headerText="Monto (U$D)" >
+                                <h:outputText value="#{pago.monto}" />
+                            </p:column>
+
+                            <p:column headerText="Acciones" >
+                                <p:commandButton icon="ui-icon ui-icon-circle-check"
+                                                 oncomplete="confirmacion.show()"
+                                                 rendered="#{empty pago.fechaConfirmado}"
+                                                 title="Confirmar pago" style="font-size: 11px" >
+                                    <f:setPropertyActionListener value="#{pago.id}" 
+                                                                 target="#{pagos.pagoElegido}" />
+                                </p:commandButton>
+                                <p:commandButton icon="ui-icon ui-icon-circle-close"
+                                                 oncomplete="confEliminar.show()"
+                                                 rendered="#{empty pago.fechaConfirmado}"
+                                                 title="Borrar pago" style="font-size: 11px" >
+                                    <f:setPropertyActionListener value="#{pago.id}"
+                                                                 target="#{pagos.pagoElegido}" />
+                                </p:commandButton>
+                            </p:column>
+
+                        </p:dataTable>
+
+                        <p:confirmDialog message="¿Está seguro que desea confirmar el pago seleccionado?"
+                                         header="Confirmar Pago" widgetVar="confirmacion" severity="alert" >
+                            <p:commandButton value="Si" actionListener="#{pagos.confirmarPago}"
+                                             oncomplete="confirmacion.hide()" update="tabla" />
+                            <p:commandButton value="No" type="button" onclick="confirmacion.hide();" />
+                        </p:confirmDialog>
+
+                        <p:confirmDialog message="¿Está seguro que desea eliminar el pago seleccionado? Esto borrará también el servicio asociado."
+                                         header="Eliminar Pago" widgetVar="confEliminar" severity="alert" >
+                            <p:commandButton value="Si" actionListener="#{pagos.eliminarPago}"
+                                             oncomplete="confEliminar.hide()" update="tabla" />
+                            <p:commandButton value="No" type="button" onclick="confEliminar.hide();" />
+                        </p:confirmDialog>
+
+                    </h:form>
+                </div>
             </ui:define>
 
         </ui:composition>

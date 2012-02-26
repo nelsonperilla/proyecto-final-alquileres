@@ -54,53 +54,20 @@ public class AlquilarMBean {
     @PostConstruct
     public void init() {
         Logger.getLogger(DesplieguePublicacionMBean.class).debug("DesplieguePublicacionMBean: postconstruct.");
-        //String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
+        String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
 
-//        if (id == null) {
-//            redirect();
-//            return;
-//        }
-//        ((HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest()).getSession(true).setAttribute("param", "id=" + id);
-//        
-//        int publicationId = 0;
-//        try {
-//            publicationId = Integer.parseInt(id);
-//        } catch (NumberFormatException e) {
-//            Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al parsear ID de parametro.");
-//            redirect();
-//            return;
-//        }
-//        publicacion = publicationBean.getPublicacion(publicationId);
-
-//        try {
-//            fechas = publicationBean.getFechasSinStock(publicationId, cantidadProductos);
-//        } catch (AlquilaCosasException e) {
-//            Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al ejecutar getFechasSinStock(): " + e.getMessage());
-//            redirect();
-//            return;
-//        }
-//        if (publicacion != null && publicacion.getFechaHasta() != null) {
-//            setFecha_hasta(DateFormat.getDateInstance(DateFormat.SHORT).format(publicacion.getFechaHasta()));
-//        }
-//        userRating = publicationBean.getUserRate(publicacion.getPropietario());
-//
-//        createDictionary();
-        cantidadProductos = 1;
-        fechaInicio = hoy = new Date();
-        periodos = new ArrayList<SelectItem>();
-        periodoAlquiler = 1;
-        List<Periodo> listaPeriodos = publicacionBean.getPeriodos();
-        periodoSeleccionado = 2; //alto hardCode, para que por defecto este seleccionado dia y no hora (Jorge)
-        for (Periodo periodo : listaPeriodos) {
-            periodos.add(new SelectItem(periodo.getPeriodoId(), periodo.getNombre().name()));
-        }
-    }
-
-    public void cargarPublicacion() {
-        if (publicacionId == null) {
+        try {
+            publicacionId = Integer.parseInt(id);
+        } catch (Exception e) {
+            Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al parsear ID de parametro.");
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "No puedes alquilar tus propios productos", "");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
             redirect();
             return;
         }
+        
+        ((HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest()).getSession(true).setAttribute("param", "id=" + id);
+        
         publicacion = publicacionBean.getPublicacion(publicacionId);
         if (login.getUsuarioId() == publicacion.getPropietario().getId()) {
             FacesContext.getCurrentInstance().addMessage(null,
@@ -117,13 +84,22 @@ public class AlquilarMBean {
             return;
         }
         userRating = publicacionBean.getUserRate(publicacion.getPropietario());
-
         createDictionary();
+        
+        cantidadProductos = 1;
+        fechaInicio = hoy = new Date();
+        periodos = new ArrayList<SelectItem>();
+        periodoAlquiler = 1;
+        List<Periodo> listaPeriodos = publicacionBean.getPeriodos();
+        periodoSeleccionado = 2; //alto hardCode, para que por defecto este seleccionado dia y no hora (Jorge)
+        for (Periodo periodo : listaPeriodos) {
+            periodos.add(new SelectItem(periodo.getPeriodoId(), periodo.getNombre().name()));
+        }
     }
 
     public void redirect() {
         try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("../inicio.xhtml");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("../inicio2.xhtml");
         } catch (Exception e) {
             Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al ejecutar redirect().");
         }

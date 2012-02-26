@@ -21,13 +21,6 @@
 
             <ui:define name="principal">
 
-                <f:metadata>
-                    <f:viewParam name="id" value="#{alquilarBean.publicacionId}" required="true" requiredMessage="error"  >
-                        <f:convertNumber />
-                    </f:viewParam>
-                    <f:event type="preRenderView" listener="#{alquilarBean.cargarPublicacion}" />
-                </f:metadata>
-
                 <h:outputScript library="javascript" name="util.js" />
 
                 <div style="margin: 0 30px">
@@ -93,13 +86,21 @@
                                 <p/>
 
                                 <f:facet name="footer" >
-                                    <p:commandButton value="Confirmar" action="#{alquilarBean.confirmarPedido}" ajax="false"/>
+                                    <p:commandButton value="Enviar" action="#{alquilarBean.confirmarPedido}" ajax="false"/>
                                     <p:button value="Cancelar" outcome="/vistas/mostrarPublicacion" >
                                         <f:param name="id" value="#{alquilarBean.publicacionId}" />
                                     </p:button>
                                 </f:facet>
 
                             </h:panelGrid>
+                            
+                            <div class="ayuda">
+                                Al enviar el pedido de alquiler, se notificará al dueño del producto, 
+                                quien podrá aceptarlo o rechazarlo. En cualquier caso 
+                                serás notificado de la respuesta.
+                                <br/>
+                                Si el dueño acepta el pedido, el alquiler se hará efectivo.
+                            </div>
                         </div>
 
                         <p:panel style="float: left; width: 260px" >

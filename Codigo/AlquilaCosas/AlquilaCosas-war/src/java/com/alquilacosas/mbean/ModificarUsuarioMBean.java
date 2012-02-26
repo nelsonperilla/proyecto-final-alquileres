@@ -9,7 +9,7 @@ import com.alquilacosas.dto.DomicilioDTO;
 import com.alquilacosas.dto.UsuarioDTO;
 import com.alquilacosas.ejb.entity.Pais;
 import com.alquilacosas.ejb.entity.Provincia;
-import com.alquilacosas.ejb.session.ModificarUsuarioBeanLocal;
+import com.alquilacosas.ejb.session.UsuarioBeanLocal;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,12 +33,12 @@ import org.apache.log4j.Logger;
 public class ModificarUsuarioMBean implements Serializable {
 
     @EJB
-    private ModificarUsuarioBeanLocal usuarioBean;
+    private UsuarioBeanLocal usuarioBean;
     @ManagedProperty(value = "#{login}")
     private ManejadorUsuarioMBean usuarioMBean;
     private UsuarioDTO usuario;
-    private String telefono;
     private Date fechaNacimiento;
+    private String nombre, apellido, dni, telefono;
     private String calle, depto, barrio, ciudad;
     private Integer numero, piso;
     private Date today;
@@ -47,7 +47,7 @@ public class ModificarUsuarioMBean implements Serializable {
     private List<SelectItem> paises;
     private int paisSeleccionado;
     private DomicilioDTO domicilio;
-    private boolean editando;
+    private boolean editando, editandoDir, sinDomicilio;
 
     /** Creates a new instance of ModificarUsuarioMBean */
     public ModificarUsuarioMBean() {
@@ -59,6 +59,9 @@ public class ModificarUsuarioMBean implements Serializable {
         Integer id = usuarioMBean.getUsuarioId();
         usuario = usuarioBean.getDatosUsuario(id);
 
+        nombre =usuario.getNombre();
+        apellido = usuario.getApellido();
+        dni = usuario.getDni();
         telefono = usuario.getTelefono();
         fechaNacimiento = usuario.getFechaNacimiento();
         domicilio = usuario.getDomicilio();
@@ -66,8 +69,15 @@ public class ModificarUsuarioMBean implements Serializable {
         if(domicilio != null) {
             paisSeleccionado = domicilio.getPaisId();
             provinciaSeleccionada = domicilio.getProvinciaId();
+            ciudad = domicilio.getCiudad();
+            barrio = domicilio.getBarrio();
+            calle = domicilio.getCalle();
+            numero = domicilio.getNumero();
+            piso = domicilio.getPiso();
+            depto = domicilio.getDepto();
+        } else {
+            sinDomicilio = true;
         }
-        
         paises = new ArrayList<SelectItem>();
         provincias = new ArrayList<SelectItem>();
         if(paisSeleccionado != 0) {
@@ -90,13 +100,44 @@ public class ModificarUsuarioMBean implements Serializable {
         if (piso != null) {
             domicilio.setPiso(piso);
         }
-        if (!depto.equals("")) {
+        if (depto != null && !depto.equals("")) {
             domicilio.setDepto(depto);
         }
         domicilio.setBarrio(barrio);
         domicilio.setCiudad(ciudad);
+        domicilio.setProvinciaId(provinciaSeleccionada);
+        domicilio.setPaisId(paisSeleccionado);
+        for(SelectItem si: paises) {
+            if(si.getValue().equals(new Integer(paisSeleccionado))) {
+                domicilio.setPais(si.getLabel());
+                break;
+            }
+        }
+        for(SelectItem si: provincias) {
+            if(si.getValue().equals(new Integer(provinciaSeleccionada))) {
+                domicilio.setProvincia(si.getLabel());
+                break;
+            }
+        }
     }
 
+    public void actualizarInfo() {
+        usuarioBean.actualizarInfoBasica(usuario.getId(), nombre, apellido, dni, telefono, fechaNacimiento);
+        editando = false;
+    }
+    
+    public void actualizarDomicilio() {
+        crearDomicilio();
+        if(sinDomicilio) {    
+            usuarioBean.agregarDomicilio(usuario.getId(), domicilio);
+            sinDomicilio = false;
+            usuario.setDomicilio(domicilio);
+        } else {
+            usuarioBean.actualizarDomicilio(usuario.getId(), domicilio);
+        }
+        editandoDir = false;
+    }
+    
     public void actualizarUsuario() {
         try {
             usuario = usuarioBean.actualizarUsuario(usuario.getId(), telefono, 
@@ -117,18 +158,18 @@ public class ModificarUsuarioMBean implements Serializable {
                 provincias.add(new SelectItem(p.getProvinciaId(), p.getNombre()));
             }
         }
-        for(SelectItem si: paises) {
-            if(si.getValue().equals(new Integer(paisSeleccionado))) {
-                domicilio.setPais(si.getLabel());
-                break;
-            }
-        }
-        for(SelectItem si: provincias) {
-            if(si.getValue().equals(new Integer(provinciaSeleccionada))) {
-                domicilio.setProvincia(si.getLabel());
-                break;
-            }
-        }
+//        for(SelectItem si: paises) {
+//            if(si.getValue().equals(new Integer(paisSeleccionado))) {
+//                domicilio.setPais(si.getLabel());
+//                break;
+//            }
+//        }
+//        for(SelectItem si: provincias) {
+//            if(si.getValue().equals(new Integer(provinciaSeleccionada))) {
+//                domicilio.setProvincia(si.getLabel());
+//                break;
+//            }
+//        }
     }
     
     public void editar() {
@@ -137,6 +178,14 @@ public class ModificarUsuarioMBean implements Serializable {
     
     public void cancelarEdicion() {
         editando= false;
+    }
+    
+    public void editarDir() {
+        editandoDir = true;
+    }
+    
+    public void cancelarEdicionDir() {
+        editandoDir = false;
     }
 
     /*
@@ -276,5 +325,37 @@ public class ModificarUsuarioMBean implements Serializable {
 
     public void setEditando(boolean editando) {
         this.editando = editando;
+    }
+
+    public boolean isEditandoDir() {
+        return editandoDir;
+    }
+
+    public void setEditandoDir(boolean editandoDir) {
+        this.editandoDir = editandoDir;
+    }
+
+    public String getApellido() {
+        return apellido;
+    }
+
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
+    }
+
+    public String getDni() {
+        return dni;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 }

@@ -9,59 +9,48 @@
 
     <body>
 
-        <ui:composition template="./../../resources/templates/masterPage.xhtml">
-
-            <ui:define name="logInfo">
-                <h:link value="inicio" outcome="/vistas/inicio" />
-            </ui:define>
+        <ui:composition template="./../../resources/templates/newTemplate.xhtml">
 
             <ui:define name="left">
-                <comps:categoriesMenu />
+                <comps:miPanel />
             </ui:define>
 
             <ui:define name="principal">
-                
-                <h1>Mis Pagos</h1>
-                <h:form>
-                    
-                    <p:dataTable value="#{misPagosBean.pagos}" var="pago"
-                                 paginator="true" rows="20" paginatorPosition="bottom"
-                                 rowStyleClass="#{pago.estado == 'INICIADO' ? 'filaAmarilla' : null}"
-                                 emptyMessage="No se ha registrado ningun pago." >
-                        <p:column headerText="Fecha iniciado" >
-                            <h:outputText value="#{pago.fechaIniciado}" >
-                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
-                            </h:outputText>
-                        </p:column>
-                        
-                        <p:column headerText="Fecha confirmado" >
-                            <h:outputText value="#{pago.fechaConfirmado}" >
-                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
-                            </h:outputText> 
-                        </p:column>
-                        
-                        <p:column headerText="Monto" >
-                            <h:outputText value="#{pago.monto}" />
-                        </p:column>
-                        
-                        <p:column headerText="Tipo de pago" >
-                            <h:outputText value="#{pago.tipoPago}" />
-                        </p:column>
-                        
-                        <p:column headerText="Servicio" >
-                            <h:outputText value="#{pago.tipoServicio.toString()}" />
-                        </p:column>
-                    </p:dataTable>
-                    
-                </h:form>
-                
-            </ui:define>
 
-            <ui:define name="right">
-                <comps:loginBox />
-                <comps:userPanel />
-                <comps:panelPublicitante />
-                <comps:adminPanel />
+                <div style="margin: 0 30px">
+                    <h:form>
+
+                        <p:dataTable value="#{misPagosBean.pagos}" var="pago"
+                                     paginator="true" rows="20" paginatorPosition="bottom" paginatorAlwaysVisible="false"
+                                     rowStyleClass="#{pago.estado == 'INICIADO' ? 'filaAmarilla' : null}"
+                                     emptyMessage="No se ha registrado ningun pago." >
+                            <p:column headerText="Fecha iniciado" >
+                                <h:outputText value="#{pago.fechaIniciado}" >
+                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column headerText="Fecha confirmado" >
+                                <h:outputText value="#{pago.fechaConfirmado}" >
+                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                                </h:outputText> 
+                            </p:column>
+
+                            <p:column headerText="Monto" >
+                                <h:outputText value="#{pago.monto}" />
+                            </p:column>
+
+                            <p:column headerText="Medio de pago" >
+                                <h:outputText value="#{pago.tipoPago}" />
+                            </p:column>
+
+                            <p:column headerText="Servicio" >
+                                <h:outputText value="#{pago.tipoServicio.toString()}" />
+                            </p:column>
+                        </p:dataTable>
+
+                    </h:form>
+                </div>
             </ui:define>
 
         </ui:composition>

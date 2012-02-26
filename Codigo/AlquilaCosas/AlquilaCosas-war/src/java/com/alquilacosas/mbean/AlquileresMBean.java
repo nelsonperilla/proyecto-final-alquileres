@@ -4,11 +4,18 @@
  */
 package com.alquilacosas.mbean;
 
+import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.AlquilerDTO;
 import com.alquilacosas.dto.CalificacionDTO;
+import com.alquilacosas.dto.PedidoCambioDTO;
+import com.alquilacosas.dto.PublicacionDTO;
+import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
 import com.alquilacosas.ejb.entity.Puntuacion;
 import com.alquilacosas.ejb.session.AlquileresBeanLocal;
+import com.alquilacosas.ejb.session.PublicacionBeanLocal;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -19,6 +26,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -30,6 +38,8 @@ public class AlquileresMBean {
 
     @EJB
     private AlquileresBeanLocal alquileresBean;
+    @EJB
+    private PublicacionBeanLocal publicacionBean;
     @ManagedProperty(value = "#{login}")
     private ManejadorUsuarioMBean loginBean;
     private Integer usuarioLogueado;
@@ -42,6 +52,10 @@ public class AlquileresMBean {
     private CalificacionDTO calificacionOfrece, calificacionToma;
     private Boolean ofreceCalifico, tomaCalifico, ofrece, toma, tomado;
     private AlquilerDTO alquiler;
+    // pedido de cambio recibido
+    private int pedidoCambioId;
+    private double montoPedido;
+    private Date fechaPedido;
     
     /** Creates a new instance of AlquileresMBean */
     public AlquileresMBean() {
@@ -79,6 +93,57 @@ public class AlquileresMBean {
             }
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
                     "Alquiler cancelado.", "");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+    }
+    
+    public void prepararVerPedido(ActionEvent event) {
+        int id = (Integer) event.getComponent().getAttributes().get("alq");
+        if(alquilerId != null && alquilerId == id) {
+            return;
+        }
+        alquilerId = id;
+        pedidoCambioId = (Integer) event.getComponent().getAttributes().get("ped");
+        PedidoCambioDTO pedido = alquileresBean.getPedidoCambio(pedidoCambioId);
+        alquiler = alquileresBean.getAlquiler(usuarioLogueado, alquilerId);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(alquiler.getFechaInicio());
+        if(pedido.getPeriodo() == NombrePeriodo.HORA) {
+            cal.add(Calendar.HOUR_OF_DAY, pedido.getDuracion());
+        } else if(pedido.getPeriodo() == NombrePeriodo.DIA) {
+            cal.add(Calendar.DATE, pedido.getDuracion());
+        } else if(pedido.getPeriodo() == NombrePeriodo.MES) {
+            cal.add(Calendar.WEEK_OF_YEAR, pedido.getDuracion());
+        } else if(pedido.getPeriodo() == NombrePeriodo.MES) {
+            cal.add(Calendar.MONTH, pedido.getDuracion());
+        }
+        fechaPedido = cal.getTime();
+        PublicacionDTO publicacion = publicacionBean.getPublicacion(alquiler.getIdPublicacion());
+        montoPedido = calcularMonto(alquiler.getFechaInicio(), fechaPedido, publicacion);
+    }
+    
+    public void aceptarPedidoCambio() {
+        try {
+            alquileresBean.responderPedidoCambio(pedidoCambioId, alquiler, fechaPedido, montoPedido, true);
+            alquiler.setIdPedidoCambio(-1);
+        } catch (AlquilaCosasException ex) {
+            Logger.getLogger(AlquileresMBean.class).error("aceptarPedidoCambio(). Excepcion al responder pedido: " + ex.getMessage());
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                    "Error al aceptar pedido de cambio", ex.getMessage());
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+    }
+    
+    public void rechazarPedidoCambio() {
+        try {
+            alquileresBean.responderPedidoCambio(pedidoCambioId, alquiler, fechaPedido, montoPedido, true);
+            alquiler.setIdPedidoCambio(-1);
+            alquiler.setFechaFin(fechaPedido);
+            alquiler.setMonto(montoPedido);
+        } catch (AlquilaCosasException ex) {
+            Logger.getLogger(AlquileresMBean.class).error("rechazarPedidoCambio(). Excepcion al responder pedido: " + ex.getMessage());
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                    "Error al rechazar pedido de cambio", ex.getMessage());
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
     }
@@ -134,6 +199,68 @@ public class AlquileresMBean {
                 "Replica registrada.", "");
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
+    
+    private double calcularMonto(Date fechaDesde, Date fechaHasta, PublicacionDTO publicacion) {
+        Calendar endDate = Calendar.getInstance();
+        endDate.setTime(fechaHasta);
+        double nuevoMonto = 0D;
+        
+        Calendar temp = Calendar.getInstance();
+        temp.setTime(fechaDesde);
+        temp.add(Calendar.MONTH, 1);
+        endDate.add(Calendar.SECOND, 1);
+        //int second = endDate.get(Calendar.SECOND);
+        while (endDate.after(temp) || endDate.equals(temp)) {
+            if(publicacion.getPrecioMes() != null) {
+                nuevoMonto += publicacion.getPrecioMes();
+            } else if(publicacion.getPrecioSemana() != null) {
+                nuevoMonto += publicacion.getPrecioSemana() * 4;
+            } else {
+                nuevoMonto += publicacion.getPrecioDia() * 30;
+            }
+            temp.add(Calendar.MONTH, 1);
+        }
+        temp.add(Calendar.MONTH, -1);
+        temp.add(Calendar.DATE, 7);
+        while (endDate.after(temp) || endDate.equals(temp)) {
+            if(publicacion.getPrecioSemana() != null) {
+                nuevoMonto += publicacion.getPrecioSemana();
+            } else {
+                nuevoMonto += publicacion.getPrecioDia() * 7;
+            }
+            temp.add(Calendar.WEEK_OF_YEAR, 1);
+        }
+        temp.add(Calendar.DATE, -7);
+        temp.add(Calendar.DATE, 1);
+        while (endDate.after(temp) || endDate.equals(temp)) {
+            nuevoMonto += publicacion.getPrecioDia();
+            temp.add(Calendar.DATE, 1);
+        }
+        temp.add(Calendar.DATE, -1);
+        temp.add(Calendar.HOUR_OF_DAY, 1);
+        double precioHoras = 0D;
+        while (endDate.after(temp) || endDate.equals(temp)) {
+            temp.add(Calendar.HOUR_OF_DAY, 1);
+            if(publicacion.getPrecioHora() != null) {
+                precioHoras = publicacion.getPrecioHora();
+            } else {
+                precioHoras = publicacion.getPrecioDia();
+                break;
+            }
+        }
+        // evitar que el precio de horas sea superior al precio de un dia.
+        if(precioHoras > publicacion.getPrecioDia()) {
+            precioHoras = publicacion.getPrecioDia();
+        }
+        nuevoMonto += precioHoras;
+        temp.add(Calendar.HOUR_OF_DAY, -1);
+        endDate.add(Calendar.SECOND, -1);
+        return nuevoMonto;
+    }
+    
+    /*
+     * Getters & Setters
+     */
 
     public List<AlquilerDTO> getAlquileres() {
         return alquileres;
@@ -214,4 +341,29 @@ public class AlquileresMBean {
     public void setUsuarioLogueado(Integer usuarioLogueado) {
         this.usuarioLogueado = usuarioLogueado;
     }
+
+    public AlquilerDTO getAlquiler() {
+        return alquiler;
+    }
+
+    public void setAlquiler(AlquilerDTO alquiler) {
+        this.alquiler = alquiler;
+    }
+
+    public Date getFechaPedido() {
+        return fechaPedido;
+    }
+
+    public void setFechaPedido(Date fechaPedido) {
+        this.fechaPedido = fechaPedido;
+    }
+
+    public double getMontoPedido() {
+        return montoPedido;
+    }
+
+    public void setMontoPedido(double montoPedido) {
+        this.montoPedido = montoPedido;
+    }
+
 }

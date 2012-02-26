@@ -18,50 +18,233 @@
             <ui:define name="principal">
                 <p:growl id="growl" globalOnly="true" />
 
-                <p:tabView >
+                <div style="margin: 0 30px" >
+                    <p:tabView id="tab" style="position: relative" >
 
-                    <p:tab title="Informacion Basica" >
+                        <p:tab title="Informacion Basica" >
 
-                    </p:tab>
+                            <p:outputPanel id="panelInfo" >
+                                <h:panelGrid columns="2" cellpadding="2" columnClasses="labelColumn2,fieldColumn"
+                                             rendered="#{not modUsuario.editando}" >
 
-                    <p:tab title="Datos de contacto" >
+                                    <h:outputLabel value="Nombre" />
+                                    <h:outputText value="#{modUsuario.usuario.nombre}" />
 
-                    </p:tab>
+                                    <h:outputLabel value="Apellido" />
+                                    <h:outputText value="#{modUsuario.usuario.apellido}" />
 
-                    <p:tab title="Cambiar contraseña" >
+                                    <h:outputLabel value="DNI" />
+                                    <h:outputText value="#{modUsuario.usuario.dni}"/>
 
-                        <h:form id="formCambiarPass" >
-                            <h:panelGrid columns="3" columnClasses="labelColumn,fieldColumn" 
-                                         style="text-align: center" >
+                                    <h:outputLabel value="Email" />
+                                    <h:outputText value="#{modUsuario.usuario.email}" />
 
-                                <h:outputLabel value="Contraseña actual:" />
-                                <p:password id="passViejo" value="#{passwordBean.password}"
-                                            minLength="4" feedback="false" required="true"
-                                            requiredMessage="Campo requerido" />
-                                <p:message for="passViejo" />
-                                <h:outputLabel value="Contraseña nueva:" />
-                                <p:password id="passNuevo" value="#{passwordBean.passwordNuevo}"
-                                            minLength="6" feedback="true" required="true" 
-                                            match="passNuevo2" validatorMessage="Las contraseñas no coinciden"
-                                            requiredMessage="Campo requerido"/>
-                                <p:message for="passNuevo" />
-                                <h:outputLabel value="Repita contraseña nueva:" />
-                                <p:password id="passNuevo2" value="#{passwordBean.passwordNuevo2}"
-                                            minLength="6" feedback="false" required="true"
-                                            requiredMessage="Campo requerido"/>
-                                <p:message for="passNuevo2" />
+                                    <h:outputLabel value="Telefono" />
+                                    <h:outputText value="#{modUsuario.telefono}" />
 
-                                <f:facet name="footer" >
-                                    <p:commandButton value="Cambiar" action="#{passwordBean.cambiarPassword}" 
-                                                     ajax="false" />
-                                </f:facet>
+                                    <h:outputLabel value="Fecha de nacimiento" />
+                                    <h:outputText value="#{modUsuario.fechaNacimiento}" >
+                                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                                    </h:outputText>
+                                </h:panelGrid>
 
-                            </h:panelGrid>
-                        </h:form>
+                                <div style="position: absolute; top: 40px; right: 5px">
+                                    <h:form id="btnForm">
+                                        <p:commandButton icon="ui-icon-pencil" actionListener="#{modUsuario.editar}"
+                                                         style="font-size: 11px" update=":tab:panelInfo :tab:panelEdit @this"
+                                                         rendered="#{not modUsuario.editando}"/>
+                                    </h:form>
+                                </div>
+                            </p:outputPanel>
 
-                    </p:tab>
+                            <p:outputPanel id="panelEdit" >
+                                <h:form rendered="#{modUsuario.editando}" >
+                                    <h:panelGrid columns="3" cellpadding="2" columnClasses="labelColumn2,fieldColumn" >
 
-                </p:tabView>
+                                        <h:outputLabel value="Nombre" for="nombre" />
+                                        <p:inputText id="nombre" value="#{modUsuario.nombre}" 
+                                                     required="true" requiredMessage="Valor requerido" />
+                                        <p:message for="nombre" />
+
+                                        <h:outputLabel value="Apellido" for="apellido" />
+                                        <p:inputText id="apellido" value="#{modUsuario.apellido}" 
+                                                     required="true" requiredMessage="Valor requerido" />
+                                        <p:message for="apellido" />
+
+                                        <h:outputLabel value="DNI" for="dni" />
+                                        <p:inputText id="dni" value="#{modUsuario.dni}"/>
+                                        <p:message for="dni" />
+
+                                        <h:outputLabel value="Email" />
+                                        <h:outputText value="#{modUsuario.usuario.email}" />
+                                        <p/>
+
+                                        <h:outputLabel value="Telefono" for="telefono" />
+                                        <p:inputText id="telefono" value="#{modUsuario.telefono}" />
+                                        <p:message for="telefono" />
+
+                                        <h:outputLabel value="Fecha de nacimiento" for="fechaNac" />
+                                        <p:calendar id="fechaNac" value="#{modUsuario.fechaNacimiento}"
+                                                    pattern="dd/MM/yyyy" locale="es" navigator="true" />
+                                        <p:message for="fechaNac" />
+
+                                        <f:facet name="footer">
+                                            <p:commandButton value="Aceptar" actionListener="#{modUsuario.actualizarInfo}"
+                                                             update=":tab:panelInfo :tab:panelEdit :tab:btnForm" />
+                                            <p:commandButton value="Cancelar" actionListener="#{modUsuario.cancelarEdicion}"
+                                                             immediate="true" update=":tab:panelInfo :tab:panelEdit :tab:btnForm" />
+                                        </f:facet>
+                                    </h:panelGrid>
+                                </h:form>
+                            </p:outputPanel>
+
+                        </p:tab>
+
+                        <p:tab title="Direccion" >
+
+                            <p:outputPanel id="panelDir" >
+
+                                <h:outputText value="Aun no has cargado ninguna direccion" style="color: gray; font-style: italic"
+                                              rendered="#{empty modUsuario.domicilio}" />
+
+                                <h:panelGrid columns="2" cellpadding="2" columnClasses="labelColumn2,fieldColumn"
+                                             rendered="#{not modUsuario.editandoDir and not empty modUsuario.domicilio}" >
+
+                                    <h:outputLabel value="Pais" for="pais" />
+                                    <h:outputText value="#{modUsuario.domicilio.pais}" />
+
+                                    <h:outputLabel value="Provincia" for="provincia" />
+                                    <h:outputText value="#{modUsuario.domicilio.provincia}" />
+
+                                    <h:outputLabel value="Ciudad" />
+                                    <h:outputText value="#{modUsuario.domicilio.ciudad}"/>
+
+                                    <h:outputLabel value="Barrio"  />
+                                    <h:outputText value="#{modUsuario.domicilio.barrio}" />
+
+                                    <h:outputLabel value="Calle" />
+                                    <h:outputText value="#{modUsuario.domicilio.calle}" />
+
+                                    <h:outputLabel value="Numero" />
+                                    <h:outputText value="#{modUsuario.domicilio.numero}" />
+
+                                    <h:outputLabel value="Piso" />
+                                    <h:outputText value="#{modUsuario.domicilio.piso}"/>
+
+                                    <h:outputLabel value="Depto" />
+                                    <h:outputText value="#{modUsuario.domicilio.depto}" />
+                                </h:panelGrid>
+
+                                <div style="position: absolute; right: 10px; top: 40px">
+                                    <h:form id="btnForm2">
+                                        <p:commandButton icon="ui-icon-pencil" actionListener="#{modUsuario.editarDir}"
+                                                         style="font-size: 11px" update=":tab:panelDir :tab:panelDirEdit @this"
+                                                         rendered="#{not modUsuario.editandoDir}"/>
+                                    </h:form>
+                                </div>
+
+                            </p:outputPanel>
+
+                            <p:outputPanel id="panelDirEdit" >
+                                <h:form rendered="#{modUsuario.editandoDir}" >
+                                    <h:panelGrid columns="3" cellpadding="2" columnClasses="labelColumn2,fieldColumn" >
+
+                                        <h:outputLabel value="Pais" for="pais" />
+                                        <h:selectOneMenu id="pais" value="#{modUsuario.paisSeleccionado}" required="true"
+                                                         requiredMessage="Valor requerido" >  
+                                            <f:selectItem itemLabel="Seleccione un pais" itemValue="" />
+                                            <f:selectItems value="#{modUsuario.paises}" />
+                                            <p:ajax event="change" update="provincia" process="@this"
+                                                    listener="#{modUsuario.actualizarProvincias}" />
+                                        </h:selectOneMenu>
+                                        <p:message for="pais" />
+
+                                        <h:outputLabel value="Provincia" for="provincia" />
+                                        <h:selectOneMenu id="provincia" value="#{modUsuario.provinciaSeleccionada}" 
+                                                         required="true" requiredMessage="Valor requerido" >
+                                            <f:selectItem itemLabel="Seleccione una provincia" itemValue="" />
+                                            <f:selectItems value="#{modUsuario.provincias}" />
+                                            <p:ajax event="change" process="@this" />
+                                        </h:selectOneMenu>
+                                        <p:message for="provincia" />
+
+                                        <h:outputLabel value="Ciudad" for="ciudad" />
+                                        <p:inputText id="ciudad" value="#{modUsuario.ciudad}"
+                                                     required="true" requiredMessage="Valor requerido" />
+                                        <p:message for="ciudad" />
+
+                                        <h:outputLabel value="Barrio" for="barrio" />
+                                        <p:inputText id="barrio" value="#{modUsuario.barrio}" 
+                                                     required="true" requiredMessage="Valor requerido" />
+                                        <p:message for="barrio" />
+
+                                        <h:outputLabel value="Calle" />
+                                        <p:inputText id="calle" value="#{modUsuario.calle}"
+                                                     styleClass="datosInput" required="true" requiredMessage="Valor requerido" />
+                                        <p:message for="calle" />
+
+                                        <h:outputLabel value="Numero" />
+                                        <p:inputText id="numero" value="#{modUsuario.numero}"
+                                                     styleClass="datosInput" required="true" requiredMessage="Valor requerido" />
+                                        <p:message for="numero" />
+
+                                        <h:outputLabel value="Piso" />
+                                        <p:inputText id="piso" value="#{modUsuario.piso}"
+                                                     styleClass="datosInput" />
+                                        <p:message for="piso" />
+
+                                        <h:outputLabel value="Depto" />
+                                        <p:inputText id="depto" value="#{modUsuario.depto}" 
+                                                     styleClass="datosInput" />
+                                        <p:message for="depto" />
+
+                                        <f:facet name="footer">
+                                            <p:commandButton value="Aceptar" actionListener="#{modUsuario.actualizarDomicilio}"
+                                                             update=":tab:panelDir :tab:panelDirEdit :tab:btnForm2" />
+                                            <p:commandButton value="Cancelar" actionListener="#{modUsuario.cancelarEdicionDir}"
+                                                             immediate="true" update=":tab:panelDir :tab:panelDirEdit :tab:btnForm2" />
+                                        </f:facet>
+                                    </h:panelGrid>
+                                </h:form>
+                            </p:outputPanel>
+
+                        </p:tab>
+
+                        <p:tab title="Cambiar contraseña" >
+
+                            <h:form id="formCambiarPass" >
+                                <h:panelGrid columns="3" columnClasses="labelColumn,fieldColumn" 
+                                             style="text-align: center" >
+
+                                    <h:outputLabel value="Contraseña actual:" />
+                                    <p:password id="passViejo" value="#{passwordBean.password}"
+                                                minLength="4" feedback="false" required="true"
+                                                requiredMessage="Campo requerido" />
+                                    <p:message for="passViejo" />
+                                    <h:outputLabel value="Contraseña nueva:" />
+                                    <p:password id="passNuevo" value="#{passwordBean.passwordNuevo}"
+                                                minLength="6" feedback="true" required="true" 
+                                                match="passNuevo2" validatorMessage="Las contraseñas no coinciden"
+                                                requiredMessage="Campo requerido"/>
+                                    <p:message for="passNuevo" />
+                                    <h:outputLabel value="Repita contraseña nueva:" />
+                                    <p:password id="passNuevo2" value="#{passwordBean.passwordNuevo2}"
+                                                minLength="6" feedback="false" required="true"
+                                                requiredMessage="Campo requerido"/>
+                                    <p:message for="passNuevo2" />
+
+                                    <f:facet name="footer" >
+                                        <p:commandButton value="Cambiar" action="#{passwordBean.cambiarPassword}" 
+                                                         ajax="false" />
+                                    </f:facet>
+
+                                </h:panelGrid>
+                            </h:form>
+
+                        </p:tab>
+
+                    </p:tabView>
+                </div>
             </ui:define>
 
         </ui:composition>

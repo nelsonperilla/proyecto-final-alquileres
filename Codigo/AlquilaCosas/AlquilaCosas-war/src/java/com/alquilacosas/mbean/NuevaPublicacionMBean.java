@@ -8,15 +8,13 @@ import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.CategoriaDTO;
 import com.alquilacosas.dto.DomicilioDTO;
 import com.alquilacosas.dto.PeriodoDTO;
-import com.alquilacosas.dto.PrecioDTO;
 import com.alquilacosas.ejb.entity.Categoria;
 import com.alquilacosas.ejb.entity.Pais;
-import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
 import com.alquilacosas.ejb.entity.Provincia;
 import com.alquilacosas.ejb.session.CategoriaBeanLocal;
-import com.alquilacosas.ejb.session.ModificarUsuarioBeanLocal;
 import com.alquilacosas.ejb.session.PeriodoAlquilerBeanLocal;
 import com.alquilacosas.ejb.session.PublicacionBeanLocal;
+import com.alquilacosas.ejb.session.UsuarioBeanLocal;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -49,7 +47,7 @@ public class NuevaPublicacionMBean implements Serializable {
     @EJB
     private PeriodoAlquilerBeanLocal periodosBean;
     @EJB
-    private ModificarUsuarioBeanLocal usuarioBean;
+    private UsuarioBeanLocal usuarioBean;
     @ManagedProperty(value = "#{login}")
     private ManejadorUsuarioMBean login;
     //Datos de la publicacion

@@ -56,7 +56,7 @@
                             <h:outputLabel value="Precio:" styleClass="precioLabel" />
                             <br/>
                             <h:outputText value="$ #{item.precioDia}" styleClass="precio" />
-                            <a onclick="manejarPopup(jQuery(this).parent('.artPrecio').find('.artPopup'))" >
+                            <a onclick="manejarPopup(jQuery(this).parent('.artPrecio').find('.artPopup'), 'artPopup')" >
                                 <p:commandButton type="button" icon="ui-icon-triangle-1-s" style="font-size: 11px"/>
                             </a>
                             <br/>

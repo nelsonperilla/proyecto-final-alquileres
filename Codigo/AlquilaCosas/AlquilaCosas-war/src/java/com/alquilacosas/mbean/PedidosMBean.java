@@ -45,7 +45,7 @@ public class PedidosMBean {
         pedidos = alquileresBean.getPedidos(usuarioLogueado);
     }
 
-    public void confirmarPedidos(ActionEvent event) {
+    public void confirmarPedido(ActionEvent event) {
         FacesMessage msg = null;
         try {
             alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
