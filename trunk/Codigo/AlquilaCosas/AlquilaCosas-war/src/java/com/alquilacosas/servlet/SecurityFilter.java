@@ -78,7 +78,7 @@ public class SecurityFilter implements Filter {
                     return;
                 }
                 if(!login.getUsuario().getRoles().contains(patrones.get(s))){
-                    resp.sendRedirect("/AlquilaCosas-war/faces/vistas/inicio.xhtml");
+                    resp.sendRedirect("/AlquilaCosas-war/faces/vistas/inicio2.xhtml");
                     return;
                 }
             }

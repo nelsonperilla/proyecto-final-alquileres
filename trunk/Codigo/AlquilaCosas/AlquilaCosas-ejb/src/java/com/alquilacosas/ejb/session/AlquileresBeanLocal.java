@@ -4,8 +4,8 @@
  */
 package com.alquilacosas.ejb.session;
 
-import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.AlquilerDTO;
+import com.alquilacosas.dto.PedidoCambioDTO;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
@@ -40,5 +40,9 @@ public interface AlquileresBeanLocal {
     public void registrarReplica(int calificacionId, String comentarioReplica, int usuarioId);
 
     public boolean cancelarAlquiler(int alquilerId);
+
+    public PedidoCambioDTO getPedidoCambio(int pedidoCambioId);
+
+    public AlquilerDTO responderPedidoCambio(int pedidoCambioId, AlquilerDTO alquilerDTO, Date fechaHasta, double monto, boolean aceptado) throws com.alquilacosas.common.AlquilaCosasException;
     
 }

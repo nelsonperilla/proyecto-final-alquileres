@@ -80,11 +80,7 @@ header#page_header nav ul, #page_footer nav ul{
 #navTop1 li:hover { 
     /*    background-image:-moz-linear-gradient(0% 100px 90deg, #999, #222); 
         background-image:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#222), to(#555)); */
-    background: aliceblue;
-}
-
-#navTop1 li:hover a {
-    color: steelblue;
+    background: #478AB6;
 }
 
 #navTop1 ul a span { 

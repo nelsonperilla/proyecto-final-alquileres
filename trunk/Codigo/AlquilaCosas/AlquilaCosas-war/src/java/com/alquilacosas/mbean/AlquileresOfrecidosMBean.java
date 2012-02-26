@@ -103,14 +103,6 @@ public class AlquileresOfrecidosMBean implements Serializable {
         }
     }
 
-//    public String verPublicacion() {
-//        return "mostrarPublicacion";
-//    }
-//
-//    public String verUsuario() {
-//        return "verReputacionUsuario";
-//    }
-
     public void prepararCalificar(ActionEvent event) {
         alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
     }

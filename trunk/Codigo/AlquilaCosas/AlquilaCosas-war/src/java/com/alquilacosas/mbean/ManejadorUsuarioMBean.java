@@ -9,7 +9,7 @@ import com.alquilacosas.common.SeguridadException;
 import com.alquilacosas.common.UsuarioLogueado;
 import com.alquilacosas.ejb.entity.Rol.NombreRol;
 import com.alquilacosas.ejb.session.LoginBeanLocal;
-import com.alquilacosas.ejb.session.RegistrarUsuarioBeanLocal;
+import com.alquilacosas.ejb.session.UsuarioBeanLocal;
 import com.visural.common.StringUtil;
 import java.io.IOException;
 import java.io.Serializable;
@@ -40,7 +40,7 @@ public class ManejadorUsuarioMBean implements Serializable {
     @EJB
     private LoginBeanLocal loginBean;
     @EJB
-    private RegistrarUsuarioBeanLocal registrarBean;
+    private UsuarioBeanLocal registrarBean;
     private UsuarioLogueado usuario;
     private String username, password;
     private String loginOnPageArg;
@@ -213,7 +213,7 @@ public class ManejadorUsuarioMBean implements Serializable {
         password = "";
         logueado = administrador = publicitante = false;
         request.getSession().invalidate();
-        return "/vistas/inicio.xhtml?faces-redirect=true";
+        return "/vistas/inicio2.xhtml?faces-redirect=true";
     }
     
     @Remove
@@ -223,7 +223,7 @@ public class ManejadorUsuarioMBean implements Serializable {
         logueado = administrador = publicitante = fbLogin = false;
         usuario = null;
         request.getSession().invalidate();
-        return "/vistas/inicio.xhtml?faces-redirect=true";
+        return "/vistas/inicio2.xhtml?faces-redirect=true";
     }
     
     /**

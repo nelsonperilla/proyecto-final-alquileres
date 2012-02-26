@@ -160,13 +160,17 @@ function updateCoordinates(event){
     document.getElementById('lng').value = event.latLng.lng();          
 }
 
-function manejarPopup(comp) {
+function manejarPopup(comp, popupClass) {
     var detalle = comp[0];
     if(detalle.style.display == 'none') {
-        $('.artPopup').css('display', 'none');
+        $('.' + popupClass).css('display', 'none');
         detalle.style.display = 'block';
+        
+        $('.' + popupClass).bind("mouseleave",function() {
+            $('.' + popupClass).hide();
+        });
+        
     } else {
-        $('.artPopup').css('display', 'none');
-        //detalle.style.display = 'none';
+        $('.' + popupClass).css('display', 'none');
     }
 }

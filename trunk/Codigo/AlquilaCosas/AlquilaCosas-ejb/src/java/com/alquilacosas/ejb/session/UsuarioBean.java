@@ -7,6 +7,7 @@ package com.alquilacosas.ejb.session;
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.common.NotificacionEmail;
 import com.alquilacosas.dto.DomicilioDTO;
+import com.alquilacosas.dto.UsuarioDTO;
 import com.alquilacosas.ejb.entity.Domicilio;
 import com.alquilacosas.ejb.entity.EstadoUsuario;
 import com.alquilacosas.ejb.entity.EstadoUsuario.NombreEstadoUsuario;
@@ -43,7 +44,7 @@ import javax.jms.Session;
  * @author damiancardozo
  */
 @Stateless
-public class RegistrarUsuarioBean implements RegistrarUsuarioBeanLocal {
+public class UsuarioBean implements UsuarioBeanLocal {
 
     @Resource(name = "emailConnectionFactory")
     private ConnectionFactory connectionFactory;
@@ -186,6 +187,98 @@ public class RegistrarUsuarioBean implements RegistrarUsuarioBeanLocal {
             return false;
         else
             return true;
+    }
+    
+    @Override
+    public UsuarioDTO actualizarUsuario(int idUsuario, String telefono, Date fechaNacimiento, 
+             DomicilioDTO dom) throws AlquilaCosasException {
+        Usuario usuario = usuarioFacade.find(idUsuario);
+        usuario.setTelefono(telefono);
+        usuario.setFechaNac(fechaNacimiento);
+        
+        List<Domicilio> domicilios = usuario.getDomicilioList();
+        Domicilio domicilio = domicilios.get(0);
+        
+        if(!domicilio.getProvinciaFk().getProvinciaId().equals(dom.getProvinciaId())) {
+            Provincia prov = provinciaFacade.find(dom.getProvinciaId());
+            domicilio.setProvinciaFk(prov);
+            dom.setProvincia(prov.getNombre());
+            dom.setPais(prov.getPaisFk().getNombre());
+        }
+        domicilio.setCiudad(dom.getCiudad());
+        domicilio.setBarrio(dom.getBarrio());
+        domicilio.setCalle(dom.getCalle());
+        domicilio.setNumero(dom.getNumero());
+        domicilio.setPiso(dom.getPiso());
+        domicilio.setDepto(dom.getDepto());
+        
+        usuarioFacade.edit(usuario);
+        
+        UsuarioDTO uFacade = new UsuarioDTO(usuario.getUsuarioId(), usuario.getNombre(),
+                usuario.getApellido(), usuario.getEmail(), usuario.getTelefono(), usuario.getDni(), 
+                usuario.getFechaNac());
+        uFacade.setDomicilio(dom);
+        return uFacade;
+    }
+    
+    @Override
+    public UsuarioDTO getDatosUsuario(Integer id) {
+        Usuario u = usuarioFacade.find(id);
+        UsuarioDTO userFacade = new UsuarioDTO(u.getUsuarioId(), u.getNombre(), 
+                u.getApellido(), u.getEmail(), u.getTelefono(), u.getDni(), u.getFechaNac());
+        Domicilio d = null;
+        if(!u.getDomicilioList().isEmpty()) {
+            d = u.getDomicilioList().get(0);
+            DomicilioDTO dom = new DomicilioDTO(d.getCalle(), d.getNumero(),
+                d.getPiso(), d.getDepto(), d.getBarrio(), d.getCiudad());
+            Provincia prov = d.getProvinciaFk();
+            dom.setProvinciaId(prov.getProvinciaId());
+            dom.setProvincia(prov.getNombre());
+            dom.setPaisId(prov.getPaisFk().getPaisId());
+            dom.setPais(prov.getPaisFk().getNombre());
+
+            userFacade.setDomicilio(dom);
+        }
+        return userFacade;
+    }
+    
+    @Override
+    public void actualizarInfoBasica(Integer usuarioId, String nombre, String apellido, 
+            String dni, String telefono, Date fechaNacimiento) {
+        Usuario usuario = usuarioFacade.find(usuarioId);
+        usuario.setNombre(nombre);
+        usuario.setApellido(apellido);
+        usuario.setDni(dni);
+        usuario.setTelefono(telefono);
+        usuario.setFechaNac(fechaNacimiento);
+        usuarioFacade.edit(usuario);
+    }
+    
+    @Override
+    public void agregarDomicilio(Integer usuarioId, DomicilioDTO dom) {
+        Usuario usuario = usuarioFacade.find(usuarioId);
+        Provincia provincia = provinciaFacade.find(dom.getProvinciaId());
+        Domicilio domicilio = new Domicilio(dom.getCalle(), dom.getNumero(), 
+                dom.getPiso(), dom.getDepto(), dom.getBarrio(), dom.getCiudad(), provincia);
+        usuario.agregarDomicilio(domicilio);
+        usuarioFacade.edit(usuario);
+    }
+    
+    @Override
+    public void actualizarDomicilio(Integer usuarioId, DomicilioDTO dom) {
+        Usuario usuario = usuarioFacade.find(usuarioId);
+        Domicilio domicilio = usuario.getDomicilioList().get(0);
+        if(domicilio.getProvinciaFk().getProvinciaId() != dom.getProvinciaId()) {
+            Provincia provincia = provinciaFacade.find(dom.getProvinciaId());
+            domicilio.setProvinciaFk(provincia);
+        }
+        domicilio.setCiudad(dom.getCiudad());
+        domicilio.setBarrio(dom.getBarrio());
+        domicilio.setCalle(dom.getCalle());
+        domicilio.setNumero(dom.getNumero());
+        domicilio.setPiso(dom.getPiso());
+        domicilio.setDepto(dom.getDepto());
+        usuarioFacade.edit(usuario);
     }
     
     @Override

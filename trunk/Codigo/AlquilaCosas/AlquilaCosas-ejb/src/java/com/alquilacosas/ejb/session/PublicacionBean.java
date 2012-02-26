@@ -37,7 +37,6 @@ import com.alquilacosas.facade.PrecioFacade;
 import com.alquilacosas.facade.PublicacionFacade;
 import com.alquilacosas.facade.PublicacionXEstadoFacade;
 import com.alquilacosas.facade.UsuarioFacade;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -492,8 +491,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
         if (publicacion != null) {
             resultado = new PublicacionDTO(publicacion.getPublicacionId(), publicacion.getTitulo(),
                     publicacion.getDescripcion(), publicacion.getFechaDesde(), publicacion.getFechaHasta(),
-                    publicacion.getDestacada(),
-                    publicacion.getCantidad());
+                    publicacion.getDestacada(), publicacion.getCantidad());
 
             resultado.setPeriodoMinimoValor(publicacion.getMinValor());
             resultado.setPeriodoMinimo(publicacion.getMinPeriodoAlquilerFk());

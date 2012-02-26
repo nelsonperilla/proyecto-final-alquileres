@@ -9,6 +9,7 @@ import com.alquilacosas.dto.AlquilerDTO;
 import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.session.AlquileresBeanLocal;
 import com.alquilacosas.ejb.session.PublicacionBeanLocal;
+import com.alquilacosas.mbean.ModificarAlquilerMBean;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -53,20 +54,19 @@ public class ModificarAlquilerMBean {
     
     @PostConstruct
     public void init() {
-        usuarioLogueado = loginBean.getUsuarioId();        
-    }
-    
-    public void cargarAlquiler() {
-        if(alquilerId == null) {
+        String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
+        try {
+            alquilerId = Integer.valueOf(id);
+        } catch (Exception e) {
             redirect();
             return;
         }
+        usuarioLogueado = loginBean.getUsuarioId();
         alquiler = alquileresBean.getAlquiler(usuarioLogueado, alquilerId);
         publicacion = publicacionBean.getPublicacion(alquiler.getIdPublicacion());
         fechaHasta = alquiler.getFechaFin();
         fechas = alquileresBean.getFechasSinStock(alquilerId);
         createDictionary();
-        
         tomado = alquiler.isTomado();
         nuevoMonto = alquiler.getMonto();
     }
@@ -81,7 +81,7 @@ public class ModificarAlquilerMBean {
     
     public void actualizarMonto(DateSelectEvent event) {
         fechaHasta = event.getDate();
-        calcularMonto();
+        nuevoMonto = calcularMonto();
     }
     
     public String modificarAlquiler() {
@@ -201,18 +201,16 @@ public class ModificarAlquilerMBean {
             yearJson.putOpt(Integer.toString(y), monthJson);
             myJson = yearJson.toString();
         } catch (Exception e) {
-            //Logger.getLogger(this).error("Exception creating JSON dictionary: " + e);
+            Logger.getLogger(ModificarAlquilerMBean.class).error("Exception creating JSON dictionary: " + e);
         }
     }
     
     private double calcularMonto() {
         Calendar endDate = Calendar.getInstance();
-        endDate.setTime(alquiler.getFechaInicio());
-        Calendar beginDate = Calendar.getInstance();
-        beginDate.setTime(fechaHasta);
+        endDate.setTime(fechaHasta);
         nuevoMonto = 0D;
         Calendar temp = Calendar.getInstance();
-        temp.setTime(beginDate.getTime());
+        temp.setTime(alquiler.getFechaInicio());
         temp.add(Calendar.MONTH, 1);
         endDate.add(Calendar.SECOND, 1);
         int second = endDate.get(Calendar.SECOND);

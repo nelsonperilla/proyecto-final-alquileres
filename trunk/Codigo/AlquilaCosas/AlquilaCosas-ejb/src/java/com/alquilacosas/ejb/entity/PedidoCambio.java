@@ -55,6 +55,7 @@ public class PedidoCambio implements Serializable {
     }
     
     public void agregarPedidoCambioXEstado(PedidoCambioXEstado pcxe) {
+        pcxe.setPedidoCambioFk(this);
         pedidoCambioXEstadoList.add(pcxe);
     }
     

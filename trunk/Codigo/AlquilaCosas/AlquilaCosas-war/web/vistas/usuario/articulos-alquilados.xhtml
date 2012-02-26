@@ -53,15 +53,13 @@
                             </div>
                             <div class="accionPrincipal">
                                 <p:commandButton value="Calificar" actionListener="#{alquileresBean.prepararCalificar}"
-                                                 oncomplete="calificarDlg.show()"
-                                                 rendered="#{alq.calificable and not alq.calificado}" 
-                                                 style="background: #F2E603; color: black" >
+                                                 oncomplete="calificarDlg.show()" update=":tab:calificarForm"
+                                                 rendered="#{alq.calificable and not alq.calificado}" >
                                     <f:attribute name="alq" value="#{alq.idAlquiler}" />
                                 </p:commandButton>
                                 <p:commandButton value="Ver Calificacion" actionListener="#{alquileresBean.prepararVerCalificacion}"
                                                  oncomplete="verCalificacionDlg.show()" update=":growl :tab:formVer"
-                                                 rendered="#{alq.calificable and alq.calificado}" 
-                                                 style="background: #F2E603; color: black" >
+                                                 rendered="#{alq.calificable and alq.calificado}" >
                                     <f:attribute name="alq" value="#{alq.idAlquiler}" />
                                 </p:commandButton>
                             </div>
@@ -95,19 +93,13 @@
                         </div>
                         <div class="artNotificaciones" >
                             <div class="accionesContenedor"></div>
-                            <a onclick="manejarPopup(jQuery(this).parent('.artNotificaciones').find('.artPopup'))"
-                               style="display: #{(alq.idPedidoCambio != -1 and not alq.tomado and alq.cancelable) ? 'block' : 'none'}">
-                                <p:commandButton type="button" icon="ui-icon-notice" style="font-size: 11px; background: yellow;"/>
-                            </a>
-
-                            <div class="artPopup" style="display: none">
-                                <h:panelGrid columns="2" style="text-align: left"  >
-                                    <f:facet name="header" >
-                                        <h:outputText value="Pedido de cambio recibido" 
-                                                      style="font-weight: bold; color: cornflowerblue" />
-                                    </f:facet>
-                                </h:panelGrid>
-                            </div>
+                            <p:commandButton oncomplete="pedidoCambioDlg.show()"
+                                             rendered="#{(alq.idPedidoCambio != -1 and not alq.tomado and alq.cancelable)}"
+                                             actionListener="#{alquileresBean.prepararVerPedido}" update=":tab:formPedido"
+                                             icon="ui-icon-notice" style="font-size: 11px; background: #F2E603;" >
+                                <f:attribute name="alq" value="#{alq.idAlquiler}" />
+                                <f:attribute name="ped" value="#{alq.idPedidoCambio}" />
+                            </p:commandButton>
                         </div>
                     </div>
                 </p:column>
@@ -127,14 +119,56 @@
             </h:form>
         </p:dialog>
 
-        <p:dialog widgetVar="calificarDlg" header="Calificar" modal="true" resizable="false" width="240" >
+        <p:dialog widgetVar="pedidoCambioDlg" header="Pedido de cambio recibido"
+                  modal="true" resizable="false" >
+            <h:form id="formPedido">
+                <h:panelGrid id="pedido" columns="2" style="text-align: left"  >
+                    <f:facet name="header" >
+                        <h:outputText value="#{alquileresBean.alquiler.titulo}" 
+                                      style="font-weight: bold; color: cornflowerblue; font-size: 12px" />
+                    </f:facet>
+                    <h:outputLabel value="Fecha fin actual:" />
+                    <h:outputText value="#{alquileresBean.alquiler.fechaFin}" >
+                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                    </h:outputText>
+                    <h:outputLabel value="Nueva fecha fin:" />
+                    <h:outputText value="#{alquileresBean.fechaPedido}" >
+                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                    </h:outputText>
+                    <h:outputLabel value="Nuevo monto:" />
+                    <h:outputText value="$ #{alquileresBean.montoPedido}" />
+                    <f:facet name="footer" >
+                        <p:commandButton value="Aceptar" actionListener="#{alquileresBean.aceptarPedidoCambio}"
+                                         update=":tab:formAlquilados:grid" style="background: palegreen" 
+                                         oncomplete="pedidoCambioDlg.hide()" />
+                        <p:commandButton value="Rechazar" actionListener="#{alquileresBean.rechazarPedidoCambio}"
+                                         update=":tab:formAlquilados:grid" style="background: red; color: white" 
+                                         oncomplete="pedidoCambioDlg.hide()" />
+                    </f:facet>
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog widgetVar="calificarDlg" header="Calificar" modal="true" 
+                  dynamic="true" resizable="false" width="240" >
             <h:form id="calificarForm" >
                 <h:panelGrid columns="1" >  
+                    <f:facet name="header" >
+                        <h:outputLabel value="Producto:" />
+                        <h:outputLabel value="#{alquileresBean.alquiler.titulo}" 
+                                       style="font-weight: bold; color: steelblue" />
+                        <br/>
+                        <h:outputLabel value="#{alquileresBean.alquiler.tomado ? 'Dueño:': 'Alquilador:'}" />
+                        <h:outputLabel value="#{alquileresBean.alquiler.usuario}" 
+                                       style="font-weight: bold; color: steelblue" />
+
+                    </f:facet>
+
                     <h:outputText value="Puntuación:" />
                     <h:selectOneMenu id="puntuacion" value="#{alquileresBean.puntuacionId}" >
                         <f:selectItems id="itemsPuntuacion" value="#{alquileresBean.puntuaciones}" />
                     </h:selectOneMenu>                                   
-                    <h:outputText value="Comentario:" />
+                    <h:outputText value="Ingresa un comentario acerca del producto y el usuario:" />
                     <p:inputTextarea id="comentario" value="#{alquileresBean.comentario}" 
                                      style="width:200px;height:100px;" />
                     <f:facet name="footer" >
@@ -152,43 +186,43 @@
                   resizable="false" width="550" style="text-align: center" >
             <h:form id="formVer">
                 <div style="float: left; width: 250px; vertical-align: middle; text-align: left">
-                    <h:outputText value="El Usuario todavia no Calificó" style="font-style: oblique" 
-                                      rendered="#{alquileresBean.calificacionOfrece == null}" />
+                    <h:outputText value="El dueño todavía no calificó" style="font-style: oblique" 
+                                  rendered="#{alquileresBean.calificacionOfrece == null}" />
                     <h:panelGrid columns="1" rendered="#{alquileresBean.calificacionOfrece != null}">
-                        <h:outputText value="Calificacion del dueno (
+                        <h:outputText value="Calificación del dueño (
                                       #{alquileresBean.calificacionOfrece.idUsuarioCalificador eq alquileresBean.usuarioLogueado ?
-                                       'Tu': alquileresBean.calificacionOfrece.nombreUsuarioCalificador})" />
-                        <h:outputText value="Puntuacion: #{alquileresBean.calificacionOfrece.nombrePuntuacion}" />
+                                        'Tu': alquileresBean.calificacionOfrece.nombreUsuarioCalificador})" />
+                        <h:outputText value="Puntuación: #{alquileresBean.calificacionOfrece.nombrePuntuacion}" />
                         <h:outputText value="Comentario:" />
                         <h:outputText value="#{alquileresBean.calificacionOfrece.comentarioCalificacion}" style="font-style: oblique"  />
-                        <h:outputText value="Replica:" rendered="#{alquileresBean.tomado or alquileresBean.calificacionOfrece.yaReplico}" />
+                        <h:outputText value="Réplica:" rendered="#{alquileresBean.tomado or alquileresBean.calificacionOfrece.yaReplico}" />
                         <h:outputText value="#{alquileresBean.calificacionOfrece.comentarioReplica}" style="font-style: oblique" 
                                       rendered="#{alquileresBean.calificacionOfrece.yaReplico}" />
                         <h:inputTextarea value="#{alquileresBean.calificacionOfrece.comentarioReplica}" 
                                          style="max-width:200px; width:200px; resize: none" 
                                          rendered="#{alquileresBean.tomado and not alquileresBean.calificacionOfrece.yaReplico}" />
-                        <p:commandButton value="Enviar Replica" actionListener="#{alquileresBean.registrarReplicaOfrece}" 
+                        <p:commandButton value="Enviar Réplica" actionListener="#{alquileresBean.registrarReplicaOfrece}" 
                                          rendered="#{alquileresBean.tomado and not alquileresBean.calificacionOfrece.yaReplico}"
                                          update="@form" />
                     </h:panelGrid>
                 </div>
                 <div style="float: left; width: 250px; vertical-align: middle; text-align: left">
-                     <h:outputText value="El Usuario todavia no Calificó" style="font-style: oblique" 
-                                      rendered="#{alquileresBean.calificacionToma == null}" />
+                    <h:outputText value="El alquilador todavía no calificó" style="font-style: oblique" 
+                                  rendered="#{alquileresBean.calificacionToma == null}" />
                     <h:panelGrid columns="1" rendered="#{alquileresBean.calificacionToma != null}">
-                        <h:outputText value="Calificacion del alquilador (
+                        <h:outputText value="Calificación del alquilador (
                                       #{alquileresBean.calificacionToma.idUsuarioCalificador eq alquileresBean.usuarioLogueado ?
-                                       'Tu': alquileresBean.calificacionToma.nombreUsuarioCalificador})" />
-                        <h:outputText value="Puntuacion: #{alquileresBean.calificacionToma.nombrePuntuacion}" />
+                                        'Tu': alquileresBean.calificacionToma.nombreUsuarioCalificador})" />
+                        <h:outputText value="Puntuación: #{alquileresBean.calificacionToma.nombrePuntuacion}" />
                         <h:outputText value="Comentario:" />
                         <h:outputText value="#{alquileresBean.calificacionToma.comentarioCalificacion}" style="font-style: oblique"  />
-                        <h:outputText value="Replica:" rendered="#{not alquileresBean.tomado or alquileresBean.calificacionOfrece.yaReplico}" />
+                        <h:outputText value="Réplica:" rendered="#{not alquileresBean.tomado or alquileresBean.calificacionOfrece.yaReplico}" />
                         <h:outputText value="#{alquileresBean.calificacionToma.comentarioReplica}" style="font-style: oblique" 
                                       rendered="#{alquileresBean.calificacionToma.yaReplico}" />
                         <h:inputTextarea value="#{alquileresBean.calificacionToma.comentarioReplica}" 
                                          rendered="#{not alquileresBean.tomado and not alquileresBean.calificacionOfrece.yaReplico}"
                                          style="max-width:200px; width:200px; resize: none"/>
-                        <p:commandButton value="Enviar Replica" actionListener="#{alquileresBean.registrarReplicaToma}" 
+                        <p:commandButton value="Enviar Réplica" actionListener="#{alquileresBean.registrarReplicaToma}" 
                                          rendered="#{not alquileresBean.tomado and not alquileresBean.calificacionOfrece.yaReplico}"
                                          update="@form" />
                     </h:panelGrid>

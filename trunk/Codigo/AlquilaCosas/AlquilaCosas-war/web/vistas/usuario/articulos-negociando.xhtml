@@ -83,7 +83,7 @@
                         <div class="artNotificaciones" >
                             <div class="accionesContenedor"></div>
                             <p:outputPanel  rendered="#{alq.idPedidoCambio != -1 and not alq.tomado and alq.cancelable}" >
-                                <a onclick="manejarPopup(jQuery(this).parent('.artNotificaciones').find('.artPopup'))" >
+                                <a onclick="manejarPopup(jQuery(this).parent('.artNotificaciones').find('.artPopup'), 'artPopup')" >
                                     <p:commandButton type="button" icon="ui-icon-notice" style="font-size: 11px; background: yellow;"/>
                                 </a>
                             </p:outputPanel>

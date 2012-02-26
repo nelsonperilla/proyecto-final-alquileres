@@ -8,20 +8,20 @@
     </Scope>
     <Scope Scope="Project">
         <Node id="resources/comps/itemInfo.xhtml" x="150" y="300" zoom="true"/>
-        <Node id="vistas/admin/administrarDenuncias.xhtml" x="1400" y="450" zoom="true"/>
         <Node id="vistas/usuario/datosUsuario.xhtml" x="150" y="900" zoom="true"/>
+        <Node id="vistas/admin/administrarDenuncias.xhtml" x="1400" y="450" zoom="true"/>
         <Node id="resources/templates/adminTemplate.xhtml" x="1900" y="450" zoom="true"/>
         <Node id="vistas/admin/administrarUsuarios.xhtml" x="900" y="750" zoom="true"/>
         <Node id="resources/comps/loginDialog.xhtml" x="1400" y="900" zoom="true"/>
         <Node id="vistas/mostrarPublicacion.xhtml?id=#{publicationsGroup.selectedPublicationId}" x="400" y="150" zoom="true"/>
         <Node id="resources/comps/logoBar.xhtml" x="400" y="300" zoom="true"/>
-        <Node id="resources/comps/itemCalificacion.xhtml" x="2400" y="450" zoom="true"/>
         <Node id="vistas/mostrarPublicacion.xhtml" x="1650" y="150" zoom="true"/>
+        <Node id="resources/comps/itemCalificacion.xhtml" x="2400" y="450" zoom="true"/>
         <Node id="vistas/usuario/misPublicaciones.xhtml" x="1650" y="300" zoom="true"/>
         <Node id="vistas/usuarioCreado.xhtml" x="400" y="600" zoom="true"/>
         <Node id="vistas/resultados.xhtml" x="1400" y="150" zoom="true"/>
-        <Node id="vistas/usuario/nuevaPublicacion.xhtml" x="1150" y="150" zoom="true"/>
         <Node id="vistas/admin/periodosAlquiler.xhtml" x="1150" y="600" zoom="true"/>
+        <Node id="vistas/usuario/nuevaPublicacion.xhtml" x="1150" y="150" zoom="true"/>
         <Node id="vistas/usuario/alquilar.xhtml" x="400" y="1350" zoom="true"/>
         <Node id="vistas/verCategoria.xhtml" x="400" y="900" zoom="true"/>
         <Node id="vistas/usuarioCreado.xhtml?email=#{regUsuario.email}" x="1400" y="600" zoom="true"/>
@@ -31,8 +31,8 @@
         <Node id="vistas/pagoCancelado.xhtml" x="150" y="1050" zoom="true"/>
         <Node id="resources/comps/itemDenuncias.xhtml" x="900" y="300" zoom="true"/>
         <Node id="vistas/login.xhtml" x="650" y="600" zoom="true"/>
-        <Node id="vistas/admin/pagosRecibidos.xhtml" x="900" y="900" zoom="true"/>
         <Node id="vistas/usuario/responderPreguntas.xhtml" x="2150" y="150" zoom="true"/>
+        <Node id="vistas/admin/pagosRecibidos.xhtml" x="900" y="900" zoom="true"/>
         <Node id="vistas/resultados.xhtml?art=#{buscarBean.criterio}" x="1650" y="750" zoom="true"/>
         <Node id="resources/comps/adminPanel.xhtml" x="900" y="450" zoom="true"/>
         <Node id="resources/comps/loginOnPage.xhtml" x="150" y="1500" zoom="true"/>
@@ -45,8 +45,8 @@
         <Node id="vistas/admin/categorias.xhtml" x="400" y="750" zoom="true"/>
         <Node id="vistas/inicio2.xhtml" x="1150" y="300" zoom="true"/>
         <Node id="vistas/pub/registrarPublicidad.xhtml" x="2650" y="300" zoom="true"/>
-        <Node id="resources/comps/itemPedido.xhtml" x="1150" y="750" zoom="true"/>
         <Node id="vistas/comoPublicitar.xhtml" x="400" y="1050" zoom="true"/>
+        <Node id="resources/comps/itemPedido.xhtml" x="1150" y="750" zoom="true"/>
         <Node id="vistas/terminos.html" x="150" y="1200" zoom="true"/>
         <Node id="vistas/usuario/articulos.xhtml" x="650" y="1200" zoom="true"/>
         <Node id="vistas/usuario/nuevoPublicitante.xhtml" x="1150" y="450" zoom="true"/>
@@ -62,8 +62,8 @@
         <Node id="vistas/usuario/destacarPublicacion.xhtml" x="1400" y="750" zoom="true"/>
         <Node id="vistas/usuario/denunciaDePregunta.xhtml" x="1400" y="300" zoom="true"/>
         <Node id="vistas/admin/provincias.xhtml" x="1900" y="300" zoom="true"/>
-        <Node id="vistas/verReputacion.xhtml" x="2150" y="450" zoom="true"/>
         <Node id="resources/comps/userPanel.xhtml" x="150" y="600" zoom="true"/>
+        <Node id="vistas/verReputacion.xhtml" x="2150" y="450" zoom="true"/>
         <Node id="index.xhtml" x="150" y="450" zoom="true"/>
         <Node id="resources/comps/loginBox.xhtml" x="1650" y="450" zoom="true"/>
         <Node id="resources/comps/panelPublicitante.xhtml" x="1900" y="600" zoom="true"/>

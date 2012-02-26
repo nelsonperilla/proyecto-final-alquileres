@@ -90,7 +90,7 @@ public class FacebookAccessMBean {
                     if (redirect != null) {
                         redirect = "/AlquilaCosas-war" + redirect;
                     } else {
-                        redirect = "/AlquilaCosas-war/faces/vistas/inicio.xhtml";
+                        redirect = "/AlquilaCosas-war/faces/vistas/inicio2.xhtml";
                     }
                     context.redirect(redirect);
                     FacesContext.getCurrentInstance().responseComplete();

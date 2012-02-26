@@ -8,7 +8,7 @@ import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.DomicilioDTO;
 import com.alquilacosas.ejb.entity.Pais;
 import com.alquilacosas.ejb.entity.Provincia;
-import com.alquilacosas.ejb.session.RegistrarUsuarioBeanLocal;
+import com.alquilacosas.ejb.session.UsuarioBeanLocal;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,7 +33,7 @@ import org.apache.log4j.Logger;
 public class RegistrarUsuarioMBean implements Serializable {
     
     @EJB
-    private RegistrarUsuarioBeanLocal usuarioBean;
+    private UsuarioBeanLocal usuarioBean;
     private String username;
     private String password;
     private String password2;
