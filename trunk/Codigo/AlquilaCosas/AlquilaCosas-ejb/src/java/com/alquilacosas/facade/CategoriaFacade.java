@@ -33,4 +33,13 @@ public class CategoriaFacade extends AbstractFacade<Categoria> {
     public CategoriaFacade() {
         super(Categoria.class);
     }
+    
+    public int getNivel(Categoria c) {
+        int nivel = 1;
+        while(c.getCategoriaFk() != null) {
+            c = c.getCategoriaFk();
+            nivel++;
+        }
+        return nivel;
+    }
 }

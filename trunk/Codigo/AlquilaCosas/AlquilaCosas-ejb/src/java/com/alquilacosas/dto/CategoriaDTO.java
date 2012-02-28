@@ -14,11 +14,11 @@ import java.util.List;
  */
 public class CategoriaDTO implements Serializable  {
     
-    private int id;
-    private int padreId;
-    private String nombre;
-    private String descripcion;
+    private int id, nivel;
+    private Integer padreId;
+    private String nombre, descripcion;
     private List<CategoriaDTO> subcategorias;
+    private CategoriaDTO padre;
 
     public CategoriaDTO(int id, int padreId, String nombre, String descripcion) {
         this.id = id;
@@ -58,11 +58,11 @@ public class CategoriaDTO implements Serializable  {
         this.nombre = nombre;
     }
 
-    public int getPadreId() {
+    public Integer getPadreId() {
         return padreId;
     }
 
-    public void setPadreId(int padreId) {
+    public void setPadreId(Integer padreId) {
         this.padreId = padreId;
     }
 
@@ -72,6 +72,23 @@ public class CategoriaDTO implements Serializable  {
 
     public void setSubcategorias(List<CategoriaDTO> subcategorias) {
         this.subcategorias = subcategorias;
+    }
+
+    public CategoriaDTO getPadre() {
+        return padre;
+    }
+
+    public void setPadre(CategoriaDTO padre) {
+        this.padre = padre;
+        padre.getSubcategorias().add(this);
+    }
+
+    public int getNivel() {
+        return nivel;
+    }
+
+    public void setNivel(int nivel) {
+        this.nivel = nivel;
     }
     
 }

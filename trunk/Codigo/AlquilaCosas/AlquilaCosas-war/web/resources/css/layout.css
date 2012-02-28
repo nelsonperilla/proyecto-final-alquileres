@@ -1058,3 +1058,14 @@ h1, h2, h3 {
     color: gray; 
     border: 1px solid gray
 }
+
+.categoriaTree {
+    width: 180px;
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+
+.categoriaTree .ui-tree-node-label {
+    font-size: 12px;
+}

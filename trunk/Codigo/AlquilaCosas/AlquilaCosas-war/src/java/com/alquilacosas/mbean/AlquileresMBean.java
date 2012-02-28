@@ -126,6 +126,8 @@ public class AlquileresMBean {
         try {
             alquileresBean.responderPedidoCambio(pedidoCambioId, alquiler, fechaPedido, montoPedido, true);
             alquiler.setIdPedidoCambio(-1);
+            alquiler.setFechaFin(fechaPedido);
+            alquiler.setMonto(montoPedido);
         } catch (AlquilaCosasException ex) {
             Logger.getLogger(AlquileresMBean.class).error("aceptarPedidoCambio(). Excepcion al responder pedido: " + ex.getMessage());
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
@@ -138,8 +140,6 @@ public class AlquileresMBean {
         try {
             alquileresBean.responderPedidoCambio(pedidoCambioId, alquiler, fechaPedido, montoPedido, true);
             alquiler.setIdPedidoCambio(-1);
-            alquiler.setFechaFin(fechaPedido);
-            alquiler.setMonto(montoPedido);
         } catch (AlquilaCosasException ex) {
             Logger.getLogger(AlquileresMBean.class).error("rechazarPedidoCambio(). Excepcion al responder pedido: " + ex.getMessage());
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 

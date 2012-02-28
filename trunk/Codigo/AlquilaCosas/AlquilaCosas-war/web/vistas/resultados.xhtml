@@ -19,19 +19,17 @@
 
                 <p:panel header="Categoria" styleClass="panelFiltro" >
                     <h:form id="categoriaForm">
-                        <p:commandLink value="Cualquiera" update="@form :tableForm:grid"
-                                       actionListener="#{resultadosBean.noFiltrarCategoria}"
-                                       styleClass="#{resultadosBean.categoria == null ? 'filtroActual': null}" /> 
-                        <br/>
-                        <ui:repeat value="#{resultadosBean.categorias}" var="cat" >
-                            <p:commandLink value="#{cat.nombre}" 
-                                           actionListener="#{resultadosBean.filtrarCategoria}"
-                                           styleClass="#{resultadosBean.categoria == cat.id ? 'filtroActual': null}"
-                                           update="@form :tableForm:grid" >
-                                <f:attribute name="cat" value="#{cat.id}" />
-                            </p:commandLink>
-                            <br />
-                        </ui:repeat>
+                        
+                        <p:tree value="#{resultadosBean.raizCategorias}" var="node" id="checkboxTree" styleClass="categoriaTree"
+                                selectionMode="checkbox" selection="#{resultadosBean.categoriasSeleccionadas}" >
+                            <p:ajax event="select" update=":tableForm:grid" />
+                            <p:ajax event="unselect" update=":tableForm:grid" />
+                            
+                            <p:treeNode>
+                                <h:outputText value="#{node.nombre}" />
+                            </p:treeNode>
+                        </p:tree>
+                        
                     </h:form>
                 </p:panel>
 
@@ -60,26 +58,26 @@
                         <br/>
                         <script>
                             $(function() {
-                                    var minP = parseFloat('<h:outputText value="#{resultadosBean.precioMin}" />');
-                                    var maxP = parseFloat('<h:outputText value="#{resultadosBean.precioMax}" />');
-                                    $( "#slider-range" ).slider({
-                                            range: true,
-                                            min: minP,
-                                            max: maxP,
-                                            values: [minP, maxP],
-                                            slide: function(event, ui) {
-                                                $("#precioForm\\:range").val(ui.values[0] + "-" + ui.values[1]);
-                                                $("#desde").val("$" + ui.values[0]);
-                                                $("#hasta").val("$" + ui.values[1]);
-                                            },  
-                                            change: function(event, ui) {
-                                                $("#precioForm\\:filtrar").click();
-                                            }
-                                    });
-                                    $("#precioForm\\:range" ).val($("#slider-range").slider("values", 0) +
-                                            "-" + $("#slider-range").slider("values", 1));
-                                    $("#desde" ).val("$" + $("#slider-range").slider("values", 0));
-                                    $("#hasta" ).val("$" + $("#slider-range").slider("values", 1));
+                                var minP = parseFloat('<h:outputText value="#{resultadosBean.precioMin}" />');
+                                var maxP = parseFloat('<h:outputText value="#{resultadosBean.precioMax}" />');
+                                $( "#slider-range" ).slider({
+                                        range: true,
+                                        min: minP,
+                                        max: maxP,
+                                        values: [minP, maxP],
+                                        slide: function(event, ui) {
+                                            $("#precioForm\\:range").val(ui.values[0] + "-" + ui.values[1]);
+                                            $("#desde").val("$" + ui.values[0]);
+                                            $("#hasta").val("$" + ui.values[1]);
+                                        },  
+                                        change: function(event, ui) {
+                                            $("#precioForm\\:filtrar").click();
+                                        }
+                                });
+                                $("#precioForm\\:range" ).val($("#slider-range").slider("values", 0) +
+                                        "-" + $("#slider-range").slider("values", 1));
+                                $("#desde" ).val("$" + $("#slider-range").slider("values", 0));
+                                $("#hasta" ).val("$" + $("#slider-range").slider("values", 1));
                             });
                         </script>
                     </h:form>

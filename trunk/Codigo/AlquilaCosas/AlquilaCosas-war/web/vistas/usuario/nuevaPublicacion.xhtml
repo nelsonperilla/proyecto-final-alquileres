@@ -25,8 +25,8 @@
 
             <ui:define name="principal">
                 <h:outputScript library="javascript" name="util.js" />
-                <h:form id="formPublicacion" prependId="false">
-
+                <h:form id="formPublicacion" >
+                    <p:growl id="growl" showDetail="true" globalOnly="true" />
                     <h:panelGrid columns="1" style="text-align: center" >
 
                         <f:facet name="header" >
@@ -98,7 +98,7 @@
                             </p:outputPanel>
                             <br/>
                             <p:editor id="desc" value="#{publicacion.descripcion}" widgetVar="editor" 
-                                      width="540" required="true"/>
+                                      width="540" required="true" requiredMessage="Ingrese una descripcion" />
                             <p:message id="descVal" for="desc" />
                         </p:fieldset>
 
@@ -249,13 +249,11 @@
                         </p:fieldset>
 
                         <f:facet name="footer">
-                            <p:commandButton value="Crear" action="#{publicacion.crearPublicacion}" 
-                                             ajax="false" />
+                            <p:commandButton value="Crear" action="#{publicacion.crearPublicacion}" ajax="false" />
                             <p:commandButton  type="reset" value="Limpiar" action="misPublicaciones"/>
                         </f:facet>
 
                     </h:panelGrid>
-                    <p:growl id="growl" showDetail="true" globalOnly="true" />
                 </h:form>
             </ui:define>
 

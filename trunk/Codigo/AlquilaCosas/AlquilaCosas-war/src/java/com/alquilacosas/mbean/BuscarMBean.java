@@ -4,7 +4,6 @@
  */
 package com.alquilacosas.mbean;
 
-import com.alquilacosas.dto.DomicilioDTO;
 import com.alquilacosas.ejb.session.ProvinciaBeanLocal;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +31,6 @@ public class BuscarMBean {
     @PostConstruct
     public void init() {
         Logger.getLogger(BuscarMBean.class).debug("BuscarMBean: postconstruct.");
-        
         ciudades = new ArrayList<SelectItem>();
         for(String s: provinciaBean.getCiudades()) {
             ciudades.add(new SelectItem(s, s));
@@ -47,7 +45,6 @@ public class BuscarMBean {
     
     public void seleccionarCiudad(ActionEvent event) {
         ciudad = (String) event.getComponent().getAttributes().get("ciudad");
-        System.out.println("cambiado ciudad: " + ciudad);
     }
     
     public String getCriterio() {

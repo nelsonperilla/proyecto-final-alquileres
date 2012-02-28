@@ -18,7 +18,7 @@ import javax.ejb.Local;
 @Local
 public interface BuscarPublicacionBeanLocal {
 
-    Busqueda buscar(String palabra, Integer categoriaId,
+    Busqueda buscar(String palabra, List<Integer> categoriaIds,
             String ubicacion, NombrePeriodo nombrePeriodo, Double precioDesde, Double precioHasta,
             int registros, int desde);
     
