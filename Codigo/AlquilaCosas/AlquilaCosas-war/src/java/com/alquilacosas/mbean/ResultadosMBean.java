@@ -6,7 +6,6 @@ package com.alquilacosas.mbean;
 
 import com.alquilacosas.common.Busqueda;
 import com.alquilacosas.dto.CategoriaDTO;
-import com.alquilacosas.dto.PeriodoDTO;
 import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
 import com.alquilacosas.ejb.session.BuscarPublicacionBeanLocal;
@@ -17,13 +16,15 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import org.apache.log4j.Logger;
+import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
+import org.primefaces.model.TreeNode;
 
 /**
  *
@@ -35,6 +36,8 @@ public class ResultadosMBean implements Serializable {
 
     @EJB
     private BuscarPublicacionBeanLocal buscarBean;
+    @ManagedProperty(value="#{buscarBean}")
+    private BuscarMBean buscarMBean;
     private LazyDataModel model;
     private List<PublicacionDTO> publicaciones;
     private List<CategoriaDTO> categorias;
@@ -46,8 +49,13 @@ public class ResultadosMBean implements Serializable {
     private int publicacionSeleccionada;
     private int totalRegistros;
     private boolean noBuscarEnModel = true;
+    private boolean init = true;
     private Double precioDesde, precioHasta, precioMin, precioMax;
     private String range;
+    private TreeNode raizCategorias;
+    private TreeNode[] categoriasSeleccionadas;
+    private List<TreeNode> seleccionadosAux;
+    private List<Integer> categoriaIds;
 
     /** Creates a new instance of BuscarPublicacionMBean */
     public ResultadosMBean() {
@@ -58,15 +66,14 @@ public class ResultadosMBean implements Serializable {
         Logger.getLogger(ResultadosMBean.class).debug("ResultadosMBean: postconstruct.");
         publicaciones = new ArrayList<PublicacionDTO>();
         busqueda = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("art");
-        String cat = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("cat");
-        if (cat != null && !cat.equals("")) {
-            categoria = Integer.valueOf(cat);
-        }
 
         periodos = new ArrayList<SelectItem>();
-        cargarPeriodos();
-
+        categoriaIds = new ArrayList<Integer>();
+        seleccionadosAux = new ArrayList<TreeNode>();
         buscar(0, 10);
+        armarCategorias();
+        categoriasSeleccionadas = new TreeNode[seleccionadosAux.size()];
+        categoriasSeleccionadas = seleccionadosAux.toArray(categoriasSeleccionadas);
         model = new LazyDataModel<PublicacionDTO>() {
 
             @Override
@@ -81,18 +88,8 @@ public class ResultadosMBean implements Serializable {
             }
         };
         model.setRowCount(totalRegistros);
-    }
-
-    public void filtrarCategoria(ActionEvent event) {
-        categoria = (Integer) event.getComponent().getAttributes().get("cat");
-        buscar(0, 10);
-        noBuscarEnModel = true;
-    }
-
-    public void noFiltrarCategoria() {
-        categoria = null;
-        buscar(0, 10);
-        noBuscarEnModel = true;
+        buscarMBean.setCriterio("");
+        init = false;
     }
 
     public void filtrarUbicacion() {
@@ -118,32 +115,30 @@ public class ResultadosMBean implements Serializable {
         noBuscarEnModel = true;
     }
 
-    public void noFiltrarPrecio() {
-        periodoSeleccionado = null;
-        precioDesde = null;
-        precioHasta = null;
-        buscar(0, 10);
-        noBuscarEnModel = true;
-    }
-
-    public String getNombreCategoria() {
-        if (categoria != null) {
-            for (CategoriaDTO c : categorias) {
-                if (c.getId() == categoria) {
-                    return c.getNombre();
-                }
+    public void buscar(int first, int pageSize) {
+        // preparar lista de ids de categorias seleccionadas
+        categoriaIds.clear();
+        if(categoriasSeleccionadas != null) {
+            for(TreeNode node: categoriasSeleccionadas) {
+                categoriaIds.add(((CategoriaDTO)node.getData()).getId());
             }
         }
-        return "";
-    }
-
-    public void buscar(int first, int pageSize) {
-        Busqueda b = buscarBean.buscar(busqueda, categoria, ubicacion, NombrePeriodo.DIA,
+        //si no se eligio ninguna categoria, no mostrar ninguna publicacion
+        if(!init && categoriaIds.isEmpty()) {
+            publicaciones.clear();
+            return;
+        }
+        if(precioDesde == precioMin && precioHasta == precioMax) {
+            precioDesde = precioHasta = null;
+        }
+        Busqueda b = buscarBean.buscar(busqueda, categoriaIds, ubicacion, NombrePeriodo.DIA,
                 precioDesde, precioHasta, pageSize, first);
         publicaciones = b.getPublicaciones();
         categorias = b.getCategorias();
-        precioMin = precioDesde = b.getPrecioMinimo();
-        precioMax = precioHasta = b.getPrecioMaximo();
+        if(init) {
+            precioMin = precioDesde = b.getPrecioMinimo();
+            precioMax = precioHasta = b.getPrecioMaximo();
+        }
         if (first == 0) {
             totalRegistros = b.getTotalRegistros();
             if (model != null) {
@@ -151,36 +146,33 @@ public class ResultadosMBean implements Serializable {
             }
         }
     }
+    
+    private void armarCategorias(){
+        raizCategorias = new DefaultTreeNode("Categorias", null);
+        for(CategoriaDTO cat: categorias) {
+            TreeNode node = expandirNodo(cat, raizCategorias);
+            node.setExpanded(true);
+            node.setSelected(true);
+            categoriaIds.add(cat.getId());
+            seleccionadosAux.add(node);
+        }
+    }
+    
+    private TreeNode expandirNodo(CategoriaDTO cat, TreeNode padre) {
+        TreeNode nuevo = new DefaultTreeNode(cat, padre);
+        nuevo.setSelected(true);
+        for(CategoriaDTO c: cat.getSubcategorias()) {
+            TreeNode nuevo2 = expandirNodo(c, nuevo);
+            nuevo2.setExpanded(true);
+            nuevo2.setSelected(true);
+            categoriaIds.add(c.getId());
+            seleccionadosAux.add(nuevo2);
+        }
+        return nuevo;
+    }
 
     public String verPublicacion() {
         return "mostrarPublicacion";
-    }
-
-    public String getParametrosUrl() {
-        String parametros = "?art=" + busqueda;
-        if (categoria != null) {
-            parametros += "&cat=" + categoria;
-        }
-        if (ubicacion != null) {
-            parametros += "&ubicacion=" + ubicacion;
-        }
-        if (periodoSeleccionado != null && (precioDesde != null || precioHasta != null)) {
-            parametros += "&periodo=" + periodoSeleccionado;
-            if (precioDesde != null) {
-                parametros += "&pDesde=" + precioDesde;
-            }
-            if (precioHasta != null) {
-                parametros += "&pHasta=" + precioHasta;
-            }
-        }
-        return parametros;
-    }
-
-    private void cargarPeriodos() {
-        List<PeriodoDTO> listaPeriodos = buscarBean.getPeriodos();
-        for (PeriodoDTO p : listaPeriodos) {
-            periodos.add(new SelectItem(p.getId(), p.getNombre().toString()));
-        }
     }
 
     /*
@@ -305,4 +297,29 @@ public class ResultadosMBean implements Serializable {
     public void setRange(String range) {
         this.range = range;
     }
+
+    public TreeNode getRaizCategorias() {
+        return raizCategorias;
+    }
+
+    public void setRaizCategorias(TreeNode raizCategorias) {
+        this.raizCategorias = raizCategorias;
+    }
+
+    public TreeNode[] getCategoriasSeleccionadas() {
+        return categoriasSeleccionadas;
+    }
+
+    public void setCategoriasSeleccionadas(TreeNode[] categoriasSeleccionadas) {
+        this.categoriasSeleccionadas = categoriasSeleccionadas;
+    }
+
+    public BuscarMBean getBuscarMBean() {
+        return buscarMBean;
+    }
+
+    public void setBuscarMBean(BuscarMBean buscarMBean) {
+        this.buscarMBean = buscarMBean;
+    }
+
 }

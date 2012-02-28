@@ -53,7 +53,7 @@ public class MisPublicacionesMBean implements Serializable {
             misPublicacionesBean.borrarPublicacion(publicacionId);
             FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage("La publicacion fue eliminada correctamente"));
-            return "misPublicaciones.xhtml";
+            return "/vistas/usuario/articulos";
         } catch( AlquilaCosasException e ){
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR,
