@@ -26,7 +26,7 @@ public class UsuarioXEstadoFacade extends AbstractFacade<UsuarioXEstado> {
     @Override
     protected EntityManager getEntityManager() {
         return em;
-    }
+}
 
     public UsuarioXEstadoFacade() {
         super(UsuarioXEstado.class);

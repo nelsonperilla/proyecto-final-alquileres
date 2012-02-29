@@ -26,4 +26,5 @@
         <property name="driverClass" value="com.mysql.jdbc.Driver"/>
     </jdbc-connection-pool>
     <jdbc-resource enabled="true" jndi-name="jdbc/mysql2" object-type="user" pool-name="mysql_alquilacosas_rootPool_1"/>
+    <jdbc-resource enabled="true" jndi-name="jdbc/alquilacosas" object-type="user" pool-name="mysql_alquilacosas_rootPool_1"/>
 </resources>

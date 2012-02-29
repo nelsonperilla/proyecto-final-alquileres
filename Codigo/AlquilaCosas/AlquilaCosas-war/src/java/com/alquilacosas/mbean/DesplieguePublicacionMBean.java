@@ -8,6 +8,7 @@ import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.ComentarioDTO;
 import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.entity.Periodo;
+import com.alquilacosas.ejb.session.FavoritoLocalBean;
 import com.alquilacosas.ejb.session.PublicacionBeanLocal;
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -67,6 +68,12 @@ public class DesplieguePublicacionMBean implements Serializable {
     private int motivoDenuncia;
     private MapModel mapModel;
     List<Integer> idImagenes;
+    private Integer publicacionId;
+    @ManagedProperty(value="#{misFavoritos}")
+    private FavoritoMBean favorito;
+    @EJB
+    private FavoritoLocalBean favoritoBean;
+    private boolean addedToFavorito;
 
     /** Creates a new instance of DesplieguePublicacionMBean */
     public DesplieguePublicacionMBean() {
@@ -84,24 +91,28 @@ public class DesplieguePublicacionMBean implements Serializable {
         
         ((HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest()).getSession(true).setAttribute("param", "id=" + id);
         
-        int publicationId = 0;
-        int tipoDeDenuncia = -1;
         try {
-            publicationId = Integer.parseInt(id);
+            publicacionId = Integer.parseInt(id);
         } catch (NumberFormatException e) {
             Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al parsear ID de parametro.");
             redirect();
             return;
         }
-        setPublicacion(publicationBean.getPublicacion(publicationId));
+        
+        if( usuarioLogueado.getUsuarioId() != null && publicacionId != null ){
+         if(favoritoBean.getFavorito(usuarioLogueado.getUsuarioId(), publicacionId) != null)
+            this.addedToFavorito = true;
+        }
+        
+        setPublicacion(publicationBean.getPublicacion(publicacionId));
         setNuevaPregunta(new ComentarioDTO());
-        setComentarios(publicationBean.getPreguntas(publicationId));
+        setComentarios(publicationBean.getPreguntas(publicacionId));
         setMapModel(new DefaultMapModel());  
         LatLng position = new LatLng(publicacion.getLatitud(), publicacion.getLongitud()); 
         getMapModel().addOverlay(new Marker(position, publicacion.getTitulo()));  
         
         try {
-            fechas = publicationBean.getFechasSinStock(publicationId, cantidadProductos);
+            fechas = publicationBean.getFechasSinStock(publicacionId, cantidadProductos);
         } catch (AlquilaCosasException e) {
             Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al ejecutar getFechasSinStock(): " + e.getMessage());
             redirect();
@@ -126,6 +137,21 @@ public class DesplieguePublicacionMBean implements Serializable {
             periodos.add(new SelectItem(periodo.getPeriodoId(), periodo.getNombre().name()));
         }
         idImagenes = publicacion.getImagenIds();
+    }
+    
+    public void agregarFavorito(){
+        try {
+           System.out.println("pasa algo....");
+           Logger.getLogger(DesplieguePublicacionMBean.class).debug("Agregando un articulo a mis favoritos");
+           PublicacionDTO pDto = publicationBean.getPublicacion(publicacionId);
+           favorito.agregarFavorito(usuarioLogueado.getUsuarioId(), pDto);
+           
+        } catch (Exception e) {
+          Logger.getLogger(DesplieguePublicacionMBean.class).error("No se pudo agregar el articulo a mis favoritos");
+          FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                    "Error al grabar un favorito", "Problemas ---->" + e.getMessage());
+          FacesContext.getCurrentInstance().addMessage( null, msg);
+        }
     }
 
     public void redirect() {
@@ -698,4 +724,31 @@ public class DesplieguePublicacionMBean implements Serializable {
     public void setIdImagenes(List<Integer> idImagenes) {
         this.idImagenes = idImagenes;
     }
+    
+    public Integer getPublicacionId() {
+        return publicacionId;
+    }
+
+    public void setPublicacionId(Integer publicacionId) {
+        this.publicacionId = publicacionId;
+    }
+
+    public FavoritoMBean getFavorito() {
+        return favorito;
+    }
+
+    public void setFavorito(FavoritoMBean favorito) {
+        this.favorito = favorito;
+    }
+
+    
+    public boolean isAddedToFavorito() {
+        return addedToFavorito;
+    }
+
+    public void setAddedToFavorito(boolean addedToFavorito) {
+        this.addedToFavorito = addedToFavorito;
+    }
+    
+    
 }

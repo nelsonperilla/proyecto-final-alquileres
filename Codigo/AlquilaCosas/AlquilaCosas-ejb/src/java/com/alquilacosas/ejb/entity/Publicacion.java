@@ -115,7 +115,7 @@ public class Publicacion implements Serializable {
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "publicacionFk")
     private List<Destacacion> servicioDestacacionList;
-
+    
     public Publicacion() {
         imagenPublicacionList = new ArrayList<ImagenPublicacion>();
         comentarioList = new ArrayList<Comentario>();

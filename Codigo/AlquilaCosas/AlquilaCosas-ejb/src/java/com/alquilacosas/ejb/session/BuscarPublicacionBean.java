@@ -24,6 +24,7 @@ import com.alquilacosas.facade.PublicacionFacade;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
+import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
@@ -46,6 +47,7 @@ public class BuscarPublicacionBean implements BuscarPublicacionBeanLocal {
     private PeriodoFacade periodoFacade;
 
     @Override
+    @PermitAll
     public Busqueda buscar(String palabra, List<Integer> categoriaIds,
             String ubicacion, NombrePeriodo nombrePeriodo, Double precioDesde, Double precioHasta,
             int registros, int desde) {

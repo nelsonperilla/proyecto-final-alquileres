@@ -4,27 +4,12 @@
  */
 package com.alquilacosas.ejb.session;
 
-import com.alquilacosas.dto.ComentarioDTO;
 import com.alquilacosas.common.AlquilaCosasException;
-import com.alquilacosas.dto.CategoriaDTO;
 import com.alquilacosas.common.NotificacionEmail;
-import com.alquilacosas.dto.PrecioDTO;
-import com.alquilacosas.dto.PublicacionDTO;
-import com.alquilacosas.dto.UsuarioDTO;
-import com.alquilacosas.ejb.entity.Alquiler;
-import com.alquilacosas.ejb.entity.Categoria;
-import com.alquilacosas.ejb.entity.Comentario;
-import com.alquilacosas.ejb.entity.Domicilio;
-import com.alquilacosas.ejb.entity.EstadoAlquiler;
-import com.alquilacosas.ejb.entity.EstadoPublicacion;
+import com.alquilacosas.dto.*;
+import com.alquilacosas.ejb.entity.*;
 import com.alquilacosas.ejb.entity.EstadoPublicacion.NombreEstadoPublicacion;
-import com.alquilacosas.ejb.entity.ImagenPublicacion;
-import com.alquilacosas.ejb.entity.Periodo;
 import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
-import com.alquilacosas.ejb.entity.Precio;
-import com.alquilacosas.ejb.entity.Publicacion;
-import com.alquilacosas.ejb.entity.PublicacionXEstado;
-import com.alquilacosas.ejb.entity.Usuario;
 import com.alquilacosas.facade.AlquilerFacade;
 import com.alquilacosas.facade.AlquilerXEstadoFacade;
 import com.alquilacosas.facade.CalificacionFacade;
@@ -37,27 +22,11 @@ import com.alquilacosas.facade.PrecioFacade;
 import com.alquilacosas.facade.PublicacionFacade;
 import com.alquilacosas.facade.PublicacionXEstadoFacade;
 import com.alquilacosas.facade.UsuarioFacade;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import javax.annotation.Resource;
 import javax.annotation.security.PermitAll;
-import javax.ejb.EJB;
-import javax.ejb.SessionContext;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
-import javax.jms.MessageProducer;
-import javax.jms.ObjectMessage;
-import javax.jms.Session;
+import javax.ejb.*;
+import javax.jms.*;
 import javax.persistence.NoResultException;
 import org.apache.log4j.Logger;
 
@@ -164,7 +133,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
 
         int maxCantidadDias = -1;
         if (periodoMaximoFk != null && periodoMaximoFk > 0) {
-            Periodo periodo2 = periodoFacade.find(periodoMaximoFk);;
+            Periodo periodo2 = periodoFacade.find(periodoMaximoFk);
             publicacion.setMaxPeriodoAlquilerFk(periodo2);
             publicacion.setMaxValor(periodoMaximo);
             if(periodo2.getNombre() == NombrePeriodo.HORA) {

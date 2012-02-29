@@ -10,11 +10,11 @@
     <body>
 
         <ui:composition template="./../resources/templates/masterPage.xhtml">
-            
+
             <ui:define name="logInfo">
                 <h:link value="Inicio" outcome="/vistas/inicio" />
             </ui:define>
-            
+
             <ui:define name="left" >
                 <comps:categoriesMenu />
             </ui:define>
@@ -58,6 +58,7 @@
                         </td>
                         <td width="310" >
                             <h:form id="principalForm">
+
                                 <h:panelGrid  styleClass="dataPrincipal" columns="2"  >
                                     <h:outputText value="Propietario: " styleClass="itemInfo"  escape="false"/>
                                     <h:outputText value="#{publicacionDesplegada.publicacion.propietario.nombre}" 
@@ -65,7 +66,8 @@
                                     <h:outputText value="Reputación: " styleClass="itemInfo" escape="false"/>
                                     <p:rating value="#{publicacionDesplegada.userRating}" stars="10" disabled="true"/> 
                                 </h:panelGrid>                                 
-                                <h:panelGrid  styleClass="dataPrincipal" style="margin-top: 10px;" columns="1"  >
+
+                                <h:panelGrid id="data" styleClass="dataPrincipal" style="margin-top: 10px;" columns="1"  >
 
                                     <h:dataTable value="#{publicacionDesplegada.publicacion.precios}"
                                                  var="precio" style="width: 100%" >
@@ -78,13 +80,18 @@
                                                           styleClass="itemPrice"/>  
                                         </h:column>
                                     </h:dataTable>
+
                                     <h:outputText value="Origen: #{publicacionDesplegada.publicacion.barrio}, 
                                                   #{publicacionDesplegada.publicacion.ciudad}" 
                                                   styleClass="itemInfo"  escape="false" style="padding-right: 5px"/> 
                                     <h:outputText value="Finaliza el #{publicacionDesplegada.fecha_hasta}" 
                                                   styleClass="itemInfo" escape="false"/>  
                                     <h:outputText value="Disponibilidad maxima: #{publicacionDesplegada.publicacion.cantidad}" 
-                                                  styleClass="itemInfo"/>  
+                                                  styleClass="itemInfo"/> 
+                                    <p:commandButton rendered="#{not publicacionDesplegada.addedToFavorito}" value="Agregar" title="agregar a Favoritos" actionListener="#{publicacionDesplegada.agregarFavorito}" 
+                                                     style="background-color: #3E58F6; margin-left: 180px; font-size: 0.8em;" update="data">
+                                        <f:attribute name="idPublicacion" value="#{publicacionDesplegada.publicacionId}" />
+                                    </p:commandButton>
 
                                 </h:panelGrid>                            
                                 <h:panelGrid columns="3" styleClass="dataPrincipal" style="margin-top: 10px; vertical-align: middle">
@@ -178,20 +185,20 @@
                     <h:form id="rent" prependId="false">
                         <script type="text/javascript" >
                             jQuery(function () {
-                                    window.setTimeout('bindEventsHighlights()',500);
+                                window.setTimeout('bindEventsHighlights()',500);
                             });
 
                             function bindEventsHighlights() {
-                                    var specialDays = <h:outputText value="#{publicacionDesplegada.fechas}" /> ;
-                                    jQuery(".hasDatepicker").datepicker("option", "beforeShowDay", function (date) {
-                                              return highlightCalendar(specialDays, date, 'highlight-calendar');
-                                    });
+                                var specialDays = <h:outputText value="#{publicacionDesplegada.fechas}" /> ;
+                                jQuery(".hasDatepicker").datepicker("option", "beforeShowDay", function (date) {
+                                    return highlightCalendar(specialDays, date, 'highlight-calendar');
+                                });
                             };
                         </script>
                         <h:panelGrid  columns="3" cellpadding="2" cellspacing="4" >
                             <h:outputLabel value="Periodo minimo:"/>
                             <h:panelGroup>
-                    <h:outputLabel value="#{publicacionDesplegada.publicacion.periodoMinimoValor} "/>
+                                <h:outputLabel value="#{publicacionDesplegada.publicacion.periodoMinimoValor} "/>
                                 <h:outputLabel value="#{publicacionDesplegada.publicacion.periodoMinimo.nombre}"/>
                             </h:panelGroup>
                             <p/>
@@ -223,7 +230,7 @@
                                         pattern="HH:mm" timeOnly="true" stepHour="1" stepMinute="15"
                                         style="width:50px; text-align: right"
                                         requiredMessage="Valor requerido" 
-                                         rendered ="#{publicacionDesplegada.periodoSeleccionado == 1}"/>
+                                        rendered ="#{publicacionDesplegada.periodoSeleccionado == 1}"/>
                             <p:message id="horaInicioMessage" for="horaInicio" 
                                        rendered ="#{publicacionDesplegada.periodoSeleccionado == 1}"/>
 
