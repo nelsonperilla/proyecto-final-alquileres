@@ -104,6 +104,9 @@ public class Usuario implements Serializable {
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
     private List<Pago> pagoList;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
+    private List<Favorito> favoritoList;
 
     public Usuario() {
         domicilioList = new ArrayList<Domicilio>();
@@ -113,6 +116,7 @@ public class Usuario implements Serializable {
         suspensionList = new ArrayList<Suspension>();
         advertenciaList = new ArrayList<Advertencia>();
         usuarioXEstadoList = new ArrayList<UsuarioXEstado>();
+        favoritoList = new ArrayList<Favorito>();
     }
 
     public Usuario(Integer usuarioId) {
@@ -182,6 +186,18 @@ public class Usuario implements Serializable {
                 return p;
         }
         return null;
+    }
+    
+    public void argegarFavorito( Favorito favorito ){
+        favoritoList.add(favorito);
+        favorito.setUsuarioFk(this);
+    }
+    
+    public void removerFavorito( Favorito favorito ){
+        for( int i = 0; i < favoritoList.size(); i++ ){
+            if( favoritoList.get(i).getId() == favorito.getId() )
+                favoritoList.remove(i);
+        }
     }
 
     public Integer getUsuarioId() {
@@ -374,6 +390,16 @@ public class Usuario implements Serializable {
          }
          return estado;
     }
+
+    public List<Favorito> getFavoritoList() {
+        return favoritoList;
+    }
+
+    public void setFavoritoList(List<Favorito> favoritoList) {
+        this.favoritoList = favoritoList;
+    }
+    
+    
 
     @Override
     public int hashCode() {
