@@ -8,7 +8,7 @@ import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.ComentarioDTO;
 import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.entity.Periodo;
-import com.alquilacosas.ejb.session.FavoritoLocalBean;
+import com.alquilacosas.ejb.session.FavoritoBeanLocal;
 import com.alquilacosas.ejb.session.PublicacionBeanLocal;
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -30,9 +30,9 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.DateSelectEvent;
 import org.primefaces.json.JSONObject;
-import org.primefaces.model.map.DefaultMapModel;  
-import org.primefaces.model.map.LatLng;  
-import org.primefaces.model.map.MapModel;  
+import org.primefaces.model.map.DefaultMapModel;
+import org.primefaces.model.map.LatLng;
+import org.primefaces.model.map.MapModel;
 import org.primefaces.model.map.Marker;
 
 /**
@@ -64,15 +64,15 @@ public class DesplieguePublicacionMBean implements Serializable {
     private String action;
     private double userRating;
     private Date horaInicioAlquiler;
-    private int denunciaId;   
+    private int denunciaId;
     private int motivoDenuncia;
     private MapModel mapModel;
     List<Integer> idImagenes;
     private Integer publicacionId;
-    @ManagedProperty(value="#{misFavoritos}")
+    @ManagedProperty(value = "#{misFavoritos}")
     private FavoritoMBean favorito;
     @EJB
-    private FavoritoLocalBean favoritoBean;
+    private FavoritoBeanLocal favoritoBean;
     private boolean addedToFavorito;
 
     /** Creates a new instance of DesplieguePublicacionMBean */
@@ -88,9 +88,9 @@ public class DesplieguePublicacionMBean implements Serializable {
             redirect();
             return;
         }
-        
-        ((HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest()).getSession(true).setAttribute("param", "id=" + id);
-        
+
+        ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getSession(true).setAttribute("param", "id=" + id);
+
         try {
             publicacionId = Integer.parseInt(id);
         } catch (NumberFormatException e) {
@@ -98,19 +98,20 @@ public class DesplieguePublicacionMBean implements Serializable {
             redirect();
             return;
         }
-        
-        if( usuarioLogueado.getUsuarioId() != null && publicacionId != null ){
-         if(favoritoBean.getFavorito(usuarioLogueado.getUsuarioId(), publicacionId) != null)
-            this.addedToFavorito = true;
+
+        if (usuarioLogueado.getUsuarioId() != null && publicacionId != null) {
+            if (favoritoBean.getFavorito(usuarioLogueado.getUsuarioId(), publicacionId) != null) {
+                this.addedToFavorito = true;
+            }
         }
-        
+
         setPublicacion(publicationBean.getPublicacion(publicacionId));
         setNuevaPregunta(new ComentarioDTO());
         setComentarios(publicationBean.getPreguntas(publicacionId));
-        setMapModel(new DefaultMapModel());  
-        LatLng position = new LatLng(publicacion.getLatitud(), publicacion.getLongitud()); 
-        getMapModel().addOverlay(new Marker(position, publicacion.getTitulo()));  
-        
+        setMapModel(new DefaultMapModel());
+        LatLng position = new LatLng(publicacion.getLatitud(), publicacion.getLongitud());
+        getMapModel().addOverlay(new Marker(position, publicacion.getTitulo()));
+
         try {
             fechas = publicationBean.getFechasSinStock(publicacionId, cantidadProductos);
         } catch (AlquilaCosasException e) {
@@ -138,19 +139,30 @@ public class DesplieguePublicacionMBean implements Serializable {
         }
         idImagenes = publicacion.getImagenIds();
     }
-    
-    public void agregarFavorito(){
+
+    public void agregarFavorito() {
+        if (!usuarioLogueado.isLogueado()) {
+            RequestContext context = RequestContext.getCurrentInstance();
+            context.addCallbackParam("noLogueado", true);
+            context.execute("login.show();");
+            return;
+        }
+
         try {
-           System.out.println("pasa algo....");
-           Logger.getLogger(DesplieguePublicacionMBean.class).debug("Agregando un articulo a mis favoritos");
-           PublicacionDTO pDto = publicationBean.getPublicacion(publicacionId);
-           favorito.agregarFavorito(usuarioLogueado.getUsuarioId(), pDto);
-           
+            Logger.getLogger(DesplieguePublicacionMBean.class).debug("Agregando un articulo a mis favoritos");
+            PublicacionDTO pDto = publicationBean.getPublicacion(publicacionId);
+            boolean agregado = favorito.agregarFavorito(usuarioLogueado.getUsuarioId(), pDto);
+            if (agregado) {
+                addedToFavorito = true;
+                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
+                        "Publicacion agregada a Mis Favoritos", "");
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            }
         } catch (Exception e) {
-          Logger.getLogger(DesplieguePublicacionMBean.class).error("No se pudo agregar el articulo a mis favoritos");
-          FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-                    "Error al grabar un favorito", "Problemas ---->" + e.getMessage());
-          FacesContext.getCurrentInstance().addMessage( null, msg);
+            Logger.getLogger(DesplieguePublicacionMBean.class).error("No se pudo agregar el articulo a mis favoritos");
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Error al grabar un favorito", e.getMessage());
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         }
     }
 
@@ -724,7 +736,7 @@ public class DesplieguePublicacionMBean implements Serializable {
     public void setIdImagenes(List<Integer> idImagenes) {
         this.idImagenes = idImagenes;
     }
-    
+
     public Integer getPublicacionId() {
         return publicacionId;
     }
@@ -741,7 +753,6 @@ public class DesplieguePublicacionMBean implements Serializable {
         this.favorito = favorito;
     }
 
-    
     public boolean isAddedToFavorito() {
         return addedToFavorito;
     }
@@ -749,6 +760,4 @@ public class DesplieguePublicacionMBean implements Serializable {
     public void setAddedToFavorito(boolean addedToFavorito) {
         this.addedToFavorito = addedToFavorito;
     }
-    
-    
 }

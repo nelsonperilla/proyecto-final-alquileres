@@ -8,12 +8,12 @@ import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.PrecioDTO;
 import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.entity.*;
-import com.alquilacosas.facade.FavoritoFacade;
 import com.alquilacosas.facade.PrecioFacade;
 import com.alquilacosas.facade.PublicacionFacade;
 import com.alquilacosas.facade.UsuarioFacade;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.NoResultException;
@@ -23,14 +23,13 @@ import javax.persistence.NoResultException;
  * @author ignaciogiagante
  */
 @Stateless
-public class FavoritoBean implements FavoritoLocalBean {
+@PermitAll
+public class FavoritoBean implements FavoritoBeanLocal {
     
     @EJB
     private UsuarioFacade usuarioFacade;
     @EJB
     private PrecioFacade precioFacade;
-    @EJB
-    private FavoritoFacade favoritoFacade;
     @EJB
     private PublicacionFacade publicacionFacade;
     @EJB
@@ -41,10 +40,8 @@ public class FavoritoBean implements FavoritoLocalBean {
     public List<PublicacionDTO> getFavoritos(Integer usuarioId) {   
         
         Usuario usuario = usuarioFacade.find(usuarioId);
-        List<Favorito> favoritos = usuario.getFavoritoList();
         List<PublicacionDTO> publicacionesDto = new ArrayList<PublicacionDTO>();
-        for( Favorito f : favoritos ){
-            Publicacion p = f.getPublicacionFk();
+        for(Publicacion p: usuario.getFavoritosList()) {
             PublicacionDTO pDto = new PublicacionDTO(p.getPublicacionId(), p.getTitulo(),
                     p.getDescripcion(), p.getFechaDesde(), p.getFechaHasta(), p.getDestacada(),
                     p.getCantidad());
@@ -68,13 +65,14 @@ public class FavoritoBean implements FavoritoLocalBean {
     }
     
     @Override
-    public Favorito getFavorito(Integer usuarioId, Integer publicacionId) {
-        List<Favorito> favoritoList = favoritoFacade.getFavorito(usuarioId, publicacionId);
-        if( favoritoList.size() == 1 ){
-            return favoritoList.get(0);
-        }else{
-            return null;
+    public Publicacion getFavorito(Integer usuarioId, Integer publicacionId) {
+        Usuario usuario = usuarioFacade.find(usuarioId);
+        for(Publicacion p: usuario.getFavoritosList()) {
+            if(p.getPublicacionId() == publicacionId) {
+                return p;
+            }
         }
+        return null;
     }
  
     
@@ -88,22 +86,16 @@ public class FavoritoBean implements FavoritoLocalBean {
             throw new AlquilaCosasException("No se pudo agregar el articulo a "
                     + "Mis Favoritos.");
         }
-        
-        Favorito favorito = new Favorito(usuario, p);
-        usuario.argegarFavorito(favorito);
+        usuario.argegarFavorito(p);
         usuarioFacade.edit(usuario);
     }
     
     @Override
-    public void eliminarFavorito(Integer usuarioId, Integer publicacionId) throws AlquilaCosasException{
-        
+    public void eliminarFavorito(Integer usuarioId, Integer publicacionId) throws AlquilaCosasException{        
         Usuario usuario = usuarioFacade.find(usuarioId);  
-        List<Favorito> favoritoList = favoritoFacade.getFavorito(usuarioId, publicacionId);
-        Favorito favorito = favoritoList.get(0);
-        usuario.removerFavorito(favorito);
-        favoritoFacade.remove(favorito);
+        Publicacion publicacion = publicacionFacade.find(publicacionId);
+        usuario.removerFavorito(publicacion);
         usuarioFacade.edit(usuario);
-        
     }
     
     private List<PrecioDTO> getPrecios(Publicacion publicacion) {
@@ -115,7 +107,5 @@ public class FavoritoBean implements FavoritoLocalBean {
         }
         return resultado;
     }
-
-    
     
 }

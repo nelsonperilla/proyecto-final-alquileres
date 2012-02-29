@@ -14,6 +14,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -52,7 +55,7 @@ public class Usuario implements Serializable {
     @Column(name = "APELLIDO")
     private String apellido;
     
-    @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+    @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")
     @Column(name = "EMAIL")
     private String email;
     
@@ -77,6 +80,12 @@ public class Usuario implements Serializable {
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
     private List<Publicacion> publicacionList;
+    
+    @ManyToMany()
+    @JoinTable(name="FAVORITO",
+      joinColumns={@JoinColumn(name="USUARIO_FK", referencedColumnName="USUARIO_ID")},
+      inverseJoinColumns={@JoinColumn(name="PUBLICACION_FK", referencedColumnName="PUBLICACION_ID")})
+    private List<Publicacion> favoritosList;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
     private List<Comentario> comentarioList;
@@ -105,8 +114,8 @@ public class Usuario implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
     private List<Pago> pagoList;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
-    private List<Favorito> favoritoList;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
+//    private List<Favorito> favoritoList;
 
     public Usuario() {
         domicilioList = new ArrayList<Domicilio>();
@@ -116,7 +125,7 @@ public class Usuario implements Serializable {
         suspensionList = new ArrayList<Suspension>();
         advertenciaList = new ArrayList<Advertencia>();
         usuarioXEstadoList = new ArrayList<UsuarioXEstado>();
-        favoritoList = new ArrayList<Favorito>();
+        favoritosList = new ArrayList<Publicacion>();
     }
 
     public Usuario(Integer usuarioId) {
@@ -188,16 +197,24 @@ public class Usuario implements Serializable {
         return null;
     }
     
-    public void argegarFavorito( Favorito favorito ){
-        favoritoList.add(favorito);
-        favorito.setUsuarioFk(this);
+//    public void argegarFavorito( Favorito favorito ){
+//        favoritoList.add(favorito);
+//        favorito.setUsuarioFk(this);
+//    }
+//    
+//    public void removerFavorito( Favorito favorito ){
+//        for( int i = 0; i < favoritoList.size(); i++ ){
+//            if( favoritoList.get(i).getId() == favorito.getId() )
+//                favoritoList.remove(i);
+//        }
+//    }
+    
+    public void argegarFavorito(Publicacion favorito){
+        favoritosList.add(favorito);
     }
     
-    public void removerFavorito( Favorito favorito ){
-        for( int i = 0; i < favoritoList.size(); i++ ){
-            if( favoritoList.get(i).getId() == favorito.getId() )
-                favoritoList.remove(i);
-        }
+    public void removerFavorito(Publicacion favorito ){
+        favoritosList.remove(favorito);
     }
 
     public Integer getUsuarioId() {
@@ -391,14 +408,13 @@ public class Usuario implements Serializable {
          return estado;
     }
 
-    public List<Favorito> getFavoritoList() {
-        return favoritoList;
+    public List<Publicacion> getFavoritosList() {
+        return favoritosList;
     }
 
-    public void setFavoritoList(List<Favorito> favoritoList) {
-        this.favoritoList = favoritoList;
+    public void setFavoritosList(List<Publicacion> favoritoList) {
+        this.favoritosList = favoritoList;
     }
-    
     
 
     @Override

@@ -9,7 +9,6 @@ import com.alquilacosas.dto.AlquilerDTO;
 import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.session.AlquileresBeanLocal;
 import com.alquilacosas.ejb.session.PublicacionBeanLocal;
-import com.alquilacosas.mbean.ModificarAlquilerMBean;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -248,7 +247,7 @@ public class ModificarAlquilerMBean {
         while (endDate.after(temp) || endDate.equals(temp)) {
             temp.add(Calendar.HOUR_OF_DAY, 1);
             if(publicacion.getPrecioHora() != null) {
-                precioHoras = publicacion.getPrecioHora();
+                precioHoras += publicacion.getPrecioHora();
             } else {
                 precioHoras = publicacion.getPrecioDia();
                 break;

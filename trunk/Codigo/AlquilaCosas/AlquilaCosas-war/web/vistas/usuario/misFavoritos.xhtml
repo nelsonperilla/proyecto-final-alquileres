@@ -7,89 +7,96 @@
 
     <h:body>
 
-                <h:form id="formFavorito">
+        <h:form id="formFavorito">
 
-                    <p:dataGrid value="#{misFavoritos.publicacionesDto}" var="item" columns="1" 
-                                styleClass="itemsTable" id="grid" rowIndexVar="row" paginator="true" 
-                                paginatorPosition="bottom" paginatorAlwaysVisible="false" >
-                        <p:column>
+            <p:dataGrid value="#{misFavoritos.publicacionesDto}" var="item" columns="1" 
+                        styleClass="itemsTable" id="grid" rowIndexVar="row" paginator="true" 
+                        paginatorPosition="bottom" paginatorAlwaysVisible="false"
+                        emptyMessage="No has agregado ningun favorito" >
+                <p:column>
 
-                            <div class="artContenedor" >
-                                <div class="artImagen" >
-                                   <h:graphicImage value="/image?id=#{item.imagenId}" 
-                                                    style="max-width: 120px; max-height: 100px"
-                                                    rendered="#{item.imagenId != -1}" />
-                                    <h:graphicImage value="#{resource['images:noImage.png']}" 
-                                                    style="max-width: 120px; max-height: 100px"
-                                                    rendered="#{item.imagenId == -1}" />
-                                </div>
-                                <div class="artDescripcion">
-                                    <h5>
-                                        <h:link value="#{item.titulo}" outcome="/vistas/mostrarPublicacion.xhtml" >
-                                            <f:param name="id" value="#{item.id}" />
-                                        </h:link>
-                                    </h5>
-                                    <div class="artDescContenido">
-                                        <h:outputText value="#{item.ciudad}, #{item.provincia}" />
-                                        <br/>
-                                        <h:outputText value="Cantidad: #{item.cantidad}" />
-                                    </div>
-
-                                </div>  
-                                <div class="artPrecio" >
-                                    <div class="accionesContenedor">
-                                        <div class="artAcciones">
-                                            <p:commandButton value="Eliminar" icon="ui-icon-close" onclick="confirmarDlg.show()" >
-                                                <f:setPropertyActionListener value="#{item.id}" target="#{misFavoritos.publicacionId}"/>
-                                            </p:commandButton>
-                                        </div>
-                                    </div>
-                                    <h:outputLabel value="Precio:" styleClass="precioLabel" />
-                                    <br/>
-                                    <h:outputText value="$ #{item.precios.get(1).precio}" styleClass="precio" />
-                                    <a onclick="manejarPopup(jQuery(this).parent('.artPrecio').find('.artPopup'))" >
-                                        <p:commandButton type="button" icon="ui-icon-triangle-1-s" style="font-size: 11px"/>
-                                    </a>
-                                    <br/>
-                                    <h:outputText value="por dia" styleClass="precioLabel" />
-                                    <div class="artPopup" style="display: none">
-                                        <h:panelGrid columns="2" style="text-align: left"  >
-                                            <f:facet name="header" >
-                                                <h:outputText value="Detalle de precios:" style="font-weight: bold; color: cornflowerblue" />
-                                            </f:facet>
-                                            <h:outputText value="$ #{item.precios.get(0).precio}" styleClass="detPrecio" />
-                                            <h:outputLabel value="/Hora" styleClass="detPeriodo" />
-                                            <h:outputText value="$ #{item.precios.get(1).precio}" styleClass="detPrecio" />
-                                            <h:outputLabel value="/Dia" styleClass="detPeriodo"/>
-                                            <h:outputText value="$ #{item.precios.get(2).precio}" styleClass="detPrecio"/>
-                                            <h:outputLabel value="/Semana" styleClass="detPeriodo"/>
-                                            <h:outputText value="$ #{item.precios.get(3).precio}" styleClass="detPrecio" />
-                                            <h:outputLabel value="/Mes" styleClass="detPeriodo"/>
-                                        </h:panelGrid>
-                                    </div>
-                                </div>
+                    <div class="artContenedor" >
+                        <div class="artImagen" >
+                            <h:graphicImage value="/image?id=#{item.imagenId}" 
+                                            style="max-width: 120px; max-height: 100px"
+                                            rendered="#{item.imagenId != -1}" />
+                            <h:graphicImage value="#{resource['images:noImage.png']}" 
+                                            style="max-width: 120px; max-height: 100px"
+                                            rendered="#{item.imagenId == -1}" />
+                        </div>
+                        <div class="artDescripcion">
+                            <h5>
+                                <h:link value="#{item.titulo}" outcome="/vistas/mostrarPublicacion.xhtml" >
+                                    <f:param name="id" value="#{item.id}" />
+                                </h:link>
+                            </h5>
+                            <div class="artDescContenido">
+                                <h:outputText value="#{item.ciudad}, #{item.provincia}" />
+                                <br/>
+                                <h:outputText value="Cantidad: #{item.cantidad}" />
                             </div>
 
-                        </p:column>
-                    </p:dataGrid>
+                        </div>  
+                        <div class="artPrecio" >
+                            <div class="accionesContenedor">
+                                <div class="artAcciones">
+                                    <p:commandButton value="Eliminar" icon="ui-icon-close" onclick="confirmarDlg.show()" >
+                                        <f:setPropertyActionListener value="#{item.id}" target="#{misFavoritos.publicacionId}"/>
+                                    </p:commandButton>
+                                </div>
+                            </div>
+                            <h:outputLabel value="Precio:" styleClass="precioLabel" />
+                            <br/>
+                            <h:outputText value="$ #{item.precioDia}" styleClass="precio" />
+                            <a onclick="manejarPopup(jQuery(this).parent('.artPrecio').find('.artPopup'), 'artPopup')" >
+                                <p:commandButton type="button" icon="ui-icon-triangle-1-s" style="font-size: 11px"/>
+                            </a>
+                            <br/>
+                            <h:outputText value="por dia" styleClass="precioLabel" />
+                            <div class="artPopup" style="display: none">
+                                <h:panelGrid columns="2" style="text-align: left"  >
+                                    <f:facet name="header" >
+                                        <h:outputText value="Detalle de precios:" style="font-weight: bold; color: cornflowerblue" />
+                                    </f:facet>
+                                    <h:outputText value="$ #{item.precioHora}" styleClass="detPrecio" 
+                                                  rendered="#{not empty item.precioHora}" />
+                                    <h:outputLabel value="/Hora" styleClass="detPeriodo" 
+                                                   rendered="#{not empty item.precioHora}" />
+                                    <h:outputText value="$ #{item.precioDia}" styleClass="detPrecio" />
+                                    <h:outputLabel value="/Dia" styleClass="detPeriodo"/>
+                                    <h:outputText value="$ #{item.precioSemana}" styleClass="detPrecio"
+                                                  rendered="#{not empty item.precioSemana}" />
+                                    <h:outputLabel value="/Semana" styleClass="detPeriodo" 
+                                                   rendered="#{not empty item.precioSemana}" />
+                                    <h:outputText value="$ #{item.precioMes}" styleClass="detPrecio" 
+                                                  rendered="#{not empty item.precioMes}" />
+                                    <h:outputLabel value="/Mes" styleClass="detPeriodo"
+                                                   rendered="#{not empty item.precioMes}" />
+                                </h:panelGrid>
+                            </div>
+                        </div>
+                    </div>
 
-                    <p:dialog widgetVar="confirmarDlg" header="Eliminar publicacion" modal="true" 
-                              resizable="false" style="text-align: center;" >
-                        <p>
-                            Esta seguro que desea borrar esta publicacion de Mis Favoritos?
-                        </p>
-                        <br/>
-                        <f:facet name="footer" >
-                            <p:commandButton value="Aceptar" action="#{misFavoritos.eliminarFavorito}"
-                                             oncomplete="confirmarDlg.hide()" ajax="false" update=":tabFavorito:formFavorito:grid"> 
-                            </p:commandButton>
-                            <p:commandButton value="Cancelar" onclick="confirmarDlg.hide()" />
-                        </f:facet>
+                </p:column>
+            </p:dataGrid>
+
+            <p:dialog widgetVar="confirmarDlg" header="Eliminar publicacion" modal="true" 
+                      resizable="false" style="text-align: center;" >
+                <p>
+                    Esta seguro que desea borrar esta publicacion de Mis Favoritos?
+                </p>
+                <br/>
+                <f:facet name="footer" >
+                    <p:commandButton value="Aceptar" action="#{misFavoritos.eliminarFavorito}"
+                                     oncomplete="confirmarDlg.hide()" update=":tab:formFavorito:grid"> 
+                    </p:commandButton>
+                    <p:commandButton value="Cancelar" onclick="confirmarDlg.hide()" />
+                </f:facet>
 
 
-                    </p:dialog>
+            </p:dialog>
 
-                </h:form>
+        </h:form>
 
     </h:body>
 </html>

@@ -19,67 +19,80 @@
 
                 <div style="margin: 0 30px">
                     <p:growl id="growl"  showDetail="true" />
-                    <div style="float: left; width: 400px">
-                        <h:panelGrid columns="2" style="background: aliceblue; padding: 10px" >
-                            <f:facet name="header" >
-                                <h:outputText value="Usted esta modificando el arquiler del articulo:" 
-                                              style="font-size: 14px; font-weight: bold;"/>
-                            </f:facet>
+                    <div style="float: left; width: 400px;">
 
-                            <h:graphicImage value="/image?id=#{modAlquilerBean.alquiler.imagenId}"
-                                            rendered="#{modAlquilerBean.alquiler.imagenId != -1}"
-                                            width="120" />
-                            <h:graphicImage value="#{resource['images:noImage.png']}" 
-                                            rendered="#{modAlquilerBean.alquiler.imagenId == -1}"
-                                            width="120" />
+                        <div class="panelInfoAlquiler">
+                            <h5>Usted esta modificando el arquiler del articulo:</h5>
+                            
+                            <div style="float: left; width: 130px; position: relative">
+                                <h:graphicImage value="/image?id=#{modAlquilerBean.alquiler.imagenId}"
+                                                rendered="#{modAlquilerBean.alquiler.imagenId != -1}"
+                                                width="120" />
+                                <h:graphicImage value="#{resource['images:noImage.png']}" 
+                                                rendered="#{modAlquilerBean.alquiler.imagenId == -1}"
+                                                width="120" />
+                            </div>
+                            <div style="float: left;">
 
-                            <h:panelGrid columns="1" >
-                                <h:link value="#{modAlquilerBean.publicacion.titulo}" outcome="/vistas/mostrarPublicacion" >
-                                    <f:param name="id" value="#{modAlquilerBean.publicacion.id}" />
-                                </h:link>
-                                <h:outputText value="Cantidad: #{modAlquilerBean.alquiler.cantidad}" />
-                                <h:outputText value="De: #{modAlquilerBean.alquiler.usuario}" 
-                                              rendered="#{modAlquilerBean.tomado}" />
-                                <h:outputText value="Alquilador: #{modAlquilerBean.alquiler.usuario}" 
-                                              rendered="#{not modAlquilerBean.tomado}"/>
-                                <h:outputText value="Fecha desde: #{modAlquilerBean.alquiler.fechaDesde}" />
-                                <h:outputText value="Fecha hasta: #{modAlquilerBean.alquiler.fechaHasta}" />
-                                <h:outputText value="Monto: $ #{modAlquilerBean.alquiler.monto}" />
+                                <h:panelGrid columns="2" >
+                                    <h:outputLabel value="Articulo: " styleClass="label" />
+                                    <h:link value="#{modAlquilerBean.alquiler.titulo}" outcome="/vistas/mostrarPublicacion" styleClass="valor" >
+                                        <f:param name="id" value="#{modAlquilerBean.alquiler.idPublicacion}" />
+                                    </h:link>
 
-                            </h:panelGrid>
+                                    <h:outputLabel value="Cantidad: " styleClass="label" />
+                                    <h:outputText value="#{modAlquilerBean.alquiler.cantidad}" styleClass="valor" />
 
-                        </h:panelGrid>
-                        <h:form id="form">
-                            <h:panelGrid  columns="3" cellpadding="2" cellspacing="4" >
+                                    <h:outputLabel value="#{modAlquilerBean.tomado ? 'De:': 'Alquilador: '}" styleClass="label" />
+                                    <h:link value="#{modAlquilerBean.alquiler.usuario}" outcome="/vistas/verReputacion" styleClass="valor" >
+                                        <f:param name="id" value="#{modAlquilerBean.alquiler.idUsuario}" />
+                                    </h:link>
 
-                                <f:facet name="header" >
-                                    <h:outputText value="Datos a cambiar:" 
-                                                  style="font-size: 14px; font-weight: bold;"/>
-                                </f:facet>
+                                    <h:outputLabel value="Fecha desde:" styleClass="label" />
+                                    <h:outputText value="#{modAlquilerBean.alquiler.fechaDesde}" styleClass="valor" />
 
-                                <h:outputLabel value="Nueva Fecha hasta" for="fechaHasta" />
-                                <p:calendar id="fechaHasta" value="#{modAlquilerBean.fechaHasta}" showOn="button" 
-                                            stepMinute="31" mindate="#{modAlquilerBean.alquiler.fechaInicio}" 
-                                            required="true" minMinute="1" pattern="dd/MM/yyyy HH:mm"
-                                            requiredMessage="Valor requerido" 
-                                            validatorMessage="Fecha invalida. Debe tener el formato dd/MM/yyyy HH:mm" >
-                                    <p:ajax event="dateSelect"  listener="#{modAlquilerBean.actualizarMonto}" 
-                                            update=":form:monto" />
-                                </p:calendar>
-                                <p:message for="fechaHasta" />
+                                    <h:outputLabel value="Fecha hasta:" styleClass="label" />
+                                    <h:outputText value="#{modAlquilerBean.alquiler.fechaHasta}" styleClass="valor" />
 
-                                <h:outputLabel value="Nuevo monto:" for="monto" />
-                                <h:outputText id="monto" value="$ #{modAlquilerBean.nuevoMonto}" style="font-weight: bold" />
+                                    <h:outputLabel value="Monto:" styleClass="label" />
+                                    <h:outputText value="$ #{modAlquilerBean.alquiler.monto}" styleClass="valorDest" />
+                                </h:panelGrid>                                
+                            </div>
+                        </div>
 
-                                <f:facet name="footer" >
-                                    <p:commandButton value="Solicitar cambio" action="#{modAlquilerBean.solicitarCambio}" 
-                                                     rendered="#{modAlquilerBean.tomado}" ajax="false"/>
-                                    <p:commandButton value="Modificar" action="#{modAlquilerBean.modificarAlquiler}" 
-                                                     rendered="#{not modAlquilerBean.tomado}" ajax="false"/>
-                                    <p:button value="Cancelar" outcome="/vistas/usuario/articulos" />
-                                </f:facet>
-                            </h:panelGrid>
-                        </h:form>
+                        <div>
+                            <h:form id="form">
+                                <h:panelGrid  columns="3" cellpadding="2" cellspacing="4" >
+
+                                    <f:facet name="header" >
+                                        <h:outputText value="Datos a cambiar:" 
+                                                      style="font-size: 14px; font-weight: bold;"/>
+                                    </f:facet>
+
+                                    <h:outputLabel value="Nueva Fecha hasta" for="fechaHasta" />
+                                    <p:calendar id="fechaHasta" value="#{modAlquilerBean.fechaHasta}" showOn="button" 
+                                                stepMinute="31" mindate="#{modAlquilerBean.alquiler.fechaInicio}" 
+                                                required="true" minMinute="1" pattern="dd/MM/yyyy HH:mm"
+                                                requiredMessage="Valor requerido" 
+                                                validatorMessage="Fecha invalida. Debe tener el formato dd/MM/yyyy HH:mm" >
+                                        <p:ajax event="dateSelect"  listener="#{modAlquilerBean.actualizarMonto}" 
+                                                update=":form:monto" />
+                                    </p:calendar>
+                                    <p:message for="fechaHasta" />
+
+                                    <h:outputLabel value="Nuevo monto:" for="monto" />
+                                    <h:outputText id="monto" value="$ #{modAlquilerBean.nuevoMonto}" style="font-weight: bold" />
+
+                                    <f:facet name="footer" >
+                                        <p:commandButton value="Solicitar cambio" action="#{modAlquilerBean.solicitarCambio}" 
+                                                         rendered="#{modAlquilerBean.tomado}" ajax="false"/>
+                                        <p:commandButton value="Modificar" action="#{modAlquilerBean.modificarAlquiler}" 
+                                                         rendered="#{not modAlquilerBean.tomado}" ajax="false"/>
+                                        <p:button value="Cancelar" outcome="/vistas/usuario/articulos" />
+                                    </f:facet>
+                                </h:panelGrid>
+                            </h:form>
+                        </div>
                     </div>
 
                     <p:panel style="width: 280px; float: left" >
