@@ -103,9 +103,9 @@ public class AlquileresMBean {
             return;
         }
         alquilerId = id;
-        pedidoCambioId = (Integer) event.getComponent().getAttributes().get("ped");
+        alquiler = buscarAlquiler(alquilerId);
+        pedidoCambioId = alquiler.getIdPedidoCambio();
         PedidoCambioDTO pedido = alquileresBean.getPedidoCambio(pedidoCambioId);
-        alquiler = alquileresBean.getAlquiler(usuarioLogueado, alquilerId);
         Calendar cal = Calendar.getInstance();
         cal.setTime(alquiler.getFechaInicio());
         if(pedido.getPeriodo() == NombrePeriodo.HORA) {
@@ -150,13 +150,13 @@ public class AlquileresMBean {
     
     public void prepararCalificar(ActionEvent event) {
         alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
-        alquiler = alquileresBean.getAlquiler(usuarioLogueado, alquilerId);
+        alquiler = buscarAlquiler(alquilerId);
         tomado = alquiler.isTomado();
     }
 
     public void prepararVerCalificacion(ActionEvent event) {
         alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
-        alquiler = alquileresBean.getAlquiler(usuarioLogueado, alquilerId);
+        alquiler = buscarAlquiler(alquilerId);
         try {
             calificacionToma = alquileresBean.getCalificacionToma(alquilerId);
             calificacionOfrece = alquileresBean.getCalificacionOfrece(alquilerId);
@@ -198,6 +198,15 @@ public class AlquileresMBean {
         FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
                 "Replica registrada.", "");
         FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+    
+    private AlquilerDTO buscarAlquiler(int alquilerId) {
+        for(AlquilerDTO alq: alquileres) {
+            if(alq.getIdAlquiler() == alquilerId) {
+                return alq;
+            }
+        }
+        return null;
     }
     
     private double calcularMonto(Date fechaDesde, Date fechaHasta, PublicacionDTO publicacion) {

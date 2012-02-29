@@ -837,28 +837,9 @@ h1, h2, h3 {
     text-align: center;
 }
 
-.itemsTable.ui-datagrid .ui-datagrid-data td,
-.itemsTable.ui-datagrid .ui-datagrid-data-empty td{
-    border: none;
-    padding: 1px;
-}
-
 .itemsTable.ui-datagrid .ui-paginator-bottom {
     background: none;
 }
-
-.itemsTable .ui-widget-header {
-    border: none !important;
-}
-
-.itemsTable .ui-state-default {
-    border: none !important;
-}
-
-.itemsTable tr.ui-widget-content {
-    border: none !important;
-} /* Fin de data table en resultados.xhtml */
-
 
 /* hacer el fondo de la pagina mas oscuro cuando se abre un dialogo modal */ 
 .ui-widget-overlay {
@@ -1068,4 +1049,37 @@ h1, h2, h3 {
 
 .categoriaTree .ui-tree-node-label {
     font-size: 12px;
+}
+
+.panelInfoAlquiler {
+    float: left;
+    background: aliceblue; 
+    padding: 10px; 
+    width: 360px;
+    border-radius: 6px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px; 
+}
+
+.label {
+    font-size: 13px;
+    color: gray;
+    width: 140px;
+}
+
+.valor, .valorDest {
+    margin-left: 10px;
+    font-size: 14px;
+}
+.valorDest {
+    font-weight: bold;
+}
+
+a.valor {
+    color: steelblue;
+    font-weight: bold;
+    text-decoration: none;
+}
+a:hover.valor {
+    color: #174867;
 }

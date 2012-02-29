@@ -16,48 +16,49 @@
             </ui:define>
 
             <ui:define name="left" >
-                <comps:categoriesMenu />
+
             </ui:define>
 
             <ui:define name="principal">
-                <div style="text-align: center" >
-                    <h:outputText value="Ingresar" style="font-size: 18px; font-weight: bold;margin-top: 15px" />
-                    <br/><br/>
-                    <h:form>
-                        <p:commandLink actionListener="#{login.fbLogin}" >
-                            <h:graphicImage value="#{resource['images:conectarFb_grande.png']}" />
-                        </p:commandLink>
-                    </h:form>
-                    <br/><br/>
-                    <h:outputLabel value="Usar cuenta de AlquilaCosas:" />
-                    <br/><br/>
-                    <h:form>
-                        <h:panelGrid columns="2" style="margin-left: auto;margin-right: auto;" >
-                            <h:outputLabel  value="Usuario" for="username" />
-                            <p:inputText id="username" value="#{login.username}" styleClass="passInput" required="true"
-                                         requiredMessage="Ingrese nombre de usuario" />
-                            <h:outputLabel value="Contraseña" for="password" />
-                            <p:password id="password" value="#{login.password}" required="true" feedback="false"
-                                        styleClass="passInput" requiredMessage="Ingrese contraseña" />
-                            <f:facet name="footer" >
-                                <p:commandButton id="login" value="Entrar" actionListener="#{login.loguearse}" update="@form" />
-                            </f:facet>
-                        </h:panelGrid>
-                        <p:messages id="msgs" />
-                    </h:form>
+                <div style="text-align: center; width: 100%" >
+                    <p:panel style="width: 400px">
+                        <h:outputText value="Ingresar" style="font-size: 18px; font-weight: bold;margin-top: 15px" />
+                        <br/><br/>
+                        <h:form>
+                            <p:commandLink actionListener="#{login.fbLogin}" >
+                                <h:graphicImage value="#{resource['images:conectarFb_grande.png']}" />
+                            </p:commandLink>
+                        </h:form>
+                        <br/><br/>
+                        <h:outputLabel value="Usar cuenta de AlquilaCosas:" />
+                        <br/><br/>
+                        <h:form>
+                            <h:panelGrid columns="2" style="margin-left: auto;margin-right: auto;" >
+                                <h:outputLabel  value="Usuario" for="username" />
+                                <p:inputText id="username" value="#{login.username}" styleClass="passInput" required="true"
+                                             requiredMessage="Ingrese nombre de usuario" />
+                                <h:outputLabel value="Contraseña" for="password" />
+                                <p:password id="password" value="#{login.password}" required="true" feedback="false"
+                                            styleClass="passInput" requiredMessage="Ingrese contraseña" />
+                                <f:facet name="footer" >
+                                    <p:commandButton id="login" value="Entrar" actionListener="#{login.loguearse}" update="@form" />
+                                </f:facet>
+                            </h:panelGrid>
+                            <p:messages id="msgs" />
+                        </h:form>
 
-                    <p:separator />
+                        <p:separator />
 
-                    <h:outputText value="Registrarse" style="font-size: 18px; font-weight: bold;margin-top: 15px" />
-                    <br/><br/>
-                    <h:form>
-                        <p:commandLink actionListener="#{login.fbLogin}" >
-                            <h:graphicImage value="#{resource['images:registrarFb_grande.png']}" />
-                        </p:commandLink>
-                    </h:form>
-                    <br/><br/>
-                    <h:link value="Crear una cuenta de AlquilaCosas" outcome="/vistas/registrarUsuario" />
-
+                        <h:outputText value="Registrarse" style="font-size: 18px; font-weight: bold;margin-top: 15px" />
+                        <br/><br/>
+                        <h:form>
+                            <p:commandLink actionListener="#{login.fbLogin}" >
+                                <h:graphicImage value="#{resource['images:registrarFb_grande.png']}" />
+                            </p:commandLink>
+                        </h:form>
+                        <br/><br/>
+                        <h:link value="Crear una cuenta de AlquilaCosas" outcome="/vistas/registrarUsuario" />
+                    </p:panel>
                 </div>
 
             </ui:define>

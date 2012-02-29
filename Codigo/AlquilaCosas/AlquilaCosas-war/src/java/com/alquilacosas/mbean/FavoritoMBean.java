@@ -5,7 +5,7 @@
 package com.alquilacosas.mbean;
 
 import com.alquilacosas.dto.PublicacionDTO;
-import com.alquilacosas.ejb.session.FavoritoLocalBean;
+import com.alquilacosas.ejb.session.FavoritoBeanLocal;
 import com.alquilacosas.ejb.session.PublicacionBeanLocal;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -25,7 +25,7 @@ import org.apache.log4j.Logger;
 public class FavoritoMBean {
 
     @EJB
-    private FavoritoLocalBean favoritoBean;
+    private FavoritoBeanLocal favoritoBean;
     @EJB
     private PublicacionBeanLocal publicacionBean;
     
@@ -44,45 +44,56 @@ public class FavoritoMBean {
         Logger.getLogger(MisPublicacionesMBean.class).debug("MisPublicacionesMBean: postconstruct."); 
         if( usuarioLogueado.getUsuarioId() != null ){
             publicacionesDto = favoritoBean.getFavoritos(usuarioLogueado.getUsuarioId());
-        }else{
-            redirect();
-        }
-  
+        }  
     }
     
-    public void agregarFavorito( Integer userId, PublicacionDTO pDto){
+    public boolean agregarFavorito( Integer userId, PublicacionDTO pDto){
+        if(userId == null) {
+            return false;
+        }
         try {
             favoritoBean.agregarFavorito(userId, pDto);
+            return true;
         } catch (Exception e) {
             System.out.println("todo mal...");
+            return false;
         }
         
     }
     
     public void eliminarFavorito() {
         try {
-            
-            Integer pId = publicacionId;       
             Integer userId = usuarioLogueado.getUsuarioId();        
-            favoritoBean.eliminarFavorito(userId, pId);
+            favoritoBean.eliminarFavorito(userId, publicacionId);
+            quitarPublicacion(publicacionId);
         } catch (Exception e) {
             System.out.println("todo mal..." + e.getMessage());
         }
     }
     
+    public void quitarPublicacion(Integer publicacionId) {
+        for(int i = 0; i < publicacionesDto.size(); i++) {
+            PublicacionDTO p = publicacionesDto.get(i);
+            if(p.getId() == publicacionId) {
+                publicacionesDto.remove(p);
+                break;
+            }
+        }
+    }
+    
     private void redirect() {
         try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("inicio2.xhtml");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("../inicio2.xhtml");
         } catch (Exception e) {
-            Logger.getLogger(DesplieguePublicacionMBean.class).error("El usuario no se registro");
+            Logger.getLogger(DesplieguePublicacionMBean.class).error("El usuario no esta logueado");
         }
     }
 
-    public FavoritoLocalBean getFavoritoBean() {
+    public FavoritoBeanLocal getFavoritoBean() {
         return favoritoBean;
     }
 
-    public void setFavoritoBean(FavoritoLocalBean favoritoBean) {
+    public void setFavoritoBean(FavoritoBeanLocal favoritoBean) {
         this.favoritoBean = favoritoBean;
     }
 
@@ -111,7 +122,6 @@ public class FavoritoMBean {
     }
 
     public Integer getPublicacionId() {
-        System.out.println("pasa por acá!!");
         return publicacionId;
     }
 

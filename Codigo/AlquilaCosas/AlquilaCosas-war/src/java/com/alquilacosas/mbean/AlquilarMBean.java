@@ -6,10 +6,8 @@ package com.alquilacosas.mbean;
 
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.PublicacionDTO;
-import com.alquilacosas.ejb.entity.Periodo;
 import com.alquilacosas.ejb.session.PublicacionBeanLocal;
-import java.text.DateFormat;
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -21,7 +19,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.primefaces.event.DateSelectEvent;
@@ -33,7 +30,7 @@ import org.primefaces.json.JSONObject;
  */
 @ManagedBean(name = "alquilarBean")
 @ViewScoped
-public class AlquilarMBean {
+public class AlquilarMBean implements Serializable {
 
     @EJB
     private PublicacionBeanLocal publicacionBean;
@@ -44,29 +41,24 @@ public class AlquilarMBean {
     private String myJson;
     private Date fechaInicio, fechaDevolucion;
     private Integer publicacionId;
-    private int periodoAlquiler;
-    private List<SelectItem> periodos;
-    private int periodoSeleccionado;
     private Date hoy;
     private int cantidadProductos;
-    private double userRating, monto;
+    private double monto;
 
     @PostConstruct
     public void init() {
-        Logger.getLogger(DesplieguePublicacionMBean.class).debug("DesplieguePublicacionMBean: postconstruct.");
+        Logger.getLogger(AlquilarMBean.class).debug("AlquilarMBean: postconstruct.");
         String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
 
         try {
             publicacionId = Integer.parseInt(id);
         } catch (Exception e) {
-            Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al parsear ID de parametro.");
+            Logger.getLogger(AlquilarMBean.class).error("Excepcion al parsear ID de parametro.");
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "No puedes alquilar tus propios productos", "");
             FacesContext.getCurrentInstance().addMessage(null, msg);
             redirect();
             return;
         }
-        
-        ((HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest()).getSession(true).setAttribute("param", "id=" + id);
         
         publicacion = publicacionBean.getPublicacion(publicacionId);
         if (login.getUsuarioId() == publicacion.getPropietario().getId()) {
@@ -79,29 +71,21 @@ public class AlquilarMBean {
         try {
             fechas = publicacionBean.getFechasSinStock(publicacionId, cantidadProductos);
         } catch (AlquilaCosasException e) {
-            Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al ejecutar getFechasSinStock(): " + e.getMessage());
+            Logger.getLogger(AlquilarMBean.class).error("Excepcion al ejecutar getFechasSinStock(): " + e.getMessage());
             redirect();
             return;
         }
-        userRating = publicacionBean.getUserRate(publicacion.getPropietario());
         createDictionary();
         
         cantidadProductos = 1;
         fechaInicio = hoy = new Date();
-        periodos = new ArrayList<SelectItem>();
-        periodoAlquiler = 1;
-        List<Periodo> listaPeriodos = publicacionBean.getPeriodos();
-        periodoSeleccionado = 2; //alto hardCode, para que por defecto este seleccionado dia y no hora (Jorge)
-        for (Periodo periodo : listaPeriodos) {
-            periodos.add(new SelectItem(periodo.getPeriodoId(), periodo.getNombre().name()));
-        }
     }
 
     public void redirect() {
         try {
             FacesContext.getCurrentInstance().getExternalContext().redirect("../inicio2.xhtml");
         } catch (Exception e) {
-            Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al ejecutar redirect().");
+            Logger.getLogger(AlquilarMBean.class).error("Excepcion al ejecutar redirect().");
         }
     }
     
@@ -111,6 +95,16 @@ public class AlquilarMBean {
     }
 
     public String confirmarPedido() {
+        if(cantidadProductos < 1) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "La cantidad minima es 1", "");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return "";
+        } else if(cantidadProductos > publicacion.getCantidad()) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                    "La cantidad seleccionada es mayor que la cantidad disponible", "");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return "";
+        }
         String redireccion = "";
         Calendar beginDate = Calendar.getInstance();
         beginDate.setTime(fechaInicio);
@@ -229,14 +223,16 @@ public class AlquilarMBean {
         temp.add(Calendar.HOUR_OF_DAY, 1);
         double precioHoras = 0D;
         while (endDate.after(temp) || endDate.equals(temp)) {
-            temp.add(Calendar.HOUR_OF_DAY, 1);
             if(publicacion.getPrecioHora() != null) {
-                precioHoras = publicacion.getPrecioHora();
+                precioHoras += publicacion.getPrecioHora();
             } else {
                 precioHoras = publicacion.getPrecioDia();
                 break;
             }
+            temp.add(Calendar.HOUR_OF_DAY, 1);
+            System.out.println("iterando.. precio horas parcial: " + precioHoras);
         }
+        System.out.println("precio horas FINAL: " + precioHoras);
         // evitar que el precio de horas sea superior al precio de un dia.
         if(precioHoras > publicacion.getPrecioDia()) {
             precioHoras = publicacion.getPrecioDia();
@@ -330,30 +326,6 @@ public class AlquilarMBean {
         this.myJson = myJson;
     }
 
-    public int getPeriodoAlquiler() {
-        return periodoAlquiler;
-    }
-
-    public void setPeriodoAlquiler(int periodoAlquiler) {
-        this.periodoAlquiler = periodoAlquiler;
-    }
-
-    public int getPeriodoSeleccionado() {
-        return periodoSeleccionado;
-    }
-
-    public void setPeriodoSeleccionado(int periodoSeleccionado) {
-        this.periodoSeleccionado = periodoSeleccionado;
-    }
-
-    public List<SelectItem> getPeriodos() {
-        return periodos;
-    }
-
-    public void setPeriodos(List<SelectItem> periodos) {
-        this.periodos = periodos;
-    }
-
     public PublicacionDTO getPublicacion() {
         return publicacion;
     }
@@ -384,14 +356,6 @@ public class AlquilarMBean {
 
     public void setCantidadProductos(int cantidadProductos) {
         this.cantidadProductos = cantidadProductos;
-    }
-
-    public double getUserRating() {
-        return userRating;
-    }
-
-    public void setUserRating(double userRating) {
-        this.userRating = userRating;
     }
 
     public Integer getPublicacionId() {
