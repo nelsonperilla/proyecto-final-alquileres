@@ -80,14 +80,6 @@ public class FavoritoMBean {
             }
         }
     }
-    
-    private void redirect() {
-        try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("../inicio2.xhtml");
-        } catch (Exception e) {
-            Logger.getLogger(DesplieguePublicacionMBean.class).error("El usuario no esta logueado");
-        }
-    }
 
     public FavoritoBeanLocal getFavoritoBean() {
         return favoritoBean;

@@ -51,6 +51,7 @@ public class MultiPageMessagesSupport implements PhaseListener {
      * not going to show up: don't display messages yet.
      */
     // TODO: Blog this (MultiPageMessagesSupport)
+    @Override
     public void beforePhase(final PhaseEvent event) {
         FacesContext facesContext = event.getFacesContext();
         this.saveMessages(facesContext);

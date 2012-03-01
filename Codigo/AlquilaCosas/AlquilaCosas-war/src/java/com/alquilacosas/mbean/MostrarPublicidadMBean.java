@@ -41,7 +41,7 @@ public class MostrarPublicidadMBean implements Serializable {
         Logger.getLogger(MostrarPublicidadMBean.class).debug("MostrarPublicidadMBean: postconstruct.");
         HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String url = req.getPathInfo();
-        if(url.contains("inicio.xhtml")) {
+        if(url != null && url.contains("/vistas/inicio")) {
             publicidadesCarrusel = publicidadBean.getPublicidades(UbicacionPublicidad.CARRUSEL, 5);
         }
         publicidadesIzq = publicidadBean.getPublicidades(UbicacionPublicidad.LATERAL_IZQUIERDA, 1);

@@ -72,7 +72,7 @@ public class ModificarAlquilerMBean {
     
     public void redirect() {
         try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("articulos.xhtml");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("articulos.jsf");
         } catch (Exception e) {
             Logger.getLogger(ModificarAlquilerMBean.class).error("Excepcion al ejecutar redirect().");
         }

@@ -88,20 +88,20 @@ public class FacebookAccessMBean {
                     String redirect = (String) req.getSession(true).getAttribute("redirectUrl");
                     req.getSession(true).removeAttribute("redirectUrl");
                     if (redirect != null) {
-                        redirect = "/AlquilaCosas-war" + redirect;
+                        redirect = req.getContextPath() + redirect;
                     } else {
-                        redirect = "/AlquilaCosas-war/faces/vistas/inicio2.xhtml";
+                        redirect = req.getContextPath() + "/vistas/inicio2.jsf";
                     }
                     context.redirect(redirect);
                     FacesContext.getCurrentInstance().responseComplete();
                 } else {
                     System.out.println("access token no recibido");
-                    context.redirect("/AlquilaCosas-war/faces/vistas/inicio.xhtml");
+                    context.redirect(req.getContextPath() + "/vistas/inicio2.jsf");
                     FacesContext.getCurrentInstance().responseComplete();
                 }
             } catch (IOException e) {
                 try {
-                    context.redirect("/AlquilaCosas-war/faces/vistas/inicio.xhtml");
+                    context.redirect(req.getContextPath() + "/vistas/inicio2.jsf");
                     FacesContext.getCurrentInstance().responseComplete();
                 } catch(IOException ex) {
                     

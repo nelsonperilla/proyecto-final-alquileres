@@ -89,7 +89,7 @@ public class DesplieguePublicacionMBean implements Serializable {
             return;
         }
 
-        ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getSession(true).setAttribute("param", "id=" + id);
+        //((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getSession(true).setAttribute("param", "id=" + id);
 
         try {
             publicacionId = Integer.parseInt(id);
@@ -168,7 +168,7 @@ public class DesplieguePublicacionMBean implements Serializable {
 
     public void redirect() {
         try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("inicio2.xhtml");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("inicio2.jsf");
         } catch (Exception e) {
             Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al ejecutar redirect().");
         }

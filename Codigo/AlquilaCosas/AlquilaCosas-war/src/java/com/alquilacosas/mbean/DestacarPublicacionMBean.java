@@ -61,7 +61,7 @@ public class DestacarPublicacionMBean implements Serializable {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
                     "La publicacion no se puede destacar", "No se indico ninguna publicacion.");
             FacesContext.getCurrentInstance().addMessage(null, msg);
-            redirect("/vistas/inicio.xhtml");
+            redirect("../inicio.jsf");
             return;
         }
         publicacion = null;
@@ -69,7 +69,7 @@ public class DestacarPublicacionMBean implements Serializable {
             publicacion = destacarBean.getPublicacion(Integer.valueOf(id), login.getUsuarioId());
         } catch(AlquilaCosasException e) {
             Logger.getLogger(DestacarPublicacionMBean.class).error("La publicacion indicada no se puede destacar: " + e.getMessage());
-            redirect("/AlquilaCosas-war/faces/vistas/inicio.xhtml");
+            redirect("../inicio.jsf");
             return;
         }
         

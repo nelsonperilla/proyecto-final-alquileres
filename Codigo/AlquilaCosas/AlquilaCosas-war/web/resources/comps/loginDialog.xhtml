@@ -11,7 +11,8 @@
     </cc:interface>
 
     <!-- IMPLEMENTATION -->
-    <cc:implementation>
+    <cc:implementation >
+
         <p:dialog widgetVar="login" modal="true" showHeader="false" style="text-align: center" 
                   resizable="false" showEffect="fade" hideEffect="fade" onHide="$('.ui-messages').css('display','none');" >
             <div style="position: absolute; top: 5px; right: 5px">
@@ -20,7 +21,7 @@
             <h:outputText value="Ingresar" style="font-size: 18px; font-weight: bold;margin-top: 15px" />
             <br/><br/>
             <h:form>
-                <p:commandLink actionListener="#{login.fbLogin}" >
+                <p:commandLink actionListener="#{login.fbLoginEnPagina}" >
                     <h:graphicImage value="#{resource['images:conectarFb_grande.png']}" />
                 </p:commandLink>
             </h:form>
@@ -47,7 +48,7 @@
             <h:outputText value="Registrarse" style="font-size: 18px; font-weight: bold;margin-top: 15px" />
             <br/><br/>
             <h:form>
-                <p:commandLink actionListener="#{login.fbLogin}" >
+                <p:commandLink actionListener="#{login.fbLoginEnPagina}" >
                     <h:graphicImage value="#{resource['images:registrarFb_grande.png']}" />
                 </p:commandLink>
             </h:form>

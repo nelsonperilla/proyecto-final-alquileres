@@ -6,11 +6,13 @@ package com.alquilacosas.servlet;
 
 import com.alquilacosas.ejb.entity.Rol.NombreRol;
 import com.alquilacosas.mbean.ManejadorUsuarioMBean;
+import com.sun.faces.application.resource.ResourceHandlerImpl;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.faces.application.ResourceHandler;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -60,25 +62,40 @@ public class SecurityFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
         
-        String destino = req.getServletPath() + req.getPathInfo();
+        String destino = req.getServletPath();
+        String uri = req.getRequestURI();
+        
+        // Ignorar JSF2/Primefaces resources (which are also mapped on FacesServlet).
+        if (destino.startsWith(ResourceHandler.RESOURCE_IDENTIFIER)) {
+            chain.doFilter(request, response);
+            return;
+        }
         
         login = (ManejadorUsuarioMBean) req.getSession().getAttribute("login");
         boolean logueado = false;
         if(login != null)
             logueado = login.isLogueado();
+        
+        resp.setHeader("Cache-Control", "no-cache,no-store,must-revalidate"); // HTTP 1.1
+        resp.setHeader("Pragma", "no-cache"); // HTTP 1.0
+        resp.setDateHeader("Expires", 0); // Proxies.
+        
+        if(!logueado && req.getQueryString() != null) {
+            login.setUrlParams(req.getQueryString());
+        }
+        
         for(String s: patrones.keySet()) {
             if(destino.contains(s)) {
                 if(!logueado) {
-//                    destino = destino.contains("/faces") ? destino.substring(destino.indexOf("/faces") + 6): destino;
                     if(req.getQueryString() != null && !req.getQueryString().equals("")) {
                         destino += "?" + req.getQueryString();
                     }
                     req.getSession(true).setAttribute("redirectUrl", destino);
-                    resp.sendRedirect("/AlquilaCosas-war/faces/vistas/login.xhtml");
+                    resp.sendRedirect(req.getContextPath() + "/vistas/login.jsf");
                     return;
                 }
                 if(!login.getUsuario().getRoles().contains(patrones.get(s))){
-                    resp.sendRedirect("/AlquilaCosas-war/faces/vistas/inicio2.xhtml");
+                    resp.sendRedirect(req.getContextPath() + "/vistas/inicio2.jsf");
                     return;
                 }
             }

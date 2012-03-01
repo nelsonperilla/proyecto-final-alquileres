@@ -56,7 +56,7 @@ public class VerCategoriaMBean implements Serializable {
         String param = FacesContext.getCurrentInstance().getExternalContext()
                 .getRequestParameterMap().get("id");
         if(param != null) {
-            ((HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest()).getSession(true).setAttribute("param", "id=" + param);
+            //((HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest()).getSession(true).setAttribute("param", "id=" + param);
             try {
                 id = Integer.valueOf(param);
             } catch (NumberFormatException e) {
