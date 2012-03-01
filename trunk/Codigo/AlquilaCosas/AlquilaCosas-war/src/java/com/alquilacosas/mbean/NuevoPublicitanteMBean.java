@@ -36,7 +36,7 @@ public class NuevoPublicitanteMBean implements Serializable {
         Logger.getLogger(NuevoPublicitanteMBean.class).debug("NuevoPublicitanteMBean: postconstruct.");
         if(loginBean.isPublicitante()) {
             try {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("inicio.xhtml");
+                FacesContext.getCurrentInstance().getExternalContext().redirect("../inicio.jsf");
                 FacesContext.getCurrentInstance().responseComplete();
             } catch (Exception e) {
                 Logger.getLogger(NuevoPublicitanteMBean.class).error("Excepcion al ejecutar redirect().");

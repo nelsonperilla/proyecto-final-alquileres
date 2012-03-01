@@ -104,7 +104,6 @@ function handlePedirCambioAlquiler(xhr, status, args) {
         pedirCambioDlg.hide();
     }
 }
-
     
 function getUrlVars() {
     var vars = [], hash;

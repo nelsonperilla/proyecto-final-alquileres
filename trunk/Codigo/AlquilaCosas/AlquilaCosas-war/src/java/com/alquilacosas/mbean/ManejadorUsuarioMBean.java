@@ -47,11 +47,12 @@ public class ManejadorUsuarioMBean implements Serializable {
     private String fbId;
     private Integer usuarioId;
     private boolean logueado, administrador, publicitante, fbLogin;
+    private String urlParams;
     
     private static final String api_key = "187196061385476";
     private static final String secret = "f43b355d1f187ec2f65e4e681dbce1c1";
     private static final String client_id = "187196061385476";
-    private static final String redirect_uri = "http://localhost.com:8080/AlquilaCosas-war/faces/vistas/fbAccess.xhtml";
+    private static final String redirect_uri = "http://localhost.com:8080/AlquilaCosas-war/vistas/fbAccess.jsf";
     private static final String[] perms = new String[]{"publish_stream", "email", "user_location"};
 
     /** Creates a new instance of LoginMBean */
@@ -85,9 +86,9 @@ public class ManejadorUsuarioMBean implements Serializable {
         String url = (String) req.getSession(true).getAttribute("redirectUrl");
         req.getSession(true).removeAttribute("redirectUrl");
         if(url == null)
-            url = "/AlquilaCosas-war/faces/vistas/inicio.xhtml";
+            url = req.getContextPath() + "/vistas/inicio2.jsf";
         else
-            url = "/AlquilaCosas-war" + url;
+            url = req.getContextPath() + url;
         try {
             context.getExternalContext().redirect(url);
         } catch (IOException e) {
@@ -112,24 +113,33 @@ public class ManejadorUsuarioMBean implements Serializable {
         RequestContext.getCurrentInstance().addCallbackParam("logueado", true);
     }
     
+    public String recargarPagina() {
+        return null;
+    }
+    
     /**
      * Comienza a efectuar los pasos para loguear al usuario a traves de Facebook.
      * El primer paso es redireccionar a una pagina de facebook brindando algunos datos.
      */
-    public void fbLogin() {
+    public void fbLoginEnPagina() {
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         HttpServletRequest req = (HttpServletRequest) ec.getRequest();
-        String redirect = (String) req.getSession(true).getAttribute("redirectUrl");
         // si no hay parametro de redireccionamiento, obtener url actual y setearla como parametro de redireccionamiento
-        if(redirect == null || redirect.equals("")) {
-            String path = req.getPathInfo();
-            String param = (String) req.getSession(true).getAttribute("param");
-            if(param != null && !param.equals("")) {
-                path = path + "?" + param;
-            }
-            ((HttpSession)ec.getSession(true)).setAttribute("redirectUrl", "/faces" + path);
-            req.getSession(true).removeAttribute("param");
+        String path = req.getServletPath();
+        if(urlParams != null && !urlParams.equals("")) {
+            path = path + "?" + urlParams;
         }
+        ((HttpSession)ec.getSession(true)).setAttribute("redirectUrl", path);
+        try {
+            String url = getLoginRedirectURL();
+            ec.redirect(url);
+        } catch (Exception e) {
+            Logger.getLogger(ManejadorUsuarioMBean.class).error("Excepcion al ejecutar redirect().");
+        }
+    }
+    
+    public void fbLogin() {
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         try {
             String url = getLoginRedirectURL();
             ec.redirect(url);
@@ -213,7 +223,7 @@ public class ManejadorUsuarioMBean implements Serializable {
         password = "";
         logueado = administrador = publicitante = false;
         request.getSession().invalidate();
-        return "/vistas/inicio2.xhtml?faces-redirect=true";
+        return "/vistas/inicio2.jsf?faces-redirect=true";
     }
     
     @Remove
@@ -223,7 +233,7 @@ public class ManejadorUsuarioMBean implements Serializable {
         logueado = administrador = publicitante = fbLogin = false;
         usuario = null;
         request.getSession().invalidate();
-        return "/vistas/inicio2.xhtml?faces-redirect=true";
+        return "/vistas/inicio2.jsf?faces-redirect=true";
     }
     
     /**
@@ -331,5 +341,13 @@ public class ManejadorUsuarioMBean implements Serializable {
 
     public void setFbId(String fbId) {
         this.fbId = fbId;
+    }
+
+    public String getUrlParams() {
+        return urlParams;
+    }
+
+    public void setUrlParams(String urlParams) {
+        this.urlParams = urlParams;
     }
 }

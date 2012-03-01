@@ -137,7 +137,7 @@ public class ModificarRepublicarPublicidadMBean implements Serializable{
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return "";
         }
-        return "misPublicidades.xhtml?faces-redirect=true";
+        return "misPublicidades.jsf?faces-redirect=true";
     }
     
     public void registrarPublicidad() {
@@ -212,7 +212,7 @@ public class ModificarRepublicarPublicidadMBean implements Serializable{
         String redirectUrl = PaypalUtil.setExpressCheckout(descripcion, Integer.toString(pagoId), null, precio.toString());
         if (redirectUrl != null) {
             try {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("inicio.xhtml");
+                FacesContext.getCurrentInstance().getExternalContext().redirect("inicio2.jsf");
                 FacesContext.getCurrentInstance().responseComplete();
             } catch (Exception e) {
                 Logger.getLogger(RegistrarPublicidadMBean.class).error("Excepcion al ejecutar redirect().");

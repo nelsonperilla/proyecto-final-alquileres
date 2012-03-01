@@ -26,7 +26,7 @@
     </filter>
     <filter-mapping>
         <filter-name>SecurityFilter</filter-name>
-        <url-pattern>*.xhtml</url-pattern>
+        <url-pattern>*.jsf</url-pattern>
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>FORWARD</dispatcher>
         <dispatcher>INCLUDE</dispatcher>
@@ -46,7 +46,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
-        <url-pattern>/faces/*</url-pattern>
+        <url-pattern>*.jsf</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>ImageServlet</servlet-name>

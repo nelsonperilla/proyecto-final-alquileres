@@ -67,7 +67,7 @@ public class AlquilarMBean implements Serializable {
                     "No esta permitido alquilar sus propios productos", ""));
             redirect();
         }
-        ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getSession(true).setAttribute("param", "id=" + publicacionId);
+        //((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getSession(true).setAttribute("param", "id=" + publicacionId);
         try {
             fechas = publicacionBean.getFechasSinStock(publicacionId, cantidadProductos);
         } catch (AlquilaCosasException e) {
@@ -83,7 +83,7 @@ public class AlquilarMBean implements Serializable {
 
     public void redirect() {
         try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("../inicio2.xhtml");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("../inicio2.jsf");
         } catch (Exception e) {
             Logger.getLogger(AlquilarMBean.class).error("Excepcion al ejecutar redirect().");
         }

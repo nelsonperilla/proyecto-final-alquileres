@@ -143,7 +143,7 @@ public class DenunciarPreguntaMBean implements Serializable {
 
     public void redirect() {
         try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("inicio.xhtml");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("inicio.jsf");
             FacesContext.getCurrentInstance().responseComplete();
         } catch (Exception e) {
             Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al ejecutar redirect().");

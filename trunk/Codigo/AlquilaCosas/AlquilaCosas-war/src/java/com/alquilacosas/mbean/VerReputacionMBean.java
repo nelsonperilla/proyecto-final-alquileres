@@ -50,7 +50,7 @@ public class VerReputacionMBean implements Serializable {
             usuarioCorrecto = false;
             return;
         }
-        ((HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest()).getSession(true).setAttribute("param", "id=" + id);
+        //((HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest()).getSession(true).setAttribute("param", "id=" + id);
         try {
             usuarioId = Integer.parseInt(id);
         } catch (NumberFormatException e) {
