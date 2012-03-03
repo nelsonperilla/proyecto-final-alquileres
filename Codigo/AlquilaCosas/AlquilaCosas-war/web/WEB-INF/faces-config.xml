@@ -61,17 +61,17 @@
         <from-view-id>*</from-view-id>
         <navigation-case>
             <from-outcome>pmostrarPublicacion</from-outcome>
-            <to-view-id>/vistas/mostrarPublicacion.xhtml?id=#{publicationsGroup.selectedPublicationId}</to-view-id>
+            <to-view-id>/vistas/mostrarPublicacion.jsf?id=#{publicationsGroup.selectedPublicationId}</to-view-id>
             <redirect/>
         </navigation-case>
         <navigation-case>
             <from-action>#{buscarBean.buscar}</from-action>
-            <to-view-id>/vistas/resultados.xhtml?art=#{buscarBean.criterio}</to-view-id>
+            <to-view-id>/vistas/resultados.jsf?art=#{buscarBean.criterio}</to-view-id>
             <redirect/>
         </navigation-case>
         <navigation-case>
             <from-outcome>pinicio</from-outcome>
-            <to-view-id>/vistas/inicio.xhtml</to-view-id>
+            <to-view-id>/vistas/inicio2.jsf</to-view-id>
             <redirect/>
         </navigation-case>
     </navigation-rule>

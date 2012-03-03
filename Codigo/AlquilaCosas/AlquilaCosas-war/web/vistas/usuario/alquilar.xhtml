@@ -49,50 +49,56 @@
                             </div>
                         </div>
 
-                        <h:form id="alquilarForm" >
-                            <h:panelGrid  columns="3" cellpadding="2" cellspacing="4" >
+                        <div style="float: left">
+                            <h:form id="alquilarForm" >
+                                <h:panelGrid  columns="3" cellpadding="2" cellspacing="4" >
 
-                                <f:facet name="header" >
-                                    <h:outputText value="Datos del pedido:" 
-                                                  style="font-size: 14px; font-weight: bold;"/>
-                                </f:facet>
+                                    <f:facet name="header" >
+                                        <h:outputText value="Datos del pedido:" 
+                                                      style="font-size: 14px; font-weight: bold;"/>
+                                    </f:facet>
 
-                                <h:outputLabel  value="Cantidad" for="cantidad" />
-                                <p:spinner id="cantidad" value="#{alquilarBean.cantidadProductos}" required="true" 
-                                           min="1" max="#{alquilarBean.publicacion.cantidad}" 
-                                           validatorMessage="Cantidad invalida" 
-                                           requiredMessage="Valor requerido" />
-                                <p:message for="cantidad" />
+                                    <h:outputLabel  value="Cantidad" for="cantidad" />
+                                    <p:spinner id="cantidad" value="#{alquilarBean.cantidadProductos}" required="true" 
+                                               min="1" max="#{alquilarBean.publicacion.cantidad}" 
+                                               validatorMessage="Cantidad invalida" 
+                                               requiredMessage="Valor requerido" />
+                                    <p:message for="cantidad" />
 
-                                <h:outputLabel  value="Fecha desde" for="fechaDesde" />
-                                <p:calendar id="fechaDesde" value="#{alquilarBean.fechaInicio}" showOn="button" pattern="dd/MM/yyyy HH:mm"
-                                            stepMinute="31" minMinute="1" mindate="#{alquilarBean.hoy}" required="true"
-                                            requiredMessage="Valor requerido" 
-                                            validatorMessage="Fecha invalida. Debe tener el formato dd/MM/yyyy HH:mm" />
-                                <p:message for="fechaDesde" />
+                                    <h:outputLabel  value="Fecha desde" for="fechaDesde" />
+                                    <p:calendar id="fechaDesde" value="#{alquilarBean.fechaInicio}" showOn="button" pattern="dd/MM/yyyy HH:mm"
+                                                stepMinute="31" minMinute="1" mindate="#{alquilarBean.hoy}" required="true"
+                                                requiredMessage="Valor requerido"
+                                                validatorMessage="Fecha invalida. Debe tener el formato dd/MM/yyyy HH:mm" >
+                                        <p:ajax process="@this" event="dateSelect" 
+                                                listener="#{alquilarBean.fechaDesdeCambio}" update="monto" />
+                                    </p:calendar>
+                                    <p:message for="fechaDesde" />
 
-                                <h:outputLabel value="Fecha hasta" for="fechaHasta" />
-                                <p:calendar id="fechaHasta" value="#{alquilarBean.fechaDevolucion}" showOn="button" pattern="dd/MM/yyyy HH:mm"
-                                            stepMinute="31" required="true" minMinute="1" 
-                                            requiredMessage="Valor requerido" 
-                                            validatorMessage="Fecha invalida. Debe tener el formato dd/MM/yyyy HH:mm" >
-                                    <p:ajax event="dateSelect" listener="#{alquilarBean.actualizarMonto}" update="monto" />
-                                </p:calendar>
-                                <p:message for="fechaHasta" />
+                                    <h:outputLabel value="Fecha hasta" for="fechaHasta" />
+                                    <p:calendar id="fechaHasta" value="#{alquilarBean.fechaDevolucion}" showOn="button" pattern="dd/MM/yyyy HH:mm"
+                                                stepMinute="31" required="true" minMinute="1" 
+                                                requiredMessage="Valor requerido" 
+                                                validatorMessage="Fecha invalida. Debe tener el formato dd/MM/yyyy HH:mm" >
+                                        <p:ajax event="dateSelect" process="@this" 
+                                                listener="#{alquilarBean.actualizarMonto}" update="monto" />
+                                    </p:calendar>
+                                    <p:message for="fechaHasta" />
 
-                                <h:outputLabel value="Monto" for="monto" />
-                                <h:outputText id="monto" value="$ #{alquilarBean.monto}" />
-                                <p/>
+                                    <h:outputLabel value="Monto" for="monto" />
+                                    <h:outputText id="monto" value="$ #{alquilarBean.monto}" />
+                                    <p/>
 
-                                <f:facet name="footer" >
+                                    <f:facet name="footer" >
 
-                                </f:facet>
-                            </h:panelGrid>
-                            <p:commandButton value="Enviar" action="#{alquilarBean.confirmarPedido}" ajax="false"/>
-                            <p:button value="Cancelar" outcome="/vistas/mostrarPublicacion" >
-                                <f:param name="id" value="#{alquilarBean.publicacionId}" />
-                            </p:button>
-                        </h:form>
+                                    </f:facet>
+                                </h:panelGrid>
+                                <p:commandButton value="Enviar" action="#{alquilarBean.confirmarPedido}" ajax="false"/>
+                                <p:button value="Cancelar" outcome="/vistas/mostrarPublicacion" >
+                                    <f:param name="id" value="#{alquilarBean.publicacionId}" />
+                                </p:button>
+                            </h:form>
+                        </div>
 
                         <div class="ayuda">
                             Al enviar el pedido de alquiler, se notificará al dueño del producto, 

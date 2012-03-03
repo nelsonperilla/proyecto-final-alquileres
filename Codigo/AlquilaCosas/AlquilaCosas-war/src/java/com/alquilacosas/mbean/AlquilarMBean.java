@@ -89,6 +89,15 @@ public class AlquilarMBean implements Serializable {
         }
     }
     
+    public void fechaDesdeCambio(DateSelectEvent event) {
+        if(fechaDevolucion == null) {
+            return;
+        } else {
+            fechaInicio = event.getDate();
+            calcularMonto();
+        }
+    }
+    
     public void actualizarMonto(DateSelectEvent event) {
         fechaDevolucion = event.getDate();
         calcularMonto();

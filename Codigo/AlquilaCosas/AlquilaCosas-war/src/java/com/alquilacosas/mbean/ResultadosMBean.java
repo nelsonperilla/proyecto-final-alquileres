@@ -65,8 +65,9 @@ public class ResultadosMBean implements Serializable {
     public void init() {
         Logger.getLogger(ResultadosMBean.class).debug("ResultadosMBean: postconstruct.");
         publicaciones = new ArrayList<PublicacionDTO>();
-        busqueda = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("art");
-
+        //busqueda = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("art");
+        busqueda = buscarMBean.getCriterio();
+        System.out.println("busqueda: " + busqueda);
         periodos = new ArrayList<SelectItem>();
         categoriaIds = new ArrayList<Integer>();
         seleccionadosAux = new ArrayList<TreeNode>();
