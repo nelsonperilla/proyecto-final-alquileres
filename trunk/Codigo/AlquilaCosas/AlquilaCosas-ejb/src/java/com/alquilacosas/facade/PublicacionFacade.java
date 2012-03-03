@@ -104,22 +104,8 @@ public class PublicacionFacade extends AbstractFacade<Publicacion> {
             predicates.add(predicate);
         }
         if (categoriaIds != null  && !categoriaIds.isEmpty()) {
-            
             Predicate p = root.get("categoriaFk").get("categoriaId").in(categoriaIds);
             predicates.add(p);
-            
-//            Path expCat = root.get("categoriaFk");
-//            List<Predicate> orPredicates = new ArrayList<Predicate>();
-//
-//            for (Integer i : categoriaIds) {
-//                Predicate p = criteriaBuilder.equal(expCat.get("categoriaId"), i);
-//                orPredicates.add(p);
-//            }
-//            Predicate[] orPredicateArray = new Predicate[orPredicates.size()];
-//            orPredicates.toArray(orPredicateArray);
-//
-//            Predicate orPredicate = criteriaBuilder.or(orPredicateArray);
-//            predicates.add(orPredicate);
         }
         if (ubicacion != null && !ubicacion.equals("")) {
             Join<Publicacion, Usuario> joinUser = root.join("usuarioFk");
@@ -206,35 +192,14 @@ public class PublicacionFacade extends AbstractFacade<Publicacion> {
             
             Predicate p = root.get("categoriaFk").get("categoriaId").in(categoriaIds);
             predicates.add(p);
-            
-//            Path expCat = root.get("categoriaFk");
-//            List<Predicate> orPredicates = new ArrayList<Predicate>();
-//
-//            for (Integer i : categoriaIds) {
-//                Predicate p = criteriaBuilder.equal(expCat.get("categoriaId"), i);
-//                orPredicates.add(p);
-//            }
-//            Predicate[] orPredicateArray = new Predicate[orPredicates.size()];
-//            orPredicates.toArray(orPredicateArray);
-//
-//            Predicate orPredicate = criteriaBuilder.or(orPredicateArray);
-//            predicates.add(orPredicate);
         }
         if (ubicacion != null && !ubicacion.equals("")) {
             Join<Publicacion, Usuario> joinUser = root.join("usuarioFk");
             Join<Usuario, Domicilio> joinDom = joinUser.join("domicilioList");
             Path dom = (Path) joinDom.as(Domicilio.class);
             ubicacion = "%" + ubicacion.toUpperCase() + "%";
-//            Path exp0 = dom.get("calle");
-//            Predicate p0 = criteriaBuilder.like(criteriaBuilder.upper(exp0), ubicacion);
             Path exp1 = dom.get("barrio");
             Predicate p1 = criteriaBuilder.like(criteriaBuilder.upper(exp1), ubicacion);
-//            Path exp2 = dom.get("ciudad");
-//            Predicate p2 = criteriaBuilder.like(criteriaBuilder.upper(exp2), ubicacion);
-//            Path exp3 = dom.get("provinciaFk").get("nombre");
-//            Predicate p3 = criteriaBuilder.like(criteriaBuilder.upper(exp3), ubicacion);
-
-//            Predicate pred = criteriaBuilder.or(p0, p1, p2, p3);
             predicates.add(p1);
         }
         if (nombrePeriodo != null && (precioDesde != null || precioHasta != null)) {

@@ -66,6 +66,7 @@ public class FacebookAccessMBean {
                 if (accessToken != null && expires != null) {
 
                     try {
+                        System.out.println("token: " + accessToken);
                         String res = IOUtil.urlToString(new URL("https://graph.facebook.com/me?access_token=" + accessToken));
                         System.out.println("fb resp:" + res);
                         JSONObject json = new JSONObject(res);

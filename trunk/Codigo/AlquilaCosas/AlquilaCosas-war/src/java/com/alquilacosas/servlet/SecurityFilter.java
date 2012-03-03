@@ -64,7 +64,6 @@ public class SecurityFilter implements Filter {
         
         String destino = req.getServletPath();
         String uri = req.getRequestURI();
-        
         // Ignorar JSF2/Primefaces resources (which are also mapped on FacesServlet).
         if (destino.startsWith(ResourceHandler.RESOURCE_IDENTIFIER)) {
             chain.doFilter(request, response);
@@ -80,7 +79,7 @@ public class SecurityFilter implements Filter {
         resp.setHeader("Pragma", "no-cache"); // HTTP 1.0
         resp.setDateHeader("Expires", 0); // Proxies.
         
-        if(!logueado && req.getQueryString() != null) {
+        if(!logueado && req.getQueryString() != null && login != null) {
             login.setUrlParams(req.getQueryString());
         }
         
