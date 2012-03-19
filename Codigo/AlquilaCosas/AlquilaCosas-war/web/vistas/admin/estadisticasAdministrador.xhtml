@@ -1,0 +1,190 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:comps="http://java.sun.com/jsf/composite/comps"
+      xmlns:p="http://primefaces.org/ui" 
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" >
+
+     <body>
+
+          <ui:composition template="./../../resources/templates/newTemplate.xhtml">
+
+               <ui:define name="left">
+                    <comps:admPanel />
+               </ui:define>
+
+               <ui:define name="principal">
+                    <h1>Estadísticas</h1>
+                    <h:form>
+                         <p:tabView id="tabEstadisticas">
+                              <p:tab title="Usuarios" id="tabUsuarios">  
+                                   <h:panelGrid columns="1" cellpadding="10">  
+                                        <p:barChart id="UsuarioCantidad" value="#{estadisticaAdmin.usuarioCantidadModel}" 
+                                                    legendPosition="ne" title="Cantidad usuarios por estado" min="0"
+                                                    style="height:300px; width:680px"/>  
+                                        <p:lineChart id="UsuarioAcumulado" value="#{estadisticaAdmin.usuarioAcumuladoModel}" 
+                                                     legendPosition="e" title="Acumulado por estado" minY="0"
+                                                     style="height:300px; width:680px"/>  
+                                        <p:panel header="Exportar Datos">  
+                                             <h:commandLink id="expExcelUser">  
+                                                  <p:graphicImage value="http://www.primefaces.org/showcase-labs/images/excel.png" />  
+                                                  <p:dataExporter type="xls" target="dTUsuarios" fileName="listEstadisticaUsuario" />  
+                                             </h:commandLink>  
+                                             <p:tooltip for="expExcelUser" value="Excel" showEffect="fade" hideEffect="fade" />
+                                             <h:commandLink id="expPDFUser">  
+                                                  <p:graphicImage value="http://www.primefaces.org/showcase-labs/images/pdf.png" />  
+                                                  <p:dataExporter type="pdf" target="dTUsuarios" fileName="listEstadisticaUsuario"/>  
+                                             </h:commandLink>  
+                                             <p:tooltip for="expPDFUser" value="PDF" showEffect="fade" hideEffect="fade" />
+                                             <h:commandLink id="expCSVUser">  
+                                                  <p:graphicImage value="http://www.primefaces.org/showcase-labs/images/csv.png" />  
+                                                  <p:dataExporter type="csv" target="dTUsuarios" fileName="listEstadisticaUsuario" />  
+                                             </h:commandLink>
+                                             <p:tooltip for="expCSVUser" value="CSV" showEffect="fade" hideEffect="fade" />
+                                        </p:panel> 
+                                        <p:dataTable id="dTUsuarios" var="user" value="#{estadisticaAdmin.listEstadisticaUsuario}" rendered="false">  
+                                             <p:column id="mesHeader">  
+                                                  <f:facet name="header">  
+                                                       Mes
+                                                  </f:facet>  
+                                                  <h:outputText value="#{user.mesFormat}" />  
+                                             </p:column>  
+
+                                             <p:column>  
+                                                  <f:facet name="header">  
+                                                       Estado  
+                                                  </f:facet>  
+                                                  <h:outputText value="#{user.estado}" />  
+                                             </p:column>  
+
+                                             <p:column>  
+                                                  <f:facet name="header">  
+                                                       Cantidad  
+                                                  </f:facet>  
+                                                  <h:outputText value="#{user.cantidad}" />  
+                                             </p:column>  
+
+                                             <p:column>  
+                                                  <f:facet name="header">  
+                                                       Acumulado  
+                                                  </f:facet>  
+                                                  <h:outputText value="#{user.acumulado}" />  
+                                             </p:column>  
+                                        </p:dataTable>
+                                   </h:panelGrid>  
+                              </p:tab>  
+                              <p:tab title="Publicaciones" id="tabPublicaciones">  
+                                   <h:panelGrid columns="1" cellpadding="10">  
+                                        <p:barChart id="PublicacionCantidad" value="#{estadisticaAdmin.publicacionCantidadModel}" 
+                                                    legendPosition="ne" title="Cantidad Publicaciones" min="0"
+                                                    style="height:300px; width:680px"/>  
+                                        <p:lineChart id="PublicacionAcumulado" value="#{estadisticaAdmin.publicacionAcumuladoModel}" 
+                                                     legendPosition="e" title="Acumulado" minY="0"
+                                                     style="height:300px; width:680px"/> 
+                                        <p:panel header="Exportar Datos">  
+                                             <h:commandLink id="expExcelPub">  
+                                                  <p:graphicImage value="http://www.primefaces.org/showcase-labs/images/excel.png" />  
+                                                  <p:dataExporter type="xls" target="dTPub" fileName="listEstadisticaPublicacion" />  
+                                             </h:commandLink>  
+                                             <p:tooltip for="expExcelUser" value="Excel" showEffect="fade" hideEffect="fade" />
+                                             <h:commandLink id="expPDFPub">  
+                                                  <p:graphicImage value="http://www.primefaces.org/showcase-labs/images/pdf.png" />  
+                                                  <p:dataExporter type="pdf" target="dTPub" fileName="listEstadisticaPublicacion"/>  
+                                             </h:commandLink>  
+                                             <p:tooltip for="expPDFUser" value="PDF" showEffect="fade" hideEffect="fade" />
+                                             <h:commandLink id="expCSVPub">  
+                                                  <p:graphicImage value="http://www.primefaces.org/showcase-labs/images/csv.png" />  
+                                                  <p:dataExporter type="csv" target="dTPub" fileName="listEstadisticaPublicacion" />  
+                                             </h:commandLink>
+                                             <p:tooltip for="expCSVUser" value="CSV" showEffect="fade" hideEffect="fade" />
+                                        </p:panel> 
+                                        <p:dataTable id="dTPub" var="pub" value="#{estadisticaAdmin.listEstadisticaPublicacion}" rendered="false">  
+                                             <p:column id="mesHeaderPub">  
+                                                  <f:facet name="header">  
+                                                       Mes
+                                                  </f:facet>  
+                                                  <h:outputText value="#{pub.mesFormat}" />  
+                                             </p:column>  
+
+                                             <p:column>  
+                                                  <f:facet name="header">  
+                                                       Cantidad  
+                                                  </f:facet>  
+                                                  <h:outputText value="#{pub.cantidad}" />  
+                                             </p:column>  
+
+                                             <p:column>  
+                                                  <f:facet name="header">  
+                                                       Acumulado  
+                                                  </f:facet>  
+                                                  <h:outputText value="#{pub.acumulado}" />  
+                                             </p:column>  
+                                        </p:dataTable>
+                                   </h:panelGrid>  
+                              </p:tab>  
+                              <p:tab title="Alquileres" id="tabAlquileres">  
+                                   <h:panelGrid columns="1" cellpadding="10">  
+                                        <p:barChart id="AlquilerCantidad" value="#{estadisticaAdmin.alquilerCantidadModel}" 
+                                                    legendPosition="ne" title="Cantidad de Alquileres" min="0"
+                                                    style="height:300px; width:680px"/>  
+                                        <p:lineChart id="AlquilerAcumulado" value="#{estadisticaAdmin.alquilerAcumuladoModel}" 
+                                                     legendPosition="e" title="Acumulado" minY="0"
+                                                     style="height:300px; width:680px"/>  
+                                        <p:panel header="Exportar Datos">  
+                                             <h:commandLink id="expExcelAlq">  
+                                                  <p:graphicImage value="http://www.primefaces.org/showcase-labs/images/excel.png" />  
+                                                  <p:dataExporter type="xls" target="dTAlq" fileName="listEstadisticaAlquiler" />  
+                                             </h:commandLink>  
+                                             <p:tooltip for="expExcelUser" value="Excel" showEffect="fade" hideEffect="fade" />
+                                             <h:commandLink id="expPDFAlq">  
+                                                  <p:graphicImage value="http://www.primefaces.org/showcase-labs/images/pdf.png" />  
+                                                  <p:dataExporter type="pdf" target="dTAlq" fileName="listEstadisticaAlquiler"/>  
+                                             </h:commandLink>  
+                                             <p:tooltip for="expPDFUser" value="PDF" showEffect="fade" hideEffect="fade" />
+                                             <h:commandLink id="expCSVAlq">  
+                                                  <p:graphicImage value="http://www.primefaces.org/showcase-labs/images/csv.png" />  
+                                                  <p:dataExporter type="csv" target="dTAlq" fileName="listEstadisticaAlquiler" />  
+                                             </h:commandLink>
+                                             <p:tooltip for="expCSVUser" value="CSV" showEffect="fade" hideEffect="fade" />
+                                        </p:panel> 
+                                        <p:dataTable id="dTAlq" var="Alq" value="#{estadisticaAdmin.listEstadisticaAlquiler}" rendered="false">  
+                                             <p:column id="mesHeaderAlq">  
+                                                  <f:facet name="header">  
+                                                       Mes
+                                                  </f:facet>  
+                                                  <h:outputText value="#{Alq.mesFormat}" />  
+                                             </p:column>  
+
+                                             <p:column>  
+                                                  <f:facet name="header">  
+                                                       Estado  
+                                                  </f:facet>  
+                                                  <h:outputText value="#{Alq.estado}" />  
+                                             </p:column>  
+
+                                             <p:column>  
+                                                  <f:facet name="header">  
+                                                       Cantidad  
+                                                  </f:facet>  
+                                                  <h:outputText value="#{Alq.cantidad}" />  
+                                             </p:column>  
+
+                                             <p:column>  
+                                                  <f:facet name="header">  
+                                                       Acumulado  
+                                                  </f:facet>  
+                                                  <h:outputText value="#{Alq.acumulado}" />  
+                                             </p:column>  
+                                        </p:dataTable>
+                                   </h:panelGrid>  
+                              </p:tab>  
+                         </p:tabView> 
+                    </h:form> 
+               </ui:define>
+
+          </ui:composition>
+
+     </body>
+</html>

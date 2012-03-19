@@ -44,7 +44,7 @@ public class AdministrarDenunciasMBean {
         filtros.add(new SelectItem(0, "Todos"));
         filtros.add(new SelectItem(1, "Publicaciones"));
         filtros.add(new SelectItem(2, "Comentarios"));
-        filtroSeleccionado = 1;
+        filtroSeleccionado = 0;
         actualizarDenuncias();
     }
 
