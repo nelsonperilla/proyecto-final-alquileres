@@ -212,7 +212,7 @@ public class ModificarRepublicarPublicidadMBean implements Serializable{
         String redirectUrl = PaypalUtil.setExpressCheckout(descripcion, Integer.toString(pagoId), null, precio.toString());
         if (redirectUrl != null) {
             try {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("inicio2.jsf");
+                FacesContext.getCurrentInstance().getExternalContext().redirect("inicio.jsf");
                 FacesContext.getCurrentInstance().responseComplete();
             } catch (Exception e) {
                 Logger.getLogger(RegistrarPublicidadMBean.class).error("Excepcion al ejecutar redirect().");

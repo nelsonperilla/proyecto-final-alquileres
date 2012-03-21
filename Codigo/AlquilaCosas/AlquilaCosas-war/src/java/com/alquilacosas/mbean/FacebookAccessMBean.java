@@ -66,9 +66,7 @@ public class FacebookAccessMBean {
                 if (accessToken != null && expires != null) {
 
                     try {
-                        System.out.println("token: " + accessToken);
                         String res = IOUtil.urlToString(new URL("https://graph.facebook.com/me?access_token=" + accessToken));
-                        System.out.println("fb resp:" + res);
                         JSONObject json = new JSONObject(res);
                         String id = json.getString("id");
                         String nombre = json.getString("first_name");
@@ -91,18 +89,18 @@ public class FacebookAccessMBean {
                     if (redirect != null) {
                         redirect = req.getContextPath() + redirect;
                     } else {
-                        redirect = req.getContextPath() + "/vistas/inicio2.jsf";
+                        redirect = req.getContextPath() + "/vistas/inicio.jsf";
                     }
                     context.redirect(redirect);
                     FacesContext.getCurrentInstance().responseComplete();
                 } else {
                     System.out.println("access token no recibido");
-                    context.redirect(req.getContextPath() + "/vistas/inicio2.jsf");
+                    context.redirect(req.getContextPath() + "/vistas/inicio.jsf");
                     FacesContext.getCurrentInstance().responseComplete();
                 }
             } catch (IOException e) {
                 try {
-                    context.redirect(req.getContextPath() + "/vistas/inicio2.jsf");
+                    context.redirect(req.getContextPath() + "/vistas/inicio.jsf");
                     FacesContext.getCurrentInstance().responseComplete();
                 } catch(IOException ex) {
                     

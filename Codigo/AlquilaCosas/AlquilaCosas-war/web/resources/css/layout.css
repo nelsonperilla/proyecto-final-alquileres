@@ -303,11 +303,11 @@ h1, h2, h3 {
 }
 
 .searchBar {
-    /*    background-image:url(../resources/images/searchBar.png);*/
-    border-radius: 15px;
+    background-image:url(../resources/images/searchBar.png);
+/*    border-radius: 15px;
     -moz-border-radius:15px; 
     -webkit-border-radius:15px;
-    background: steelblue;
+    background: steelblue;*/
     height: 50px;
     width: 659px;
     font-size: 18px;
@@ -568,24 +568,17 @@ h1, h2, h3 {
 
 .item{
     background-image:url(../resources/images/item.png);
+    background-size: 100%;
+    -webkit-background-size: 100%;
     margin-top: 5px;    
-    /*    -moz-border-radius: 10px;
-        background: -moz-linear-gradient(top, #E9FDFE, white);
-         Chrome, Safari:
-        background: -webkit-gradient(linear,
-                    left top, left bottom, from(#E9FDFE), to(white));
-        border-radius: 10px;
-        border: 1px solid cornflowerblue;*/
     padding: 0px 0px 0px 0px; 
     height: 100px;
-    width: 600px;
+    width: 750px;
     font-size: 24px;
     color: #2c2c2c;
 }
 
 .itemDestacado {
-    /*    background: url(../resources/images/item.png) no-repeat;
-        background-size: 600px,120px; */
     margin-top: 3px;    
     -moz-border-radius: 10px;
     border-radius: 10px;
@@ -596,7 +589,7 @@ h1, h2, h3 {
     display: block;
     padding: 0px 0px 0px 0px; 
     height: 120px;
-    width: 600px;
+    width: 750px;
     font-size: 28px;
     font-family: sans-serif;
     color: #2c2c2c; 
@@ -671,7 +664,7 @@ h1, h2, h3 {
 }
 
 .itemContentCol {
-    width: 300px;
+    width: 400px;
     text-align: left;
     font-size: 14px;
 }

@@ -9,11 +9,9 @@
 
     <body>
 
-        <ui:composition template="./../resources/templates/masterPage.xhtml">
+        <ui:composition template="./../resources/templates/newTemplate.xhtml">
 
-            <ui:define name="logInfo">
-                <h:link value="inicio" outcome="/vistas/inicio" />
-            </ui:define>
+            
 
             <ui:define name="left" >
 
@@ -105,13 +103,6 @@
                         <p:growl id="growl" globalOnly="true" />
                     </h:form>
                 </div>
-            </ui:define>
-
-            <ui:define name="right">
-                <comps:loginBox />
-                <comps:adminPanel />
-                <comps:userPanel />
-                <comps:panelPublicitante />
             </ui:define>
 
         </ui:composition>

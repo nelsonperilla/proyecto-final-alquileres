@@ -21,28 +21,14 @@
                     <h:form>
                         <h:panelGrid columns="3" styleClass="searchBar" cellpadding="0" cellspacing="4" >
                             <p:inputText value="#{buscarBean.criterio}" 
-                                         required="true" style="width:380px" />
+                                         required="true" style="width:480px" />
                             <p:commandButton action="#{buscarBean.buscar}" ajax="false"
                                              value="Buscar" style="font-size: 14px;" />
-                            <p:commandButton id="ciudad" value="#{buscarBean.ciudad}" 
-                                             style="width: 120px; margin-left: 20px; font-size: 12px" icon="ui-icon-triangle-1-s" />
-                            <p:overlayPanel widgetVar="ciudades" for="ciudad" hideEffect="fade" showEffect="fade" 
-                                            style="background: #333; color: white; width: 400px; text-align: left;" >
-                                <div style="width: 100%; float: left;">
-                                    <p:selectOneMenu value="#{buscarBean.ciudad}" style="width: 300px; margin-right: 10px" >
-                                        <f:selectItems value="#{buscarBean.ciudades}" />
-                                    </p:selectOneMenu>
-                                    <p:commandButton value="Actualizar" style="font-size: 10px" />
-                                </div>
-                            </p:overlayPanel>
-
                         </h:panelGrid>
                     </h:form>
                 </td>   
             </tr>
         </table> 
-
-
 
     </cc:implementation>
 </html>

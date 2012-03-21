@@ -227,10 +227,7 @@ public class AlquileresBean implements AlquileresBeanLocal {
         }
 
         alquiler.setFechaFin(fechaFin);
-
-        List<Precio> precios = precioFacade.buscarActualesPorPublicacion(publicacion);
         alquiler.setMonto(monto);
-
         alquilerFacade.edit(alquiler);
 
         dto.setMonto(monto);
@@ -255,7 +252,7 @@ public class AlquileresBean implements AlquileresBeanLocal {
     }
     
     @Override
-    public void solicitarCambioAlquiler(int alquilerId, Date fechaFin)
+    public void solicitarCambioAlquiler(int alquilerId, Date fechaFin, NombrePeriodo periodo, Integer duracion)
             throws AlquilaCosasException {
 
         Alquiler alquiler = alquilerFacade.find(alquilerId);
@@ -293,15 +290,6 @@ public class AlquileresBean implements AlquileresBeanLocal {
         cal1.setTime(fechaInicio);
         Calendar cal2 = Calendar.getInstance();
         cal2.setTime(fechaFin);
-        NombrePeriodo periodo = null;
-        int duracion = 0;
-        if(cal1.get(Calendar.DATE) == cal2.get(Calendar.DATE)) {
-            periodo = NombrePeriodo.HORA;
-            duracion = cal2.get(Calendar.HOUR) - cal1.get(Calendar.HOUR);
-        } else {
-            periodo = NombrePeriodo.DIA;
-            duracion = cal2.get(Calendar.DAY_OF_YEAR) - cal1.get(Calendar.DAY_OF_YEAR);
-        }
         
         Periodo period = periodoFacade.findByNombre(periodo);
         PedidoCambio pedido = new PedidoCambio();
