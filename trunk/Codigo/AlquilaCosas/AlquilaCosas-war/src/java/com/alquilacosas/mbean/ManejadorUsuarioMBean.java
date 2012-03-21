@@ -86,7 +86,7 @@ public class ManejadorUsuarioMBean implements Serializable {
         String url = (String) req.getSession(true).getAttribute("redirectUrl");
         req.getSession(true).removeAttribute("redirectUrl");
         if(url == null)
-            url = req.getContextPath() + "/vistas/inicio2.jsf";
+            url = req.getContextPath() + "/vistas/inicio.jsf";
         else
             url = req.getContextPath() + url;
         try {
@@ -223,7 +223,7 @@ public class ManejadorUsuarioMBean implements Serializable {
         password = "";
         logueado = administrador = publicitante = false;
         request.getSession().invalidate();
-        return "/vistas/inicio2.jsf?faces-redirect=true";
+        return "/vistas/inicio.jsf?faces-redirect=true";
     }
     
     @Remove
@@ -233,7 +233,7 @@ public class ManejadorUsuarioMBean implements Serializable {
         logueado = administrador = publicitante = fbLogin = false;
         usuario = null;
         request.getSession().invalidate();
-        return "/vistas/inicio2.jsf?faces-redirect=true";
+        return "/vistas/inicio.jsf?faces-redirect=true";
     }
     
     /**

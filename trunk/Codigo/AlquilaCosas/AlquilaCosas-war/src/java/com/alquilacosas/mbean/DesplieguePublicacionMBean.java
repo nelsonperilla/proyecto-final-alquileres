@@ -168,7 +168,7 @@ public class DesplieguePublicacionMBean implements Serializable {
 
     public void redirect() {
         try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("inicio2.jsf");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("inicio.jsf");
         } catch (Exception e) {
             Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al ejecutar redirect().");
         }

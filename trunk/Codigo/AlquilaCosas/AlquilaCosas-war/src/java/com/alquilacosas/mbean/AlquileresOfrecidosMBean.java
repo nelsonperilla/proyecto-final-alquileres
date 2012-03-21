@@ -83,7 +83,6 @@ public class AlquileresOfrecidosMBean implements Serializable {
         filtros.add(new SelectItem(2, "Alquileres finalizados sin calificar"));
         filtros.add(new SelectItem(3, "Alquileres finalizados calificados"));
         filtroSeleccionado = 1;
-
     }
 
     public void cambioFiltro() {

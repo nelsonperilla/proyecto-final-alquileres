@@ -62,25 +62,22 @@
 
                         <div style="float: left">
                             <h:form id="form">
-                                <h:panelGrid  columns="3" cellpadding="2" cellspacing="4" >
+                                <h:panelGrid  columns="2" cellpadding="2" cellspacing="4" >
 
                                     <f:facet name="header" >
                                         <h:outputText value="Datos a cambiar:" 
                                                       style="font-size: 14px; font-weight: bold;"/>
                                     </f:facet>
 
-                                    <h:outputLabel value="Nueva Fecha hasta" for="fechaHasta" />
-                                    <p:calendar id="fechaHasta" value="#{modAlquilerBean.fechaHasta}" showOn="button" 
-                                                stepMinute="31" mindate="#{modAlquilerBean.alquiler.fechaInicio}" 
-                                                required="true" minMinute="1" pattern="dd/MM/yyyy HH:mm"
-                                                requiredMessage="Valor requerido" 
-                                                validatorMessage="Fecha invalida. Debe tener el formato dd/MM/yyyy HH:mm" >
-                                        <p:ajax event="dateSelect"  listener="#{modAlquilerBean.actualizarMonto}" 
-                                                update=":form:monto" />
-                                    </p:calendar>
-                                    <p:message for="fechaHasta" />
+                                    <h:outputLabel value="Periodo" for="fechaHasta" />
+                                    <h:outputText id="periodo" value="#{modAlquilerBean.periodo}" />
 
-                                    <h:outputLabel value="Nuevo monto:" for="monto" />
+                                    <h:outputLabel value="Nueva duración:" for="duracion" />
+                                    <p:spinner id="duracion" value="#{modAlquilerBean.duracion}" min="1" >
+                                        <p:ajax process="@this" update="monto" listener="#{modAlquilerBean.actualizarMonto}" />
+                                    </p:spinner>
+                                    
+                                    <h:outputLabel value="Monto" for="monto" />
                                     <h:outputText id="monto" value="$ #{modAlquilerBean.nuevoMonto}" style="font-weight: bold" />
 
                                     <f:facet name="footer" >

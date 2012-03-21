@@ -7,6 +7,7 @@ package com.alquilacosas.mbean;
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.AlquilerDTO;
 import com.alquilacosas.dto.PublicacionDTO;
+import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
 import com.alquilacosas.ejb.session.AlquileresBeanLocal;
 import com.alquilacosas.ejb.session.PublicacionBeanLocal;
 import java.util.Calendar;
@@ -38,7 +39,8 @@ public class ModificarAlquilerMBean {
     private PublicacionBeanLocal publicacionBean;
     @ManagedProperty(value = "#{login}")
     private ManejadorUsuarioMBean loginBean;
-    private Integer usuarioLogueado, alquilerId;
+    private NombrePeriodo periodo;
+    private Integer usuarioLogueado, alquilerId, duracion, duracionAnterior;
     private AlquilerDTO alquiler;
     private PublicacionDTO publicacion;
     private Date fechaHasta;
@@ -68,6 +70,23 @@ public class ModificarAlquilerMBean {
         createDictionary();
         tomado = alquiler.isTomado();
         nuevoMonto = alquiler.getMonto();
+        
+        // obtener periodo
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(alquiler.getFechaInicio());
+        int dia1 = calendar.get(Calendar.DAY_OF_YEAR);
+        int hora1 = calendar.get(Calendar.HOUR_OF_DAY);
+        calendar.setTime(alquiler.getFechaFin());
+        int dia2 = calendar.get(Calendar.DAY_OF_YEAR);
+        int hora2 = calendar.get(Calendar.HOUR_OF_DAY);
+        if (dia1 == dia2) {
+            periodo = NombrePeriodo.HORA;
+            duracion = hora2 - hora1;
+        } else {
+            periodo = NombrePeriodo.DIA;
+            duracion = dia2 - dia1;
+        }
+        duracionAnterior = duracion;
     }
     
     public void redirect() {
@@ -78,12 +97,27 @@ public class ModificarAlquilerMBean {
         }
     }
     
-    public void actualizarMonto(DateSelectEvent event) {
-        fechaHasta = event.getDate();
+    public void actualizarMonto() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(alquiler.getFechaInicio());
+        if(periodo == NombrePeriodo.HORA) {
+            cal.add(Calendar.HOUR_OF_DAY, duracion);
+            fechaHasta = cal.getTime();
+        } else if(periodo == NombrePeriodo.DIA) {
+            cal.add(Calendar.DATE, duracion);
+            fechaHasta = cal.getTime();
+        } else if(periodo == NombrePeriodo.SEMANA) {
+            cal.add(Calendar.DATE, duracion * 7);
+            fechaHasta = cal.getTime();
+        } else {
+            cal.add(Calendar.MONTH, duracion);
+            fechaHasta = cal.getTime();
+        }
         nuevoMonto = calcularMonto();
     }
     
     public String modificarAlquiler() {
+        actualizarMonto();
         FacesMessage msg = null;
         FacesContext context = FacesContext.getCurrentInstance();
         // Si la duracion ingresada es 0, no permitir
@@ -129,6 +163,7 @@ public class ModificarAlquilerMBean {
     }
     
     public String solicitarCambio() {
+        actualizarMonto();
         FacesMessage msg = null;
         FacesContext context = FacesContext.getCurrentInstance();
         // Si la duracion ingresada es 0, no permitir
@@ -161,7 +196,7 @@ public class ModificarAlquilerMBean {
             return "";
         }
         try {
-            alquileresBean.solicitarCambioAlquiler(alquilerId, fechaHasta);
+            alquileresBean.solicitarCambioAlquiler(alquilerId, fechaHasta, periodo, duracion);
         } catch (AlquilaCosasException e) {
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
                     "Error al solicitar cambio de alquiler", e.getMessage());
@@ -329,6 +364,22 @@ public class ModificarAlquilerMBean {
 
     public void setNuevoMonto(double nuevoMonto) {
         this.nuevoMonto = nuevoMonto;
+    }
+
+    public Integer getDuracion() {
+        return duracion;
+    }
+
+    public void setDuracion(Integer duracion) {
+        this.duracion = duracion;
+    }
+
+    public String getPeriodo() {
+        return periodo.toString();
+    }
+
+    public void setPeriodo(NombrePeriodo periodo) {
+        this.periodo = periodo;
     }
     
 }

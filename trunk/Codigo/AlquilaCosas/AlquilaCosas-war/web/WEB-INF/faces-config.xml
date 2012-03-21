@@ -71,7 +71,7 @@
         </navigation-case>
         <navigation-case>
             <from-outcome>pinicio</from-outcome>
-            <to-view-id>/vistas/inicio2.jsf</to-view-id>
+            <to-view-id>/vistas/inicio.jsf</to-view-id>
             <redirect/>
         </navigation-case>
     </navigation-rule>

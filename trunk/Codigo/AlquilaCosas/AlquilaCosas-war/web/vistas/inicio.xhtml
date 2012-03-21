@@ -8,7 +8,7 @@
 
     <body>
 
-        <ui:composition template="./../resources/templates/masterPage.xhtml">
+        <ui:composition template="./../resources/templates/newTemplate.xhtml">
 
             <ui:define name="logInfo">
                 <p:outputPanel rendered="#{not login.logueado}" >
@@ -21,25 +21,26 @@
             </ui:define>
 
             <ui:define name="principal">
+                
+                <div style="margin: 0 20px; text-align: center">
                 <table>
                     <tr>
                         <td>
-
                             <p:outputPanel rendered="#{not empty mostrarPublicidad.publicidadesCarrusel}" >
                                 <p:carousel value="#{mostrarPublicidad.publicidadesCarrusel}" autoPlayInterval="3500"
                                             var="pub" rows="1" circular="true" itemStyle="height:130px;width:600px;"
-                                            style="width:600px;" >
+                                            style="width:750px;" >
                                     <a href="#{pub.url}" >    
                                         <h:graphicImage value="/imagenpub?id=#{pub.id}" 
                                                         alt="#{pub.caption}"
-                                                        width="600" height="130" />
+                                                        width="750" height="130" />
                                     </a>
                                 </p:carousel>
                             </p:outputPanel>    
                             <p:outputPanel rendered="#{empty mostrarPublicidad.publicidadesCarrusel}" >
                                 <p:carousel autoPlayInterval="3500" rows="1"
                                             effect="easeInStrong" circular="true"
-                                            itemStyle="height:130px;width:600px;text-align: center" >
+                                            itemStyle="height:130px;width:750px;text-align: center" >
                                     <p:tab title="1" >
                                         <div class="carusel">
                                             <br/><br/>
@@ -86,13 +87,8 @@
                             </table>
                         </td>
                     </tr>
-                </table>              
-            </ui:define>
-            <ui:define name="right" >
-                <comps:loginBox />
-                <comps:adminPanel />
-                <comps:userPanel />
-                <comps:panelPublicitante />
+                </table>      
+                    </div>
             </ui:define>
         </ui:composition>
     </body>

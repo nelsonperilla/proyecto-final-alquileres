@@ -94,7 +94,7 @@ public class SecurityFilter implements Filter {
                     return;
                 }
                 if(!login.getUsuario().getRoles().contains(patrones.get(s))){
-                    resp.sendRedirect(req.getContextPath() + "/vistas/inicio2.jsf");
+                    resp.sendRedirect(req.getContextPath() + "/vistas/inicio.jsf");
                     return;
                 }
             }
