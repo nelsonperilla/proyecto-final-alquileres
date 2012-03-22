@@ -7,16 +7,9 @@ package com.alquilacosas.ejb.session;
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.common.SeguridadException;
 import com.alquilacosas.common.UsuarioLogueado;
-import com.alquilacosas.ejb.entity.EstadoUsuario;
+import com.alquilacosas.ejb.entity.*;
 import com.alquilacosas.ejb.entity.EstadoUsuario.NombreEstadoUsuario;
-import com.alquilacosas.ejb.entity.Login;
-import com.alquilacosas.ejb.entity.Rol;
-import com.alquilacosas.ejb.entity.Usuario;
-import com.alquilacosas.ejb.entity.UsuarioXEstado;
-import com.alquilacosas.facade.EstadoUsuarioFacade;
-import com.alquilacosas.facade.LoginFacade;
-import com.alquilacosas.facade.UsuarioFacade;
-import com.alquilacosas.facade.UsuarioXEstadoFacade;
+import com.alquilacosas.facade.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -38,6 +31,8 @@ public class LoginBean implements LoginBeanLocal {
     private UsuarioXEstadoFacade uxeFacade;
     @EJB
     private EstadoUsuarioFacade estadoUsuarioFacade;
+    @EJB
+    private ImagenUsuarioFacade imagenFacade;
     
     @Override
     public boolean activarCuenta(String username, String codigo) throws AlquilaCosasException {
@@ -97,8 +92,12 @@ public class LoginBean implements LoginBeanLocal {
             for(Rol r: login.getRolList()) {
                 roles.add(r.getNombre());
             }
-            UsuarioLogueado user = new UsuarioLogueado(usuario.getUsuarioId(), usuario.getNombre(), usuario.getApellido(), ciudad, null, roles);
+            ImagenUsuario iu = usuario.getImagenUsuarioList().get(0);
+            
+            UsuarioLogueado user = new UsuarioLogueado(usuario.getUsuarioId(), usuario.getNombre(), 
+                    usuario.getApellido(), ciudad, iu , roles);
             user.setDireccionRegistrada(dir);
+            
             return user;
         }
     }
@@ -120,7 +119,8 @@ public class LoginBean implements LoginBeanLocal {
             for(Rol r: login.getRolList()) {
                 roles.add(r.getNombre());
             }
-            UsuarioLogueado user = new UsuarioLogueado(usuario.getUsuarioId(), usuario.getNombre(), usuario.getApellido(), ciudad, null, roles);
+            ImagenUsuario iu = usuario.getImagenUsuarioList().get(0);
+            UsuarioLogueado user = new UsuarioLogueado(usuario.getUsuarioId(), usuario.getNombre(), usuario.getApellido(), ciudad, iu, roles);
             user.setDireccionRegistrada(dir);
             return user;
         }
@@ -152,5 +152,23 @@ public class LoginBean implements LoginBeanLocal {
         login.setPassword(passwordNuevo);
         loginFacade.edit(login);
     }
-    
+
+   @Override
+    public byte[] leerImagen(int id) {
+        ImagenUsuario imagen = imagenFacade.find(id);
+        byte[] img = null;
+        if (imagen != null) {
+            img = imagen.getImagen();
+        }
+        return img;
+    }
+
+    @Override
+    public boolean usarImagenLocal(Integer usuarioId) {
+        Usuario usuario = usuarioFacade.find(usuarioId);
+        ImagenUsuario iu = usuario.getImagenUsuarioList().get(0);
+        if( iu != null )
+            return iu.getUsar();
+        return false;
+    }
 }

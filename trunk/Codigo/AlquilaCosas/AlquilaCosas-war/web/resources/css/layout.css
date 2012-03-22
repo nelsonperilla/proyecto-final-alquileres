@@ -13,7 +13,7 @@
 
 body {
     background: #ffffff;
-    font-family: sans-serif;
+    font-family: sans-serif;    
     text-align: center;
 }
 
@@ -1083,4 +1083,8 @@ a.valor {
 }
 a:hover.valor {
     color: #174867;
+}
+
+.ui-panelgrid tr, .ui-panelgrid td {
+border:0 !important;
 }

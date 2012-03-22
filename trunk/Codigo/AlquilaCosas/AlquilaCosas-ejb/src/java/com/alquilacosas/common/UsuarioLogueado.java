@@ -4,6 +4,7 @@
  */
 package com.alquilacosas.common;
 
+import com.alquilacosas.ejb.entity.ImagenUsuario;
 import com.alquilacosas.ejb.entity.Rol.NombreRol;
 import java.io.Serializable;
 import java.util.List;
@@ -16,11 +17,11 @@ public class UsuarioLogueado implements Serializable {
     
     private Integer id;
     private String nombre, apellido, ciudad;
-    private byte[] imagen;
+    private ImagenUsuario imagen;
     private List<NombreRol> roles;
     private boolean direccionRegistrada;
 
-    public UsuarioLogueado(Integer id, String nombre, String apellido, String ciudad, byte[] imagen, List<NombreRol> roles) {
+    public UsuarioLogueado(Integer id, String nombre, String apellido, String ciudad, ImagenUsuario imagen, List<NombreRol> roles) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -53,13 +54,15 @@ public class UsuarioLogueado implements Serializable {
         this.id = id;
     }
 
-    public byte[] getImagen() {
+    public ImagenUsuario getImagen() {
         return imagen;
     }
 
-    public void setImagen(byte[] imagen) {
+    public void setImagen(ImagenUsuario imagen) {
         this.imagen = imagen;
     }
+
+    
 
     public String getNombre() {
         return nombre;

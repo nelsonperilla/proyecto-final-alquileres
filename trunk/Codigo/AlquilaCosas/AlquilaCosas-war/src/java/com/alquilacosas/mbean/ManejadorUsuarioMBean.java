@@ -13,7 +13,6 @@ import com.alquilacosas.ejb.session.UsuarioBeanLocal;
 import com.visural.common.StringUtil;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Remove;
@@ -22,7 +21,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ValueChangeEvent;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -55,6 +53,9 @@ public class ManejadorUsuarioMBean implements Serializable {
     private static final String redirect_uri = "http://localhost.com:8080/AlquilaCosas-war/vistas/fbAccess.jsf";
     private static final String[] perms = new String[]{"publish_stream", "email", "user_location"};
 
+    private boolean usarImagenSubida = false;
+    private Integer imagenUsuarioId;
+    
     /** Creates a new instance of LoginMBean */
     public ManejadorUsuarioMBean() {
     }
@@ -71,7 +72,7 @@ public class ManejadorUsuarioMBean implements Serializable {
     public void loguearse() {
         FacesContext context = FacesContext.getCurrentInstance();
         try {
-            usuario = loginBean.login(username, password);
+            usuario = loginBean.login(username, password);    
         } catch (SeguridadException e) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Credenciales incorrectas", ""));
@@ -100,6 +101,9 @@ public class ManejadorUsuarioMBean implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         try {
             usuario = loginBean.login(username, password);
+            this.usarImagenSubida = loginBean.usarImagenLocal(usuario.getId());
+            if(this.usarImagenSubida)
+                this.imagenUsuarioId = usuario.getImagen().getImagenUsuarioId();
         } catch (SeguridadException e) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Credenciales incorrectas", ""));
@@ -350,4 +354,21 @@ public class ManejadorUsuarioMBean implements Serializable {
     public void setUrlParams(String urlParams) {
         this.urlParams = urlParams;
     }
+
+    public Integer getImagenUsuarioId() {
+        return imagenUsuarioId;
+    }
+
+    public void setImagenUsuarioId(Integer imagenUsuarioId) {
+        this.imagenUsuarioId = imagenUsuarioId;
+    }
+
+    public boolean isUsarImagenFacebook() {
+        return usarImagenSubida;
+    }
+
+    public void setUsarImagenFacebook(boolean usarImagenFacebook) {
+        this.usarImagenSubida = usarImagenFacebook;
+    }
+     
 }

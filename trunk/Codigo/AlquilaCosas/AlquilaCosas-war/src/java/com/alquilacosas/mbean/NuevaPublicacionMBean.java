@@ -90,7 +90,7 @@ public class NuevaPublicacionMBean implements Serializable {
     public void init() {
         Logger.getLogger(NuevaPublicacionMBean.class).debug("NuevaPublicacionMBean: postconstruct.");
         imagenes = new ArrayList<byte[]>();
-        
+
         today = new Date();
         categorias = new ArrayList<SelectItem>();
         subcategorias1 = new ArrayList<SelectItem>();
@@ -133,13 +133,13 @@ public class NuevaPublicacionMBean implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         FacesMessage msg = null;
 
-        if(pedirDireccion) {
+        if (pedirDireccion) {
             DomicilioDTO dom = new DomicilioDTO(calle, numero, piso, depto, barrio, ciudad);
             dom.setProvinciaId(provinciaSeleccionada);
             usuarioBean.agregarDomicilio(login.getUsuarioId(), dom);
             login.getUsuario().setDireccionRegistrada(true);
         }
-        
+
         int cat = 0;
         if (selectedSubcategoria3 > 0) {
             cat = selectedSubcategoria3;

@@ -8,21 +8,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -31,16 +18,29 @@ import javax.xml.bind.annotation.XmlTransient;
  *
  * @author damiancardozo
  */
+
 @Entity
-@Table(name = "USUARIO")
+@Table(name = "usuario")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Usuario.findAll", query = "SELECT u FROM Usuario u"),
     @NamedQuery(name = "Usuario.findByUsuarioId", query = "SELECT u FROM Usuario u WHERE u.usuarioId = :usuarioId"),
+    @NamedQuery(name = "Usuario.findByNombre", query = "SELECT u FROM Usuario u WHERE u.nombre = :nombre"),
     @NamedQuery(name = "Usuario.findByApellido", query = "SELECT u FROM Usuario u WHERE u.apellido = :apellido"),
     @NamedQuery(name = "Usuario.findByEmail", query = "SELECT u FROM Usuario u WHERE u.email = :email"),
-    @NamedQuery(name = "Usuario.findByDni", query = "SELECT u FROM Usuario u WHERE u.dni = :dni")})
+    @NamedQuery(name = "Usuario.findByTelefono", query = "SELECT u FROM Usuario u WHERE u.telefono = :telefono"),
+    @NamedQuery(name = "Usuario.findByDni", query = "SELECT u FROM Usuario u WHERE u.dni = :dni"),
+    @NamedQuery(name = "Usuario.findByFechaNac", query = "SELECT u FROM Usuario u WHERE u.fechaNac = :fechaNac")})
+
 public class Usuario implements Serializable {
+    
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "FECHA_NAC")
+    @Temporal(TemporalType.DATE)
+    private Date fechaNac;
+    @Column(name = "FACEBOOK_ID")
+    private Integer facebookId;
     
     private static final long serialVersionUID = 1L;
     
@@ -64,10 +64,6 @@ public class Usuario implements Serializable {
     
     @Column(name = "DNI")
     private String dni;
-    
-    @Column(name = "FECHA_NAC")
-    @Temporal(TemporalType.DATE)
-    private Date fechaNac;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
     private List<Publicidad> publicidadList;
@@ -114,8 +110,8 @@ public class Usuario implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
     private List<Pago> pagoList;
     
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
-//    private List<Favorito> favoritoList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioFk")
+    private List<ImagenUsuario> imagenUsuarioList;
 
     public Usuario() {
         domicilioList = new ArrayList<Domicilio>();
@@ -126,6 +122,7 @@ public class Usuario implements Serializable {
         advertenciaList = new ArrayList<Advertencia>();
         usuarioXEstadoList = new ArrayList<UsuarioXEstado>();
         favoritosList = new ArrayList<Publicacion>();
+        imagenUsuarioList = new ArrayList<ImagenUsuario>();
     }
 
     public Usuario(Integer usuarioId) {
@@ -197,24 +194,21 @@ public class Usuario implements Serializable {
         return null;
     }
     
-//    public void argegarFavorito( Favorito favorito ){
-//        favoritoList.add(favorito);
-//        favorito.setUsuarioFk(this);
-//    }
-//    
-//    public void removerFavorito( Favorito favorito ){
-//        for( int i = 0; i < favoritoList.size(); i++ ){
-//            if( favoritoList.get(i).getId() == favorito.getId() )
-//                favoritoList.remove(i);
-//        }
-//    }
-    
     public void argegarFavorito(Publicacion favorito){
         favoritosList.add(favorito);
     }
     
     public void removerFavorito(Publicacion favorito ){
         favoritosList.remove(favorito);
+    }
+    
+    public void agregarImagen(ImagenUsuario iu){
+        imagenUsuarioList.add(iu);
+        iu.setUsuarioFk(this);
+    }
+    
+    public void removerImagen(ImagenUsuario iu){
+        imagenUsuarioList.remove(iu);
     }
 
     public Integer getUsuarioId() {
@@ -415,7 +409,15 @@ public class Usuario implements Serializable {
     public void setFavoritosList(List<Publicacion> favoritoList) {
         this.favoritosList = favoritoList;
     }
-    
+
+    @XmlTransient
+    public List<ImagenUsuario> getImagenUsuarioList() {
+        return imagenUsuarioList;
+    }
+
+    public void setImagenUsuarioList(List<ImagenUsuario> imagenUsuarioList) {
+        this.imagenUsuarioList = imagenUsuarioList;
+    }
 
     @Override
     public int hashCode() {
@@ -442,5 +444,14 @@ public class Usuario implements Serializable {
     public String toString() {
         return "com.alquilacosas.ejb.entity.Usuario[ usuarioId=" + usuarioId + " ]";
     }
+
+    public Integer getFacebookId() {
+        return facebookId;
+    }
+
+    public void setFacebookId(Integer facebookId) {
+        this.facebookId = facebookId;
+    }
+
     
 }
