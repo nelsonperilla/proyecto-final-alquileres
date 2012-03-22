@@ -42,5 +42,9 @@ public interface UsuarioBeanLocal {
     public void actualizarDomicilio(Integer usuarioId, DomicilioDTO dom);
 
     public void actualizarInfoBasica(Integer usuarioId, String nombre, String apellido, String dni, String telefono, Date fechaNacimiento);
+
+    void actualizarImagen(int usuarioId, byte[] imagen);
+
+    void seleccionarImagenPerfil(Integer usuarioId, boolean usar);
     
 }

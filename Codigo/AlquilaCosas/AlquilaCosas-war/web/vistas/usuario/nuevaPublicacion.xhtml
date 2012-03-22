@@ -5,18 +5,14 @@
       xmlns:comps="http://java.sun.com/jsf/composite/comps"
       xmlns:p="http://primefaces.org/ui" 
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core" >
+      xmlns:f="http://java.sun.com/jsf/core">
 
     <body>
 
-        <ui:composition template="./../../resources/templates/masterPage.xhtml">
-
-            <script type="text/javascript"
-                    src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAIvenuSuB8qlfz056q69ddMHJIdqra2sc&amp;sensor=false">
-            </script> 
-
+        <ui:composition template="./../../resources/templates/newTemplate.xhtml">
+            
             <ui:define name="logInfo">
-                <h:link value="inicio" outcome="/vistas/inicio" />
+                <h:link value="inicio" outcome="/vistas/inicio2" />
             </ui:define>
 
             <ui:define name="left" >
@@ -30,7 +26,7 @@
                     <h:panelGrid columns="1" style="text-align: center" >
 
                         <f:facet name="header" >
-                            <h1>Publicar</h1>
+                            <h1 style="font-family: Arial">Publicar</h1>
                         </f:facet>
                         <p:fieldset legend="Datos del producto" styleClass="fieldset" >
                             <h:panelGrid columns="3" columnClasses="labelColumn" >                       
@@ -109,31 +105,7 @@
                                           allowTypes="/(\.|\/)(gif|jpe?g|png)$/" multiple="true" 
                                           cancelLabel="Cancelar" uploadLabel="Subir" mode="advanced" />
 
-                        </p:fieldset>
-
-                        <p:fieldset legend="Ubicación del articulo" styleClass="fieldset" >
-                            <script type="text/javascript"
-                                    src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAIvenuSuB8qlfz056q69ddMHJIdqra2sc&amp;sensor=false">
-                            </script>                 
-                            <p:gmap center="-31.41,-64.20"
-                                    zoom="13" type="HYBRID" style="width:540px;height:400px;"
-                                    widgetVar="myMap" model="#{publicacion.gMap}"   
-                                    onPointClick="handlePointClick(event);"  >
-                            </p:gmap>
-                            <p:dialog widgetVar="dlg" showEffect="fade" header="Confirme su marcador"  closable="false">  
-                                <h:panelGrid columns="2">  
-                                    <h:outputLabel value="La posición del marcador es correcta" />  
-                                    <f:facet name="footer">  
-                                        <p:commandButton value="Confirmar"   
-                                                         actionListener="#{publicacion.addMarker}"  
-                                                         oncomplete="markerAddComplete()"/>  
-                                        <p:commandButton value="Cancelar" onclick="return cancel()"/>  
-                                    </f:facet>  
-                                </h:panelGrid>  
-                                <h:inputHidden id="lat" value="#{publicacion.lat}" />  
-                                <h:inputHidden id="lng" value="#{publicacion.lng}" />  
-                            </p:dialog> 
-                        </p:fieldset>                    
+                        </p:fieldset>                  
 
                         <!-- <h2>Elije un periodo minimo y maximo de alquiler</h2> -->
                         <p:fieldset legend="Periodo minimo y maximo de alquiler" styleClass="fieldset" >
@@ -249,19 +221,13 @@
                         </p:fieldset>
 
                         <f:facet name="footer">
-                            <p:commandButton value="Crear" action="#{publicacion.crearPublicacion}" ajax="false" />
-                            <p:commandButton  type="reset" value="Limpiar" action="misPublicaciones"/>
+                            <p:commandButton value="Crear" action="#{publicacion.crearPublicacion}" ajax="false" style="width: 80px"/>
+                            <p:spacer width="20" />
+                            <p:commandButton  type="reset" value="Limpiar" action="misPublicaciones" />
                         </f:facet>
 
                     </h:panelGrid>
                 </h:form>
-            </ui:define>
-
-            <ui:define name="right">
-                <comps:loginBox />
-                <comps:userPanel />
-                <comps:panelPublicitante />
-                <comps:adminPanel />
             </ui:define>
 
         </ui:composition>

@@ -44,6 +44,10 @@
         <servlet-name>ImagenPublicidadServlet</servlet-name>
         <servlet-class>com.alquilacosas.servlet.ImagenPublicidadServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ImagenUsuarioServlet</servlet-name>
+        <servlet-class>com.alquilacosas.servlet.ImagenUsuarioServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>*.jsf</url-pattern>
@@ -68,6 +72,10 @@
     <servlet-mapping>
         <servlet-name>ImagenPublicidadServlet</servlet-name>
         <url-pattern>/imagenpub/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ImagenUsuarioServlet</servlet-name>
+        <url-pattern>/imageUser/*</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

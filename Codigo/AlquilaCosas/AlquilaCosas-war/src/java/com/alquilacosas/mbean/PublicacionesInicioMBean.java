@@ -44,8 +44,6 @@ public class PublicacionesInicioMBean implements Serializable {
         return selectedPublicationId;
     }
 
- 
-    
     public void setSelectedPublicationId(int id) {
         selectedPublicationId = id;
     }

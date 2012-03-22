@@ -8,16 +8,9 @@ import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.common.NotificacionEmail;
 import com.alquilacosas.dto.DomicilioDTO;
 import com.alquilacosas.dto.UsuarioDTO;
-import com.alquilacosas.ejb.entity.Domicilio;
-import com.alquilacosas.ejb.entity.EstadoUsuario;
+import com.alquilacosas.ejb.entity.*;
 import com.alquilacosas.ejb.entity.EstadoUsuario.NombreEstadoUsuario;
-import com.alquilacosas.ejb.entity.Login;
-import com.alquilacosas.ejb.entity.Pais;
-import com.alquilacosas.ejb.entity.Provincia;
-import com.alquilacosas.ejb.entity.Rol;
 import com.alquilacosas.ejb.entity.Rol.NombreRol;
-import com.alquilacosas.ejb.entity.Usuario;
-import com.alquilacosas.ejb.entity.UsuarioXEstado;
 import com.alquilacosas.facade.EstadoUsuarioFacade;
 import com.alquilacosas.facade.LoginFacade;
 import com.alquilacosas.facade.PaisFacade;
@@ -290,5 +283,22 @@ public class UsuarioBean implements UsuarioBeanLocal {
     public List<Provincia> getProvincias(int paisId) {
         return provinciaFacade.findByPais(paisId);
     }
+
+    @Override
+    public void actualizarImagen(int usuarioId, byte[] imagen) {
+        Usuario usuario = usuarioFacade.find(usuarioId);
+        ImagenUsuario iu = usuario.getImagenUsuarioList().get(0);
+        iu.setImagen(imagen);
+        usuarioFacade.edit(usuario);
+    }
+
+    @Override
+    public void seleccionarImagenPerfil(Integer usuarioId, boolean usar) {
+        Usuario usuario = usuarioFacade.find(usuarioId);
+        ImagenUsuario iu = usuario.getImagenUsuarioList().get(0);
+        iu.setUsar(usar);
+        usuarioFacade.edit(usuario);
+    }
+    
     
 }

@@ -6,7 +6,7 @@
       xmlns:comps="http://java.sun.com/jsf/composite/comps"
       xmlns:h="http://java.sun.com/jsf/html" 
       xmlns:f="http://java.sun.com/jsf/core" >
-
+    
     <body>
 
         <ui:composition template="./../../resources/templates/newTemplate.xhtml">
@@ -239,11 +239,92 @@
                                     </f:facet>
 
                                 </h:panelGrid>
+
+
+
+                            </h:form>
+
+                        </p:tab>
+
+                        <p:tab title="Elegir imagen de perfil">
+                            <h:form id="formSubirImagen">
+                               
+                                <p:selectOneRadio id="radioPicture" value="#{modUsuario.pictureSelected}" layout="custom" >
+                                    <f:selectItem itemLabel="option 1" itemValue="1" />
+                                    <f:selectItem itemLabel="option 2" itemValue="2"/>
+                                </p:selectOneRadio>
+                                
+                                <p:panelGrid columns="6" styleClass="iu-panelgrid">
+
+                                    <p:radioButton id="opt1" for="radioPicture" itemIndex="0" /> 
+                                    <h:outputLabel for="opt1" value="Foto Facebook" />
+                                    <h:graphicImage styleClass="image" rendered="#{login.fbLogin}" 
+                                                    value="https://graph.facebook.com/#{login.fbId}/picture?type=large" />
+                                    <h:graphicImage styleClass="image" rendered="#{not login.fbLogin}"
+                                                    value="#{resource['images:no_user.jpg']}" />
+
+                                    <p:radioButton id="opt2" for="radioPicture" itemIndex="1"/> 
+                                    <h:outputLabel for="opt2" value="Foto Local  " />
+
+                                    <p:graphicImage value="/imageUser?id=#{modUsuario.imagenUsuarioId}" styleClass="image" 
+                                                    cache="false" rendered="#{not modUsuario.renderImage}"/>
+                                    <p:graphicImage value="/imageUser?id=#{modUsuario.imagenUsuarioId}" styleClass="image" 
+                                                    cache="false" rendered="#{modUsuario.renderImage}"/>
+                                    <p:graphicImage styleClass="image" rendered="#{not modUsuario.fotoSubida}"
+                                                    value="#{resource['images:no_user.jpg']}"/>
+
+                                    <f:facet name="footer">
+
+                                        <p:commandButton value="Guardar" actionListener="#{modUsuario.actualizarFoto}" 
+                                                         update=":growl" style="margin-left: 420px; height: 28px; "/>
+                                        <p:spacer width="15px"/>
+                                        <p:commandButton value="Cancelar" immediate="true" update=":tab" 
+                                                         style="height: 28px; width: 90px"/>
+                                    </f:facet>
+                                </p:panelGrid>
+
+                                <div style="position: absolute; right: 10px; top: 40px">
+                                    <p:commandButton type="button" icon="ui-icon-pencil" 
+                                                     style="font-size: 11px" onclick="cargarImagenDlg.show()" 
+                                                     title="Cargar Nueva Foto!"/>
+                                </div>
                             </h:form>
 
                         </p:tab>
 
                     </p:tabView>
+
+                    <p:dialog widgetVar="cargarImagenDlg" header="Subir Nueva Imagen" modal="true" 
+                              resizable="false" style="text-align: center;"
+                              width="600" height="600">
+                        <h:form>
+                            <p:fileUpload fileUploadListener="#{modUsuario.handleFileUpload}"  
+                                          mode="advanced"
+                                          label="Seleccionar"
+                                          allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+                                          uploadLabel="Subir"
+                                          cancelLabel="Cancelar"
+                                          update="outputPanelUpload"/>
+
+                            <p:outputPanel id="outputPanelUpload">
+
+                                <h:panelGrid columns="1">
+                                    <h:outputText value="Imagen" rendered="#{modUsuario.buttonPressed}" />
+                                    <p:graphicImage value="/imageUser?id=#{modUsuario.imagenUsuarioId}" 
+                                                    cache="false" rendered="#{modUsuario.buttonPressed}"/>
+                                </h:panelGrid>
+
+                                <p:commandButton value="Aceptar" actionListener="#{modUsuario.subirImagen}"
+                                                 update=":tab:formSubirImagen" rendered="#{modUsuario.buttonPressed}"
+                                                 onclick="cargarImagenDlg.hide()"/>
+                                <p:commandButton value="Cancelar" type="button" onclick="cargarImagenDlg.hide()"
+                                                 update=":tab:formSubirImagen" rendered="#{modUsuario.buttonPressed}"/>
+
+                            </p:outputPanel> 
+                        </h:form>
+
+                    </p:dialog>
+
                 </div>
             </ui:define>
 

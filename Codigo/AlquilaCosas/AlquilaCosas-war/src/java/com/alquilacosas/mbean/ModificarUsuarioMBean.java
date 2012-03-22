@@ -7,9 +7,11 @@ package com.alquilacosas.mbean;
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.DomicilioDTO;
 import com.alquilacosas.dto.UsuarioDTO;
+import com.alquilacosas.ejb.entity.ImagenUsuario;
 import com.alquilacosas.ejb.entity.Pais;
 import com.alquilacosas.ejb.entity.Provincia;
 import com.alquilacosas.ejb.session.UsuarioBeanLocal;
+import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,6 +25,9 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import org.apache.log4j.Logger;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 /**
  *
@@ -48,8 +53,16 @@ public class ModificarUsuarioMBean implements Serializable {
     private int paisSeleccionado;
     private DomicilioDTO domicilio;
     private boolean editando, editandoDir, sinDomicilio;
+    private Integer pictureSelected;
+    private Integer imagenUsuarioId;
+    private byte[] imagenPerfil;
+    private boolean buttonPressed = false;
+    private boolean renderImage = false;
+    private boolean fotoSubida = false;
 
-    /** Creates a new instance of ModificarUsuarioMBean */
+    /**
+     * Creates a new instance of ModificarUsuarioMBean
+     */
     public ModificarUsuarioMBean() {
     }
 
@@ -59,14 +72,14 @@ public class ModificarUsuarioMBean implements Serializable {
         Integer id = usuarioMBean.getUsuarioId();
         usuario = usuarioBean.getDatosUsuario(id);
 
-        nombre =usuario.getNombre();
+        nombre = usuario.getNombre();
         apellido = usuario.getApellido();
         dni = usuario.getDni();
         telefono = usuario.getTelefono();
         fechaNacimiento = usuario.getFechaNacimiento();
         domicilio = usuario.getDomicilio();
-        
-        if(domicilio != null) {
+
+        if (domicilio != null) {
             paisSeleccionado = domicilio.getPaisId();
             provinciaSeleccionada = domicilio.getProvinciaId();
             ciudad = domicilio.getCiudad();
@@ -80,7 +93,7 @@ public class ModificarUsuarioMBean implements Serializable {
         }
         paises = new ArrayList<SelectItem>();
         provincias = new ArrayList<SelectItem>();
-        if(paisSeleccionado != 0) {
+        if (paisSeleccionado != 0) {
             actualizarProvincias();
         }
 
@@ -91,6 +104,16 @@ public class ModificarUsuarioMBean implements Serializable {
             }
         }
         today = new Date();
+
+        ImagenUsuario iu = this.usuarioMBean.getUsuario().getImagen();
+        if (iu != null) {
+            this.imagenUsuarioId = iu.getImagenUsuarioId();
+            this.fotoSubida = true;
+            this.pictureSelected = 2; //quitar este hardcode una vez que se implemente
+            //la funcionalidad que inicializa el radiobutton teniendo en cuenta si el usuario
+            //se logea con facebook o a traves de una cuenta de AlquilaCosas
+        }
+
     }
 
     public void crearDomicilio() {
@@ -107,14 +130,14 @@ public class ModificarUsuarioMBean implements Serializable {
         domicilio.setCiudad(ciudad);
         domicilio.setProvinciaId(provinciaSeleccionada);
         domicilio.setPaisId(paisSeleccionado);
-        for(SelectItem si: paises) {
-            if(si.getValue().equals(new Integer(paisSeleccionado))) {
+        for (SelectItem si : paises) {
+            if (si.getValue().equals(new Integer(paisSeleccionado))) {
                 domicilio.setPais(si.getLabel());
                 break;
             }
         }
-        for(SelectItem si: provincias) {
-            if(si.getValue().equals(new Integer(provinciaSeleccionada))) {
+        for (SelectItem si : provincias) {
+            if (si.getValue().equals(new Integer(provinciaSeleccionada))) {
                 domicilio.setProvincia(si.getLabel());
                 break;
             }
@@ -125,10 +148,10 @@ public class ModificarUsuarioMBean implements Serializable {
         usuarioBean.actualizarInfoBasica(usuario.getId(), nombre, apellido, dni, telefono, fechaNacimiento);
         editando = false;
     }
-    
+
     public void actualizarDomicilio() {
         crearDomicilio();
-        if(sinDomicilio) {    
+        if (sinDomicilio) {
             usuarioBean.agregarDomicilio(usuario.getId(), domicilio);
             sinDomicilio = false;
             usuario.setDomicilio(domicilio);
@@ -137,15 +160,15 @@ public class ModificarUsuarioMBean implements Serializable {
         }
         editandoDir = false;
     }
-    
+
     public void actualizarUsuario() {
         try {
-            usuario = usuarioBean.actualizarUsuario(usuario.getId(), telefono, 
+            usuario = usuarioBean.actualizarUsuario(usuario.getId(), telefono,
                     fechaNacimiento, domicilio);
             editando = false;
-        } catch(AlquilaCosasException e) {
-            FacesContext.getCurrentInstance().addMessage(null, 
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+        } catch (AlquilaCosasException e) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Error al actualizar usuario", e.getMessage()));
         }
     }
@@ -158,32 +181,51 @@ public class ModificarUsuarioMBean implements Serializable {
                 provincias.add(new SelectItem(p.getProvinciaId(), p.getNombre()));
             }
         }
-//        for(SelectItem si: paises) {
-//            if(si.getValue().equals(new Integer(paisSeleccionado))) {
-//                domicilio.setPais(si.getLabel());
-//                break;
-//            }
-//        }
-//        for(SelectItem si: provincias) {
-//            if(si.getValue().equals(new Integer(provinciaSeleccionada))) {
-//                domicilio.setProvincia(si.getLabel());
-//                break;
-//            }
-//        }
+
+    }
+
+    //crear método que devuelva el ID de una imagenUsuario
+    public void handleFileUpload(FileUploadEvent event) {
+        imagenPerfil = event.getFile().getContents();
+        usuarioBean.actualizarImagen(usuario.getId(), imagenPerfil);
+        ImagenUsuario iu = this.usuarioMBean.getUsuario().getImagen();
+        if (iu != null) {
+            this.imagenUsuarioId = iu.getImagenUsuarioId();
+            this.fotoSubida = true;
+        }
+        this.buttonPressed = true;
     }
     
+    public void subirImagen(){
+        this.renderImage = true;  
+    }
+
+    public void actualizarFoto() {
+        if (this.pictureSelected.equals("1")) {
+            //se selecciona la imagen de Facebook para mostrar en la imagen de perfil
+            usuarioBean.seleccionarImagenPerfil(usuario.getId(), false);
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Imagen Facebook seleccionada", "");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        } else {
+            // se selecciona la imagen que es subida por el usuario
+            usuarioBean.seleccionarImagenPerfil(usuario.getId(), true);
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Imagen Subida por el usuario seleccionada", "");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+    }
+
     public void editar() {
         editando = true;
     }
-    
+
     public void cancelarEdicion() {
-        editando= false;
+        editando = false;
     }
-    
+
     public void editarDir() {
         editandoDir = true;
     }
-    
+
     public void cancelarEdicionDir() {
         editandoDir = false;
     }
@@ -358,4 +400,53 @@ public class ModificarUsuarioMBean implements Serializable {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+
+    public Integer getPictureSelected() {
+        return pictureSelected;
+    }
+
+    public void setPictureSelected(Integer pictureSelected) {
+        this.pictureSelected = pictureSelected;
+    }
+
+    public Integer getImagenUsuarioId() {
+        return imagenUsuarioId;
+    }
+
+    public void setImagenUsuarioId(Integer imagenUsuarioId) {
+        this.imagenUsuarioId = imagenUsuarioId;
+    }
+
+    public boolean isButtonPressed() {
+        return buttonPressed;
+    }
+
+    public void setButtonPressed(boolean buttonPressed) {
+        this.buttonPressed = buttonPressed;
+    }
+
+    public byte[] getImagenPerfil() {
+        return imagenPerfil;
+    }
+
+    public void setImagenPerfil(byte[] imagenPerfil) {
+        this.imagenPerfil = imagenPerfil;
+    }
+
+    public boolean isRenderImage() {
+        return renderImage;
+    }
+
+    public void setRenderImage(boolean renderImage) {
+        this.renderImage = renderImage;
+    }
+
+    public boolean isFotoSubida() {
+        return fotoSubida;
+    }
+
+    public void setFotoSubida(boolean fotoSubida) {
+        this.fotoSubida = fotoSubida;
+    }
+
 }

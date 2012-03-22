@@ -25,5 +25,9 @@ public interface LoginBeanLocal {
     public UsuarioLogueado login(java.lang.String username, java.lang.String password) throws SeguridadException;
 
     public UsuarioLogueado facebookLogin(java.lang.String email) throws com.alquilacosas.common.SeguridadException;
+
+    public byte[] leerImagen(int id);
+
+    boolean usarImagenLocal(Integer usuarioId);
     
 }
