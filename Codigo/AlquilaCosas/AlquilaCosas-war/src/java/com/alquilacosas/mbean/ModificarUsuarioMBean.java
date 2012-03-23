@@ -11,7 +11,6 @@ import com.alquilacosas.ejb.entity.ImagenUsuario;
 import com.alquilacosas.ejb.entity.Pais;
 import com.alquilacosas.ejb.entity.Provincia;
 import com.alquilacosas.ejb.session.UsuarioBeanLocal;
-import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,8 +25,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
 
 /**
  *
@@ -187,10 +184,10 @@ public class ModificarUsuarioMBean implements Serializable {
     //crear método que devuelva el ID de una imagenUsuario
     public void handleFileUpload(FileUploadEvent event) {
         imagenPerfil = event.getFile().getContents();
-        usuarioBean.actualizarImagen(usuario.getId(), imagenPerfil);
-        ImagenUsuario iu = this.usuarioMBean.getUsuario().getImagen();
+        ImagenUsuario iu = usuarioBean.actualizarImagen(usuario.getId(), imagenPerfil);
         if (iu != null) {
-            this.imagenUsuarioId = iu.getImagenUsuarioId();
+            usuarioMBean.setImagenUsuarioId(iu.getImagenUsuarioId());
+            imagenUsuarioId = iu.getImagenUsuarioId();
             this.fotoSubida = true;
         }
         this.buttonPressed = true;

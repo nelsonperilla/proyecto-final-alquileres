@@ -7,6 +7,7 @@ package com.alquilacosas.ejb.session;
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.DomicilioDTO;
 import com.alquilacosas.dto.UsuarioDTO;
+import com.alquilacosas.ejb.entity.ImagenUsuario;
 import com.alquilacosas.ejb.entity.Pais;
 import com.alquilacosas.ejb.entity.Provincia;
 import java.util.Date;
@@ -43,7 +44,7 @@ public interface UsuarioBeanLocal {
 
     public void actualizarInfoBasica(Integer usuarioId, String nombre, String apellido, String dni, String telefono, Date fechaNacimiento);
 
-    void actualizarImagen(int usuarioId, byte[] imagen);
+    ImagenUsuario actualizarImagen(int usuarioId, byte[] imagen);
 
     void seleccionarImagenPerfil(Integer usuarioId, boolean usar);
     

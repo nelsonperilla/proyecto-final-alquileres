@@ -286,11 +286,12 @@ public class UsuarioBean implements UsuarioBeanLocal {
     }
 
     @Override
-    public void actualizarImagen(int usuarioId, byte[] imagen) {
+    public ImagenUsuario actualizarImagen(int usuarioId, byte[] imagen) {
         Usuario usuario = usuarioFacade.find(usuarioId);
         ImagenUsuario iu = usuario.getImagenUsuarioList().get(0);
         iu.setImagen(imagen);
         usuarioFacade.edit(usuario);
+        return iu;
     }
 
     @Override

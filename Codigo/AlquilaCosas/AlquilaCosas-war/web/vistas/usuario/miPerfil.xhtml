@@ -11,7 +11,7 @@
 
         <ui:composition template="./../../resources/templates/newTemplate.xhtml">
 
-            <ui:define name="left">
+            <ui:define name="left" id="panel" >
                 <comps:miPanel />
             </ui:define>
 
@@ -254,23 +254,22 @@
                                     <f:selectItem itemLabel="option 2" itemValue="2"/>
                                 </p:selectOneRadio>
                                 
-                                <p:panelGrid columns="6" styleClass="iu-panelgrid">
+                                <p:panelGrid id="panelFoto" columns="6" styleClass="iu-panelgrid">
 
                                     <p:radioButton id="opt1" for="radioPicture" itemIndex="0" /> 
                                     <h:outputLabel for="opt1" value="Foto Facebook" />
-                                    <h:graphicImage styleClass="image" rendered="#{login.fbLogin}" 
+                                <h:graphicImage styleClass="image" rendered="#{not empty login.fbId}" 
                                                     value="https://graph.facebook.com/#{login.fbId}/picture?type=large" />
-                                    <h:graphicImage styleClass="image" rendered="#{not login.fbLogin}"
+                                    <h:graphicImage styleClass="image" rendered="#{empty login.fbId}"
                                                     value="#{resource['images:no_user.jpg']}" />
 
                                     <p:radioButton id="opt2" for="radioPicture" itemIndex="1"/> 
                                     <h:outputLabel for="opt2" value="Foto Local  " />
 
                                     <p:graphicImage value="/imageUser?id=#{modUsuario.imagenUsuarioId}" styleClass="image" 
-                                                    cache="false" rendered="#{not modUsuario.renderImage}"/>
-                                    <p:graphicImage value="/imageUser?id=#{modUsuario.imagenUsuarioId}" styleClass="image" 
-                                                    cache="false" rendered="#{modUsuario.renderImage}"/>
-                                    <p:graphicImage styleClass="image" rendered="#{not modUsuario.fotoSubida}"
+                                                    cache="false" rendered="#{not empty modUsuario.imagenUsuarioId}"/>
+                  
+                                    <p:graphicImage styleClass="image" rendered="#{empty modUsuario.imagenUsuarioId}"
                                                     value="#{resource['images:no_user.jpg']}"/>
 
                                     <f:facet name="footer">
@@ -318,7 +317,7 @@
                                                  update=":tab:formSubirImagen" rendered="#{modUsuario.buttonPressed}"
                                                  onclick="cargarImagenDlg.hide()"/>
                                 <p:commandButton value="Cancelar" type="button" onclick="cargarImagenDlg.hide()"
-                                                 update=":tab:formSubirImagen" rendered="#{modUsuario.buttonPressed}"/>
+                                                 update=":tab:formSubirImagen :panel" rendered="#{modUsuario.buttonPressed}"/>
 
                             </p:outputPanel> 
                         </h:form>
