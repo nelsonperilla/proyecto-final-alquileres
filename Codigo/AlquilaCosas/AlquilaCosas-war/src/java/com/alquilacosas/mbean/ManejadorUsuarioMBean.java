@@ -42,7 +42,7 @@ public class ManejadorUsuarioMBean implements Serializable {
     private UsuarioLogueado usuario;
     private String username, password;
     private String loginOnPageArg;
-    private String fbId;
+    private Integer fbId;
     private Integer usuarioId;
     private boolean logueado, administrador, publicitante, fbLogin;
     private String urlParams;
@@ -83,6 +83,7 @@ public class ManejadorUsuarioMBean implements Serializable {
         usuarioId = usuario.getId();
         administrador = usuario.getRoles().contains(NombreRol.ADMIN);
         publicitante = usuario.getRoles().contains(NombreRol.PUBLICITANTE);
+        fbId = usuario.getFacebookId();
         HttpServletRequest req = (HttpServletRequest) context.getExternalContext().getRequest();
         String url = (String) req.getSession(true).getAttribute("redirectUrl");
         req.getSession(true).removeAttribute("redirectUrl");
@@ -112,13 +113,10 @@ public class ManejadorUsuarioMBean implements Serializable {
         }
         logueado = true;
         usuarioId = usuario.getId();
+        fbId = usuario.getFacebookId();
         administrador = usuario.getRoles().contains(NombreRol.ADMIN);
         publicitante = usuario.getRoles().contains(NombreRol.PUBLICITANTE);
         RequestContext.getCurrentInstance().addCallbackParam("logueado", true);
-    }
-    
-    public String recargarPagina() {
-        return null;
     }
     
     /**
@@ -159,12 +157,12 @@ public class ManejadorUsuarioMBean implements Serializable {
      * @param email Email del usuario obtenido a traes de Facebook
      * @return 
      */
-    public boolean completeFbLogin(String email, String id) {
+    public boolean completeFbLogin(String email, Integer id) {
         if(email == null) {
             return false;
         }
         try {
-            usuario = loginBean.facebookLogin(email);
+            usuario = loginBean.facebookLogin(email, id);
         } catch (SeguridadException e) {
             Logger.getLogger(ManejadorUsuarioMBean.class).error("fbLogin(). Usuario no registrado.");
             return false;
@@ -185,9 +183,9 @@ public class ManejadorUsuarioMBean implements Serializable {
      * @param email Email del usuario obtenido a traves de facebook
      * @return 
      */
-    public boolean registrarFb(String nombre, String apellido, String email, String id) {
+    public boolean registrarFb(String nombre, String apellido, String email, Integer id) {
         try {
-            registrarBean.registrarUsuarioConFacebook(email, nombre, apellido);   
+            registrarBean.registrarUsuarioConFacebook(email, nombre, apellido, id);   
         } catch (AlquilaCosasException e) {
             Logger.getLogger(ManejadorUsuarioMBean.class).error("registrarFb(). "
                     + "Error al registrar usuario a traves de facebook: " + e.getMessage());
@@ -339,11 +337,11 @@ public class ManejadorUsuarioMBean implements Serializable {
         this.fbLogin = fbLogin;
     }
 
-    public String getFbId() {
+    public Integer getFbId() {
         return fbId;
     }
 
-    public void setFbId(String fbId) {
+    public void setFbId(Integer fbId) {
         this.fbId = fbId;
     }
 

@@ -146,11 +146,12 @@ public class UsuarioBean implements UsuarioBeanLocal {
     }
     
     @Override
-    public void registrarUsuarioConFacebook(String email, String nombre, String apellido) throws AlquilaCosasException {
+    public void registrarUsuarioConFacebook(String email, String nombre, String apellido, Integer fbId) throws AlquilaCosasException {
         Usuario usuario = new Usuario();
         usuario.setNombre(nombre);
         usuario.setApellido(apellido);
         usuario.setEmail(email);
+        usuario.setFacebookId(fbId);
         
         Login login = new Login();
         login.setFechaCreacion(new Date());
