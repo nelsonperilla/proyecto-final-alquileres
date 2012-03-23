@@ -95,7 +95,7 @@ public class LoginBean implements LoginBeanLocal {
             ImagenUsuario iu = usuario.getImagenUsuarioList().get(0);
             
             UsuarioLogueado user = new UsuarioLogueado(usuario.getUsuarioId(), usuario.getNombre(), 
-                    usuario.getApellido(), ciudad, iu , roles);
+                    usuario.getApellido(), ciudad, iu , roles, usuario.getFacebookId());
             user.setDireccionRegistrada(dir);
             
             return user;
@@ -103,12 +103,16 @@ public class LoginBean implements LoginBeanLocal {
     }
     
     @Override
-    public UsuarioLogueado facebookLogin(String email) throws SeguridadException {
+    public UsuarioLogueado facebookLogin(String email, Integer facebookId) throws SeguridadException {
         Login login = loginFacade.findByEmail(email);
         if(login == null) {
             throw new SeguridadException("Usuario no registrado.");
         } else {
             Usuario usuario = login.getUsuarioFk();
+            if(usuario.getFacebookId() == null || usuario.getFacebookId() == 0) {
+                usuario.setFacebookId(facebookId);
+                usuarioFacade.edit(usuario);
+            }
             String ciudad = null;
             boolean dir = false;
             if(!usuario.getDomicilioList().isEmpty()) {
@@ -119,8 +123,13 @@ public class LoginBean implements LoginBeanLocal {
             for(Rol r: login.getRolList()) {
                 roles.add(r.getNombre());
             }
-            ImagenUsuario iu = usuario.getImagenUsuarioList().get(0);
-            UsuarioLogueado user = new UsuarioLogueado(usuario.getUsuarioId(), usuario.getNombre(), usuario.getApellido(), ciudad, iu, roles);
+            ImagenUsuario iu = null;
+            if(!usuario.getImagenUsuarioList().isEmpty()) {
+                iu = usuario.getImagenUsuarioList().get(0);
+            }
+            UsuarioLogueado user = new UsuarioLogueado(usuario.getUsuarioId(), 
+                    usuario.getNombre(), usuario.getApellido(), ciudad, iu, roles,
+                    usuario.getFacebookId());
             user.setDireccionRegistrada(dir);
             return user;
         }

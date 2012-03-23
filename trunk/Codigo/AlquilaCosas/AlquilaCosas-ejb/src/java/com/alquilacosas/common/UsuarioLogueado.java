@@ -15,19 +15,21 @@ import java.util.List;
  */
 public class UsuarioLogueado implements Serializable {
     
-    private Integer id;
+    private Integer id, facebookId;
     private String nombre, apellido, ciudad;
     private ImagenUsuario imagen;
     private List<NombreRol> roles;
     private boolean direccionRegistrada;
 
-    public UsuarioLogueado(Integer id, String nombre, String apellido, String ciudad, ImagenUsuario imagen, List<NombreRol> roles) {
+    public UsuarioLogueado(Integer id, String nombre, String apellido, String ciudad, 
+            ImagenUsuario imagen, List<NombreRol> roles, Integer facebookId) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
         this.ciudad = ciudad;
         this.imagen = imagen;
         this.roles = roles;
+        this.facebookId = facebookId;
     }
 
     public String getApellido() {
@@ -86,6 +88,14 @@ public class UsuarioLogueado implements Serializable {
 
     public void setDireccionRegistrada(boolean direccionRegistrada) {
         this.direccionRegistrada = direccionRegistrada;
+    }
+
+    public Integer getFacebookId() {
+        return facebookId;
+    }
+
+    public void setFacebookId(Integer facebookId) {
+        this.facebookId = facebookId;
     }
     
 }
