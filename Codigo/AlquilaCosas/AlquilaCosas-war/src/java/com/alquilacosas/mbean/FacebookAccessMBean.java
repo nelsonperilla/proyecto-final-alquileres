@@ -73,10 +73,9 @@ public class FacebookAccessMBean {
                         String apellido = json.getString("last_name");
                         String email = json.getString("email");
                         //String ubicacion = json.getString("location");
-                        Integer fbId = Integer.valueOf(id);
-                        boolean loggedIn = login.completeFbLogin(email, fbId);
+                        boolean loggedIn = login.completeFbLogin(email, id);
                         if (!loggedIn) {
-                            login.registrarFb(nombre, apellido, email, fbId);
+                            login.registrarFb(nombre, apellido, email, id);
                         }
                         System.out.println("Hello " + nombre + " " + apellido + ", email: " + email);
                     } catch (Exception e) {

@@ -17,8 +17,8 @@ import java.util.List;
  */
 public class UsuarioDTO implements Serializable {
 
-     private Integer id, facebookId;
-     private String nombre, apellido, email, telefono, dni;
+     private Integer id;
+     private String nombre, apellido, email, telefono, dni, facebookId;
      private Date fechaNacimiento;
      private DomicilioDTO domicilio;
      private String username;
@@ -367,11 +367,11 @@ public class UsuarioDTO implements Serializable {
           this.cantidadSuspencion = cantidadSuspencion;
      }
 
-    public Integer getFacebookId() {
+    public String getFacebookId() {
         return facebookId;
     }
 
-    public void setFacebookId(Integer facebookId) {
+    public void setFacebookId(String facebookId) {
         this.facebookId = facebookId;
     }
 }

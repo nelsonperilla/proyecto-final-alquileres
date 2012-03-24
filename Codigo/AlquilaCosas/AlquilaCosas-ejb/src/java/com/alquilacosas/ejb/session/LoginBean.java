@@ -103,13 +103,13 @@ public class LoginBean implements LoginBeanLocal {
     }
     
     @Override
-    public UsuarioLogueado facebookLogin(String email, Integer facebookId) throws SeguridadException {
+    public UsuarioLogueado facebookLogin(String email, String facebookId) throws SeguridadException {
         Login login = loginFacade.findByEmail(email);
         if(login == null) {
             throw new SeguridadException("Usuario no registrado.");
         } else {
             Usuario usuario = login.getUsuarioFk();
-            if(usuario.getFacebookId() == null || usuario.getFacebookId() == 0) {
+            if(usuario.getFacebookId() == null || usuario.getFacebookId().equals("")) {
                 usuario.setFacebookId(facebookId);
                 usuarioFacade.edit(usuario);
             }
