@@ -40,7 +40,7 @@ public class Usuario implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date fechaNac;
     @Column(name = "FACEBOOK_ID")
-    private Integer facebookId;
+    private String facebookId;
     
     private static final long serialVersionUID = 1L;
     
@@ -445,11 +445,11 @@ public class Usuario implements Serializable {
         return "com.alquilacosas.ejb.entity.Usuario[ usuarioId=" + usuarioId + " ]";
     }
 
-    public Integer getFacebookId() {
+    public String getFacebookId() {
         return facebookId;
     }
 
-    public void setFacebookId(Integer facebookId) {
+    public void setFacebookId(String facebookId) {
         this.facebookId = facebookId;
     }
 

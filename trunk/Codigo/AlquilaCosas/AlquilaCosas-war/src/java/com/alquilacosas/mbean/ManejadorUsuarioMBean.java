@@ -42,7 +42,7 @@ public class ManejadorUsuarioMBean implements Serializable {
     private UsuarioLogueado usuario;
     private String username, password;
     private String loginOnPageArg;
-    private Integer fbId;
+    private String fbId;
     private Integer usuarioId;
     private boolean logueado, administrador, publicitante, fbLogin;
     private String urlParams;
@@ -157,7 +157,7 @@ public class ManejadorUsuarioMBean implements Serializable {
      * @param email Email del usuario obtenido a traes de Facebook
      * @return 
      */
-    public boolean completeFbLogin(String email, Integer id) {
+    public boolean completeFbLogin(String email, String id) {
         if(email == null) {
             return false;
         }
@@ -183,7 +183,7 @@ public class ManejadorUsuarioMBean implements Serializable {
      * @param email Email del usuario obtenido a traves de facebook
      * @return 
      */
-    public boolean registrarFb(String nombre, String apellido, String email, Integer id) {
+    public boolean registrarFb(String nombre, String apellido, String email, String id) {
         try {
             registrarBean.registrarUsuarioConFacebook(email, nombre, apellido, id);   
         } catch (AlquilaCosasException e) {
@@ -337,11 +337,11 @@ public class ManejadorUsuarioMBean implements Serializable {
         this.fbLogin = fbLogin;
     }
 
-    public Integer getFbId() {
+    public String getFbId() {
         return fbId;
     }
 
-    public void setFbId(Integer fbId) {
+    public void setFbId(String fbId) {
         this.fbId = fbId;
     }
 
