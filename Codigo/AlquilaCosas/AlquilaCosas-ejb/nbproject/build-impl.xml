@@ -126,9 +126,6 @@ is divided into following sections:
         <condition property="is.server.weblogic" value="true">
             <equals arg1="${j2ee.server.type}" arg2="WebLogic9"/>
         </condition>
-        <condition property="is.jars.in.ejbjar" value="true">
-            <equals arg1="${jars.in.ejbjar}" arg2="true"/>
-        </condition>
         <condition else="false" property="jdkBug6558476">
             <and>
                 <matches pattern="1\.[56]" string="${java.specification.version}"/>
@@ -141,10 +138,7 @@ is divided into following sections:
     </target>
     <target depends="init" name="-init-cos" unless="deploy.on.save">
         <condition property="deploy.on.save" value="true">
-            <or>
-                <istrue value="${j2ee.deploy.on.save}"/>
-                <istrue value="${j2ee.compile.on.save}"/>
-            </or>
+            <istrue value="${j2ee.deploy.on.save}"/>
         </condition>
     </target>
     <target name="-post-init">
@@ -367,7 +361,7 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
                 </nbjpdareload>
             </sequential>
         </macrodef>
-        <macrodef name="nbjpdaappreloaded" uri="http://www.netbeans.org/ns/j2ee-ejbjarproject/1">
+        <macrodef name="nbjpdaappreloaded" uri="http://www.netbeans.org/ns/web-project/1">
             <sequential>
                 <nbjpdaappreloaded/>
             </sequential>
@@ -477,11 +471,7 @@ exists or setup the property manually. For example like this:
         <!-- Empty placeholder for easier customization. -->
         <!-- You can override this target in the ../build.xml file. -->
     </target>
-    <target depends="compile,-library-inclusion-in-archive-weblogic,-library-inclusion-in-archive-by-user" name="library-inclusion-in-archive"/>
-    <target if="is.jars.in.ejbjar" name="-library-inclusion-in-archive-by-user">
-        <copyfiles files="${file.reference.log4j-1.2.16.jar}" todir="${build.classes.dir}"/>
-    </target>
-    <target if="is.server.weblogic" name="-library-inclusion-in-archive-weblogic">
+    <target depends="compile" if="is.server.weblogic" name="library-inclusion-in-archive">
         <basename file="${file.reference.log4j-1.2.16.jar}" property="manifest.file.reference.log4j-1.2.16.jar"/>
         <manifest file="${build.ear.classes.dir}/META-INF/MANIFEST.MF" mode="update">
             <attribute name="Extension-List" value="jar-1 "/>
@@ -607,7 +597,9 @@ exists or setup the property manually. For example like this:
     <target name="-run-deploy-am">
         <!-- Task to deploy to the Access Manager runtime. -->
     </target>
-    <target depends="init,-init-cos,-init-deploy,compile,library-inclusion-in-archive,dist-directory-deploy,pre-run-deploy,-pre-nbmodule-run-deploy,-run-deploy-nb,-init-deploy-ant,-deploy-ant,-run-deploy-am,-post-nbmodule-run-deploy,post-run-deploy,-do-update-breakpoints" name="run-deploy"/>
+    <target depends="init,-init-cos,-init-deploy,compile,library-inclusion-in-archive,dist-directory-deploy,pre-run-deploy,-pre-nbmodule-run-deploy,-run-deploy-nb,-init-deploy-ant,-deploy-ant,-run-deploy-am,-post-nbmodule-run-deploy,post-run-deploy" name="run-deploy">
+        <nbjpdaappreloaded/>
+    </target>
     <target if="netbeans.home" name="-run-deploy-nb">
         <nbdeploy debugmode="false" forceRedeploy="${forceRedeploy}"/>
     </target>
@@ -626,9 +618,6 @@ exists or setup the property manually. For example like this:
     <target depends="init,compile-single" name="run-main">
         <fail unless="run.class">Must select one file in the IDE or set run.class</fail>
         <ejbjarproject3:java classname="${run.class}"/>
-    </target>
-    <target depends="init" if="netbeans.home" name="-do-update-breakpoints">
-        <ejbjarproject1:nbjpdaappreloaded/>
     </target>
     <!--
                 DEBUGGING SECTION
@@ -839,7 +828,7 @@ exists or setup the property manually. For example like this:
     <!--
                 CLEANUP SECTION
             -->
-    <target depends="init" name="deps-clean" unless="no.deps"/>
+    <target depends="init" if="no.dist.ear.dir" name="deps-clean" unless="no.deps"/>
     <target depends="init" name="-do-clean">
         <delete dir="${build.dir}"/>
         <delete dir="${dist.dir}"/>
