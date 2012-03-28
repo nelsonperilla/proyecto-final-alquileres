@@ -4,7 +4,9 @@
  */
 package com.alquilacosas.dto;
 
+import com.alquilacosas.ejb.entity.ImagenPublicacion;
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.util.Date;
 
 /**
@@ -20,8 +22,10 @@ public class ComentarioDTO implements Serializable  {
     private String usuario;
     private ComentarioDTO respuesta;
     private int publicacionId;
+    private String publicationTitle;
+    private int imageId;
     private boolean baneado;
-
+    private String fechaComentario;
     public ComentarioDTO(){ }
     
     public ComentarioDTO(int id, String comentario, Date fecha, int usuarioId,
@@ -29,6 +33,7 @@ public class ComentarioDTO implements Serializable  {
         this.id=id;
         this.comentario=comentario;
         this.fecha=fecha;
+        this.fechaComentario = DateFormat.getDateInstance(DateFormat.MEDIUM).format(this.fecha);
         this.usuarioId=usuarioId;
         this.usuario=usuario;
         if(respuesta!=null)
@@ -42,6 +47,7 @@ public class ComentarioDTO implements Serializable  {
         this.id=id;
         this.comentario=comentario;
         this.fecha=fecha;
+        this.fechaComentario = DateFormat.getDateTimeInstance(DateFormat.SHORT,DateFormat.SHORT).format(this.fecha);
         this.usuarioId=usuarioId;
         this.usuario=usuario;
         this.publicacionId = publicacionId;
@@ -167,6 +173,48 @@ public class ComentarioDTO implements Serializable  {
      */
     public void setBaneado(boolean baneado) {
         this.baneado = baneado;
+    }
+
+    /**
+     * @return the publicationTitle
+     */
+    public String getPublicationTitle() {
+        return publicationTitle;
+    }
+
+    /**
+     * @param publicationTitle the publicationTitle to set
+     */
+    public void setPublicationTitle(String publicationTitle) {
+        this.publicationTitle = publicationTitle;
+    }
+
+    /**
+     * @return the image
+     */
+    public int getImageId() {
+        return imageId;
+    }
+
+    /**
+     * @param image the image to set
+     */
+    public void setImageId(int imageId) {
+        this.imageId = imageId;
+    }
+
+    /**
+     * @return the fechaComentario
+     */
+    public String getFechaComentario() {
+        return fechaComentario;
+    }
+
+    /**
+     * @param fechaComentario the fechaComentario to set
+     */
+    public void setFechaComentario(String fechaComentario) {
+        this.fechaComentario = fechaComentario;
     }
     
     
