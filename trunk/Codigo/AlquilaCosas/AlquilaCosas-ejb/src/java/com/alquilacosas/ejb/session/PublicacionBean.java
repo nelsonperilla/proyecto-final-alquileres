@@ -580,10 +580,16 @@ public class PublicacionBean implements PublicacionBeanLocal {
         List<ComentarioDTO> resultado = new ArrayList<ComentarioDTO>();
         Comentario respuesta = null;
         for (Comentario comentario : comentarios) {
-            resultado.add(new ComentarioDTO(comentario.getComentarioId(),
+            ComentarioDTO tempComentario = new ComentarioDTO(comentario.getComentarioId(),
                     comentario.getComentario(), comentario.getFecha(),
                     comentario.getUsuarioFk().getUsuarioId(),
-                    comentario.getUsuarioFk().getNombre(), comentario.getPublicacionFk().getPublicacionId(), null));
+                    comentario.getUsuarioFk().getNombre(), comentario.getPublicacionFk().getPublicacionId(), null);
+            tempComentario.setPublicationTitle(comentario.getPublicacionFk().getTitulo());
+            tempComentario.setImageId(
+                    comentario.getPublicacionFk().getImagenPublicacionList().isEmpty()?
+                    (-1):comentario.getPublicacionFk().getImagenPublicacionList().get(0).getImagenPublicacionId());
+            resultado.add(tempComentario);
+            
         }
 
         return resultado;

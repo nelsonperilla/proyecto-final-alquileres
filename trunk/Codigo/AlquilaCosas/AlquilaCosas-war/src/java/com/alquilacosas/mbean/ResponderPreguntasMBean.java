@@ -38,6 +38,7 @@ public class ResponderPreguntasMBean implements Serializable {
     private ComentarioDTO nuevaRespuesta;
     private ComentarioDTO selectedPregunta;
     private int cantidad;
+
     
     
     
@@ -146,5 +147,5 @@ public class ResponderPreguntasMBean implements Serializable {
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
     }
-    
+
 }
