@@ -9,6 +9,7 @@ import com.alquilacosas.dto.DomicilioDTO;
 import com.alquilacosas.ejb.entity.Pais;
 import com.alquilacosas.ejb.entity.Provincia;
 import com.alquilacosas.ejb.session.UsuarioBeanLocal;
+import java.awt.event.ActionEvent;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,6 +24,10 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
 import org.apache.log4j.Logger;
+import org.primefaces.model.map.DefaultMapModel;
+import org.primefaces.model.map.LatLng;
+import org.primefaces.model.map.MapModel;
+import org.primefaces.model.map.Marker;
 
 /**
  *
@@ -56,6 +61,9 @@ public class RegistrarUsuarioMBean implements Serializable {
     private int paisSeleccionado;
     private DomicilioDTO domicilio;
     private boolean creado;
+    private MapModel gMap;
+    private double lat;
+    private double lng;
     
     public RegistrarUsuarioMBean() {
         
@@ -73,7 +81,13 @@ public class RegistrarUsuarioMBean implements Serializable {
             }
         }
         today = new Date();
+        gMap = new DefaultMapModel();
     }
+
+    public void addMarker(ActionEvent actionEvent) {
+        Marker marker = new Marker(new LatLng(getLat(), getLng()), "alquilaCosas");
+        getgMap().addOverlay(marker);
+    }    
     
     public void crearDomicilio() {
         domicilio = new DomicilioDTO();
@@ -314,6 +328,48 @@ public class RegistrarUsuarioMBean implements Serializable {
 
     public void setCreado(boolean creado) {
         this.creado = creado;
-    }    
+    }
+
+    /**
+     * @return the gMap
+     */
+    public MapModel getgMap() {
+        return gMap;
+    }
+
+    /**
+     * @param gMap the gMap to set
+     */
+    public void setgMap(MapModel gMap) {
+        this.gMap = gMap;
+    }
+
+    /**
+     * @return the lat
+     */
+    public double getLat() {
+        return lat;
+    }
+
+    /**
+     * @param lat the lat to set
+     */
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    /**
+     * @return the lng
+     */
+    public double getLng() {
+        return lng;
+    }
+
+    /**
+     * @param lng the lng to set
+     */
+    public void setLng(double lng) {
+        this.lng = lng;
+    }
     
 }
