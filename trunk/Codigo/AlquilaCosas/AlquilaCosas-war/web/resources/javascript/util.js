@@ -117,6 +117,7 @@ function getUrlVars() {
 }
 
 var currentMarker = null;
+
 function handlePointClick(event) {  
         
     if(currentMarker == null) {  
@@ -135,7 +136,36 @@ function handlePointClick(event) {
 function markerAddComplete() {  
     var title = "alquilacosas";//document.getElementById('title');  
     currentMarker.setTitle(title.value);  
-    dlg.hide();  
+    var geocoder = new google.maps.Geocoder();
+    var lat = parseFloat(document.getElementById('lat').value);
+    var lng = parseFloat(document.getElementById('lng').value);
+    var latlng = new google.maps.LatLng(lat, lng);
+    geocoder.geocode({'latLng': latlng}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+          //document.getElementById('registro:barrio').value = results[0].formatted_address;
+          var direction = results[0].address_components;
+          //document.getElementById('registro:piso').value = direction[2].long_name;
+          /*for(var i = 0; i< direction.length; ++i)
+            document.getElementById('registro:' + direction[i].types[0]).value = direction[i].long_name;*/
+            
+            document.getElementById('registro:' + direction[0].types[0]).value = direction[0].long_name;   
+            document.getElementById('registro:' + direction[1].types[0]).value = direction[1].long_name;   
+            document.getElementById('registro:' + direction[2].types[0]).value = direction[2].long_name;   
+            document.getElementById('registro:' + direction[3].types[0]).value = direction[3].long_name;   
+            /*document.getElementById('registro:' + direction[4].types[0]).value = direction[4].long_name;   
+            document.getElementById('registro:' + direction[5].types[0]).value = direction[5].long_name;   
+            document.getElementById('registro:' + direction[6].types[0]).value = direction[6].long_name;*/
+              
+
+         
+          
+      } else {
+        document.getElementById('direccion').value = "No ok!!";
+      }
+    });
+
+    dlg.hide();   
+    
 }  
   
 function cancel() {  
