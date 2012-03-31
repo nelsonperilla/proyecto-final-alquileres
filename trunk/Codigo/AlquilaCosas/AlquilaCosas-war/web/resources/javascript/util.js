@@ -139,11 +139,23 @@ function loadMarker() {
                 draggable: true
             });
             myMap.addOverlay(currentMarker);
+            
             document.getElementById('lat').value = results[0].geometry.location.lat();  
             document.getElementById('lng').value = results[0].geometry.location.lng();         
             }
         });
+        google.maps.event.addListener(
+            currentMarker,
+            'drag',
+            function(event) {
+                document.getElementById("registro:ciudad").value = 'ok!!';
+                document.getElementById('lat').value = currentMarker.position.lat();
+                document.getElementById('lng').value = currentMarker.position.lng();
+            }
+        );
+        
     }
+
 
 
 /*
@@ -234,9 +246,11 @@ function onMarkerDrag(event){
     document.getElementById('lng').value = event.latLng.lng();          
 }
     
-function updateCoordinates(event){
-    document.getElementById('lat').value = event.latLng.lat();  
-    document.getElementById('lng').value = event.latLng.lng();          
+function updateCoordinates(){
+    document.getElementById('lng').value = currentMarker.position.lng();
+    document.getElementById('lat').value = currentMarker.position.lat();
+    /*document.getElementById('lat').value = event.latLng.lat();  
+    document.getElementById('lng').value = event.latLng.lng();          */
 }
 
 function manejarPopup(comp, popupClass) {
