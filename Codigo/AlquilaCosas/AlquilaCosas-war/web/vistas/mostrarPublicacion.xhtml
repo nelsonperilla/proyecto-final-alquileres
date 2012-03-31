@@ -24,6 +24,16 @@
                 <script type="text/javascript"
                         src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAIvenuSuB8qlfz056q69ddMHJIdqra2sc&amp;sensor=false">
                 </script>
+
+                <div id="fb-root"></div>
+                <script>(function(d, s, id) {
+                    var js, fjs = d.getElementsByTagName(s)[0];
+                    if (d.getElementById(id)) return;
+                    js = d.createElement(s); js.id = id;
+                    js.src = "//connect.facebook.net/es_LA/all.js#xfbml=1\u0026appId=187196061385476";
+                    fjs.parentNode.insertBefore(js, fjs);
+                }(document, 'script', 'facebook-jssdk'));</script>
+
                 <h:outputScript library="javascript" name="util.js" />
 
                 <table id="simpleItem">
@@ -93,6 +103,8 @@
                                                      style="background-color: #3E58F6; margin-left: 180px; font-size: 0.8em;" update="data growl">
                                         <f:attribute name="idPublicacion" value="#{publicacionDesplegada.publicacionId}" />
                                     </p:commandButton>
+                                    
+                                    <div class="fb-like" data-send="false" data-width="300" data-show-faces="false" data-font="arial"></div>
 
                                 </h:panelGrid>                            
                                 <h:panelGrid columns="3" styleClass="dataPrincipal" style="margin-top: 10px; vertical-align: middle">
@@ -185,16 +197,16 @@
                            showEffect="fade" width="450"  dynamic="true" >
                     <h:form id="rent" prependId="false">
                         <script type="text/javascript" >
-                            jQuery(function () {
-                                window.setTimeout('bindEventsHighlights()',500);
-                            });
+                        jQuery(function () {
+                            window.setTimeout('bindEventsHighlights()',500);
+                        });
 
-                            function bindEventsHighlights() {
-                                var specialDays = <h:outputText value="#{publicacionDesplegada.fechas}" /> ;
-                                jQuery(".hasDatepicker").datepicker("option", "beforeShowDay", function (date) {
-                                    return highlightCalendar(specialDays, date, 'highlight-calendar');
-                                });
-                            };
+                        function bindEventsHighlights() {
+                            var specialDays = <h:outputText value="#{publicacionDesplegada.fechas}" /> ;
+                            jQuery(".hasDatepicker").datepicker("option", "beforeShowDay", function (date) {
+                                return highlightCalendar(specialDays, date, 'highlight-calendar');
+                            });
+                        };
                         </script>
                         <h:panelGrid  columns="3" cellpadding="2" cellspacing="4" >
                             <h:outputLabel value="Periodo minimo:"/>
