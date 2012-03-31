@@ -88,11 +88,16 @@ public class LoginBean implements LoginBeanLocal {
                 ciudad = usuario.getDomicilioList().get(0).getCiudad();
                 dir = true;
             }
+            
             List<Rol.NombreRol> roles = new ArrayList<Rol.NombreRol>();
             for(Rol r: login.getRolList()) {
                 roles.add(r.getNombre());
             }
-            ImagenUsuario iu = usuario.getImagenUsuarioList().get(0);
+            
+            ImagenUsuario iu = null;
+            if(!usuario.getImagenUsuarioList().isEmpty()) {
+                iu = usuario.getImagenUsuarioList().get(0);
+            }
             
             UsuarioLogueado user = new UsuarioLogueado(usuario.getUsuarioId(), usuario.getNombre(), 
                     usuario.getApellido(), ciudad, iu , roles, usuario.getFacebookId());
