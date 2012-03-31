@@ -117,7 +117,36 @@ function getUrlVars() {
 }
 
 var currentMarker = null;
+var marker = null;
 
+function loadMarker() {  
+        
+        var address = document.getElementById("registro:numero").value + ' ';
+        address = address + document.getElementById("registro:calle").value + ',';
+        address = address + document.getElementById("registro:ciudad").value + ',';
+        
+        var selectedIndex = document.getElementById("registro:provincia_input").selectedIndex;
+        address = address + document.getElementById("registro:provincia_input").options[selectedIndex].text + ',';
+        selectedIndex = document.getElementById("registro:pais_input").selectedIndex;
+        address = address + document.getElementById("registro:pais_input").options[selectedIndex].text;
+        var geocoder = new google.maps.Geocoder();
+        geocoder.geocode( { 'address': address}, function(results, status) {
+          if (status == google.maps.GeocoderStatus.OK) {
+            var gmap = myMap.getMap(); 
+            gmap.setCenter(results[0].geometry.location);
+            currentMarker = new google.maps.Marker({
+                position: results[0].geometry.location,
+                draggable: true
+            });
+            myMap.addOverlay(currentMarker);
+            document.getElementById('lat').value = results[0].geometry.location.lat();  
+            document.getElementById('lng').value = results[0].geometry.location.lng();         
+            }
+        });
+    }
+
+
+/*
 function handlePointClick(event) {  
         
     if(currentMarker == null) {  
@@ -129,8 +158,9 @@ function handlePointClick(event) {
         }); 
                               
         myMap.addOverlay(currentMarker);  
+        dlg.show();
     }
-    dlg.show();  
+      
 }  
   
 function markerAddComplete() {  
@@ -142,32 +172,54 @@ function markerAddComplete() {
     var latlng = new google.maps.LatLng(lat, lng);
     geocoder.geocode({'latLng': latlng}, function(results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
-          //document.getElementById('registro:barrio').value = results[0].formatted_address;
+          /*document.getElementById('registro:barrio').value = results[0].formatted_address;
           var direction = results[0].address_components;
-          //document.getElementById('registro:piso').value = direction[2].long_name;
-          /*for(var i = 0; i< direction.length; ++i)
-            document.getElementById('registro:' + direction[i].types[0]).value = direction[i].long_name;*/
-            
-            document.getElementById('registro:' + direction[0].types[0]).value = direction[0].long_name;   
-            document.getElementById('registro:' + direction[1].types[0]).value = direction[1].long_name;   
-            document.getElementById('registro:' + direction[2].types[0]).value = direction[2].long_name;   
-            document.getElementById('registro:' + direction[3].types[0]).value = direction[3].long_name;   
-            /*document.getElementById('registro:' + direction[4].types[0]).value = direction[4].long_name;   
-            document.getElementById('registro:' + direction[5].types[0]).value = direction[5].long_name;   
-            document.getElementById('registro:' + direction[6].types[0]).value = direction[6].long_name;*/
-              
-
-         
-          
+          for(var i = 0; i< direction.length; ++i)
+            document.getElementById('registro:' + direction[i].types[0]).value = direction[i].long_name;
+            document.getElementById('registro:' + direction[0].types[0]).value = direction[0].long_name;/   
       } else {
         document.getElementById('direccion').value = "No ok!!";
       }
     });
-
+    getMarkerFromAdress();
     dlg.hide();   
-    
 }  
-  
+
+  function getMarkerFromAdress() {
+    var selectedIndex = document.getElementById("registro:pais_input").selectedIndex;
+    var address = document.getElementById("registro:numero").value + ' ';
+    address = address + document.getElementById("registro:calle").value + ',';
+    address = address + document.getElementById("registro:ciudad").value + ',';
+    address = address + document.getElementById("registro:pais_input").options[selectedIndex].text;
+    document.getElementById("registro:barrio").value = address;
+    var geocoder = new google.maps.Geocoder();
+    geocoder.geocode( { 'address': address}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        var gmap = myMap.getMap(); 
+        gmap.setCenter(results[0].geometry.location);
+        marker = new google.maps.Marker({
+            position: results[0].geometry.location
+        });
+        myMap.addOverlay(marker);
+      } else {
+        alert("No ha sido posible geolocalizar su dirección" );
+      }
+    });
+  }*/
+
+    function pedirPosicion(pos) {
+        var gmap = myMap.getMap();
+        var centro = new google.maps.LatLng(pos.coords.latitude,pos.coords.longitude);
+        gmap.setCenter(centro); //pedimos que centre el mapa..
+        gmap.setZoom(15);
+     }
+
+    function geolocalizame(){
+        navigator.geolocation.getCurrentPosition(pedirPosicion);
+    }
+
+
+
 function cancel() {  
     dlg.hide();  
     currentMarker.setMap(null);  

@@ -18,12 +18,14 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
 import org.apache.log4j.Logger;
+import org.primefaces.event.map.MarkerDragEvent;
 import org.primefaces.model.map.DefaultMapModel;
 import org.primefaces.model.map.LatLng;
 import org.primefaces.model.map.MapModel;
@@ -82,13 +84,23 @@ public class RegistrarUsuarioMBean implements Serializable {
         }
         today = new Date();
         gMap = new DefaultMapModel();
+        //paisSeleccionado = 2;
+        
     }
 
     public void addMarker(ActionEvent actionEvent) {
         Marker marker = new Marker(new LatLng(getLat(), getLng()), "alquilaCosas");
         getgMap().addOverlay(marker);
+        paisSeleccionado = 3;
     }    
     
+    public void updateCoordinates(MarkerDragEvent event)
+    {
+        lat = event.getMarker().getLatlng().getLat();
+        lng = event.getMarker().getLatlng().getLng();
+    }
+    
+   
     public void crearDomicilio() {
         domicilio = new DomicilioDTO();
         domicilio.setCalle(calle);
@@ -99,6 +111,8 @@ public class RegistrarUsuarioMBean implements Serializable {
             domicilio.setDepto(depto);
         domicilio.setBarrio(barrio);
         domicilio.setCiudad(ciudad);
+        domicilio.setLatitud(lat);
+        domicilio.setLongitud(lng);
     }
     
     public String crearUsuario() {   

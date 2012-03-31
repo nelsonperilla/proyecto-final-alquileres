@@ -207,9 +207,6 @@ public class PublicacionBean implements PublicacionBeanLocal {
             publicacion.agregarImagen(ip);
         }
 
-        publicacion.setLatitud(latitud);
-        publicacion.setLongitud(longitud);
-
         usuario.agregarPublicacion(publicacion);
         publicacion = publicacionFacade.create(publicacion);
         return publicacion.getPublicacionId();
@@ -254,10 +251,6 @@ public class PublicacionBean implements PublicacionBeanLocal {
                         precio.getPeriodoFk().getNombre()));
             }
         }
-
-        publicacionDto.setLatitud(p.getLatitud());
-        publicacionDto.setLongitud(p.getLongitud());
-
         return publicacionDto;
     }
 
@@ -268,8 +261,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
             Double precioSemana, Double precioMes, 
             List<byte[]> imagenesAgregar, List<Integer> imagenesABorrar,
             int periodoMinimo, int periodoMinimoFk, Integer periodoMaximo,
-            Integer periodoMaximoFk, NombreEstadoPublicacion estadoPublicacion,
-            double latitud, double longitud) throws AlquilaCosasException {
+            Integer periodoMaximoFk, NombreEstadoPublicacion estadoPublicacion) throws AlquilaCosasException {
 
         Publicacion publicacion = null;
         try {
@@ -446,9 +438,6 @@ public class PublicacionBean implements PublicacionBeanLocal {
             publicacion.agregarImagen(ip);
         }
 
-        publicacion.setLatitud(latitud);
-        publicacion.setLongitud(longitud);
-
         publicacion = publicacionFacade.edit(publicacion);
     }
 
@@ -489,9 +478,6 @@ public class PublicacionBean implements PublicacionBeanLocal {
             resultado.setPrecios(precios);
             resultado.setCategoriaF(new CategoriaDTO(publicacion.getCategoriaFk().getCategoriaId(),
                     publicacion.getCategoriaFk().getNombre()));
-            resultado.setLatitud(publicacion.getLatitud());//dif: 0.0007502 sumar
-            resultado.setLongitud(publicacion.getLongitud());//dif: 0.008808 restar
-
         }
         return resultado;
     }
