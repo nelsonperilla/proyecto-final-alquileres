@@ -21,8 +21,10 @@ import java.util.List;
 public class PublicacionDTO implements Serializable {
 
     private int id;
-    private String titulo, descripcion;
-    private Date fechaDesde, fechaHasta;
+    private String titulo;
+    private String descripcion;
+    private Date fechaDesde;
+    private Date fechaHasta;
     private boolean destacada;
     private int cantidad;
     private int imagenId = -1;
@@ -32,12 +34,20 @@ public class PublicacionDTO implements Serializable {
     private List<PrecioDTO> precios;
     private NombreEstadoPublicacion estado;
     private List<ImagenPublicacion> imagenes;
-    private Integer periodoMinimoValor, periodoMaximoValor;
-    private Periodo periodoMinimo, periodoMaximo;
-    private String provincia, ciudad, barrio;
+    private Integer periodoMinimoValor;
+    private Integer periodoMaximoValor;
+    private Periodo periodoMinimo;
+    private Periodo periodoMaximo;
+    private String provincia;
+    private String ciudad;
+    private String barrio;
     private UsuarioDTO propietario;
-    private double latitud, longitud;
-    private Double precioHora, precioDia, precioSemana, precioMes;
+    private Double precioHora;
+    private Double precioDia;
+    private Double precioSemana;
+    private Double precioMes;
+    private double latitud;
+    private double longitud;    
 
     public PublicacionDTO(int id, String titulo, String descripcion,
             Date fechaDesde, Date fechaHasta, boolean destacada,
@@ -319,34 +329,6 @@ public class PublicacionDTO implements Serializable {
         this.propietario = propietario;
     }
 
-    /**
-     * @return the latitud
-     */
-    public double getLatitud() {
-        return latitud;
-    }
-
-    /**
-     * @param latitud the latitud to set
-     */
-    public void setLatitud(double latitud) {
-        this.latitud = latitud;
-    }
-
-    /**
-     * @return the longitud
-     */
-    public double getLongitud() {
-        return longitud;
-    }
-
-    /**
-     * @param longitud the longitud to set
-     */
-    public void setLongitud(double longitud) {
-        this.longitud = longitud;
-    }
-
     public Double getPrecioDia() {
         return precioDia;
     }
@@ -378,4 +360,32 @@ public class PublicacionDTO implements Serializable {
     public void setPrecioSemana(Double precioSemana) {
         this.precioSemana = precioSemana;
     }
+
+    /**
+     * @return the latitud
+     */
+    public double getLatitud() {
+        return latitud;
+    }
+
+    /**
+     * @param latitud the latitud to set
+     */
+    public void setLatitud(double latitud) {
+        this.latitud = latitud;
+    }
+
+    /**
+     * @return the longitud
+     */
+    public double getLongitud() {
+        return longitud;
+    }
+
+    /**
+     * @param longitud the longitud to set
+     */
+    public void setLongitud(double longitud) {
+        this.longitud = longitud;
+    }    
 }

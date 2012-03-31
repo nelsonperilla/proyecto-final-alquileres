@@ -69,6 +69,12 @@ public class Domicilio implements Serializable {
     @ManyToOne(optional = false)
     private Usuario usuarioFk;
 
+    @Column(name = "LATITUD")
+    private double latitud;
+        
+    @Column(name = "LONGITUD")
+    private double longitud;    
+    
     public Domicilio() {
     }
 
@@ -182,5 +188,31 @@ public class Domicilio implements Serializable {
     public void setPiso(Integer piso) {
         this.piso = piso;
     }
-    
+    /**
+     * @return the latitud
+     */
+    public double getLatitud() {
+        return latitud;
+    }
+
+    /**
+     * @param latitud the latitud to set
+     */
+    public void setLatitud(double latitud) {
+        this.latitud = latitud;
+    }
+
+    /**
+     * @return the longitud
+     */
+    public double getLongitud() {
+        return longitud;
+    }
+
+    /**
+     * @param longitud the longitud to set
+     */
+    public void setLongitud(double longitud) {
+        this.longitud = longitud;
+    }    
 }

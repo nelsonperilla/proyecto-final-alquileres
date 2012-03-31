@@ -97,17 +97,18 @@
                                 <h:panelGrid id="datos" columns="3" columnClasses="labelColumn,null,null" >
                                     <h:outputLabel value="Pais" />
 
-                                    <p:selectOneMenu id="country" value="#{regUsuario.paisSeleccionado}" required="true"
-                                                     requiredMessage="Valor requerido" style="width: 150px" >                                
+                                    <p:selectOneMenu id="pais" value="#{regUsuario.paisSeleccionado}" required="true"
+                                                     requiredMessage="Valor requerido" style="width: 150px" 
+                                                     onchange="geolocalizame()" >                                
                                         <f:selectItem itemLabel="Seleccione un pais" itemValue="" />
                                         <f:selectItems value="#{regUsuario.paises}" />
-                                        <p:ajax event="change" update="administrative_area_level_1 :form:growl" process="@this"
+                                        <p:ajax event="change" update="provincia :form:growl" process="@this"
                                                 listener="#{regUsuario.actualizarProvincias}" />
                                     </p:selectOneMenu>
-                                    <p:message for="country" />
+                                    <p:message for="pais" />
 
                                     <h:outputLabel value="Provincia" />
-                                    <p:selectOneMenu id="administrative_area_level_1" value="#{regUsuario.provinciaSeleccionada}" 
+                                    <p:selectOneMenu id="provincia" value="#{regUsuario.provinciaSeleccionada}" 
                                                      required="true" requiredMessage="Valor requerido" 
                                                      style="width: 150px" >
                                         <f:selectItem itemLabel="Seleccione una provincia" itemValue="" />
@@ -115,15 +116,15 @@
                                         <p:ajax event="change" process="@this" 
                                                 listener="#{regUsuario.prepararDomicilio}" />
                                     </p:selectOneMenu>
-                                    <p:message for="administrative_area_level_1" />
+                                    <p:message for="provincia" />
 
                                     <h:outputLabel value="Ciudad" />
-                                    <p:inputText id="locality" value="#{regUsuario.ciudad}" required="true"
+                                    <p:inputText id="ciudad" value="#{regUsuario.ciudad}" required="true"
                                                  requiredMessage="Valor requerido" 
                                                  validatorMessage="Maximo 45 caracteres" >
                                         <f:validateLength maximum="45" />
                                     </p:inputText>
-                                    <p:message for="locality" />
+                                    <p:message for="ciudad" />
 
                                     <h:outputLabel value="Barrio" />
                                     <p:inputText id="barrio" value="#{regUsuario.barrio}" required="true"
@@ -134,18 +135,18 @@
                                     <p:message for="barrio" />
 
                                     <h:outputLabel value="Calle" />
-                                    <p:inputText id="route" value="#{regUsuario.calle}" required="true"
+                                    <p:inputText id="calle" value="#{regUsuario.calle}" required="true"
                                                  requiredMessage="Valor requerido"
                                                  validatorMessage="maximo 45 caracteres" >
                                         <f:validateLength maximum="45" />
                                     </p:inputText>
-                                    <p:message for="route" />
+                                    <p:message for="calle" />
 
                                     <h:outputLabel value="Numero" />
-                                    <p:inputText id="street_number" value="#{regUsuario.numero}" required="true"
+                                    <p:inputText id="numero" value="#{regUsuario.numero}" required="true"
                                                  requiredMessage="Valor requerido" 
                                                  converterMessage="El 'Numero' debe ser un numero entero"/>
-                                    <p:message for="street_number" />
+                                    <p:message for="numero" />
 
                                     <h:outputLabel value="Piso" />
                                     <p:inputText id="piso" value="#{regUsuario.piso}" 
@@ -157,27 +158,37 @@
                                     <p:message id="deptoVal" for="depto" />
                                 </h:panelGrid>
                                 <div>
-                                    <script type="text/javascript"
-                                        src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAIvenuSuB8qlfz056q69ddMHJIdqra2sc&amp;sensor=false">
-                                    </script>                 
-                                    <p:gmap center="-31.41,-64.20"
-                                            zoom="13" type="HYBRID" style="width:540px;height:400px;"
-                                            widgetVar="myMap" model="#{regUsuario.gMap}"   
-                                            onPointClick="handlePointClick(event);"  >
-                                    </p:gmap>
+                                    <p:commandButton type="button" icon="ui-icon-pin-s" 
+                                       value="ver Mapa" onclick="map.show()"/>
+                                    <p:dialog widgetVar="map" onShow="geolocalizame();myMap.checkResize();loadMarker()" modal="true" 
+                                              showEffect="fade" width="425" height="450">
+                                            <script type="text/javascript"
+                                                    src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAIvenuSuB8qlfz056q69ddMHJIdqra2sc&amp;sensor=false">
+                                            </script> 
+                                            <p:gmap center="-31.41,-64.20"
+                                                    zoom="15" type="HYBRID" style="width:400px;height:400px;"
+                                                    widgetVar="myMap" model="#{regUsusario.gMap}"  >
+                                                <p:ajax event="markerDrag" onstart="updateCoordinates(event)"  />  
+                                            </p:gmap>
+                                        <p:commandButton value="Esta es mi ubicación correcta" 
+                                                         actionListener="#{regUsusario.updateCoordinates}"
+                                                         oncomplete="map.hide()"/>
+                                    </p:dialog>
                                 </div>
                             </p:tab>
                             
                         </p:accordionPanel>
+
                         <p:dialog widgetVar="dlg" showEffect="fade" header="Confirme su marcador"  closable="false">  
                                 <h:panelGrid columns="2">  
                                     <h:outputLabel for="title" value="La posición del marcador es correcta" />  
                                     <f:facet name="footer">  
                                         <p:commandButton value="Confirmar"   
                                                 actionListener="#{regUsuario.addMarker}"   
-
+                                                
                                                 oncomplete="markerAddComplete()"/>  
                                         <p:commandButton value="Cancelar" onclick="return cancel()"/>  
+                                        
                                     </f:facet>  
                                 </h:panelGrid>  
                                 <h:inputHidden id="lat" value="#{regUsuario.lat}" />  
@@ -206,6 +217,7 @@
                     </h:form>
                 </div>
 
+                  
             </ui:define>
 
         </ui:composition>

@@ -36,7 +36,8 @@ public interface UsuarioBeanLocal {
 
     public UsuarioDTO getDatosUsuario(Integer id);
 
-    public UsuarioDTO actualizarUsuario(int idUsuario, String telefono, Date fechaNacimiento, DomicilioDTO dom) throws com.alquilacosas.common.AlquilaCosasException;
+    public UsuarioDTO actualizarUsuario(int idUsuario, String telefono, 
+           Date fechaNacimiento, DomicilioDTO dom) throws com.alquilacosas.common.AlquilaCosasException;
 
     public void agregarDomicilio(Integer usuarioId, DomicilioDTO dom);
 

@@ -85,10 +85,6 @@ public class ModificarPublicacionMBean implements Serializable {
     private int publicacionId;
     private List<NombreEstadoPublicacion> estadosPublicaciones;
     private int imagenABorrar;
-
-    private MapModel gMap;  
-    private double lat;  
-    private double lng;     
     
     public ModificarPublicacionMBean() {
     }
@@ -179,12 +175,6 @@ public class ModificarPublicacionMBean implements Serializable {
         }
 
         selectedEstado = pf.getEstado();
-        
-        setgMap(new DefaultMapModel());
-        LatLng position = new LatLng(pf.getLatitud(), pf.getLongitud()); 
-        Marker marcador = new Marker(position, pf.getTitulo());
-        marcador.setDraggable(true);
-        getgMap().addOverlay(marcador);         
 
     }
 
@@ -255,7 +245,7 @@ public class ModificarPublicacionMBean implements Serializable {
                     descripcion, fechaDesde, fechaHasta, destacada, cantidad,
                     login.getUsuarioId(), cat, precioHora, precioDia, precioSemana, precioMes, imagenesAgregar,
                     imagenesABorrar, periodoMinimo, selectedPeriodoMinimo, periodoMaximo, 
-                    selectedPeriodoMaximo, selectedEstado,lat,lng);
+                    selectedPeriodoMaximo, selectedEstado);
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage("Los datos fueron guardados correctamente"));
             return "pmisPublicaciones";
@@ -341,11 +331,7 @@ public class ModificarPublicacionMBean implements Serializable {
         imagenesABorrar.add(id);
     }
     
-    public void updateCoordinates(MarkerDragEvent event) {
-        lat = event.getMarker().getLatlng().getLat();
-        lng = event.getMarker().getLatlng().getLng();
-    }
-    
+   
     /*
      * Getters & Setters
      */
@@ -629,30 +615,6 @@ public class ModificarPublicacionMBean implements Serializable {
 
     public void setPeriodoMinimo(int periodoMinimo) {
         this.periodoMinimo = periodoMinimo;
-    }
-
-    public MapModel getgMap() {
-        return gMap;
-    }
-
-    public void setgMap(MapModel gMap) {
-        this.gMap = gMap;
-    }
-
-    public double getLat() {
-        return lat;
-    }
-
-    public void setLat(double lat) {
-        this.lat = lat;
-    }
-
-    public double getLng() {
-        return lng;
-    }
-
-    public void setLng(double lng) {
-        this.lng = lng;
     }
 
     public Double getPrecioDia() {

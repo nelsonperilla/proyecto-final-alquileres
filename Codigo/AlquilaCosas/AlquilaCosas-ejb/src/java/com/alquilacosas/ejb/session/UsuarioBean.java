@@ -91,6 +91,8 @@ public class UsuarioBean implements UsuarioBeanLocal {
         domicilio.setBarrio(dom.getBarrio());
         domicilio.setCiudad(dom.getCiudad());
         domicilio.setProvinciaFk(provincia);
+        domicilio.setLatitud(dom.getLatitud());
+        domicilio.setLongitud(dom.getLongitud());
         
         usuario.agregarDomicilio(domicilio);
 

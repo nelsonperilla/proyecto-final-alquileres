@@ -12,10 +12,19 @@ import java.io.Serializable;
  */
 public class DomicilioDTO implements Serializable {
     
-    private String calle, depto, barrio, ciudad, provincia, pais;
+    private String calle;
+    private String depto;
+    private String barrio;
+    private String ciudad;
+    private String provincia;
+    private String pais;
+                    
     private int numero;
     private Integer piso;
-    private int provinciaId, paisId;
+    private int provinciaId;
+    private int paisId;
+    private double latitud;
+    private double longitud;
     
     public DomicilioDTO() {
     }
@@ -116,6 +125,34 @@ public class DomicilioDTO implements Serializable {
 
     public void setProvincia(String provincia) {
         this.provincia = provincia;
+    }
+
+        /**
+     * @return the latitud
+     */
+    public double getLatitud() {
+        return latitud;
+    }
+
+    /**
+     * @param latitud the latitud to set
+     */
+    public void setLatitud(double latitud) {
+        this.latitud = latitud;
+    }
+
+    /**
+     * @return the longitud
+     */
+    public double getLongitud() {
+        return longitud;
+    }
+
+    /**
+     * @param longitud the longitud to set
+     */
+    public void setLongitud(double longitud) {
+        this.longitud = longitud;
     }
     
 }

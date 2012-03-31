@@ -49,8 +49,7 @@ public interface PublicacionBeanLocal {
             Double precioSemana, Double precioMes, 
             List<byte[]> imagenesAgregar, List<Integer> imagenesABorrar, 
             int periodoMinimo, int periodoMinimoFk, Integer periodoMaximo, Integer periodoMaximoFk,
-            NombreEstadoPublicacion estadoPublicacion, 
-            double latitud, double longitud) throws AlquilaCosasException;
+            NombreEstadoPublicacion estadoPublicacion) throws AlquilaCosasException;
     
 
     public List<Periodo> getPeriodos();
