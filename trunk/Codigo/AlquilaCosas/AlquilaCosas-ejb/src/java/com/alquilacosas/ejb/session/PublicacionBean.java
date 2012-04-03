@@ -471,7 +471,8 @@ public class PublicacionBean implements PublicacionBeanLocal {
             resultado.setProvincia(domicilio.getProvinciaFk().getNombre());
             resultado.setCiudad(domicilio.getProvinciaFk().getNombre());
             resultado.setBarrio(domicilio.getBarrio());
-
+            resultado.setLatitud(domicilio.getLatitud());
+            resultado.setLongitud(domicilio.getLongitud());
             resultado.setImagenIds(getIdImagenes(publicacion));
 
             List<PrecioDTO> precios = precioBean.getPrecios(publicacion);
