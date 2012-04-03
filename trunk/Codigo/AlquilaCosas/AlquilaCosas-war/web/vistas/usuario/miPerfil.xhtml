@@ -19,7 +19,7 @@
                 <p:growl id="growl" globalOnly="true" />
 
                 <div style="margin: 0 30px" >
-                    <p:tabView id="tab" style="position: relative" >
+                    <p:tabView id="tab" dynamic="true"  >
 
                         <p:tab title="Informacion Basica" >
 
@@ -61,6 +61,10 @@
                                 <h:form rendered="#{modUsuario.editando}" >
                                     <h:panelGrid columns="3" cellpadding="2" columnClasses="labelColumn2,fieldColumn" >
 
+                                        <h:outputLabel value="Email" />
+                                        <h:outputText value="#{modUsuario.usuario.email}" />
+                                        <p/>                                        
+                                        
                                         <h:outputLabel value="Nombre" for="nombre" />
                                         <p:inputText id="nombre" value="#{modUsuario.nombre}" 
                                                      required="true" requiredMessage="Valor requerido" />
@@ -74,10 +78,6 @@
                                         <h:outputLabel value="DNI" for="dni" />
                                         <p:inputText id="dni" value="#{modUsuario.dni}"/>
                                         <p:message for="dni" />
-
-                                        <h:outputLabel value="Email" />
-                                        <h:outputText value="#{modUsuario.usuario.email}" />
-                                        <p/>
 
                                         <h:outputLabel value="Telefono" for="telefono" />
                                         <p:inputText id="telefono" value="#{modUsuario.telefono}" />
@@ -102,70 +102,79 @@
 
                         <p:tab title="Direccion" >
 
-                            <p:outputPanel id="panelDir" >
+                            <p:outputPanel id="panelDir"  >
 
                                 <h:outputText value="Aun no has cargado ninguna direccion" style="color: gray; font-style: italic"
                                               rendered="#{empty modUsuario.domicilio}" />
+                                <div >
+                                    <div style="float:left; margin-right: 80px">
+                                        <h:panelGrid columns="2" cellpadding="2" columnClasses="labelColumn3,fieldColumn"
+                                                     rendered="#{not modUsuario.editandoDir and not empty modUsuario.domicilio}" >
 
-                                <h:panelGrid columns="2" cellpadding="2" columnClasses="labelColumn2,fieldColumn"
-                                             rendered="#{not modUsuario.editandoDir and not empty modUsuario.domicilio}" >
+                                            <h:outputLabel value="Pais" for="pais" />
+                                            <h:outputText  value="#{modUsuario.domicilio.pais}" />
 
-                                    <h:outputLabel value="Pais" for="pais" />
-                                    <h:outputText value="#{modUsuario.domicilio.pais}" />
+                                            <h:outputLabel value="Provincia" for="provincia" />
+                                            <h:outputText value="#{modUsuario.domicilio.provincia}" />
 
-                                    <h:outputLabel value="Provincia" for="provincia" />
-                                    <h:outputText value="#{modUsuario.domicilio.provincia}" />
+                                            <h:outputLabel value="Ciudad" />
+                                            <h:outputText value="#{modUsuario.domicilio.ciudad}"/>
 
-                                    <h:outputLabel value="Ciudad" />
-                                    <h:outputText value="#{modUsuario.domicilio.ciudad}"/>
+                                            <h:outputLabel value="Barrio"  />
+                                            <h:outputText value="#{modUsuario.domicilio.barrio}" />
 
-                                    <h:outputLabel value="Barrio"  />
-                                    <h:outputText value="#{modUsuario.domicilio.barrio}" />
+                                            <h:outputLabel value="Calle" />
+                                            <h:outputText value="#{modUsuario.domicilio.calle}" />
 
-                                    <h:outputLabel value="Calle" />
-                                    <h:outputText value="#{modUsuario.domicilio.calle}" />
+                                            <h:outputLabel value="Numero" />
+                                            <h:outputText value="#{modUsuario.domicilio.numero}" />
 
-                                    <h:outputLabel value="Numero" />
-                                    <h:outputText value="#{modUsuario.domicilio.numero}" />
+                                            <h:outputLabel value="Piso" />
+                                            <h:outputText value="#{modUsuario.domicilio.piso}"/>
 
-                                    <h:outputLabel value="Piso" />
-                                    <h:outputText value="#{modUsuario.domicilio.piso}"/>
+                                            <h:outputLabel value="Depto" />
+                                            <h:outputText value="#{modUsuario.domicilio.depto}" />
+                                        </h:panelGrid>
+                                    </div>
+                                    <div style="margin-left: 10px">
+                                        <p:gmap center="#{modUsuario.domicilio.latitud},#{modUsuario.domicilio.longitud}"
+                                                zoom="15" type="HYBRID" style="width:300px;height:200px;"
+                                                model="#{modUsuario.gMap}"
+                                                rendered="#{not modUsuario.editandoDir and not empty modUsuario.domicilio}">
 
-                                    <h:outputLabel value="Depto" />
-                                    <h:outputText value="#{modUsuario.domicilio.depto}" />
-                                </h:panelGrid>
-
-                                <div style="position: absolute; right: 10px; top: 40px">
-                                    <h:form id="btnForm2">
-                                        <p:commandButton icon="ui-icon-pencil" actionListener="#{modUsuario.editarDir}"
-                                                         style="font-size: 11px" update=":tab:panelDir :tab:panelDirEdit @this"
-                                                         rendered="#{not modUsuario.editandoDir}"/>
-                                    </h:form>
+                                        </p:gmap> 
+                                    </div>
+                                    <div style="position: absolute; right: 10px; top: 40px">
+                                        <h:form id="btnForm2">
+                                            <p:commandButton icon="ui-icon-pencil" actionListener="#{modUsuario.editarDir}"
+                                                             style="font-size: 11px" update=":tab:panelDir :tab:panelDirEdit @this"
+                                                             rendered="#{not modUsuario.editandoDir}"/>
+                                        </h:form>
+                                    </div>
                                 </div>
-
                             </p:outputPanel>
 
                             <p:outputPanel id="panelDirEdit" >
-                                <h:form rendered="#{modUsuario.editandoDir}" >
+                                <h:form prependId="false" rendered="#{modUsuario.editandoDir}" >
                                     <h:panelGrid columns="3" cellpadding="2" columnClasses="labelColumn2,fieldColumn" >
 
                                         <h:outputLabel value="Pais" for="pais" />
-                                        <h:selectOneMenu id="pais" value="#{modUsuario.paisSeleccionado}" required="true"
+                                        <p:selectOneMenu id="pais" value="#{modUsuario.paisSeleccionado}" required="true"
                                                          requiredMessage="Valor requerido" >  
                                             <f:selectItem itemLabel="Seleccione un pais" itemValue="" />
                                             <f:selectItems value="#{modUsuario.paises}" />
                                             <p:ajax event="change" update="provincia" process="@this"
                                                     listener="#{modUsuario.actualizarProvincias}" />
-                                        </h:selectOneMenu>
+                                        </p:selectOneMenu>
                                         <p:message for="pais" />
 
                                         <h:outputLabel value="Provincia" for="provincia" />
-                                        <h:selectOneMenu id="provincia" value="#{modUsuario.provinciaSeleccionada}" 
+                                        <p:selectOneMenu id="provincia" value="#{modUsuario.provinciaSeleccionada}" 
                                                          required="true" requiredMessage="Valor requerido" >
                                             <f:selectItem itemLabel="Seleccione una provincia" itemValue="" />
                                             <f:selectItems value="#{modUsuario.provincias}" />
                                             <p:ajax event="change" process="@this" />
-                                        </h:selectOneMenu>
+                                        </p:selectOneMenu>
                                         <p:message for="provincia" />
 
                                         <h:outputLabel value="Ciudad" for="ciudad" />
@@ -178,26 +187,25 @@
                                                      required="true" requiredMessage="Valor requerido" />
                                         <p:message for="barrio" />
 
-                                        <h:outputLabel value="Calle" />
+                                        <h:outputLabel value="Calle" for="calle" />
                                         <p:inputText id="calle" value="#{modUsuario.calle}"
-                                                     styleClass="datosInput" required="true" requiredMessage="Valor requerido" />
+                                                     required="true" requiredMessage="Valor requerido" />
                                         <p:message for="calle" />
 
-                                        <h:outputLabel value="Numero" />
+                                        <h:outputLabel value="Numero" for="numero"/>
                                         <p:inputText id="numero" value="#{modUsuario.numero}"
-                                                     styleClass="datosInput" required="true" requiredMessage="Valor requerido" />
+                                                     required="true" requiredMessage="Valor requerido" />
                                         <p:message for="numero" />
 
-                                        <h:outputLabel value="Piso" />
-                                        <p:inputText id="piso" value="#{modUsuario.piso}"
-                                                     styleClass="datosInput" />
+                                        <h:outputLabel value="Piso" for="piso"/>
+                                        <p:inputText id="piso" value="#{modUsuario.piso}"/>
                                         <p:message for="piso" />
 
-                                        <h:outputLabel value="Depto" />
-                                        <p:inputText id="depto" value="#{modUsuario.depto}" 
-                                                     styleClass="datosInput" />
+                                        <h:outputLabel value="Depto" for="depto"/>
+                                        <p:inputText id="depto" value="#{modUsuario.depto}"/>
                                         <p:message for="depto" />
-
+                                        <p:commandButton type="button" icon="ui-icon-pin-s" 
+                                            value="ver Mapa" onclick="mapDialog.show()"/>
                                         <f:facet name="footer">
                                             <p:commandButton value="Aceptar" actionListener="#{modUsuario.actualizarDomicilio}"
                                                              update=":tab:panelDir :tab:panelDirEdit :tab:btnForm2" />
@@ -205,6 +213,8 @@
                                                              immediate="true" update=":tab:panelDir :tab:panelDirEdit :tab:btnForm2" />
                                         </f:facet>
                                     </h:panelGrid>
+                                    <h:inputHidden id="lat" value="#{modUsuario.lat}" />  
+                                    <h:inputHidden id="lng" value="#{modUsuario.lng}" /> 
                                 </h:form>
                             </p:outputPanel>
 
@@ -325,6 +335,25 @@
                     </p:dialog>
 
                 </div>
+                 <div>
+                    <p:dialog widgetVar="mapDialog" onShow="myMap.checkResize();getLocationFromAdress()" modal="true" 
+                              showEffect="fade" width="425" height="450">
+                            <script type="text/javascript"
+                                    src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAIvenuSuB8qlfz056q69ddMHJIdqra2sc&amp;sensor=false">
+                            </script> 
+                            <p:gmap center="-31.41,-64.20"
+                                    zoom="15" type="HYBRID" style="width:400px;height:400px;"
+                                    widgetVar="myMap" model="#{modUsuario.editableGMap}"  >
+
+                            </p:gmap>
+                        <p:commandButton type="button" icon="ui-icon-pin-s" 
+                                         value="Esta es mi ubicación correcta" 
+                                         onclick="updateCoordinatesEditUser();mapDialog.hide()"/>
+
+                    </p:dialog>
+
+                </div>   
+
             </ui:define>
 
         </ui:composition>

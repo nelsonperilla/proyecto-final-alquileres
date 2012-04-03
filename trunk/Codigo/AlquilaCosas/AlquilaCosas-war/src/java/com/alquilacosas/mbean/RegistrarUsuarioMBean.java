@@ -84,14 +84,11 @@ public class RegistrarUsuarioMBean implements Serializable {
         }
         today = new Date();
         gMap = new DefaultMapModel();
-        //paisSeleccionado = 2;
-        
     }
 
     public void addMarker(ActionEvent actionEvent) {
         Marker marker = new Marker(new LatLng(getLat(), getLng()), "alquilaCosas");
         getgMap().addOverlay(marker);
-        paisSeleccionado = 3;
     }    
     
     public void updateCoordinates(MarkerDragEvent event)
@@ -385,5 +382,4 @@ public class RegistrarUsuarioMBean implements Serializable {
     public void setLng(double lng) {
         this.lng = lng;
     }
-    
 }
