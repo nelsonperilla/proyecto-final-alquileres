@@ -11,6 +11,7 @@ import com.alquilacosas.ejb.entity.ImagenUsuario;
 import com.alquilacosas.ejb.entity.Pais;
 import com.alquilacosas.ejb.entity.Provincia;
 import com.alquilacosas.ejb.session.UsuarioBeanLocal;
+import java.awt.event.ActionEvent;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,6 +26,11 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.map.MarkerDragEvent;
+import org.primefaces.model.map.DefaultMapModel;
+import org.primefaces.model.map.LatLng;
+import org.primefaces.model.map.MapModel;
+import org.primefaces.model.map.Marker;
 
 /**
  *
@@ -56,7 +62,11 @@ public class ModificarUsuarioMBean implements Serializable {
     private boolean buttonPressed = false;
     private boolean renderImage = false;
     private boolean fotoSubida = false;
-
+    private MapModel gMap;
+    private MapModel editableGMap;
+    private double lat;
+    private double lng;
+    private LatLng marker;
     /**
      * Creates a new instance of ModificarUsuarioMBean
      */
@@ -85,6 +95,8 @@ public class ModificarUsuarioMBean implements Serializable {
             numero = domicilio.getNumero();
             piso = domicilio.getPiso();
             depto = domicilio.getDepto();
+            lat = domicilio.getLatitud();
+            lng = domicilio.getLongitud();
         } else {
             sinDomicilio = true;
         }
@@ -110,9 +122,19 @@ public class ModificarUsuarioMBean implements Serializable {
             //la funcionalidad que inicializa el radiobutton teniendo en cuenta si el usuario
             //se logea con facebook o a traves de una cuenta de AlquilaCosas
         }
-
+        gMap = new DefaultMapModel(); 
+        editableGMap = new DefaultMapModel();
+        marker = new LatLng(lat, lng);  
+        gMap.addOverlay(new Marker(marker, "AlquilaCosas"));         
     }
 
+    public void updateCoordinates(MarkerDragEvent event)
+    {
+        setLat(event.getMarker().getLatlng().getLat());
+        setLng(event.getMarker().getLatlng().getLng());
+    }
+    
+    
     public void crearDomicilio() {
         domicilio = new DomicilioDTO();
         domicilio.setCalle(calle);
@@ -127,10 +149,12 @@ public class ModificarUsuarioMBean implements Serializable {
         domicilio.setCiudad(ciudad);
         domicilio.setProvinciaId(provinciaSeleccionada);
         domicilio.setPaisId(paisSeleccionado);
+        domicilio.setLatitud(lat);
+        domicilio.setLongitud(lng);
         for (SelectItem si : paises) {
             if (si.getValue().equals(new Integer(paisSeleccionado))) {
                 domicilio.setPais(si.getLabel());
-                break;
+                break; 
             }
         }
         for (SelectItem si : provincias) {
@@ -139,6 +163,11 @@ public class ModificarUsuarioMBean implements Serializable {
                 break;
             }
         }
+        gMap.getMarkers().remove(0);
+        //editableGMap.getMarkers().remove(0);
+        
+        marker = new LatLng(lat, lng);  
+        gMap.addOverlay(new Marker(marker, "AlquilaCosas"));
     }
 
     public void actualizarInfo() {
@@ -446,4 +475,58 @@ public class ModificarUsuarioMBean implements Serializable {
         this.fotoSubida = fotoSubida;
     }
 
+    /**
+     * @return the gMap
+     */
+    public MapModel getgMap() {
+        return gMap;
+    }
+
+    /**
+     * @param gMap the gMap to set
+     */
+    public void setgMap(MapModel gMap) {
+        this.gMap = gMap;
+    }
+
+    /**
+     * @return the lat
+     */
+    public double getLat() {
+        return lat;
+    }
+
+    /**
+     * @param lat the lat to set
+     */
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    /**
+     * @return the lng
+     */
+    public double getLng() {
+        return lng;
+    }
+
+    /**
+     * @param lng the lng to set
+     */
+    public void setLng(double lng) {
+        this.lng = lng;
+    }
+    /**
+     * @return the editableGMap
+     */
+    public MapModel getEditableGMap() {
+        return editableGMap;
+    }
+
+    /**
+     * @param editableGMap the editableGMap to set
+     */
+    public void setEditableGMap(MapModel editableGMap) {
+        this.editableGMap = editableGMap;
+    }
 }

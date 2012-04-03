@@ -232,6 +232,8 @@ public class UsuarioBean implements UsuarioBeanLocal {
             dom.setProvincia(prov.getNombre());
             dom.setPaisId(prov.getPaisFk().getPaisId());
             dom.setPais(prov.getPaisFk().getNombre());
+            dom.setLatitud(d.getLatitud());
+            dom.setLongitud(d.getLongitud());
 
             userFacade.setDomicilio(dom);
         }
@@ -256,6 +258,9 @@ public class UsuarioBean implements UsuarioBeanLocal {
         Provincia provincia = provinciaFacade.find(dom.getProvinciaId());
         Domicilio domicilio = new Domicilio(dom.getCalle(), dom.getNumero(), 
                 dom.getPiso(), dom.getDepto(), dom.getBarrio(), dom.getCiudad(), provincia);
+        domicilio.setLatitud(dom.getLatitud());
+        domicilio.setLongitud(dom.getLongitud());
+        
         usuario.agregarDomicilio(domicilio);
         usuarioFacade.edit(usuario);
     }
@@ -274,6 +279,8 @@ public class UsuarioBean implements UsuarioBeanLocal {
         domicilio.setNumero(dom.getNumero());
         domicilio.setPiso(dom.getPiso());
         domicilio.setDepto(dom.getDepto());
+        domicilio.setLatitud(dom.getLatitud());
+        domicilio.setLongitud(dom.getLongitud());
         usuarioFacade.edit(usuario);
     }
     
