@@ -17,7 +17,7 @@
 
                <ui:define name="principal">
                     <h1>Estadísticas</h1>
-                    <h:form>
+                    <h:form id="formEstadistica">
                          <p:tabView id="tabEstadisticas">
                               <p:tab title="Usuarios" id="tabUsuarios">  
                                    <h:panelGrid columns="1" cellpadding="10">  
@@ -76,13 +76,16 @@
                                    </h:panelGrid>  
                               </p:tab>  
                               <p:tab title="Publicaciones" id="tabPublicaciones">  
-                                   <h:panelGrid columns="1" cellpadding="10">  
+                                   <h:panelGrid columns="1" cellpadding="10">
+                                        <p:growl id="growl" showDetail="true" /> 
                                         <p:barChart id="PublicacionCantidad" value="#{estadisticaAdmin.publicacionCantidadModel}" 
                                                     legendPosition="ne" title="Cantidad Publicaciones" min="0"
-                                                    style="height:300px; width:680px"/>  
+                                                    style="height:300px; width:680px">
+                                             <p:ajax event="itemSelect" listener="#{estadisticaAdmin.itemSelect}" update="pieCategoria growl" />
+                                        </p:barChart>
                                         <p:lineChart id="PublicacionAcumulado" value="#{estadisticaAdmin.publicacionAcumuladoModel}" 
                                                      legendPosition="e" title="Acumulado" minY="0"
-                                                     style="height:300px; width:680px"/> 
+                                                     style="height:300px; width:680px"/>           
                                         <p:panel header="Exportar Datos">  
                                              <h:commandLink id="expExcelPub">  
                                                   <p:graphicImage value="http://www.primefaces.org/showcase-labs/images/excel.png" />  
@@ -122,6 +125,8 @@
                                                   <h:outputText value="#{pub.acumulado}" />  
                                              </p:column>  
                                         </p:dataTable>
+                                        <p:pieChart id="pieCategoria" value="#{estadisticaAdmin.pieCategoriaModel}" legendPosition="e"  
+                                                    title="#{estadisticaAdmin.anioMesCategorias}" style="width:680px;height:500px"/> 
                                    </h:panelGrid>  
                               </p:tab>  
                               <p:tab title="Alquileres" id="tabAlquileres">  
@@ -180,7 +185,7 @@
                                         </p:dataTable>
                                    </h:panelGrid>  
                               </p:tab>  
-                         </p:tabView> 
+                         </p:tabView>
                     </h:form> 
                </ui:define>
 

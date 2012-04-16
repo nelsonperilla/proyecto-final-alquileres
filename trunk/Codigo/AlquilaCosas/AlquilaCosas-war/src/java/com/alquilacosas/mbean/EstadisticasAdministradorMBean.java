@@ -5,6 +5,7 @@
 package com.alquilacosas.mbean;
 
 import com.alquilacosas.common.EstadisticaAdminAlquiler;
+import com.alquilacosas.common.EstadisticaAdminCategoria;
 import com.alquilacosas.common.EstadisticaAdminPublicacion;
 import com.alquilacosas.common.EstadisticaAdminUsuarios;
 import com.alquilacosas.ejb.entity.EstadoAlquiler;
@@ -12,15 +13,19 @@ import com.alquilacosas.ejb.entity.EstadoUsuario;
 import com.alquilacosas.ejb.session.EstadisticasAdministradorBeanLocal;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import org.apache.log4j.Logger;
-import org.primefaces.event.TabChangeEvent;
+import org.primefaces.event.ItemSelectEvent;
 import org.primefaces.model.chart.CartesianChartModel;
 import org.primefaces.model.chart.ChartSeries;
+import org.primefaces.model.chart.PieChartModel;
 
 /**
  *
@@ -38,9 +43,12 @@ public class EstadisticasAdministradorMBean implements Serializable {
      private CartesianChartModel publicacionAcumuladoModel;
      private CartesianChartModel alquilerCantidadModel;
      private CartesianChartModel alquilerAcumuladoModel;
+     private PieChartModel pieCategoriaModel;
      List<EstadisticaAdminUsuarios> listEstadisticaUsuario;
      List<EstadisticaAdminPublicacion> listEstadisticaPublicacion;
-     List<EstadisticaAdminAlquiler> listEstadisticaAlquiler;     
+     List<EstadisticaAdminAlquiler> listEstadisticaAlquiler;
+     List<EstadisticaAdminCategoria> listEstadisticaCategoria;
+     private String anioMesCategorias;
 
      /** Creates a new instance of EstadisticasAdministradorMBean */
      public EstadisticasAdministradorMBean() {
@@ -51,7 +59,21 @@ public class EstadisticasAdministradorMBean implements Serializable {
           Logger.getLogger(EstadisticasAdministradorMBean.class).debug("EstadisticasAdministradorMBean: postconstruct.");
           cargarGraficosUsuario();
           cargarGraficosPublicacion();
-          cargarGraficosAlquiler();
+          cargarGraficosAlquiler();          
+     }
+     
+     public void itemSelect(ItemSelectEvent event) {
+          String anioMes = publicacionCantidadModel.getCategories().get(event.getItemIndex());
+          anioMesCategorias = "Distribución de Categorias Publicadas del mes " + anioMes;
+          listEstadisticaCategoria = estadisticasAdministradorBean.getEstadisticaAdminCategoria(anioMes);
+          
+          pieCategoriaModel.clear();
+          for(EstadisticaAdminCategoria e : listEstadisticaCategoria) {
+               pieCategoriaModel.set(e.getNombre(), e.getCantidad());
+          }
+          
+          FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Categorias Publicadas", "Mes seleccionado: " + publicacionCantidadModel.getCategories().get(event.getItemIndex()));  
+          FacesContext.getCurrentInstance().addMessage(null, msg);  
      }
 
      public void cargarGraficosUsuario() {
@@ -120,6 +142,17 @@ public class EstadisticasAdministradorMBean implements Serializable {
 
           publicacionCantidadModel.addSeries(cantRegistrados);
           publicacionAcumuladoModel.addSeries(acumRegistrados);
+          
+          pieCategoriaModel = new PieChartModel();
+          Calendar fechaActual = Calendar.getInstance();
+          String anioMes = formato.format(fechaActual.getTime());
+          anioMesCategorias = "Distribución de Categorias Publicadas del mes " + anioMes;
+          listEstadisticaCategoria = estadisticasAdministradorBean.getEstadisticaAdminCategoria(anioMes);
+          
+          pieCategoriaModel.clear();
+          for(EstadisticaAdminCategoria e : listEstadisticaCategoria) {
+               pieCategoriaModel.set(e.getNombre(), e.getCantidad());
+          }
      }
      
      public void cargarGraficosAlquiler() {
@@ -253,5 +286,29 @@ public class EstadisticasAdministradorMBean implements Serializable {
 
      public void setListEstadisticaUsuario(List<EstadisticaAdminUsuarios> listEstadisticaUsuario) {
           this.listEstadisticaUsuario = listEstadisticaUsuario;
+     }
+
+     public List<EstadisticaAdminCategoria> getListEstadisticaCategoria() {
+          return listEstadisticaCategoria;
+     }
+
+     public void setListEstadisticaCategoria(List<EstadisticaAdminCategoria> listEstadisticaCategoria) {
+          this.listEstadisticaCategoria = listEstadisticaCategoria;
+     }
+
+     public PieChartModel getPieCategoriaModel() {
+          return pieCategoriaModel;
+     }
+
+     public void setPieCategoriaModel(PieChartModel pieCategoriaModel) {
+          this.pieCategoriaModel = pieCategoriaModel;
+     }
+     
+     public String getAnioMesCategorias() {
+          return anioMesCategorias;
+     }
+
+     public void setAnioMesCategorias(String anioMesCategorias) {
+          this.anioMesCategorias = anioMesCategorias;
      }
 }

@@ -5,17 +5,19 @@
 package com.alquilacosas.ejb.session;
 
 import com.alquilacosas.common.EstadisticaAdminAlquiler;
+import com.alquilacosas.common.EstadisticaAdminCategoria;
 import com.alquilacosas.common.EstadisticaAdminPublicacion;
 import com.alquilacosas.common.EstadisticaAdminUsuarios;
-import com.alquilacosas.ejb.entity.Alquiler;
 import com.alquilacosas.ejb.entity.AlquilerXEstado;
 import com.alquilacosas.ejb.entity.EstadoAlquiler;
 import com.alquilacosas.ejb.entity.EstadoUsuario;
 import com.alquilacosas.ejb.entity.Publicacion;
 import com.alquilacosas.ejb.entity.UsuarioXEstado;
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -166,6 +168,43 @@ public class EstadisticasAdministradorBean implements EstadisticasAdministradorB
                     }
                }
           }
+          return listEstadistica;
+     }
+
+     @Override
+     public List<EstadisticaAdminCategoria> getEstadisticaAdminCategoria(String anioMes) {
+          List<EstadisticaAdminCategoria> listEstadistica = new ArrayList<EstadisticaAdminCategoria>();
+          
+          int anio = Integer.parseInt(anioMes.substring(0, 4));
+          int mes = Integer.parseInt(anioMes.substring(5)) - 1;
+          Calendar calDesde = Calendar.getInstance();
+          calDesde.clear();
+          calDesde.set(anio, mes, 1, 0, 0, 0);
+          Date fechaDesde = calDesde.getTime();
+          Calendar calHasta = Calendar.getInstance();
+          calHasta.clear();
+          calHasta.set(anio, mes, 1, 0, 0, 0);
+          calHasta.add(Calendar.MONTH, 1);
+          Date fechaHasta = calHasta.getTime();
+          
+          Query query = entityManager.createNamedQuery("Publicacion.findAll");
+          List<Publicacion> publicaciones = query.getResultList();
+          
+          for(Publicacion p : publicaciones) {
+               if (p.getFechaDesde().before(fechaHasta) && p.getFechaDesde().after(fechaDesde)) {
+                    boolean inserta = true;
+                    for(EstadisticaAdminCategoria e : listEstadistica) {
+                         if (e.getNombre().equals(p.getCategoriaFk().getNombre())) {
+                              e.aumentarCantidad();
+                              inserta = false;
+                         }
+                    }
+                    if (inserta) {
+                         listEstadistica.add(new EstadisticaAdminCategoria(p.getCategoriaFk().getNombre(), 1));
+                    }
+               }
+          }
+          
           return listEstadistica;
      }
 }

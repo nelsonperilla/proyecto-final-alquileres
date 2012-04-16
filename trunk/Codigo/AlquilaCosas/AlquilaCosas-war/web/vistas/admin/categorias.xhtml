@@ -9,23 +9,13 @@
 
     <body>
 
-        <ui:composition template="./../../resources/templates/masterPage.xhtml">
+        <ui:composition template="./../../resources/templates/newTemplate.xhtml">
 
-            <ui:define name="logInfo">
-                <h:link value="inicio" outcome="/vistas/inicio" />
-            </ui:define>
+               <ui:define name="left">
+                    <comps:admPanel />
+               </ui:define>
 
-            <ui:define name="left">
-                <p:outputPanel id="catMenu" autoUpdate="true" layout="block" >
-                    <comps:categoriesMenu />
-                </p:outputPanel> 
-            </ui:define>
-
-            <ui:define name="left">
-                <comps:categoriesMenu />
-            </ui:define>
-
-            <ui:define name="principal">
+               <ui:define name="principal">
                 <h:outputScript library="javascript" name="util.js" />
                 <p:tabView id="tab">
                     <p:tab title="Nuevo">
@@ -118,13 +108,6 @@
                     </h:form>
                 </p:dialog>
 
-            </ui:define>
-
-            <ui:define name="right">
-                <comps:loginBox />
-                <comps:adminPanel />
-                <comps:userPanel />
-                <comps:panelPublicitante />
             </ui:define>
 
         </ui:composition>
