@@ -5,6 +5,7 @@
 package com.alquilacosas.ejb.session;
 
 import com.alquilacosas.common.EstadisticaAdminAlquiler;
+import com.alquilacosas.common.EstadisticaAdminCategoria;
 import com.alquilacosas.common.EstadisticaAdminPublicacion;
 import com.alquilacosas.common.EstadisticaAdminUsuarios;
 import java.util.List;
@@ -22,5 +23,7 @@ public interface EstadisticasAdministradorBeanLocal {
      List<EstadisticaAdminPublicacion> getEstadisticaAdminPublicaciones();
 
      List<EstadisticaAdminAlquiler> getEstadisticaAdminAlquiler();
+
+     List<EstadisticaAdminCategoria> getEstadisticaAdminCategoria(String anioMes);
      
 }
