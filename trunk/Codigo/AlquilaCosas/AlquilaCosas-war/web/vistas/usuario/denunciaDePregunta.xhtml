@@ -8,10 +8,7 @@
       xmlns:f="http://java.sun.com/jsf/core" >
 
     <body>
-        <ui:composition template="./../../resources/templates/masterPage.xhtml">
-            <ui:define name="logInfo">
-                <h:link value="inicio" outcome="/vistas/inicio" />
-            </ui:define>
+        <ui:composition template="./../../resources/templates/newTemplate.xhtml">
 
             <ui:define name="left">
                 <comps:categoriesMenu />
@@ -80,14 +77,6 @@
                     </tr>
                 </table>
 
-            </ui:define>
-            <ui:define name="right" >
-                <p:outputPanel id="paneles" >
-                    <comps:loginBox />
-                    <comps:userPanel />
-                    <comps:panelPublicitante />
-                    <comps:adminPanel />
-                </p:outputPanel>
             </ui:define>            
         </ui:composition>
     </body>

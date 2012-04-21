@@ -9,14 +9,10 @@
 
     <body>
 
-        <ui:composition template="./../../resources/templates/masterPage.xhtml">
-
-            <ui:define name="logInfo">
-                <h:link value="inicio" outcome="/vistas/inicio" />
-            </ui:define>
+        <ui:composition template="./../../resources/templates/newTemplate.xhtml">
 
             <ui:define name="left">
-                <comps:categoriesMenu />
+                <comps:miPanel />
             </ui:define>
 
             <ui:define name="principal">
@@ -64,7 +60,7 @@
                             <h:graphicImage value="#{resource['images:pagoPaypal.gif']}" />
                         </p:commandLink>
                         <p:commandLink id="pagoDm" actionListener="#{destacarBean.destacarDm}" 
-                                       update="dm growl" oncomplete="submitForm(xhr, status, args)"
+                                       update=":dm growl" oncomplete="submitForm(xhr, status, args)"
                                        disabled="#{empty destacarBean.tipoSeleccionado}" >
                             <h:graphicImage value="#{resource['images:pagoDineroMail.gif']}" />
                         </p:commandLink>
@@ -94,13 +90,6 @@
                             document.forms["dmForm"].submit();
                     }
                 </script>
-            </ui:define>
-
-            <ui:define name="right">
-                <comps:loginBox />
-                <comps:userPanel />
-                <comps:panelPublicitante />
-                <comps:adminPanel />
             </ui:define>
 
         </ui:composition>

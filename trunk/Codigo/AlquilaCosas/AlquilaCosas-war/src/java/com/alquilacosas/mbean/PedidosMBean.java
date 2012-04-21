@@ -55,7 +55,12 @@ public class PedidosMBean {
                 FacesContext.getCurrentInstance().addMessage(null, msg);
             }
             pedidosBean.confirmarPedidoDeAlquiler(alquilerId);
-            pedidos = alquileresBean.getPedidos(loginBean.getUsuarioId());
+            for(int i = 0; i < pedidos.size(); i++) {
+                AlquilerDTO pedido = pedidos.get(i);
+                if(pedido.getIdAlquiler() == alquilerId) {
+                    pedidos.remove(pedido);
+                }
+            }
             msg = new FacesMessage("Alquiler Confirmado");
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (AlquilaCosasException e) {
@@ -75,7 +80,12 @@ public class PedidosMBean {
                 FacesContext.getCurrentInstance().addMessage(null, msg);
             }
             pedidosBean.rechazarPedidoDeAlquiler(alquilerId);
-            pedidos = alquileresBean.getPedidos(loginBean.getUsuarioId());
+            for(int i = 0; i < pedidos.size(); i++) {
+                AlquilerDTO pedido = pedidos.get(i);
+                if(pedido.getIdAlquiler() == alquilerId) {
+                    pedidos.remove(pedido);
+                }
+            }
             msg = new FacesMessage("Alquiler Rechazado");
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (AlquilaCosasException e) {
@@ -96,7 +106,12 @@ public class PedidosMBean {
             }    
             
             pedidosBean.cancelarPedidoDeAlquiler(alquilerId);
-            pedidos = alquileresBean.getPedidos(loginBean.getUsuarioId());
+            for(int i = 0; i < pedidos.size(); i++) {
+                AlquilerDTO pedido = pedidos.get(i);
+                if(pedido.getIdAlquiler() == alquilerId) {
+                    pedidos.remove(pedido);
+                }
+            }
             msg = new FacesMessage("Alquiler Cancelado");
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (AlquilaCosasException e) {

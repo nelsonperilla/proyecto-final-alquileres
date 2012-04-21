@@ -255,17 +255,10 @@ public class DesplieguePublicacionMBean implements Serializable {
                     try {
                         Calendar time = Calendar.getInstance();
                         time.setTime(horaInicioAlquiler);
-                        //String[] composicionHoraInicio = horaInicioAlquiler.split(":");
-                        //int hora = Integer.parseInt(composicionHoraInicio[0]);
-                        //int minuto = Integer.parseInt(composicionHoraInicio[1]);
                         beginDate.add(Calendar.HOUR_OF_DAY, time.get(Calendar.HOUR_OF_DAY));
                         beginDate.add(Calendar.MINUTE, time.get(Calendar.MINUTE));
                         endDate.add(Calendar.HOUR_OF_DAY, time.get(Calendar.HOUR_OF_DAY));
                         endDate.add(Calendar.MINUTE, time.get(Calendar.MINUTE));
-                        //beginDate.add(Calendar.HOUR_OF_DAY, hora);
-                        //beginDate.add(Calendar.MINUTE, minuto);
-                        //endDate.add(Calendar.HOUR_OF_DAY, hora);
-                        //endDate.add(Calendar.MINUTE, minuto);
 
                     } catch (Exception e) {
                         FacesContext.getCurrentInstance().addMessage(null,
@@ -343,7 +336,7 @@ public class DesplieguePublicacionMBean implements Serializable {
                         publicationBean.crearPedidoAlquiler(publicacion.getId(),
                                 usuarioLogueado.getUsuarioId(), beginDate.getTime(),
                                 endDate.getTime(), monto, cantidadProductos);
-                        redireccion = "pmisPedidosRealizados";
+                        redireccion = "/vistas/usuario/articulos?faces-redirect=true";
                     } catch (AlquilaCosasException ex) {
                         FacesContext.getCurrentInstance().addMessage(null,
                                 new FacesMessage(FacesMessage.SEVERITY_ERROR,

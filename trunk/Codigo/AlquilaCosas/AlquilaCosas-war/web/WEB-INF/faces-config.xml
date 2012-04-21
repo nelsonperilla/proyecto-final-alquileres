@@ -13,15 +13,6 @@
     </validator>
     
     <navigation-rule>
-        <from-view-id>/vistas/mostrarPublicacion.xhtml</from-view-id>
-        <navigation-case>
-            <from-outcome>pmisPedidosRealizados</from-outcome>
-            <to-view-id>/vistas/usuario/misPedidosRealizados.jsf</to-view-id>
-            <redirect/>
-        </navigation-case>
-    </navigation-rule>
-    
-    <navigation-rule>
         <from-view-id>/vistas/registrarUsuario.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>pusuarioCreado</from-outcome>

@@ -125,18 +125,6 @@
 
                     </p:fieldset>
 
-                    <p:fieldset legend="Ubicación del articulo" styleClass="fieldset" >
-                        <script type="text/javascript"
-                                src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAIvenuSuB8qlfz056q69ddMHJIdqra2sc&amp;sensor=false">
-                        </script> 
-                        <p:gmap center="#{modPublicacion.pf.latitud},
-                                #{modPublicacion.pf.longitud} "
-                                zoom="15" type="HYBRID" style="width:540px;height:400px;"
-                                widgetVar="myMap" model="#{modPublicacion.gMap}" >
-                            <p:ajax event="markerDrag" listener="#{modPublicacion.updateCoordinates}" />
-                        </p:gmap>
-                    </p:fieldset>
-
                     <p:fieldset legend="Periodos minimo y maximo" styleClass="fieldset" >
                         <h:panelGrid columns="4">
 
