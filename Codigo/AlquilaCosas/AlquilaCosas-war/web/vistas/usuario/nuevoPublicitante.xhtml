@@ -8,14 +8,10 @@
 
     <body>
 
-        <ui:composition template="./../../resources/templates/masterPage.xhtml">
-
-            <ui:define name="logInfo">
-                <h:link value="inicio" outcome="/vistas/inicio" />
-            </ui:define>
+        <ui:composition template="./../../resources/templates/newTemplate.xhtml">
 
             <ui:define name="left">
-                <comps:categoriesMenu /> 
+                <comps:miPanel />
             </ui:define>
 
             <ui:define name="principal">
@@ -39,13 +35,6 @@
                         <p:button value="No" outcome="/vistas/inicio" />
                     </h:panelGrid>
                 </h:form>
-            </ui:define>
-
-            <ui:define name="right">
-                <comps:loginBox />
-                <comps:userPanel />
-                <comps:panelPublicitante />
-                <comps:adminPanel />
             </ui:define>
 
         </ui:composition>

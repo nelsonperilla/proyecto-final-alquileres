@@ -16,7 +16,7 @@
         <from-view-id>/vistas/mostrarPublicacion.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>pmisPedidosRealizados</from-outcome>
-            <to-view-id>/vistas/usuario/misPedidosRealizados.xhtml</to-view-id>
+            <to-view-id>/vistas/usuario/misPedidosRealizados.jsf</to-view-id>
             <redirect/>
         </navigation-case>
     </navigation-rule>
@@ -25,7 +25,7 @@
         <from-view-id>/vistas/registrarUsuario.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>pusuarioCreado</from-outcome>
-            <to-view-id>/vistas/usuarioCreado.xhtml?email=#{regUsuario.email}</to-view-id>
+            <to-view-id>/vistas/usuarioCreado.jsf?email=#{regUsuario.email}</to-view-id>
             <redirect/>
         </navigation-case>
     </navigation-rule>
@@ -34,7 +34,7 @@
         <from-view-id>/vistas/usuario/modificarPublicacion.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>pmisPublicaciones</from-outcome>
-            <to-view-id>/vistas/usuario/misPublicaciones.xhtml</to-view-id>
+            <to-view-id>/vistas/usuario/misPublicaciones.jsf</to-view-id>
             <redirect/>
         </navigation-case>
     </navigation-rule>
@@ -43,7 +43,7 @@
         <from-view-id>/vistas/admin/categorias.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>pcategorias</from-outcome>
-            <to-view-id>/vistas/admin/categorias.xhtml</to-view-id>
+            <to-view-id>/vistas/admin/categorias.jsf</to-view-id>
             <redirect/>
         </navigation-case>
     </navigation-rule>
@@ -52,7 +52,7 @@
         <from-view-id>/vistas/usuario/nuevaPublicacion.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>pdestacarPublicacion</from-outcome>
-            <to-view-id>/vistas/usuario/destacarPublicacion.xhtml?id=#{publicacion.publicacionId}</to-view-id>
+            <to-view-id>/vistas/usuario/destacarPublicacion.jsf?id=#{publicacion.publicacionId}</to-view-id>
             <redirect/>
         </navigation-case>
     </navigation-rule>

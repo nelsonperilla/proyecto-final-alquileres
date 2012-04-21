@@ -12,28 +12,33 @@
     <!-- IMPLEMENTATION -->
     <cc:implementation>  
         <p:panel style="width: 200px; background: aliceblue" >
-                <div class="user-namedetail">
-                    <p>#{login.usuario.nombre} #{login.usuario.apellido}</p>
-                </div>
-                <div id="list">
-                    <ul class="menu" rel="sam1">
-                        <li>
+            <div class="user-namedetail">
+                <p>#{login.usuario.nombre} #{login.usuario.apellido}</p>
+            </div>
+            <div id="list">
+                <ul class="menu" rel="sam1">
+                    <li>
                         <h:link value="Usuarios" outcome="/vistas/admin/administrarUsuarios" />
-                        </li>
-                        <li >
-                            <h:link value="Denuncias" outcome="/vistas/admin/administrarDenuncias" />
-                        </li>
-                        <li>
+                    </li>
+                    <li >
+                        <h:link value="Denuncias" outcome="/vistas/admin/administrarDenuncias" />
+                    </li>
+                    <li>
                         <h:link value="Pagos recibidos" outcome="/vistas/admin/pagosRecibidos" />
-                        </li>
-                        <li >
+                    </li>
+                    <li >
                         <h:link value="Categorias" outcome="/vistas/admin/categorias" />
-                        </li>
-                        <li >
+                    </li>
+                    <li >
                         <h:link value="Estadisticas" outcome="/vistas/admin/estadisticasAdministrador" />
-                        </li>
-                    </ul>
-                </div>
-            </p:panel>
+                    </li>
+                    <li>
+                        <h:form>
+                            <h:commandLink value="Salir" action="#{login.salir}" />
+                        </h:form>
+                    </li>
+                </ul>
+            </div>
+        </p:panel>
     </cc:implementation>
 </html>

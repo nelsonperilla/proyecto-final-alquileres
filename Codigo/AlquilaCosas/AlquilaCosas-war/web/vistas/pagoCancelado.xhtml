@@ -8,11 +8,7 @@
 
     <body>
 
-        <ui:composition template="./../resources/templates/masterPage.xhtml">
-
-            <ui:define name="logInfo">
-                <h:link value="Inicio" outcome="/vistas/inicio" />
-            </ui:define>
+        <ui:composition template="./../resources/templates/newTemplate.xhtml">
 
             <ui:define name="left">
                 <comps:categoriesMenu />
@@ -24,13 +20,6 @@
                     Usted ha cancelado el pago por el servicio.
                 </p>
                 
-            </ui:define>
-
-            <ui:define name="right">
-                <comps:loginBox />
-                <comps:adminPanel />
-                <comps:panelPublicitante />
-                <comps:userPanel />
             </ui:define>
 
         </ui:composition>

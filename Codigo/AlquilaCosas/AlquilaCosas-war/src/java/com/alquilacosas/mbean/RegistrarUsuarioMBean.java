@@ -89,7 +89,7 @@ public class RegistrarUsuarioMBean implements Serializable {
     public void addMarker(ActionEvent actionEvent) {
         Marker marker = new Marker(new LatLng(getLat(), getLng()), "alquilaCosas");
         getgMap().addOverlay(marker);
-    }    
+    }
     
     public void updateCoordinates(MarkerDragEvent event)
     {

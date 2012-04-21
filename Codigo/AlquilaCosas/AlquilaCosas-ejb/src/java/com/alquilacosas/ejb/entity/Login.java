@@ -44,8 +44,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Login.findByUsuarioFk", query = "SELECT l FROM Login l WHERE l.usuarioFk = :usuarioFk")})
 public class Login implements Serializable {
     
-    //@Basic(optional = false)
-    //@NotNull
     @Column(name = "FECHA_CREACION")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;

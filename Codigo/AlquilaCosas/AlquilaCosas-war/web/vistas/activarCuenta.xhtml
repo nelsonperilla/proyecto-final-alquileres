@@ -8,7 +8,7 @@
 
     <body>
 
-        <ui:composition template="./../resources/templates/masterPage.xhtml">
+        <ui:composition template="./../resources/templates/newTemplate.xhtml">
 
             <ui:define name="logInfo">
                 <h:link value="Inicio" outcome="/vistas/inicio" />
@@ -30,13 +30,6 @@
                     Se ha producido al tratar de activar su cuenta.
                     Por favor, contacte a soporte técnico para solucionar su problema.
                 </p:outputPanel>
-            </ui:define>
-
-            <ui:define name="right">
-                <comps:loginBox />
-                <comps:adminPanel />
-                <comps:userPanel />
-                <comps:panelPublicitante />
             </ui:define>
 
         </ui:composition>
