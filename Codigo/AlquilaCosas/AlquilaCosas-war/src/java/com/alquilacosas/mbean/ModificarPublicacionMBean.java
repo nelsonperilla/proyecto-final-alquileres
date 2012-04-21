@@ -31,11 +31,7 @@ import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.event.map.MarkerDragEvent;
-import org.primefaces.model.map.DefaultMapModel;  
-import org.primefaces.model.map.LatLng;  
 import org.primefaces.model.map.MapModel;
-import org.primefaces.model.map.Marker;
 
 /**
  *
@@ -175,7 +171,6 @@ public class ModificarPublicacionMBean implements Serializable {
         }
 
         selectedEstado = pf.getEstado();
-
     }
 
     public void inicializarCategorias(int categoriaId) {
@@ -248,7 +243,7 @@ public class ModificarPublicacionMBean implements Serializable {
                     selectedPeriodoMaximo, selectedEstado);
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage("Los datos fueron guardados correctamente"));
-            return "pmisPublicaciones";
+            return "/vistas/usuario/articulos?faces-redirect=true";
         } catch (AlquilaCosasException e) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR,
