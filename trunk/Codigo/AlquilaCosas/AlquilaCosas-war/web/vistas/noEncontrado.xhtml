@@ -7,11 +7,7 @@
 
     <body>
 
-        <ui:composition template="./../../resources/templates/masterPage.xhtml">
-
-            <ui:define name="logInfo">
-                <h:link value="Inicio" outcome="/vistas/inicio" />
-            </ui:define>
+        <ui:composition template="./../../resources/templates/newTemplate.xhtml">
 
             <ui:define name="left">
                 <comps:categoriesMenu />
@@ -20,13 +16,6 @@
             <ui:define name="principal">
                 <h1>Pagina no encontrada</h1>
                 <p>La pagina solicitada no existe</p>
-            </ui:define>
-
-            <ui:define name="right">
-                <comps:loginBox />
-                <comps:userPanel />
-                <comps:panelPublicitante />
-                <comps:adminPanel />
             </ui:define>
 
         </ui:composition>

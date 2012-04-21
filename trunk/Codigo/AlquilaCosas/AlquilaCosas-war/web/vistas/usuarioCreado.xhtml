@@ -7,11 +7,7 @@
 
     <body>
 
-        <ui:composition template="./../resources/templates/masterPage.xhtml">
-
-            <ui:define name="logInfo">
-                <h:link value="inicio" outcome="/vistas/inicio" />
-            </ui:define>
+        <ui:composition template="./../resources/templates/newTemplate.xhtml">
             
             <ui:define name="left" >
                 <comps:categoriesMenu />
@@ -25,13 +21,6 @@
                     con las instrucciones para activar su cuenta.
                     
                 </p>
-            </ui:define>
-
-            <ui:define name="right">
-                <comps:loginBox />
-                <comps:adminPanel />
-                <comps:userPanel />
-                <comps:panelPublicitante />
             </ui:define>
 
         </ui:composition>

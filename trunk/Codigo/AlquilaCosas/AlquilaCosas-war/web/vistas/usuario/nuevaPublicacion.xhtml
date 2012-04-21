@@ -10,10 +10,6 @@
     <body>
 
         <ui:composition template="./../../resources/templates/newTemplate.xhtml">
-            
-            <ui:define name="logInfo">
-                <h:link value="inicio" outcome="/vistas/inicio2" />
-            </ui:define>
 
             <ui:define name="left" >
                 <comps:categoriesMenu />
@@ -21,7 +17,7 @@
 
             <ui:define name="principal">
                 <h:outputScript library="javascript" name="util.js" />
-                <h:form id="formPublicacion" >
+                <h:form id="formPublicacion" enctype="multipart/form-data" >
                     <p:growl id="growl" showDetail="true" globalOnly="true" />
                     <h:panelGrid columns="1" style="text-align: center" >
 
@@ -100,11 +96,10 @@
 
                         <p:fieldset legend="Imagenes" styleClass="fieldset" >
 
-                            <p:fileUpload widgetVar="uploader" label="Seleccionar"
+                            <p:fileUpload id="upload" widgetVar="uploader" label="Seleccionar"
                                           fileUploadListener="#{publicacion.handleFileUpload}"
                                           allowTypes="/(\.|\/)(gif|jpe?g|png)$/" multiple="true" 
                                           cancelLabel="Cancelar" uploadLabel="Subir" mode="advanced" />
-
                         </p:fieldset>                  
 
                         <!-- <h2>Elije un periodo minimo y maximo de alquiler</h2> -->

@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:cc="http://java.sun.com/jsf/composite" 
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
 
     <!-- INTERFACE -->
     <cc:interface>
@@ -12,36 +13,42 @@
     <!-- IMPLEMENTATION -->
     <cc:implementation>  
         <p:panel style="width: 200px; background: aliceblue" >
-                <div class="user-image">
-                    <h:graphicImage styleClass="image" rendered="#{login.fbLogin and not login.usarImagenFacebook}" 
-                                    value="https://graph.facebook.com/#{login.fbId}/picture?type=large" />
-                    <h:graphicImage styleClass="image" rendered="#{not login.fbLogin and not login.usarImagenFacebook}"
-                                    value="#{resource['images:no_user.jpg']}" />
-                    <h:graphicImage styleClass="image" rendered="#{login.usarImagenFacebook}"
-                                    value="/imageUser?id=#{login.imagenUsuarioId}" />
-                </div>
-                <div class="user-namedetail">
-                    <p>#{login.usuario.nombre} #{login.usuario.apellido}</p>
-                </div>
-                <div id="list">
-                    <ul class="menu" rel="sam1">
-                        <li>
+            <div class="user-image">
+                <h:graphicImage styleClass="image" rendered="#{login.fbLogin and not login.usarImagenFacebook}" 
+                                value="https://graph.facebook.com/#{login.fbId}/picture?type=large" />
+                <h:graphicImage styleClass="image" rendered="#{not login.fbLogin and not login.usarImagenFacebook}"
+                                value="#{resource['images:no_user.jpg']}" />
+                <h:graphicImage styleClass="image" rendered="#{login.usarImagenFacebook}"
+                                value="/imageUser?id=#{login.imagenUsuarioId}" />
+            </div>
+            <div class="user-namedetail">
+                <p>#{login.usuario.nombre} #{login.usuario.apellido}</p>
+            </div>
+            <div id="list">
+                <ul class="menu" rel="sam1">
+                    <li>
                         <h:link value="Publicar" outcome="/vistas/usuario/nuevaPublicacion" />
-                        </li>
-                        <li >
-                            <h:link value="Articulos" outcome="/vistas/usuario/articulos" />
-                        </li>
-                        <li>
+                    </li>
+                    <li >
+                        <h:link value="Articulos" outcome="/vistas/usuario/articulos" />
+                    </li>
+                    <li>
                         <h:link value="Mi Perfil" outcome="/vistas/usuario/miPerfil" />
-                        </li>
-                        <li >
+                    </li>
+                    <li >
                         <h:link value="Preguntas" outcome="/vistas/usuario/misPreguntas"/>
                     </li>
                     <li>
                         <h:link value="Pagos" outcome="/vistas/usuario/misPagos" />
                     </li>
                     <li>
-                        <h:link value="Mi reputacion" />
+                        <h:link value="Mi reputacion" outcome="/vistas/verReputacion" >
+                            <f:param name="id" value="#{login.usuarioId}" />
+                        </h:link>
+                    </li>
+                    <li>
+                        <h:link value="Cómo publicitar" outcome="/vistas/usuario/nuevoPublicitante" 
+                                rendered="#{not login.publicitante}" />
                     </li>
                 </ul>
             </div>

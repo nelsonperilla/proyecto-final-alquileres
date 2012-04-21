@@ -53,13 +53,13 @@
                     <h:panelGrid columns="1" style="text-align:right" >
                          <p:commandLink value="Aceptar" title="Aceptar Denuncia"
                                         actionListener="#{cc.attrs.bean[cc.attrs.metodoAceptar]}"
-                                        update="#{cc.attrs.panelDialogos}"
+                                        update=":#{cc.attrs.panelDialogos}"
                                         oncomplete="#{cc.attrs.aceptarDlg}.show();" >
                               <f:attribute name="denId" value="#{cc.attrs.var.denunciaId}" />
                          </p:commandLink>
                          <p:commandLink value="Rechazar" title="Rechazar Denuncia"
                                         actionListener="#{cc.attrs.bean[cc.attrs.metodoRechazar]}"
-                                        update="#{cc.attrs.panelDialogos}"
+                                        update=":#{cc.attrs.panelDialogos}"
                                         oncomplete="#{cc.attrs.rechazarDlg}.show();" >
                               <f:attribute name="denId" value="#{cc.attrs.var.denunciaId}" />
                          </p:commandLink>
