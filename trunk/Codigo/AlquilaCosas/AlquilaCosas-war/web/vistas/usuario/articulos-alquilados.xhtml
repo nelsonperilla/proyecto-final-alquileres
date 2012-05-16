@@ -75,7 +75,7 @@
                                               rendered="#{alq.tomado and alq.cancelable and alq.idPedidoCambio == -1}">
                                         <f:param name="id" value="#{alq.idAlquiler}" />
                                     </p:button>
-                                    <p:commandButton value="Cancelar" icon="ui-icon-close" type="button" 
+                                    <p:commandButton value="Cancelar" icon="ui-icon-close" process="@this"
                                                      rendered="#{alq.cancelable}" onclick="cancelarDlg.show()" >
                                         <f:setPropertyActionListener value="#{alq.idAlquiler}" target="#{alquileresBean.alquilerId}" />
                                     </p:commandButton>
@@ -113,7 +113,7 @@
                 <p:separator />
                 <h:panelGrid columns="2" columnClasses="leftCol,rightCol" style="width:100%" >
                     <p:commandButton value="Si" actionListener="#{alquileresBean.cancelarAlquiler}" 
-                                     oncomplete="cancelarDlg.hide()" update=":tab:formAlquilados:grid" />
+                                     oncomplete="cancelarDlg.hide()" update=":tab:formAlquilados:grid :growl" />
                     <p:commandButton value="No" oncomplete="cancelarDlg.hide()" />
                 </h:panelGrid>
             </h:form>
@@ -139,10 +139,10 @@
                     <h:outputText value="$ #{alquileresBean.montoPedido}" />
                     <f:facet name="footer" >
                         <p:commandButton value="Aceptar" actionListener="#{alquileresBean.aceptarPedidoCambio}"
-                                         update=":tab:formAlquilados:grid" style="background: palegreen" 
+                                         update=":tab:formAlquilados:grid :growl" style="background: palegreen" 
                                          oncomplete="pedidoCambioDlg.hide()" />
                         <p:commandButton value="Rechazar" actionListener="#{alquileresBean.rechazarPedidoCambio}"
-                                         update=":tab:formAlquilados:grid" style="background: red; color: white" 
+                                         update=":tab:formAlquilados:grid :growl" style="background: red; color: white" 
                                          oncomplete="pedidoCambioDlg.hide()" />
                     </f:facet>
                 </h:panelGrid>
@@ -174,7 +174,7 @@
                     <f:facet name="footer" >
                         <h:panelGrid columns="2" columnClasses="leftCol,rightCol" style="width:100%" >
                             <p:commandButton value="Calificar" actionListener="#{alquileresBean.registrarCalificacion}" 
-                                             oncomplete="calificarDlg.hide()" update=":tab:formAlquilados" />
+                                             oncomplete="calificarDlg.hide()" update=":tab:formAlquilados :growl" />
                             <p:commandButton value="Cancelar" type="reset" onclick="calificarDlg.hide()" />
                         </h:panelGrid>
                     </f:facet>

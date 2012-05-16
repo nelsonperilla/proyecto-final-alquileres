@@ -96,8 +96,8 @@
 
                         <p:fieldset legend="Imagenes" styleClass="fieldset" >
 
-                            <p:fileUpload id="upload" widgetVar="uploader" label="Seleccionar"
-                                          fileUploadListener="#{publicacion.handleFileUpload}"
+                            <p:fileUpload id="upload" widgetVar="uploader" label="Seleccionar" auto="true"
+                                          fileUploadListener="#{publicacion.handleFileUpload}" update="growl"
                                           allowTypes="/(\.|\/)(gif|jpe?g|png)$/" multiple="true" 
                                           cancelLabel="Cancelar" uploadLabel="Subir" mode="advanced" />
                         </p:fieldset>                  

@@ -132,7 +132,7 @@ public class UsuarioBean implements UsuarioBeanLocal {
             String texto = "<html>" + usuario.getNombre() + ", <br/><br/>" + 
                     "Gracias por usar AlquilaCosas. Para confirmar su direccion de correo electronico " +
                     "y activar su cuenta, dirijase al siguiente link: <br/>" +
-                    "http://localhost:8080/AlquilaCosas-war/faces/vistas/activarCuenta.xhtml?user=" +
+                    "http://localhost:8080/AlquilaCosas-war/vistas/activarCuenta.jsf?user=" +
                     login.getUsername() + "&codigo=" + login.getCodigoActivacion() + "<br/><br/>" +
                     "Atentamente, <br/> <b>AlquilaCosas </b>";
             NotificacionEmail notificacion = new NotificacionEmail(usuario.getEmail(), asunto, texto);

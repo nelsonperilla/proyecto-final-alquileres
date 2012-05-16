@@ -52,20 +52,17 @@
                                 </div>
                             </div>
                             <div class="accionPrincipal">
-                                <p:commandButton value="Aceptar" actionListener="#{pedidosBean.confirmarPedido}"
-                                                 rendered="#{not alq.tomado}" update=":tab:formNegociando:grid :growl"
-                                                 style="background: palegreen" >
-                                    <f:attribute name="alq" value="#{alq.idAlquiler}" />
+                                <p:commandButton value="Aceptar" oncomplete="confirmarAceptar.show();" process="@this"
+                                                 rendered="#{not alq.tomado}" style="background: palegreen" >
+                                    <f:setPropertyActionListener target="#{pedidosBean.pedidoSeleccionado}" value="#{alq}" />
                                 </p:commandButton>
-                                <p:commandButton value="Rechazar" actionListener="#{pedidosBean.rechazarPedido}"
-                                                 rendered="#{not alq.tomado}" update=":tab:formNegociando:grid :growl"
-                                                 style="background: red; color: white" >
-                                    <f:attribute name="alq" value="#{alq.idAlquiler}" />
+                                <p:commandButton value="Rechazar" oncomplete="confirmarRechazar.show();" process="@this"
+                                                 rendered="#{not alq.tomado}" style="background: red; color: white" >
+                                    <f:setPropertyActionListener target="#{pedidosBean.pedidoSeleccionado}" value="#{alq}" />
                                 </p:commandButton>
-                                <p:commandButton value="Cancelar" actionListener="#{pedidosBean.cancelarPedido}"
-                                                 rendered="#{alq.tomado}" update=":tab:formNegociando:grid :growl"
-                                                 style="background: red; color: white" >
-                                    <f:attribute name="alq" value="#{alq.idAlquiler}" />
+                                <p:commandButton value="Cancelar" oncomplete="confirmarCancelar.show();" process="@this"
+                                                 rendered="#{alq.tomado}" style="background: red; color: white" >
+                                    <f:setPropertyActionListener target="#{pedidosBean.pedidoSeleccionado}" value="#{alq}" />
                                 </p:commandButton>
                             </div>
                         </div>  
@@ -102,6 +99,40 @@
                 </p:column>
             </p:dataGrid>
         </h:form>
+        
+        <p:confirmDialog widgetVar="confirmarAceptar" header="Aceptar pedido"
+                         message="¿Está seguro que desea aceptar el pedido?" >
+            <h:form>
+                <p:commandButton value="Aceptar" oncomplete="confirmarAceptar.hide();" 
+                                 actionListener="#{pedidosBean.confirmarPedido}" 
+                                 update=":tab:formNegociando:grid :growl"/>
+                <p:commandButton value="Cancelar" type="button" 
+                                 onclick="confirmarAceptar.hide();" />
+            </h:form>
+        </p:confirmDialog>
+
+        <p:confirmDialog widgetVar="confirmarRechazar" header="Rechazar pedido"
+                         message="¿Está seguro que desea rechazar el pedido?">
+            <h:form>
+                <p:commandButton value="Aceptar" oncomplete="confirmarRechazar.hide();"
+                                 actionListener="#{pedidosBean.rechazarPedido}" 
+                                 update=":tab:formNegociando:grid :growl"/>
+                <p:commandButton value="Cancelar" type="button" 
+                                 onclick="confirmarRechazar.hide();" />
+            </h:form>
+        </p:confirmDialog>
+
+        <p:confirmDialog widgetVar="confirmarCancelar" header="Cancelar pedido"
+                         message="¿Está seguro que desea cancelar el pedido?" >
+            <h:form>
+                <p:commandButton value="Aceptar" oncomplete="confirmarCancelar.hide();"
+                                 actionListener="#{pedidosBean.cancelarPedido}"
+                                 update=":tab:formNegociando:grid :growl"/>
+                <p:commandButton value="Cancelar" type="button" 
+                                 onclick="confirmarCancelar.hide();" />
+            </h:form>
+        </p:confirmDialog>
+        
     </h:body>
 </html>
 
