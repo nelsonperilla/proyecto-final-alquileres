@@ -236,7 +236,7 @@ public class NuevaPublicacionMBean implements Serializable {
                 byte[] img = event.getFile().getContents();
                 imagenes.add(img);
                 msg = new FacesMessage("Excelente",
-                        event.getFile().getFileName() + "fue cargado correctamente");
+                        event.getFile().getFileName() + " fue cargado correctamente");
 
                 context.addMessage(null, msg);
             } else {

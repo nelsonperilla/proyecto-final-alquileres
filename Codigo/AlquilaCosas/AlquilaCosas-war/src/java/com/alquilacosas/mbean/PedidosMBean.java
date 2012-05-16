@@ -34,6 +34,7 @@ public class PedidosMBean {
     private ManejadorUsuarioMBean loginBean;
     private Integer usuarioLogueado;
     private List<AlquilerDTO> pedidos;
+    private AlquilerDTO pedidoSeleccionado;
     private Integer alquilerId;
 
     @PostConstruct
@@ -45,22 +46,17 @@ public class PedidosMBean {
         pedidos = alquileresBean.getPedidos(usuarioLogueado);
     }
 
-    public void confirmarPedido(ActionEvent event) {
+    public void confirmarPedido() {
         FacesMessage msg = null;
         try {
-            alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
+            alquilerId = pedidoSeleccionado.getIdAlquiler();
             if (alquilerId == null) {
                 msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
                         "Error al cargar pagina", "No se brindo el id del alquiler");
                 FacesContext.getCurrentInstance().addMessage(null, msg);
             }
             pedidosBean.confirmarPedidoDeAlquiler(alquilerId);
-            for(int i = 0; i < pedidos.size(); i++) {
-                AlquilerDTO pedido = pedidos.get(i);
-                if(pedido.getIdAlquiler() == alquilerId) {
-                    pedidos.remove(pedido);
-                }
-            }
+            pedidos.remove(pedidoSeleccionado);
             msg = new FacesMessage("Alquiler Confirmado");
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (AlquilaCosasException e) {
@@ -70,22 +66,17 @@ public class PedidosMBean {
         }
     }
 
-    public void rechazarPedido(ActionEvent event) {
+    public void rechazarPedido() {
         FacesMessage msg = null;
         try {
-            alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
+            alquilerId = pedidoSeleccionado.getIdAlquiler();
             if (alquilerId == null) {
                 msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
                         "Error al cargar pagina", "No se brindo el id del alquiler");
                 FacesContext.getCurrentInstance().addMessage(null, msg);
             }
             pedidosBean.rechazarPedidoDeAlquiler(alquilerId);
-            for(int i = 0; i < pedidos.size(); i++) {
-                AlquilerDTO pedido = pedidos.get(i);
-                if(pedido.getIdAlquiler() == alquilerId) {
-                    pedidos.remove(pedido);
-                }
-            }
+            pedidos.remove(pedidoSeleccionado);
             msg = new FacesMessage("Alquiler Rechazado");
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (AlquilaCosasException e) {
@@ -95,10 +86,10 @@ public class PedidosMBean {
         }
     }
     
-    public void cancelarPedido(ActionEvent event) {
+    public void cancelarPedido() {
         FacesMessage msg = null;
         try {
-            alquilerId = (Integer) event.getComponent().getAttributes().get("alq");
+            alquilerId = pedidoSeleccionado.getIdAlquiler();
             if( alquilerId == null ){
                 msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
                     "Error al cargar pagina", "No se brindo el id del alquiler");
@@ -106,12 +97,7 @@ public class PedidosMBean {
             }    
             
             pedidosBean.cancelarPedidoDeAlquiler(alquilerId);
-            for(int i = 0; i < pedidos.size(); i++) {
-                AlquilerDTO pedido = pedidos.get(i);
-                if(pedido.getIdAlquiler() == alquilerId) {
-                    pedidos.remove(pedido);
-                }
-            }
+            pedidos.remove(pedidoSeleccionado);
             msg = new FacesMessage("Alquiler Cancelado");
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (AlquilaCosasException e) {
@@ -135,5 +121,13 @@ public class PedidosMBean {
 
     public void setLoginBean(ManejadorUsuarioMBean loginBean) {
         this.loginBean = loginBean;
+    }
+
+    public AlquilerDTO getPedidoSeleccionado() {
+        return pedidoSeleccionado;
+    }
+
+    public void setPedidoSeleccionado(AlquilerDTO pedidoSeleccionado) {
+        this.pedidoSeleccionado = pedidoSeleccionado;
     }
 }

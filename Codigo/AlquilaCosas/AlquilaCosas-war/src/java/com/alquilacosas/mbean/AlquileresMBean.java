@@ -9,6 +9,7 @@ import com.alquilacosas.dto.AlquilerDTO;
 import com.alquilacosas.dto.CalificacionDTO;
 import com.alquilacosas.dto.PedidoCambioDTO;
 import com.alquilacosas.dto.PublicacionDTO;
+import com.alquilacosas.ejb.entity.EstadoAlquiler;
 import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
 import com.alquilacosas.ejb.entity.Puntuacion;
 import com.alquilacosas.ejb.session.AlquileresBeanLocal;
@@ -78,16 +79,17 @@ public class AlquileresMBean {
     
     public void cancelarAlquiler() {
         if(alquilerId == null || alquilerId < 0) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Error al cancelar alquiler.", "No se brindo un ID.");
             FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
         }
         boolean borrado = alquileresBean.cancelarAlquiler(alquilerId);
         if (borrado) {
             for (int i = 0; i < alquileres.size(); i++) {
                 AlquilerDTO alq = alquileres.get(i);
                 if (alq.getIdAlquiler() == alquilerId) {
-                    alquileres.remove(alq);
+                    alq.setEstadoAlquiler(EstadoAlquiler.NombreEstadoAlquiler.CANCELADO);
                     return;
                 }
             }
