@@ -81,6 +81,12 @@ public class LoginBean implements LoginBeanLocal {
             throw new SeguridadException("Credenciales incorrectas.");
         } else {
             Usuario usuario = login.getUsuarioFk();
+            NombreEstadoUsuario nombreEstado = usuario.getEstadoVigente().getEstadoUsuario().getNombre();
+            if(nombreEstado == NombreEstadoUsuario.REGISTRADO) {
+                throw new SeguridadException("La cuenta no está activa");
+            } else if(nombreEstado == NombreEstadoUsuario.SUSPENDIDO) {
+                throw new SeguridadException("La cuenta se encuentra suspendida");
+            }
             String ciudad = null;
             boolean dir = false;
             if (!usuario.getDomicilioList().isEmpty()) {
@@ -113,6 +119,12 @@ public class LoginBean implements LoginBeanLocal {
             throw new SeguridadException("Usuario no registrado.");
         } else {
             Usuario usuario = login.getUsuarioFk();
+            NombreEstadoUsuario nombreEstado = usuario.getEstadoVigente().getEstadoUsuario().getNombre();
+            if(nombreEstado == NombreEstadoUsuario.REGISTRADO) {
+                throw new SeguridadException("La cuenta no está activa");
+            } else if(nombreEstado == NombreEstadoUsuario.SUSPENDIDO) {
+                throw new SeguridadException("La cuenta se encuentra suspendida");
+            }
             if (usuario.getFacebookId() == null || usuario.getFacebookId().equals("")) {
                 usuario.setFacebookId(facebookId);
                 usuarioFacade.edit(usuario);

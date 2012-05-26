@@ -67,6 +67,7 @@ public class ModificarUsuarioMBean implements Serializable {
     private double lat;
     private double lng;
     private LatLng marker;
+
     /**
      * Creates a new instance of ModificarUsuarioMBean
      */
@@ -118,23 +119,25 @@ public class ModificarUsuarioMBean implements Serializable {
         if (iu != null) {
             this.imagenUsuarioId = iu.getImagenUsuarioId();
             this.fotoSubida = true;
-            this.pictureSelected = 2; //quitar este hardcode una vez que se implemente
-            //la funcionalidad que inicializa el radiobutton teniendo en cuenta si el usuario
-            //se logea con facebook o a traves de una cuenta de AlquilaCosas
+            if(iu.getUsar()) {
+                pictureSelected = 2;
+            } else {
+                pictureSelected = 1;
+            }
+        } else {
+            pictureSelected = 1;
         }
-        gMap = new DefaultMapModel(); 
+        gMap = new DefaultMapModel();
         editableGMap = new DefaultMapModel();
-        marker = new LatLng(lat, lng);  
-        gMap.addOverlay(new Marker(marker, "AlquilaCosas"));         
+        marker = new LatLng(lat, lng);
+        gMap.addOverlay(new Marker(marker, "AlquilaCosas"));
     }
 
-    public void updateCoordinates(MarkerDragEvent event)
-    {
+    public void updateCoordinates(MarkerDragEvent event) {
         setLat(event.getMarker().getLatlng().getLat());
         setLng(event.getMarker().getLatlng().getLng());
     }
-    
-    
+
     public void crearDomicilio() {
         domicilio = new DomicilioDTO();
         domicilio.setCalle(calle);
@@ -154,7 +157,7 @@ public class ModificarUsuarioMBean implements Serializable {
         for (SelectItem si : paises) {
             if (si.getValue().equals(new Integer(paisSeleccionado))) {
                 domicilio.setPais(si.getLabel());
-                break; 
+                break;
             }
         }
         for (SelectItem si : provincias) {
@@ -165,8 +168,8 @@ public class ModificarUsuarioMBean implements Serializable {
         }
         gMap.getMarkers().remove(0);
         //editableGMap.getMarkers().remove(0);
-        
-        marker = new LatLng(lat, lng);  
+
+        marker = new LatLng(lat, lng);
         gMap.addOverlay(new Marker(marker, "AlquilaCosas"));
     }
 
@@ -215,29 +218,36 @@ public class ModificarUsuarioMBean implements Serializable {
         imagenPerfil = event.getFile().getContents();
         ImagenUsuario iu = usuarioBean.actualizarImagen(usuario.getId(), imagenPerfil);
         if (iu != null) {
-            usuarioMBean.setImagenUsuarioId(iu.getImagenUsuarioId());
             imagenUsuarioId = iu.getImagenUsuarioId();
             this.fotoSubida = true;
         }
         this.buttonPressed = true;
+        usuarioMBean.getUsuario().setImagen(iu);
     }
-    
-    public void subirImagen(){
-        this.renderImage = true;  
+
+    public void subirImagen() {
+        this.renderImage = true;
     }
 
     public void actualizarFoto() {
-        if (this.pictureSelected.equals("1")) {
+        FacesMessage msg = null;
+        if (pictureSelected == 1) {
             //se selecciona la imagen de Facebook para mostrar en la imagen de perfil
             usuarioBean.seleccionarImagenPerfil(usuario.getId(), false);
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Imagen Facebook seleccionada", "");
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            if (usuarioMBean.getUsuario().getImagen() != null) {
+                usuarioMBean.getUsuario().getImagen().setUsar(false);
+            }
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Imagen Facebook seleccionada", "");
+            
         } else {
             // se selecciona la imagen que es subida por el usuario
             usuarioBean.seleccionarImagenPerfil(usuario.getId(), true);
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Imagen Subida por el usuario seleccionada", "");
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            if (usuarioMBean.getUsuario().getImagen() != null) {
+                usuarioMBean.getUsuario().getImagen().setUsar(true);
+            }
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Imagen Subida por el usuario seleccionada", "");
         }
+        FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 
     public void editar() {
@@ -516,6 +526,7 @@ public class ModificarUsuarioMBean implements Serializable {
     public void setLng(double lng) {
         this.lng = lng;
     }
+
     /**
      * @return the editableGMap
      */

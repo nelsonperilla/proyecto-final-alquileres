@@ -19,11 +19,15 @@
         <table id="form:panel" width="1024px" align="center" >
             <tr>
                 <td id="title" colspan="3" >
-            <comps:logoBar />
-            </td>
+                    <comps:logoBar />
+                    <div style="position: absolute; right: 120px; top: 10px;">
+                        <h:outputText value="Hola, #{login.usuario.nombre}" rendered="#{login.logueado}"
+                                      style="font-size: 11px"/>
+                    </div>
+                </td>
             </tr>
             <td id="BarraMenu" colspan="3">
-            <comps:menuBar />
+                <comps:menuBar />
             </td>    
             <tr>
             </tr>

@@ -26,6 +26,8 @@
                                  paginatorAlwaysVisible="false"
                                  style="text-align: center">
 
+                        <p:ajax event="rowSelect" update="botones" />
+                        
                         <f:facet name="header">
                             Seleccione una fila para mayor información de una Publicidad
                         </f:facet>
@@ -85,9 +87,11 @@
                         </p:column>
 
                         <f:facet name="footer">
-                            <p:commandButton value="Ver Publicidad" icon="ui-icon ui-icon-search"
+                            <p:outputPanel id="botones" >
+                            <p:commandButton id="btnVer" value="Ver Publicidad" icon="ui-icon ui-icon-search"
                                              update=":displayForm:display" oncomplete="pubDialog.show()"
-                                             rendered="#{not (publicidad != null)}"/>
+                                             disabled="#{empty misPublicidades.selectedPublicidad}"/>
+                            </p:outputPanel>
                         </f:facet>
 
                     </p:dataTable>
@@ -95,15 +99,19 @@
                 </h:form>
 
                 <p:dialog header="Publicidad" widgetVar="pubDialog" resizable="false"
-                          width="500" height="350" showEffect="clip" hideEffect="fold">
+                          showEffect="clip" hideEffect="fold">
                     <h:form id="displayForm">
                         <h:panelGrid id="display" columns="2" cellpadding="4">
 
                             <f:facet name="header">
                                 <h:graphicImage value="/imagenpub?id=#{misPublicidades.selectedPublicidad.id}" 
-                                                width="200" height="185" styleClass="img"/> 
+                                                style="max-width: 200px; max-height: 180px; margin: 10px auto" 
+                                                styleClass="img"/>
                             </f:facet>
 
+                            <h:outputText value="Título:" />
+                            <h:outputText value="#{misPublicidades.selectedPublicidad.titulo}" />
+                            
                             <h:outputText value="Descripción:" />
                             <h:outputText value="#{misPublicidades.selectedPublicidad.caption}" />
 

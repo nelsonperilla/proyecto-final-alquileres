@@ -16,7 +16,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 
 /**
  *
@@ -32,6 +31,8 @@ public class PedidosMBean {
     private PedidosBeanLocal pedidosBean;
     @ManagedProperty(value = "#{login}")
     private ManejadorUsuarioMBean loginBean;
+    @ManagedProperty(value = "#{alquileresBean}")
+    private AlquileresMBean misAlquileresMBean;
     private Integer usuarioLogueado;
     private List<AlquilerDTO> pedidos;
     private AlquilerDTO pedidoSeleccionado;
@@ -57,6 +58,7 @@ public class PedidosMBean {
             }
             pedidosBean.confirmarPedidoDeAlquiler(alquilerId);
             pedidos.remove(pedidoSeleccionado);
+            misAlquileresMBean.actualizarAlquileres();
             msg = new FacesMessage("Alquiler Confirmado");
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (AlquilaCosasException e) {
@@ -129,5 +131,13 @@ public class PedidosMBean {
 
     public void setPedidoSeleccionado(AlquilerDTO pedidoSeleccionado) {
         this.pedidoSeleccionado = pedidoSeleccionado;
+    }
+
+    public AlquileresMBean getMisAlquileresMBean() {
+        return misAlquileresMBean;
+    }
+
+    public void setMisAlquileresMBean(AlquileresMBean misAlquileresMBean) {
+        this.misAlquileresMBean = misAlquileresMBean;
     }
 }

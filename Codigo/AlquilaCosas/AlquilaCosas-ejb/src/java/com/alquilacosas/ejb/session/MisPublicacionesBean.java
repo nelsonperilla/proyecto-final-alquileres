@@ -42,8 +42,8 @@ public class MisPublicacionesBean implements MisPublicacionesBeanLocal {
     @Override
     public List<PublicacionDTO> getPublicaciones(int usuarioId) {
 
-        Usuario usuario = usuarioFacade.find(usuarioId);
-        List<Publicacion> listaPublicaciones = usuario.getPublicacionList();
+//        Usuario usuario = usuarioFacade.find(usuarioId);
+        List<Publicacion> listaPublicaciones = publicacionFacade.getPublicacionesDeUsuario(usuarioId);
         List<PublicacionDTO> listaFacade = new ArrayList<PublicacionDTO>();
         for (Publicacion p : listaPublicaciones) {
             PublicacionDTO dto = new PublicacionDTO(p.getPublicacionId(), p.getTitulo(),

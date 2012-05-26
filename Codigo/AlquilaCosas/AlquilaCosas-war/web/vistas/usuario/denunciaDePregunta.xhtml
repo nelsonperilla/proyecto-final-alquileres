@@ -64,9 +64,15 @@
                                         </tr>
                                         <tr>
                                             <td colspan="2">
-                                                <h:outputText value="Si desea, puede detallar la razón de su denuncia:"  /><br/>
-                                                <h:inputTextarea style="width: 400px; height: 200px" value="#{denuncia.descripcionDenuncia}"/><br/>
-                                                <p:commandButton value="Ingresa denuncia" action="#{denuncia.saveDenuncia}" update="grow"/>
+                                                <h:outputLabel for="explicacion" value="Si desea, puede detallar la razón de su denuncia:"  /><br/>
+                                                <p:inputTextarea id="explicacion" style="width: 400px; height: 200px" validatorMessage="Ingrese menos de 300 caracteres."
+                                                                 value="#{denuncia.descripcionDenuncia}" >
+                                                    <f:validateLength maximum="300" />
+                                                </p:inputTextarea>
+                                                <br/>
+                                                <p:message for="explicacion" />
+                                                <p:commandButton value="Ingresa denuncia" style="margin-top: 10px;"
+                                                                 action="#{denuncia.saveDenuncia}" update="@form grow"/>
                                             </td>
                                         </tr>
                                     </table>

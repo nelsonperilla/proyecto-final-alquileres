@@ -12,6 +12,7 @@ import com.alquilacosas.ejb.entity.*;
 import com.alquilacosas.ejb.entity.EstadoUsuario.NombreEstadoUsuario;
 import com.alquilacosas.ejb.entity.Rol.NombreRol;
 import com.alquilacosas.facade.EstadoUsuarioFacade;
+import com.alquilacosas.facade.ImagenUsuarioFacade;
 import com.alquilacosas.facade.LoginFacade;
 import com.alquilacosas.facade.PaisFacade;
 import com.alquilacosas.facade.ProvinciaFacade;
@@ -60,6 +61,8 @@ public class UsuarioBean implements UsuarioBeanLocal {
     private LoginFacade loginFacade;
     @EJB 
     private EstadoUsuarioFacade estadoUsuarioFacade;
+    @EJB
+    private ImagenUsuarioFacade imagenUsuarioFacade;
     
     @Override
     public void registrarUsuario(String username, String password, String nombre,
@@ -304,6 +307,7 @@ public class UsuarioBean implements UsuarioBeanLocal {
         }else{
             iu = new ImagenUsuario();
             iu.setImagen(imagen);
+            iu.setUsar(false);
             usuario.agregarImagen(iu);
         }
         usuarioFacade.edit(usuario);
@@ -313,9 +317,12 @@ public class UsuarioBean implements UsuarioBeanLocal {
     @Override
     public void seleccionarImagenPerfil(Integer usuarioId, boolean usar) {
         Usuario usuario = usuarioFacade.find(usuarioId);
-        ImagenUsuario iu = usuario.getImagenUsuarioList().get(0);
-        iu.setUsar(usar);
-        usuarioFacade.edit(usuario);
+        if(!usuario.getImagenUsuarioList().isEmpty()) {
+            ImagenUsuario iu = usuario.getImagenUsuarioList().get(0);
+            iu.setUsar(usar);
+            imagenUsuarioFacade.edit(iu);
+        }
+        
     }
     
     

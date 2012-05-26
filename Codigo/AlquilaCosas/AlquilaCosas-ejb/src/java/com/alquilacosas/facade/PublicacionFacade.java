@@ -65,6 +65,13 @@ public class PublicacionFacade extends AbstractFacade<Publicacion> {
         query.setMaxResults(filas);
         return query.getResultList();
     }
+    
+    public List<Publicacion> getPublicacionesDeUsuario(int usuarioId) {
+        Query query = em.createQuery("SELECT p FROM Publicacion p WHERE "
+                + "p.usuarioFk.usuarioId = :id ORDER BY p.fechaHasta DESC");
+        query.setParameter("id", usuarioId);
+        return query.getResultList();
+    }
 
     /**
      * Devuelve una lista de publicaciones ordenada por destacacion, y fecha de publicacion descendente
