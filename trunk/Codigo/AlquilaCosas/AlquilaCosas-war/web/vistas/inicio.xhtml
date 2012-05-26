@@ -4,13 +4,19 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
       xmlns:h="http://java.sun.com/jsf/html" 
-      xmlns:comps="http://java.sun.com/jsf/composite/comps" >
+      xmlns:comps="http://java.sun.com/jsf/composite/comps" 
+      xmlns:f="http://java.sun.com/jsf/core">
 
     <body>
 
         <ui:composition template="./../resources/templates/newTemplate.xhtml">
-
+            
             <ui:define name="logInfo">
+                
+                <f:metadata>
+                    <f:event type="preRenderView" listener="#{mostrarPublicidad.cargarPublicidades}" />
+                </f:metadata>
+                
                 <p:outputPanel rendered="#{not login.logueado}" >
                     <a onclick="login.show()" style="cursor:pointer">Acceso/Registrarse</a> 
                 </p:outputPanel>
@@ -28,8 +34,7 @@
                         <td>
                             <p:outputPanel rendered="#{not empty mostrarPublicidad.publicidadesCarrusel}" >
                                 <p:carousel value="#{mostrarPublicidad.publicidadesCarrusel}" autoPlayInterval="3500"
-                                            var="pub" rows="1" circular="true" itemStyle="height:130px;width:600px;"
-                                            style="width:750px;" >
+                                            var="pub" rows="1" circular="true" itemStyle="height:130px;width:750px;" >
                                     <a href="#{pub.url}" >    
                                         <h:graphicImage value="/imagenpub?id=#{pub.id}" 
                                                         alt="#{pub.caption}"

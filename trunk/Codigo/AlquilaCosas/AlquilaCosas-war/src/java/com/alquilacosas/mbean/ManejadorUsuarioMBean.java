@@ -54,7 +54,6 @@ public class ManejadorUsuarioMBean implements Serializable {
     private static final String[] perms = new String[]{"publish_stream", "email", "user_location"};
 
     private boolean usarImagenSubida = false;
-    private Integer imagenUsuarioId;
     
     /** Creates a new instance of LoginMBean */
     public ManejadorUsuarioMBean() {
@@ -75,7 +74,7 @@ public class ManejadorUsuarioMBean implements Serializable {
             usuario = loginBean.login(username, password);    
         } catch (SeguridadException e) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Credenciales incorrectas", ""));
+                    e.getMessage(), ""));
             username = password = "";
             return;
         }
@@ -103,11 +102,9 @@ public class ManejadorUsuarioMBean implements Serializable {
         try {
             usuario = loginBean.login(username, password);
             this.usarImagenSubida = loginBean.usarImagenLocal(usuario.getId());
-            if(this.usarImagenSubida)
-                this.imagenUsuarioId = usuario.getImagen().getImagenUsuarioId();
         } catch (SeguridadException e) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Credenciales incorrectas", ""));
+                    e.getMessage(), ""));
             username = password = "";
             return;
         }
@@ -351,14 +348,6 @@ public class ManejadorUsuarioMBean implements Serializable {
 
     public void setUrlParams(String urlParams) {
         this.urlParams = urlParams;
-    }
-
-    public Integer getImagenUsuarioId() {
-        return imagenUsuarioId;
-    }
-
-    public void setImagenUsuarioId(Integer imagenUsuarioId) {
-        this.imagenUsuarioId = imagenUsuarioId;
     }
 
     public boolean isUsarImagenFacebook() {

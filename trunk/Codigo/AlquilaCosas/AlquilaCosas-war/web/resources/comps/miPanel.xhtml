@@ -12,14 +12,14 @@
 
     <!-- IMPLEMENTATION -->
     <cc:implementation>  
-        <p:panel style="width: 200px; background: aliceblue" >
+        <p:panel id="menu" style="width: 200px; background: aliceblue" >
             <div class="user-image">
-                <h:graphicImage styleClass="image" rendered="#{login.fbLogin and not login.usarImagenFacebook}" 
-                                value="https://graph.facebook.com/#{login.fbId}/picture?type=large" />
-                <h:graphicImage styleClass="image" rendered="#{not login.fbLogin and not login.usarImagenFacebook}"
+                <h:graphicImage styleClass="image" rendered="#{not empty login.usuario.facebookId and (empty login.usuario.imagen or not login.usuario.imagen.usar)}" 
+                                value="https://graph.facebook.com/#{login.usuario.facebookId}/picture?type=large" />
+                <h:graphicImage styleClass="image" rendered="#{empty login.usuario.facebookId and (empty login.usuario.imagen or not login.usuario.imagen.usar)}"
                                 value="#{resource['images:no_user.jpg']}" />
-                <h:graphicImage styleClass="image" rendered="#{login.usarImagenFacebook}"
-                                value="/imageUser?id=#{login.imagenUsuarioId}" />
+                <p:graphicImage styleClass="image" rendered="#{not empty login.usuario.imagen and login.usuario.imagen.usar}"
+                                value="/imageUser?id=#{login.usuario.imagen.imagenUsuarioId}" cache="false" />
             </div>
             <div class="user-namedetail">
                 <p>#{login.usuario.nombre} #{login.usuario.apellido}</p>

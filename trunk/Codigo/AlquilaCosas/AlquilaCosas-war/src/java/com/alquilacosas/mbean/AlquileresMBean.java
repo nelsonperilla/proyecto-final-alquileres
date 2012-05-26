@@ -175,6 +175,7 @@ public class AlquileresMBean {
     
     public void registrarCalificacion() {
         alquileresBean.registrarCalificacion(puntuacionId, alquilerId, comentario, usuarioLogueado, tomado);
+        comentario = "";
         for(AlquilerDTO alq: alquileres) {
             if(alq.getIdAlquiler() == alquilerId) {
                 alq.setCalificado(true);
@@ -200,6 +201,12 @@ public class AlquileresMBean {
         FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
                 "Replica registrada.", "");
         FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+    
+    public void actualizarAlquileres() {
+        if(usuarioLogueado != null) {
+            alquileres = alquileresBean.getAlquileres(usuarioLogueado);
+        }
     }
     
     private AlquilerDTO buscarAlquiler(int alquilerId) {

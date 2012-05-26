@@ -46,11 +46,12 @@
                 </p:ajaxStatus> 
                <h3>Preguntas pendientes</h3> 
                 <div class="preguntas">
-                    <h:outputText id="noHayPreguntas" value="No hay preguntas pendientes para responder"
+                    <p:outputPanel id="preguntas" >  
+                        <h:outputText id="noHayPreguntas" value="No hay preguntas pendientes para responder"
                                   rendered="#{empty desplieguePreguntas.comentarios}"
                                   style="margin: 80px"/>
-                    <p:outputPanel id="preguntas" rendered="#{desplieguePreguntas.cantidad != 0}">  
-                        <h:dataTable value="#{desplieguePreguntas.comentarios}" var="pregunta">  
+                        <h:dataTable value="#{desplieguePreguntas.comentarios}" var="pregunta"
+                                     rendered="#{desplieguePreguntas.cantidad != 0}" >  
                             <p:column>  
                                 <div class="preguntasContenedor" >
                                     <div class="artImagen" >

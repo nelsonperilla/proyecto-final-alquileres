@@ -12,7 +12,7 @@
         <ui:composition template="./../../resources/templates/newTemplate.xhtml">
 
             <ui:define name="left" id="panel" >
-                <comps:miPanel />
+                <comps:miPanel id="menu" />
             </ui:define>
 
             <ui:define name="principal">
@@ -282,15 +282,11 @@
                                     <p:graphicImage styleClass="image" rendered="#{empty modUsuario.imagenUsuarioId}"
                                                     value="#{resource['images:no_user.jpg']}"/>
 
-                                    <f:facet name="footer">
 
-                                        <p:commandButton value="Guardar" actionListener="#{modUsuario.actualizarFoto}" 
-                                                         update=":growl" style="margin-left: 420px; height: 28px; "/>
-                                        <p:spacer width="15px"/>
-                                        <p:commandButton value="Cancelar" immediate="true" update=":tab" 
-                                                         style="height: 28px; width: 90px"/>
-                                    </f:facet>
+                                        
                                 </p:panelGrid>
+                                <p:commandButton value="Guardar" actionListener="#{modUsuario.actualizarFoto}" 
+                                                         update=":growl :menu:menu" style="margin-right: 20px; height: 28px; "/>
 
                                 <div style="position: absolute; right: 10px; top: 40px">
                                     <p:commandButton type="button" icon="ui-icon-pencil" 
@@ -304,32 +300,15 @@
                     </p:tabView>
 
                     <p:dialog widgetVar="cargarImagenDlg" header="Subir Nueva Imagen" modal="true" 
-                              resizable="false" style="text-align: center;"
-                              width="600" height="600">
+                              resizable="false" style="text-align: center;">
                         <h:form>
                             <p:fileUpload fileUploadListener="#{modUsuario.handleFileUpload}"  
-                                          mode="advanced"
-                                          label="Seleccionar"
+                                          mode="advanced" oncomplete="cargarImagenDlg.hide()"
+                                          label="Seleccionar" multiple="false"
                                           allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
                                           uploadLabel="Subir"
                                           cancelLabel="Cancelar"
-                                          update="outputPanelUpload"/>
-
-                            <p:outputPanel id="outputPanelUpload">
-
-                                <h:panelGrid columns="1">
-                                    <h:outputText value="Imagen" rendered="#{modUsuario.buttonPressed}" />
-                                    <p:graphicImage value="/imageUser?id=#{modUsuario.imagenUsuarioId}" 
-                                                    cache="false" rendered="#{modUsuario.buttonPressed}"/>
-                                </h:panelGrid>
-
-                                <p:commandButton value="Aceptar" actionListener="#{modUsuario.subirImagen}"
-                                                 update=":tab:formSubirImagen" rendered="#{modUsuario.buttonPressed}"
-                                                 onclick="cargarImagenDlg.hide()"/>
-                                <p:commandButton value="Cancelar" type="button" onclick="cargarImagenDlg.hide()"
-                                                 update=":tab:formSubirImagen :panel" rendered="#{modUsuario.buttonPressed}"/>
-
-                            </p:outputPanel> 
+                                          update=":tab:formSubirImagen :menu:menu"/> 
                         </h:form>
 
                     </p:dialog>
