@@ -103,8 +103,9 @@ public class DenunciarPreguntaMBean implements Serializable {
             
     }
     
-    public void saveDenuncia()
+    public String saveDenuncia()
     {
+        String redirection = null;
         if(getUsuarioLogueado().isLogueado())
         {
             DenunciaDTO nuevaDenuncia = new DenunciaDTO();
@@ -125,7 +126,8 @@ public class DenunciarPreguntaMBean implements Serializable {
                 denunciaBean.saveDenuncia(nuevaDenuncia,motivoSeleccionado);
                 FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO,
-                    "Su denuncia ha sido agendada para revisión", ""));                
+                    "Su denuncia ha sido agendada para revisión", "")); 
+                redirection = "/vistas/usuario/denunciaCompletada?faces-redirect=true";
             }
             catch(Exception e){
                 FacesContext.getCurrentInstance().addMessage(null,
@@ -139,6 +141,7 @@ public class DenunciarPreguntaMBean implements Serializable {
                new FacesMessage(FacesMessage.SEVERITY_ERROR,
                "Su denuncia no ha podido ser ingresada, por favor intente nuevamente", ""));                
         }
+        return redirection;
     }
 
     public void redirect() {

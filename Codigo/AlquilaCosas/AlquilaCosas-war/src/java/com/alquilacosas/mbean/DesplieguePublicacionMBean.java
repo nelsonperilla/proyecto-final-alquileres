@@ -66,6 +66,7 @@ public class DesplieguePublicacionMBean implements Serializable {
     private Date horaInicioAlquiler;
     private int denunciaId;
     private int motivoDenuncia;
+    private boolean ownerLogged;
     private MapModel mapModel;
     List<Integer> idImagenes;
     private Integer publicacionId;
@@ -99,13 +100,16 @@ public class DesplieguePublicacionMBean implements Serializable {
             return;
         }
 
+        setPublicacion(publicationBean.getPublicacion(publicacionId));
+
         if (usuarioLogueado.getUsuarioId() != null && publicacionId != null) {
-            if (favoritoBean.getFavorito(usuarioLogueado.getUsuarioId(), publicacionId) != null) {
+            if (favoritoBean.getFavorito(usuarioLogueado.getUsuarioId(), publicacionId) != null) 
                 this.addedToFavorito = true;
-            }
+            ownerLogged = false;
+            if (usuarioLogueado.getUsuarioId() == publicacion.getPropietario().getId()) 
+                ownerLogged = true;
         }
 
-        setPublicacion(publicationBean.getPublicacion(publicacionId));
         setNuevaPregunta(new ComentarioDTO());
         setComentarios(publicationBean.getPreguntas(publicacionId));
         setMapModel(new DefaultMapModel());
@@ -180,6 +184,7 @@ public class DesplieguePublicacionMBean implements Serializable {
 
     public void actualizarPreguntas() {
         comentarios = publicationBean.getPreguntas(publicacion.getId());
+
     }
 
     public void actualizarFechas() {
@@ -198,12 +203,11 @@ public class DesplieguePublicacionMBean implements Serializable {
         }
 
         boolean logueado = usuarioLogueado.isLogueado();
-        boolean ownerLogged = false;
         if (logueado) {
             if (usuarioLogueado.getUsuarioId() == publicacion.getPropietario().getId()) {
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "Usted no puede alquilar sus propios productos", ""));
+                        "Usted no puede alquilar su propio producto", ""));
                 ownerLogged = true;
             }
         }
@@ -216,8 +220,17 @@ public class DesplieguePublicacionMBean implements Serializable {
 
     public void preguntar() {
         boolean logueado = usuarioLogueado.isLogueado();
+        if (logueado) {
+            if (usuarioLogueado.getUsuarioId() == publicacion.getPropietario().getId()) {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "Usted no puede realizar preguntas en su propio productos", ""));
+                ownerLogged = true;
+            }
+        }        
         RequestContext context = RequestContext.getCurrentInstance();
         context.addCallbackParam("logueado", logueado);
+        context.addCallbackParam("ownerLogged", ownerLogged);
         action = "preguntar";
     }
 
@@ -752,5 +765,12 @@ public class DesplieguePublicacionMBean implements Serializable {
 
     public void setAddedToFavorito(boolean addedToFavorito) {
         this.addedToFavorito = addedToFavorito;
+    }
+
+    /**
+     * @return the ownerLogged
+     */
+    public boolean isOwnerLogged() {
+        return ownerLogged;
     }
 }

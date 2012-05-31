@@ -28,7 +28,7 @@
                     <td width="30px">
                     <h:link value="Denunciar"
                        outcome="/vistas/usuario/denunciaDePregunta" 
-                       rendered="#{pregunta.baneado == false}">
+                       rendered="#{pregunta.baneado == false and pregunta.usuarioId != login.usuarioId}">
                         <f:param name="motivo" value="0" />
                         <f:param name="id" value="#{pregunta.id}" />                        
                     </h:link>
@@ -40,7 +40,7 @@
                     </td>
                     <td>
                         <h:outputText value="#{pregunta.respuesta.comentario}" 
-                        rendered="#{pregunta.respuesta != null and pregunta.respuesta.baneado == false}"/>  
+                        rendered="#{pregunta.respuesta != null and pregunta.respuesta.baneado == false }"/>  
                          <h:graphicImage value="/resources/images/comentarioBaneado.jpg"
                                 width="416" height="90" 
                                 rendered="#{pregunta.respuesta != null and pregunta.respuesta.baneado == true}"/>                            
@@ -48,7 +48,9 @@
                     <td>
                         <h:link value="Denunciar"
                             outcome="/vistas/usuario/denunciaDePregunta" 
-                            rendered="#{pregunta.respuesta != null and pregunta.respuesta.baneado == true}">
+                            rendered="#{pregunta.respuesta != null and 
+                                        pregunta.respuesta.baneado == true and 
+                                        pregunta.usuarioId != login.usuarioId}">
                             <f:param name="motivo" value="0" />
                             <f:param name="id" value="#{pregunta.respuesta.id}" />                        
                         </h:link>
