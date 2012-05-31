@@ -149,7 +149,8 @@
                                     <p:outputPanel id="preguntas" > 
                                         <p:commandButton style="margin: 10px 10px 0px 5px;" value="Hacer una pregunta" 
                                                          actionListener="#{publicacionDesplegada.preguntar}" 
-                                                         oncomplete="agregarPregunta(xhr, status, args)"/>  
+                                                         oncomplete="agregarPregunta(xhr, status, args)"
+                                                         update=":principalForm:growl"/>  
                                         <h:dataTable value="#{publicacionDesplegada.comentarios}" var="pregunta">  
                                             <p:column>  
                                                 <comps:itemPreguntas />
@@ -164,10 +165,13 @@
                     <tr>
                         <td colspan="2">
                             <h:link value="Denunciar esta publicacion"
-                                    outcome="/vistas/usuario/denunciaDePregunta"  >
+                                    outcome="/vistas/usuario/denunciaDePregunta"
+                                    rendered="#{publicacionDesplegada.ownerLogged == false}"
+                                    >
                                 <f:param name="motivo" value="1" />
                                 <f:param name="id" value="#{publicacionDesplegada.publicacion.id}" />                        
-                            </h:link>                        
+                            </h:link>
+                            
                         </td>                    
                     </tr>                    
                 </table>

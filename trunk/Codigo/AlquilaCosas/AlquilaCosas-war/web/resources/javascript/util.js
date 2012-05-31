@@ -24,7 +24,8 @@ function handleNuevoPeriodo(xhr, status, args) {
 
 function agregarPregunta(xhr, status, args) {
     if(args.logueado) {
-        nuevaPregunta.show();
+        if(!args.ownerLogged)
+            nuevaPregunta.show();
     }
     else {
         login.show();
@@ -75,14 +76,15 @@ function highlightCalendar(specialDays, date, cssClass) {
 }
 
 function revisarDisponibilidad(xhr, status, args){
-    if(!args.ownerLogged){
-        if(args.hayDisponibilidad) {
-            if(args.logueado)
+    if(args.logueado){
+        if(!args.ownerLogged){
+            if(args.hayDisponibilidad)
                 confirmRent.show();
-            else
-                login.show();
         }
     }
+    else
+        login.show();
+
 }
 
 
