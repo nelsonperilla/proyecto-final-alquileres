@@ -19,6 +19,7 @@ import com.alquilacosas.facade.PublicacionFacade;
 import com.alquilacosas.facade.UsuarioFacade;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
@@ -40,6 +41,7 @@ public class MisPublicacionesBean implements MisPublicacionesBeanLocal {
     private EstadoPublicacionFacade estadoFacade;
 
     @Override
+    @PermitAll
     public List<PublicacionDTO> getPublicaciones(int usuarioId) {
 
 //        Usuario usuario = usuarioFacade.find(usuarioId);
@@ -68,6 +70,7 @@ public class MisPublicacionesBean implements MisPublicacionesBeanLocal {
     }
     
     @Override
+    @PermitAll
     public void borrarPublicacion( Integer publicacionId ) throws AlquilaCosasException{
         Publicacion p = publicacionFacade.find(publicacionId);
         Usuario usuario = p.getUsuarioFk();
@@ -86,6 +89,7 @@ public class MisPublicacionesBean implements MisPublicacionesBeanLocal {
     }
 
     @Override
+    @PermitAll
     public List<EstadoPublicacion> getEstados() {
         return estadoFacade.findAll();
     }
