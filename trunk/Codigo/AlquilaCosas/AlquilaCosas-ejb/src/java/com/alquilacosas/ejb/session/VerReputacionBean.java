@@ -40,6 +40,7 @@ public class VerReputacionBean implements VerReputacionBeanLocal {
               throw new AlquilaCosasException("Usuario no encontrado");
           }
           UsuarioDTO usuarioDTO = new UsuarioDTO();
+          usuarioDTO.setId(usuario.getUsuarioId());
           usuarioDTO.setUsername(usuario.getLoginList().get(0).getUsername());
           usuarioDTO.setFechaDeRegistro(usuario.getLoginList().get(0).getFechaCreacion());
           

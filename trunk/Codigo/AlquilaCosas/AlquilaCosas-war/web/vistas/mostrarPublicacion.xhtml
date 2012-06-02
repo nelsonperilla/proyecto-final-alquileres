@@ -58,8 +58,10 @@
 
                                 <h:panelGrid  styleClass="dataPrincipal" columns="2"  >
                                     <h:outputText value="Propietario: " styleClass="itemInfo"  escape="false"/>
-                                    <h:outputText value="#{publicacionDesplegada.publicacion.propietario.nombre}" 
-                                                  styleClass="itemInfo" style=" color: #556275" escape="false"/>  
+                                    <h:link value="#{publicacionDesplegada.publicacion.propietario.nombre}" 
+                                            styleClass="itemInfo" style=" color: #556275" >
+                                        <f:param name="id" value="#{publicacionDesplegada.publicacion.propietario.id}" />
+                                    </h:link>
                                     <h:outputText value="Reputación: " styleClass="itemInfo" escape="false"/>
                                     <p:rating value="#{publicacionDesplegada.userRating}" stars="10" disabled="true"/> 
                                 </h:panelGrid>                                 

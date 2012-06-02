@@ -11,23 +11,22 @@
 
         <ui:composition template="./../resources/templates/newTemplate.xhtml">
 
-            <ui:define name="logInfo">
-                <h:link value="inicio" outcome="/vistas/inicio" />
-            </ui:define>
-
             <ui:define name="left">
-                <p:outputPanel id="catMenu" >
+                <p:outputPanel rendered="#{not login.logueado or (not (login.usuario.id eq reputacion.usuarioDTO.id))}" >
                     <comps:categoriesMenu />
+                </p:outputPanel>
+                <p:outputPanel rendered="#{login.logueado and (login.usuario.id eq reputacion.usuarioDTO.id)}" >
+                    <comps:miPanel />
                 </p:outputPanel>
             </ui:define>
 
             <ui:define name="principal">
-                <h1>Reputación</h1>
-                <h:form>
+                <div style="margin: 0 20px" >
+                    <h2>Reputación</h2>
                     <p:outputPanel rendered="#{not reputacion.usuarioCorrecto}">
                         No se encontro el Usuario.
                     </p:outputPanel>
-                    <!-- <p:fieldset  > -->
+                    <h:form rendered="#{reputacion.usuarioCorrecto}">
 
                         <h:panelGrid columns="1" styleClass="repTable" rendered="#{reputacion.usuarioCorrecto}" >
                             <p:outputPanel>Usuario: #{reputacion.usuarioDTO.username}</p:outputPanel>
@@ -91,13 +90,8 @@
                             </h:panelGrid>
                         </h:panelGrid>
 
-                    <!-- </p:fieldset>  -->
-
-                </h:form>
-            </ui:define>
-
-            <ui:define name="right">
-                <comps:loginBox />
+                    </h:form>
+                </div>
             </ui:define>
 
         </ui:composition>
