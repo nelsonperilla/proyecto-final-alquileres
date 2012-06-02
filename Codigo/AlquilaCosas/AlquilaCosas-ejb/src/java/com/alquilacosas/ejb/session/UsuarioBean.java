@@ -304,13 +304,14 @@ public class UsuarioBean implements UsuarioBeanLocal {
         if( !usuario.getImagenUsuarioList().isEmpty() ){
             iu = usuario.getImagenUsuarioList().get(0);
              iu.setImagen(imagen);
+             iu = imagenUsuarioFacade.edit(iu);
         }else{
             iu = new ImagenUsuario();
             iu.setImagen(imagen);
             iu.setUsar(false);
             usuario.agregarImagen(iu);
+            iu = imagenUsuarioFacade.create(iu);
         }
-        usuarioFacade.edit(usuario);
         return iu;
     }
 
