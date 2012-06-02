@@ -31,7 +31,6 @@ import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.map.MapModel;
 
 /**
  *
@@ -79,7 +78,6 @@ public class ModificarPublicacionMBean implements Serializable {
     private List<Integer> imagenesABorrar;
     private List<Integer> imagenIds;
     private int publicacionId;
-    private List<NombreEstadoPublicacion> estadosPublicaciones;
     private int imagenABorrar;
     
     public ModificarPublicacionMBean() {
