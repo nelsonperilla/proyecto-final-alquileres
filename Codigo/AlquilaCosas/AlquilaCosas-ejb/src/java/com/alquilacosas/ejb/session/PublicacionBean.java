@@ -14,7 +14,7 @@ import com.alquilacosas.facade.AlquilerFacade;
 import com.alquilacosas.facade.AlquilerXEstadoFacade;
 import com.alquilacosas.facade.CalificacionFacade;
 import com.alquilacosas.facade.CategoriaFacade;
-import com.alquilacosas.facade.ComentarioFacade;
+import com.alquilacosas.facade.ComentarioFacade;    
 import com.alquilacosas.facade.EstadoPublicacionFacade;
 import com.alquilacosas.facade.ImagenPublicacionFacade;
 import com.alquilacosas.facade.PeriodoFacade;
@@ -175,31 +175,6 @@ public class PublicacionBean implements PublicacionBeanLocal {
             publicacion.agregarPrecio(precio);
         }        
         
-//        double precioDiario = precios.get(1).getPrecio();
-//
-//        for (PrecioDTO p : precios) {
-//
-//            periodo = periodoBean.getPeriodo(p.getPeriodoNombre());
-//            precio = new Precio();
-//
-//            if (p.getPrecio() == 0) {
-//                if (p.getPeriodoNombre() == NombrePeriodo.HORA) {
-//                    precio.setPrecio(redondearDecimal(precioDiario / 24.0, 2));
-//                } else if (p.getPeriodoNombre() == NombrePeriodo.SEMANA) {
-//                    precio.setPrecio(precioDiario * 7.0);
-//                } else if (p.getPeriodoNombre() == NombrePeriodo.MES) {
-//                    precio.setPrecio(precioDiario * 30.0);
-//                }
-//            } else {
-//                precio.setPrecio(p.getPrecio());
-//            }
-//
-//            precio.setFechaDesde(new Date());
-//            precio.setPeriodoFk(periodo);
-//            precio.setFechaDesde(new Date());
-//            publicacion.agregarPrecio(precio);
-//        }
-
         // Agregar imagenes
         for (byte[] bytes : imagenes) {
             ImagenPublicacion ip = new ImagenPublicacion();
@@ -403,25 +378,6 @@ public class PublicacionBean implements PublicacionBeanLocal {
             publicacion.agregarPrecio(precio);
         }
         
-        // Actualizar precios
-//        double precioDiario = precios.get(1).getPrecio();
-//        DecimalFormat formatter = new DecimalFormat();
-//        formatter.applyPattern("0.00#");
-//        String precioHora = formatter.format(precioDiario / 24.0);
-//        for (PrecioDTO precioDto : precios) {
-//
-//            if (precioDto.getPrecio() == 0.0) {
-//                if (precioDto.getPeriodoNombre() == NombrePeriodo.HORA) {
-//                    precioDto.setPrecio(Double.valueOf(precioHora));
-//                } else if (precioDto.getPeriodoNombre() == NombrePeriodo.SEMANA) {
-//                    precioDto.setPrecio(precioDiario * 7.0);
-//                } else if (precioDto.getPeriodoNombre() == NombrePeriodo.MES) {
-//                    precioDto.setPrecio(precioDiario * 30.0);
-//                }
-//            }
-//            Periodo periodo = periodoBean.getPeriodo(precioDto.getPeriodoNombre());
-//            publicacion.actualizarPrecio(precioDto.getPrecioId(), precioDto.getPrecio(), periodo);
-//        }
 
         // Borrar imagenes removidas
         if (imagenesABorrar != null) {

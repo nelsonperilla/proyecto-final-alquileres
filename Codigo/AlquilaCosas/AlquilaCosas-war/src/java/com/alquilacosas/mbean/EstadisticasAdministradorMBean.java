@@ -35,280 +35,304 @@ import org.primefaces.model.chart.PieChartModel;
 @ViewScoped
 public class EstadisticasAdministradorMBean implements Serializable {
 
-     @EJB
-     private EstadisticasAdministradorBeanLocal estadisticasAdministradorBean;
-     private CartesianChartModel usuarioCantidadModel;
-     private CartesianChartModel usuarioAcumuladoModel;
-     private CartesianChartModel publicacionCantidadModel;
-     private CartesianChartModel publicacionAcumuladoModel;
-     private CartesianChartModel alquilerCantidadModel;
-     private CartesianChartModel alquilerAcumuladoModel;
-     private PieChartModel pieCategoriaModel;
-     List<EstadisticaAdminUsuarios> listEstadisticaUsuario;
-     List<EstadisticaAdminPublicacion> listEstadisticaPublicacion;
-     List<EstadisticaAdminAlquiler> listEstadisticaAlquiler;
-     List<EstadisticaAdminCategoria> listEstadisticaCategoria;
-     private String anioMesCategorias;
+    @EJB
+    private EstadisticasAdministradorBeanLocal estadisticasAdministradorBean;
+    private CartesianChartModel usuarioCantidadModel;
+    private CartesianChartModel usuarioAcumuladoModel;
+    private CartesianChartModel publicacionCantidadModel;
+    private CartesianChartModel publicacionAcumuladoModel;
+    private CartesianChartModel alquilerCantidadModel;
+    private CartesianChartModel alquilerAcumuladoModel;
+    private PieChartModel pieCategoriaModel;
+    List<EstadisticaAdminUsuarios> listEstadisticaUsuario;
+    List<EstadisticaAdminPublicacion> listEstadisticaPublicacion;
+    List<EstadisticaAdminAlquiler> listEstadisticaAlquiler;
+    List<EstadisticaAdminCategoria> listEstadisticaCategoria;
+    private String anioMesCategorias;
 
-     /** Creates a new instance of EstadisticasAdministradorMBean */
-     public EstadisticasAdministradorMBean() {
-     }
+    /**
+     * Creates a new instance of EstadisticasAdministradorMBean
+     */
+    public EstadisticasAdministradorMBean() {
+    }
 
-     @PostConstruct
-     public void init() {
-          Logger.getLogger(EstadisticasAdministradorMBean.class).debug("EstadisticasAdministradorMBean: postconstruct.");
-          cargarGraficosUsuario();
-          cargarGraficosPublicacion();
-          cargarGraficosAlquiler();          
-     }
-     
-     public void itemSelect(ItemSelectEvent event) {
-          String anioMes = publicacionCantidadModel.getCategories().get(event.getItemIndex());
-          anioMesCategorias = "Distribución de Categorias Publicadas del mes " + anioMes;
-          listEstadisticaCategoria = estadisticasAdministradorBean.getEstadisticaAdminCategoria(anioMes);
-          
-          pieCategoriaModel.clear();
-          for(EstadisticaAdminCategoria e : listEstadisticaCategoria) {
-               pieCategoriaModel.set(e.getNombre(), e.getCantidad());
-          }
-          
-          FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Categorias Publicadas", "Mes seleccionado: " + publicacionCantidadModel.getCategories().get(event.getItemIndex()));  
-          FacesContext.getCurrentInstance().addMessage(null, msg);  
-     }
+    @PostConstruct
+    public void init() {
+        Logger.getLogger(EstadisticasAdministradorMBean.class).debug("EstadisticasAdministradorMBean: postconstruct.");
+        cargarGraficosUsuario();
+        cargarGraficosPublicacion();
+        cargarGraficosAlquiler();
+        //      !!! Por favor no descomentar este código, sino vuela todo !!! es para crear entidades aleatorias
+        // crearUsuarios();
+        //crearPublicaciones();
+        //crearAlquileres();
+    }
 
-     public void cargarGraficosUsuario() {
-          listEstadisticaUsuario = estadisticasAdministradorBean.getEstadisticaAdminUsuarios();
-          
-          usuarioCantidadModel = new CartesianChartModel();
-          usuarioAcumuladoModel = new CartesianChartModel();
-          SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM");
+    public void itemSelect(ItemSelectEvent event) {
+        String anioMes = publicacionCantidadModel.getCategories().get(event.getItemIndex());
+        anioMesCategorias = "Distribución de Categorias Publicadas del mes " + anioMes;
+        listEstadisticaCategoria = estadisticasAdministradorBean.getEstadisticaAdminCategoria(anioMes);
 
-          ChartSeries cantRegistrados = new ChartSeries();
-          ChartSeries acumRegistrados = new ChartSeries();
-          cantRegistrados.setLabel("Registrados");
-          acumRegistrados.setLabel("Registrados");
-          for (EstadisticaAdminUsuarios e : listEstadisticaUsuario) {
-               if (e.getEstado() == EstadoUsuario.NombreEstadoUsuario.REGISTRADO) {
-                    cantRegistrados.set(formato.format(e.getMes()), e.getCantidad());
-                    acumRegistrados.set(formato.format(e.getMes()), e.getAcumulado());
-               }
-          }
+        pieCategoriaModel.clear();
+        for (EstadisticaAdminCategoria e : listEstadisticaCategoria) {
+            pieCategoriaModel.set(e.getNombre(), e.getCantidad());
+        }
 
-          ChartSeries cantActivos = new ChartSeries();
-          ChartSeries acumActivos = new ChartSeries();
-          cantActivos.setLabel("Activados");
-          acumActivos.setLabel("Activados");
-          for (EstadisticaAdminUsuarios e : listEstadisticaUsuario) {
-               if (e.getEstado() == EstadoUsuario.NombreEstadoUsuario.ACTIVO) {
-                    cantActivos.set(formato.format(e.getMes()), e.getCantidad());
-                    acumActivos.set(formato.format(e.getMes()), e.getAcumulado());
-               }
-          }
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Categorias Publicadas", "Mes seleccionado: " + publicacionCantidadModel.getCategories().get(event.getItemIndex()));
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
 
-          ChartSeries cantSuspendidos = new ChartSeries();
-          ChartSeries acumSuspendidos = new ChartSeries();
-          cantSuspendidos.setLabel("Suspendidos");
-          acumSuspendidos.setLabel("Suspendidos");
-          for (EstadisticaAdminUsuarios e : listEstadisticaUsuario) {
-               if (e.getEstado() == EstadoUsuario.NombreEstadoUsuario.SUSPENDIDO) {
-                    cantSuspendidos.set(formato.format(e.getMes()), e.getCantidad());
-                    acumSuspendidos.set(formato.format(e.getMes()), e.getAcumulado());
-               }
-          }
+    public void cargarGraficosUsuario() {
+        listEstadisticaUsuario = estadisticasAdministradorBean.getEstadisticaAdminUsuarios();
 
-          usuarioCantidadModel.addSeries(cantRegistrados);
-          usuarioCantidadModel.addSeries(cantActivos);
-          usuarioCantidadModel.addSeries(cantSuspendidos);
-          usuarioAcumuladoModel.addSeries(acumRegistrados);
-          usuarioAcumuladoModel.addSeries(acumActivos);
-          usuarioAcumuladoModel.addSeries(acumSuspendidos);
-     }
+        usuarioCantidadModel = new CartesianChartModel();
+        usuarioAcumuladoModel = new CartesianChartModel();
+        SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM");
 
-     public void cargarGraficosPublicacion() {
-          listEstadisticaPublicacion = estadisticasAdministradorBean.getEstadisticaAdminPublicaciones();
+        ChartSeries cantRegistrados = new ChartSeries();
+        ChartSeries acumRegistrados = new ChartSeries();
+        cantRegistrados.setLabel("Registrados");
+        acumRegistrados.setLabel("Registrados");
+        for (EstadisticaAdminUsuarios e : listEstadisticaUsuario) {
+            if (e.getEstado() == EstadoUsuario.NombreEstadoUsuario.REGISTRADO) {
+                cantRegistrados.set(formato.format(e.getMes()), e.getCantidad());
+                acumRegistrados.set(formato.format(e.getMes()), e.getAcumulado());
+            }
+        }
 
-          publicacionCantidadModel = new CartesianChartModel();
-          publicacionAcumuladoModel = new CartesianChartModel();
-          SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM");
+        ChartSeries cantActivos = new ChartSeries();
+        ChartSeries acumActivos = new ChartSeries();
+        cantActivos.setLabel("Activados");
+        acumActivos.setLabel("Activados");
+        for (EstadisticaAdminUsuarios e : listEstadisticaUsuario) {
+            if (e.getEstado() == EstadoUsuario.NombreEstadoUsuario.ACTIVO) {
+                cantActivos.set(formato.format(e.getMes()), e.getCantidad());
+                acumActivos.set(formato.format(e.getMes()), e.getAcumulado());
+            }
+        }
 
-          ChartSeries cantRegistrados = new ChartSeries();
-          ChartSeries acumRegistrados = new ChartSeries();
-          cantRegistrados.setLabel("Registrados");
-          acumRegistrados.setLabel("Registrados");
-          for (EstadisticaAdminPublicacion e : listEstadisticaPublicacion) {
-               cantRegistrados.set(formato.format(e.getMes()), e.getCantidad());
-               acumRegistrados.set(formato.format(e.getMes()), e.getAcumulado());
-          }
+        ChartSeries cantSuspendidos = new ChartSeries();
+        ChartSeries acumSuspendidos = new ChartSeries();
+        cantSuspendidos.setLabel("Suspendidos");
+        acumSuspendidos.setLabel("Suspendidos");
+        for (EstadisticaAdminUsuarios e : listEstadisticaUsuario) {
+            if (e.getEstado() == EstadoUsuario.NombreEstadoUsuario.SUSPENDIDO) {
+                cantSuspendidos.set(formato.format(e.getMes()), e.getCantidad());
+                acumSuspendidos.set(formato.format(e.getMes()), e.getAcumulado());
+            }
+        }
 
-          publicacionCantidadModel.addSeries(cantRegistrados);
-          publicacionAcumuladoModel.addSeries(acumRegistrados);
-          
-          pieCategoriaModel = new PieChartModel();
-          Calendar fechaActual = Calendar.getInstance();
-          String anioMes = formato.format(fechaActual.getTime());
-          anioMesCategorias = "Distribución de Categorias Publicadas del mes " + anioMes;
-          listEstadisticaCategoria = estadisticasAdministradorBean.getEstadisticaAdminCategoria(anioMes);
-          
-          pieCategoriaModel.clear();
-          for(EstadisticaAdminCategoria e : listEstadisticaCategoria) {
-               pieCategoriaModel.set(e.getNombre(), e.getCantidad());
-          }
-     }
-     
-     public void cargarGraficosAlquiler() {
-          listEstadisticaAlquiler = estadisticasAdministradorBean.getEstadisticaAdminAlquiler();
+        usuarioCantidadModel.addSeries(cantRegistrados);
+        usuarioCantidadModel.addSeries(cantActivos);
+        usuarioCantidadModel.addSeries(cantSuspendidos);
+        usuarioAcumuladoModel.addSeries(acumRegistrados);
+        usuarioAcumuladoModel.addSeries(acumActivos);
+        usuarioAcumuladoModel.addSeries(acumSuspendidos);
+    }
 
-          alquilerCantidadModel = new CartesianChartModel();
-          alquilerAcumuladoModel = new CartesianChartModel();
-          SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM");
+    public void cargarGraficosPublicacion() {
+        listEstadisticaPublicacion = estadisticasAdministradorBean.getEstadisticaAdminPublicaciones();
 
-          ChartSeries cantPedidos = new ChartSeries();
-          ChartSeries acumPedidos = new ChartSeries();
-          cantPedidos.setLabel("Pedidos");
-          acumPedidos.setLabel("Pedidos");
-          for (EstadisticaAdminAlquiler e : listEstadisticaAlquiler) {
-               if (e.getEstado() == EstadoAlquiler.NombreEstadoAlquiler.PEDIDO) {
-                    cantPedidos.set(formato.format(e.getMes()), e.getCantidad());
-                    acumPedidos.set(formato.format(e.getMes()), e.getAcumulado());
-               }
-          }
+        publicacionCantidadModel = new CartesianChartModel();
+        publicacionAcumuladoModel = new CartesianChartModel();
+        SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM");
 
-          ChartSeries cantConfirmados = new ChartSeries();
-          ChartSeries acumConfirmados = new ChartSeries();
-          cantConfirmados.setLabel("Confirmados");
-          acumConfirmados.setLabel("Confirmados");
-          for (EstadisticaAdminAlquiler e : listEstadisticaAlquiler) {
-               if (e.getEstado() == EstadoAlquiler.NombreEstadoAlquiler.CONFIRMADO) {
-                    cantConfirmados.set(formato.format(e.getMes()), e.getCantidad());
-                    acumConfirmados.set(formato.format(e.getMes()), e.getAcumulado());
-               }
-          }
+        ChartSeries cantRegistrados = new ChartSeries();
+        ChartSeries acumRegistrados = new ChartSeries();
+        cantRegistrados.setLabel("Registrados");
+        acumRegistrados.setLabel("Registrados");
+        for (EstadisticaAdminPublicacion e : listEstadisticaPublicacion) {
+            cantRegistrados.set(formato.format(e.getMes()), e.getCantidad());
+            acumRegistrados.set(formato.format(e.getMes()), e.getAcumulado());
+        }
 
-          ChartSeries cantActivos = new ChartSeries();
-          ChartSeries acumActivos = new ChartSeries();
-          cantActivos.setLabel("Activos");
-          acumActivos.setLabel("Activos");
-          for (EstadisticaAdminAlquiler e : listEstadisticaAlquiler) {
-               if (e.getEstado() == EstadoAlquiler.NombreEstadoAlquiler.ACTIVO) {
-                    cantActivos.set(formato.format(e.getMes()), e.getCantidad());
-                    acumActivos.set(formato.format(e.getMes()), e.getAcumulado());
-               }
-          }
-          
-          ChartSeries cantFinalizados = new ChartSeries();
-          ChartSeries acumFinalizados = new ChartSeries();
-          cantFinalizados.setLabel("Finalizados");
-          acumFinalizados.setLabel("Finalizados");
-          for (EstadisticaAdminAlquiler e : listEstadisticaAlquiler) {
-               if (e.getEstado() == EstadoAlquiler.NombreEstadoAlquiler.FINALIZADO) {
-                    cantFinalizados.set(formato.format(e.getMes()), e.getCantidad());
-                    acumFinalizados.set(formato.format(e.getMes()), e.getAcumulado());
-               }
-          }
+        publicacionCantidadModel.addSeries(cantRegistrados);
+        publicacionAcumuladoModel.addSeries(acumRegistrados);
 
-          alquilerCantidadModel.addSeries(cantPedidos);
-          alquilerCantidadModel.addSeries(cantConfirmados);
-          alquilerCantidadModel.addSeries(cantActivos);
-          alquilerCantidadModel.addSeries(cantFinalizados);
-          alquilerAcumuladoModel.addSeries(acumPedidos);
-          alquilerAcumuladoModel.addSeries(acumConfirmados);
-          alquilerAcumuladoModel.addSeries(acumActivos);
-          alquilerAcumuladoModel.addSeries(acumFinalizados);
-     }
+        pieCategoriaModel = new PieChartModel();
+        Calendar fechaActual = Calendar.getInstance();
+        String anioMes = formato.format(fechaActual.getTime());
+        anioMesCategorias = "Distribución de Categorias Publicadas del mes " + anioMes;
+        listEstadisticaCategoria = estadisticasAdministradorBean.getEstadisticaAdminCategoria(anioMes);
 
-     public CartesianChartModel getUsuarioCantidadModel() {
-          return usuarioCantidadModel;
-     }
+        pieCategoriaModel.clear();
+        for (EstadisticaAdminCategoria e : listEstadisticaCategoria) {
+            pieCategoriaModel.set(e.getNombre(), e.getCantidad());
+        }
+    }
 
-     public void setUsuarioCantidadModel(CartesianChartModel usuarioCantidadModel) {
-          this.usuarioCantidadModel = usuarioCantidadModel;
-     }
+    public void cargarGraficosAlquiler() {
+        listEstadisticaAlquiler = estadisticasAdministradorBean.getEstadisticaAdminAlquiler();
 
-     public CartesianChartModel getUsuarioAcumuladoModel() {
-          return usuarioAcumuladoModel;
-     }
+        alquilerCantidadModel = new CartesianChartModel();
+        alquilerAcumuladoModel = new CartesianChartModel();
+        SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM");
 
-     public void setUsuarioAcumuladoModel(CartesianChartModel usuarioAcumuladoModel) {
-          this.usuarioAcumuladoModel = usuarioAcumuladoModel;
-     }
+        ChartSeries cantPedidos = new ChartSeries();
+        ChartSeries acumPedidos = new ChartSeries();
+        cantPedidos.setLabel("Pedidos");
+        acumPedidos.setLabel("Pedidos");
+        for (EstadisticaAdminAlquiler e : listEstadisticaAlquiler) {
+            if (e.getEstado() == EstadoAlquiler.NombreEstadoAlquiler.PEDIDO) {
+                cantPedidos.set(formato.format(e.getMes()), e.getCantidad());
+                acumPedidos.set(formato.format(e.getMes()), e.getAcumulado());
+            }
+        }
 
-     public CartesianChartModel getPublicacionAcumuladoModel() {
-          return publicacionAcumuladoModel;
-     }
+        ChartSeries cantConfirmados = new ChartSeries();
+        ChartSeries acumConfirmados = new ChartSeries();
+        cantConfirmados.setLabel("Confirmados");
+        acumConfirmados.setLabel("Confirmados");
+        for (EstadisticaAdminAlquiler e : listEstadisticaAlquiler) {
+            if (e.getEstado() == EstadoAlquiler.NombreEstadoAlquiler.CONFIRMADO) {
+                cantConfirmados.set(formato.format(e.getMes()), e.getCantidad());
+                acumConfirmados.set(formato.format(e.getMes()), e.getAcumulado());
+            }
+        }
 
-     public void setPublicacionAcumuladoModel(CartesianChartModel publicacionAcumuladoModel) {
-          this.publicacionAcumuladoModel = publicacionAcumuladoModel;
-     }
+        ChartSeries cantActivos = new ChartSeries();
+        ChartSeries acumActivos = new ChartSeries();
+        cantActivos.setLabel("Activos");
+        acumActivos.setLabel("Activos");
+        for (EstadisticaAdminAlquiler e : listEstadisticaAlquiler) {
+            if (e.getEstado() == EstadoAlquiler.NombreEstadoAlquiler.ACTIVO) {
+                cantActivos.set(formato.format(e.getMes()), e.getCantidad());
+                acumActivos.set(formato.format(e.getMes()), e.getAcumulado());
+            }
+        }
 
-     public CartesianChartModel getPublicacionCantidadModel() {
-          return publicacionCantidadModel;
-     }
+        ChartSeries cantFinalizados = new ChartSeries();
+        ChartSeries acumFinalizados = new ChartSeries();
+        cantFinalizados.setLabel("Finalizados");
+        acumFinalizados.setLabel("Finalizados");
+        for (EstadisticaAdminAlquiler e : listEstadisticaAlquiler) {
+            if (e.getEstado() == EstadoAlquiler.NombreEstadoAlquiler.FINALIZADO) {
+                cantFinalizados.set(formato.format(e.getMes()), e.getCantidad());
+                acumFinalizados.set(formato.format(e.getMes()), e.getAcumulado());
+            }
+        }
 
-     public void setPublicacionCantidadModel(CartesianChartModel publicacionCantidadModel) {
-          this.publicacionCantidadModel = publicacionCantidadModel;
-     }
+        alquilerCantidadModel.addSeries(cantPedidos);
+        alquilerCantidadModel.addSeries(cantConfirmados);
+        alquilerCantidadModel.addSeries(cantActivos);
+        alquilerCantidadModel.addSeries(cantFinalizados);
+        alquilerAcumuladoModel.addSeries(acumPedidos);
+        alquilerAcumuladoModel.addSeries(acumConfirmados);
+        alquilerAcumuladoModel.addSeries(acumActivos);
+        alquilerAcumuladoModel.addSeries(acumFinalizados);
+    }
 
-     public CartesianChartModel getAlquilerAcumuladoModel() {
-          return alquilerAcumuladoModel;
-     }
+    public void crearUsuarios() {
+        estadisticasAdministradorBean.crearUsuarios();
+    }
 
-     public void setAlquilerAcumuladoModel(CartesianChartModel alquilerAcumuladoModel) {
-          this.alquilerAcumuladoModel = alquilerAcumuladoModel;
-     }
+    public void crearPublicaciones() {
 
-     public CartesianChartModel getAlquilerCantidadModel() {
-          return alquilerCantidadModel;
-     }
+        try {
+            estadisticasAdministradorBean.crearPublicaciones();
+        } catch (Exception e) {
+            System.out.println("TODO MAL!!!!!");
+        }
 
-     public void setAlquilerCantidadModel(CartesianChartModel alquilerCantidadModel) {
-          this.alquilerCantidadModel = alquilerCantidadModel;
-     }
+    }
 
-     public List<EstadisticaAdminAlquiler> getListEstadisticaAlquiler() {
-          return listEstadisticaAlquiler;
-     }
+    public void crearAlquileres() {
+        estadisticasAdministradorBean.crearAlquileres();
+    }
 
-     public void setListEstadisticaAlquiler(List<EstadisticaAdminAlquiler> listEstadisticaAlquiler) {
-          this.listEstadisticaAlquiler = listEstadisticaAlquiler;
-     }
+    public CartesianChartModel getUsuarioCantidadModel() {
+        return usuarioCantidadModel;
+    }
 
-     public List<EstadisticaAdminPublicacion> getListEstadisticaPublicacion() {
-          return listEstadisticaPublicacion;
-     }
+    public void setUsuarioCantidadModel(CartesianChartModel usuarioCantidadModel) {
+        this.usuarioCantidadModel = usuarioCantidadModel;
+    }
 
-     public void setListEstadisticaPublicacion(List<EstadisticaAdminPublicacion> listEstadisticaPublicacion) {
-          this.listEstadisticaPublicacion = listEstadisticaPublicacion;
-     }
+    public CartesianChartModel getUsuarioAcumuladoModel() {
+        return usuarioAcumuladoModel;
+    }
 
-     public List<EstadisticaAdminUsuarios> getListEstadisticaUsuario() {
-          return listEstadisticaUsuario;
-     }
+    public void setUsuarioAcumuladoModel(CartesianChartModel usuarioAcumuladoModel) {
+        this.usuarioAcumuladoModel = usuarioAcumuladoModel;
+    }
 
-     public void setListEstadisticaUsuario(List<EstadisticaAdminUsuarios> listEstadisticaUsuario) {
-          this.listEstadisticaUsuario = listEstadisticaUsuario;
-     }
+    public CartesianChartModel getPublicacionAcumuladoModel() {
+        return publicacionAcumuladoModel;
+    }
 
-     public List<EstadisticaAdminCategoria> getListEstadisticaCategoria() {
-          return listEstadisticaCategoria;
-     }
+    public void setPublicacionAcumuladoModel(CartesianChartModel publicacionAcumuladoModel) {
+        this.publicacionAcumuladoModel = publicacionAcumuladoModel;
+    }
 
-     public void setListEstadisticaCategoria(List<EstadisticaAdminCategoria> listEstadisticaCategoria) {
-          this.listEstadisticaCategoria = listEstadisticaCategoria;
-     }
+    public CartesianChartModel getPublicacionCantidadModel() {
+        return publicacionCantidadModel;
+    }
 
-     public PieChartModel getPieCategoriaModel() {
-          return pieCategoriaModel;
-     }
+    public void setPublicacionCantidadModel(CartesianChartModel publicacionCantidadModel) {
+        this.publicacionCantidadModel = publicacionCantidadModel;
+    }
 
-     public void setPieCategoriaModel(PieChartModel pieCategoriaModel) {
-          this.pieCategoriaModel = pieCategoriaModel;
-     }
-     
-     public String getAnioMesCategorias() {
-          return anioMesCategorias;
-     }
+    public CartesianChartModel getAlquilerAcumuladoModel() {
+        return alquilerAcumuladoModel;
+    }
 
-     public void setAnioMesCategorias(String anioMesCategorias) {
-          this.anioMesCategorias = anioMesCategorias;
-     }
+    public void setAlquilerAcumuladoModel(CartesianChartModel alquilerAcumuladoModel) {
+        this.alquilerAcumuladoModel = alquilerAcumuladoModel;
+    }
+
+    public CartesianChartModel getAlquilerCantidadModel() {
+        return alquilerCantidadModel;
+    }
+
+    public void setAlquilerCantidadModel(CartesianChartModel alquilerCantidadModel) {
+        this.alquilerCantidadModel = alquilerCantidadModel;
+    }
+
+    public List<EstadisticaAdminAlquiler> getListEstadisticaAlquiler() {
+        return listEstadisticaAlquiler;
+    }
+
+    public void setListEstadisticaAlquiler(List<EstadisticaAdminAlquiler> listEstadisticaAlquiler) {
+        this.listEstadisticaAlquiler = listEstadisticaAlquiler;
+    }
+
+    public List<EstadisticaAdminPublicacion> getListEstadisticaPublicacion() {
+        return listEstadisticaPublicacion;
+    }
+
+    public void setListEstadisticaPublicacion(List<EstadisticaAdminPublicacion> listEstadisticaPublicacion) {
+        this.listEstadisticaPublicacion = listEstadisticaPublicacion;
+    }
+
+    public List<EstadisticaAdminUsuarios> getListEstadisticaUsuario() {
+        return listEstadisticaUsuario;
+    }
+
+    public void setListEstadisticaUsuario(List<EstadisticaAdminUsuarios> listEstadisticaUsuario) {
+        this.listEstadisticaUsuario = listEstadisticaUsuario;
+    }
+
+    public List<EstadisticaAdminCategoria> getListEstadisticaCategoria() {
+        return listEstadisticaCategoria;
+    }
+
+    public void setListEstadisticaCategoria(List<EstadisticaAdminCategoria> listEstadisticaCategoria) {
+        this.listEstadisticaCategoria = listEstadisticaCategoria;
+    }
+
+    public PieChartModel getPieCategoriaModel() {
+        return pieCategoriaModel;
+    }
+
+    public void setPieCategoriaModel(PieChartModel pieCategoriaModel) {
+        this.pieCategoriaModel = pieCategoriaModel;
+    }
+
+    public String getAnioMesCategorias() {
+        return anioMesCategorias;
+    }
+
+    public void setAnioMesCategorias(String anioMesCategorias) {
+        this.anioMesCategorias = anioMesCategorias;
+    }
 }
