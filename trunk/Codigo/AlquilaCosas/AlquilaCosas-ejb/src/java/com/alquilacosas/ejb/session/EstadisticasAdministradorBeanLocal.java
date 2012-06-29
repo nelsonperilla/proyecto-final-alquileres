@@ -4,10 +4,7 @@
  */
 package com.alquilacosas.ejb.session;
 
-import com.alquilacosas.common.EstadisticaAdminAlquiler;
-import com.alquilacosas.common.EstadisticaAdminCategoria;
-import com.alquilacosas.common.EstadisticaAdminPublicacion;
-import com.alquilacosas.common.EstadisticaAdminUsuarios;
+import com.alquilacosas.common.*;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -25,5 +22,11 @@ public interface EstadisticasAdministradorBeanLocal {
      List<EstadisticaAdminAlquiler> getEstadisticaAdminAlquiler();
 
      List<EstadisticaAdminCategoria> getEstadisticaAdminCategoria(String anioMes);
+
+    void crearUsuarios();
+    
+    void crearPublicaciones()throws AlquilaCosasException ;
+
+    void crearAlquileres();
      
 }

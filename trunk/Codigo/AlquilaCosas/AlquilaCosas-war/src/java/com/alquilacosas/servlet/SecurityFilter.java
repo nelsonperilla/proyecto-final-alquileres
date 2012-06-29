@@ -126,7 +126,7 @@ public class SecurityFilter implements Filter {
         this.filterConfig = filterConfig;
         patrones = new HashMap<String, NombreRol>();
         patrones.put("/usuario/", NombreRol.USUARIO);
-        patrones.put("/admin/", NombreRol.ADMIN);
+        patrones.put("/admin/", NombreRol.ADMINISTRADOR);
         patrones.put("/pub/", NombreRol.PUBLICITANTE);
         restringidos = new ArrayList<String>();
         restringidos.add("/usuario/");

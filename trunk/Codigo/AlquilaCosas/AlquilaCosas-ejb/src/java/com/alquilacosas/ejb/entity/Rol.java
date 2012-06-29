@@ -34,7 +34,7 @@ public class Rol implements Serializable {
     
     public enum NombreRol {
         USUARIO("Usuario"), 
-        ADMIN("Administrador"), 
+        ADMINISTRADOR("Administrador"), 
         PUBLICITANTE("Publicitante");
         String label;
         NombreRol(String label) {

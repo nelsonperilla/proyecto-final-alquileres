@@ -80,7 +80,7 @@ public class ManejadorUsuarioMBean implements Serializable {
         }
         logueado = true;
         usuarioId = usuario.getId();
-        administrador = usuario.getRoles().contains(NombreRol.ADMIN);
+        administrador = usuario.getRoles().contains(NombreRol.ADMINISTRADOR);
         publicitante = usuario.getRoles().contains(NombreRol.PUBLICITANTE);
         fbId = usuario.getFacebookId();
         HttpServletRequest req = (HttpServletRequest) context.getExternalContext().getRequest();
@@ -111,7 +111,7 @@ public class ManejadorUsuarioMBean implements Serializable {
         logueado = true;
         usuarioId = usuario.getId();
         fbId = usuario.getFacebookId();
-        administrador = usuario.getRoles().contains(NombreRol.ADMIN);
+        administrador = usuario.getRoles().contains(NombreRol.ADMINISTRADOR);
         publicitante = usuario.getRoles().contains(NombreRol.PUBLICITANTE);
         RequestContext.getCurrentInstance().addCallbackParam("logueado", true);
     }
@@ -167,7 +167,7 @@ public class ManejadorUsuarioMBean implements Serializable {
         fbId = id;
         logueado = fbLogin = true;
         usuarioId = usuario.getId();
-        administrador = usuario.getRoles().contains(NombreRol.ADMIN);
+        administrador = usuario.getRoles().contains(NombreRol.ADMINISTRADOR);
         publicitante = usuario.getRoles().contains(NombreRol.PUBLICITANTE);
         return true;
     }
@@ -202,7 +202,7 @@ public class ManejadorUsuarioMBean implements Serializable {
         }
         logueado = true;
         usuarioId = usuario.getId();
-        administrador = usuario.getRoles().contains(NombreRol.ADMIN);
+        administrador = usuario.getRoles().contains(NombreRol.ADMINISTRADOR);
         publicitante = usuario.getRoles().contains(NombreRol.PUBLICITANTE);
         RequestContext reqContext = RequestContext.getCurrentInstance();
         reqContext.addCallbackParam("logueado", logueado);
