@@ -75,20 +75,34 @@ public class PagosRecibidosMBean implements Serializable {
                 return pagos;
             }
         };
-        model.setRowCount(totalRegistros);
-        
-    }
-    
-    public void getPagosRecibidos(int registros, int desde) {
-        pagos = pagosBean.getPagosRecibidos(tipoPago, fechaDesde, confirmado, registros, desde);
-        Long n = pagosBean.getCantidadPagos(null, null, todos);
+        Long n = pagosBean.getCantidadPagos(tipoPago, fechaDesde, confirmado);
         if(n != null)
             totalRegistros = n.intValue();
         else
             totalRegistros = 0;
-        this.desde = desde;
+        model.setRowCount(totalRegistros);
     }
     
+    public void getPagosRecibidos(int registros, int desde) {
+        pagos = pagosBean.getPagosRecibidos(tipoPago, fechaDesde, confirmado, registros, desde);
+        this.desde = desde;
+        if(model != null) {
+            model.setRowCount(totalRegistros);
+            Long n = pagosBean.getCantidadPagos(tipoPago, fechaDesde, confirmado);
+            if(n != null)
+                totalRegistros = n.intValue();
+            else
+                totalRegistros = 0;
+            if(desde > totalRegistros) {
+                desde = 0;
+                pagos = pagosBean.getPagosRecibidos(tipoPago, fechaDesde, confirmado, registros, desde);
+            }
+        }
+    }
+    
+    /**
+     * Muestra todos los tipos de pago (Paypal y DineroMail)
+     */
     public void mostrarTodos() {
         todos = true;
         paypal = false;
@@ -97,6 +111,9 @@ public class PagosRecibidosMBean implements Serializable {
         getPagosRecibidos(15, 0);
     }
     
+    /**
+     * Muestra solo pagos hechos con Paypal
+     */
     public void mostrarPagosPaypal() {
         todos = false;
         paypal = true;
@@ -105,6 +122,9 @@ public class PagosRecibidosMBean implements Serializable {
         getPagosRecibidos(15, 0);
     }
     
+    /**
+     * Muestra solo pagos hechos con DineroMail
+     */
     public void mostrarPagosDineroMail() {
         todos = false;
         paypal = false;
@@ -113,6 +133,9 @@ public class PagosRecibidosMBean implements Serializable {
         getPagosRecibidos(15, 0);
     }
     
+    /**
+     * Muestra solo estados en estado confirmado
+     */
     public void mostrarConfirmados() {
         confirmado = true;
         confirmados = true;
@@ -121,6 +144,9 @@ public class PagosRecibidosMBean implements Serializable {
         getPagosRecibidos(15, 0);
     }
     
+    /**
+     * Muestra solo pagos en estado pendiente
+     */
     public void mostrarPendientes() {
         confirmado = false;
         confirmados = false;
@@ -129,6 +155,9 @@ public class PagosRecibidosMBean implements Serializable {
         getPagosRecibidos(15, 0);
     }
     
+    /**
+     * Muestra los pagos en cualquier estado
+     */
     public void mostrarTodosEstados() {
         confirmado = null;
         confirmados = false;

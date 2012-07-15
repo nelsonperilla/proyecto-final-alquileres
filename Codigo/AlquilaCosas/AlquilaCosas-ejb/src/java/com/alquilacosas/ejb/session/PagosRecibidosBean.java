@@ -76,12 +76,11 @@ public class PagosRecibidosBean implements PagosRecibidosBeanLocal {
     
     @Override
     public Long getCantidadPagos(NombreTipoPago tipoPago, Date fechaDesde, Boolean confirmado) {
-        
         TipoPago tipo = null;
         if(tipoPago != null) {
             tipo = tipoPagoFacade.findByNombre(tipoPago);
         }
-        return pagoFacade.countPagosRecibidos(null, fechaDesde, confirmado);
+        return pagoFacade.countPagosRecibidos(tipo, fechaDesde, confirmado);
     }
     
     @Override
