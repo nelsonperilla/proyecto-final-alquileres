@@ -23,12 +23,12 @@
                                            actionListener="#{pagos.mostrarTodos}"
                                            disabled="#{pagos.todos}"
                                            update="todos paypal dm tabla" />
-                            |
+                            
                             <p:commandLink id="paypal" value="Paypal" 
                                            actionListener="#{pagos.mostrarPagosPaypal}"
                                            disabled="#{pagos.paypal}"
                                            update="todos paypal dm tabla" /> 
-                            | 
+                             
                             <p:commandLink id="dm" value="DineroMail" 
                                            actionListener="#{pagos.mostrarPagosDineroMail}"
                                            disabled="#{pagos.dm}" 
@@ -39,12 +39,12 @@
                                            actionListener="#{pagos.mostrarTodosEstados}" 
                                            disabled="#{pagos.todosEstados}" 
                                            update="tod conf pend tabla"/>
-                            |
+                            
                             <p:commandLink id="conf" value="Confirmados"
                                            actionListener="#{pagos.mostrarConfirmados}" 
                                            disabled="#{pagos.confirmados}" 
                                            update="tod conf pend tabla"/>
-                            |
+                            
                             <p:commandLink id="pend" value="Pendientes"
                                            actionListener="#{pagos.mostrarPendientes}" 
                                            disabled="#{pagos.pendientes}" 
