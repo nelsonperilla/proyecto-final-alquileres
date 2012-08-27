@@ -87,7 +87,7 @@
                                                   styleClass="itemInfo" escape="false"/>  
                                     <h:outputText value="Disponibilidad maxima: #{publicacionDesplegada.publicacion.cantidad}" 
                                                   styleClass="itemInfo"/> 
-                                    <p:commandButton value="Agregar" rendered="#{not publicacionDesplegada.addedToFavorito}" 
+                                    <p:commandButton value="Agregar a Favoritos" rendered="#{not publicacionDesplegada.addedToFavorito}" 
                                                      title="Agregar a Mis Favoritos" actionListener="#{publicacionDesplegada.agregarFavorito}" 
                                                      style="background-color: #3E58F6; margin-left: 180px; font-size: 0.8em;" update="data growl">
                                         <f:attribute name="idPublicacion" value="#{publicacionDesplegada.publicacionId}" />

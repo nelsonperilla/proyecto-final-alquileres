@@ -34,4 +34,6 @@ public interface CategoriaBeanLocal {
     public List<CategoriaDTO> getCategoriasPrincipal();
 
     public List<Integer> getCategoriasPadre(int categoriaId);
+    
+    public Categoria getCategoriaRandom();
 }

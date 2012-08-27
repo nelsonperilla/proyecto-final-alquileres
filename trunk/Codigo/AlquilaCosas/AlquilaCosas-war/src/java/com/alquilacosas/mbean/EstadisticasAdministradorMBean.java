@@ -63,7 +63,7 @@ public class EstadisticasAdministradorMBean implements Serializable {
         cargarGraficosPublicacion();
         cargarGraficosAlquiler();
         //      !!! Por favor no descomentar este código, sino vuela todo !!! es para crear entidades aleatorias
-        // crearUsuarios();
+        //crearUsuarios();
         //crearPublicaciones();
         //crearAlquileres();
     }

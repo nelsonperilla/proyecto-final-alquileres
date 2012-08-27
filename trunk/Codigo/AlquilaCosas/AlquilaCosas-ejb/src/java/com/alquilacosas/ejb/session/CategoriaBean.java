@@ -149,4 +149,12 @@ public class CategoriaBean implements CategoriaBeanLocal {
         return ids;
 
     }
+   
+    @Override
+    public Categoria getCategoriaRandom()
+    {
+        return entityManager.find(Categoria.class, 
+                new Double(Math.random() * 29).intValue());
+    }
+    
 }

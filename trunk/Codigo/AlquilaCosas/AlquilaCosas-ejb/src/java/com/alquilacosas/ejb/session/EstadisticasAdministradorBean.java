@@ -48,6 +48,8 @@ public class EstadisticasAdministradorBean implements EstadisticasAdministradorB
     private AlquilerXEstadoFacade estadoAlquiler;
     @EJB
     private AlquilerFacade alquilerFacade;
+    @EJB
+    private CategoriaBeanLocal categoriaEjb;
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
@@ -228,7 +230,7 @@ public class EstadisticasAdministradorBean implements EstadisticasAdministradorB
         List<Date> dates = createDates();
 
         // se crearan 5 usuarios ACTIVOS
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 100; i++) {
             //Se crea un usuario
             Usuario usuario = new Usuario();
             usuario.setNombre("Juan" + i);
@@ -261,7 +263,7 @@ public class EstadisticasAdministradorBean implements EstadisticasAdministradorB
         }
 
         // se crearan 3 usuarios REGISTRADOS
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 30; i++) {
             //Se crea un usuario
             Usuario usuario = new Usuario();
             usuario.setNombre("Miguel" + i);
@@ -294,7 +296,7 @@ public class EstadisticasAdministradorBean implements EstadisticasAdministradorB
         }
 
         // se crearan 2 usuarios SUSPENDIDOS
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 10; i++) {
             //Se crea un usuario
             Usuario usuario = new Usuario();
             usuario.setNombre("omar" + i);
@@ -334,7 +336,7 @@ public class EstadisticasAdministradorBean implements EstadisticasAdministradorB
         List<Date> dates = createDates();
 
         //Se crearan 200 publicaciones entre el periodo 01/06/2011 y 01/05/2012
-        for (int i = 0; i < 200; i++) {
+        for (int i = 0; i < 100; i++) {
 
             Date fecha = dates.get(new Double(Math.random() * 100).intValue());
 
@@ -351,7 +353,7 @@ public class EstadisticasAdministradorBean implements EstadisticasAdministradorB
             calendar.add(Calendar.MONTH, 2);
             publicacion.setFechaHasta(calendar.getTime());
 
-            Integer categoriaId = new Double(Math.random() * 30).intValue();
+            Integer categoriaId = new Double(Math.random() * 29).intValue();
             //Se trae la categoria random a la cual pertenecera la publicacion
             try {
                 Categoria c = categoriaFacade.find(categoriaId);
@@ -400,19 +402,19 @@ public class EstadisticasAdministradorBean implements EstadisticasAdministradorB
     public void crearAlquileres() {
         
         //Se crearan 200 alquileres en estado PEDIDO entre el periodo 01/06/2011 y 01/05/2012
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 50; i++) {
             crearAlquileresPorPeriodo(EstadoAlquiler.NombreEstadoAlquiler.PEDIDO);
         }
         //Se crearan 200 alquileres en estado PEDIDO entre el periodo 01/06/2011 y 01/05/2012
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 100; i++) {
             crearAlquileresPorPeriodo(EstadoAlquiler.NombreEstadoAlquiler.CONFIRMADO);
         }
         //Se crearan 200 alquileres en estado PEDIDO entre el periodo 01/06/2011 y 01/05/2012
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 80; i++) {
             crearAlquileresPorPeriodo(EstadoAlquiler.NombreEstadoAlquiler.ACTIVO);
         }
         //Se crearan 200 alquileres en estado PEDIDO entre el periodo 01/06/2011 y 01/05/2012
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 150; i++) {
             crearAlquileresPorPeriodo(EstadoAlquiler.NombreEstadoAlquiler.FINALIZADO);
         }
         
@@ -430,9 +432,9 @@ public class EstadisticasAdministradorBean implements EstadisticasAdministradorB
         Date fecha = dates.get(new Double(Math.random() * 100).intValue());
 
         Alquiler alquiler = new Alquiler();
-        Publicacion publicacion = publicacionFacade.find(new Double(Math.random() * 10).intValue());
+        Publicacion publicacion = publicacionFacade.find(new Double(Math.random() * 10).intValue() + 30);
         alquiler.setPublicacionFk(publicacion);
-        alquiler.setUsuarioFk(usuarioFacade.find(new Double(Math.random() * 10).intValue()));
+        alquiler.setUsuarioFk(usuarioFacade.find(new Double(Math.random() * 10).intValue() + 1));
         alquiler.setFechaInicio(fecha);
 
         Calendar calendar = Calendar.getInstance();
@@ -445,7 +447,7 @@ public class EstadisticasAdministradorBean implements EstadisticasAdministradorB
 
         alquilerFacade.create(alquiler);
 
-        estadoAlquiler.saveState(alquiler, estado);
+        estadoAlquiler.saveStateFurioso(alquiler, estado);
 
     }
 
