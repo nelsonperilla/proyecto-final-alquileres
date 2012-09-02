@@ -21,20 +21,6 @@
 
             <ui:define name="principal">
 
-                <script type="text/javascript"
-                        src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAIvenuSuB8qlfz056q69ddMHJIdqra2sc&amp;sensor=false">
-                </script>
-
-                <script>(function(d, s, id) {
-                    var js, fjs = d.getElementsByTagName(s)[0];
-                    if (d.getElementById(id)) return;
-                    js = d.createElement(s); js.id = id;
-                    js.src = "//connect.facebook.net/es_LA/all.js#xfbml=1\u0026appId=187196061385476";
-                    fjs.parentNode.insertBefore(js, fjs);
-                }(document, 'script', 'facebook-jssdk'));</script>
-
-                <h:outputScript library="javascript" name="util.js" />
-
                 <table id="simpleItem">
                     <tr>
                         <td colspan="2">
@@ -87,20 +73,21 @@
                                                   styleClass="itemInfo" escape="false"/>  
                                     <h:outputText value="Disponibilidad maxima: #{publicacionDesplegada.publicacion.cantidad}" 
                                                   styleClass="itemInfo"/> 
-                                    <p:commandButton value="Agregar a Favoritos" rendered="#{not publicacionDesplegada.addedToFavorito}" 
-                                                     title="Agregar a Mis Favoritos" actionListener="#{publicacionDesplegada.agregarFavorito}" 
+                                    <p:commandButton icon="ui-icon-plusthick" value="Favoritos" rendered="#{not publicacionDesplegada.addedToFavorito}" 
+                                                     title="Agregar a Favoritos" actionListener="#{publicacionDesplegada.agregarFavorito}" 
                                                      style="background-color: #3E58F6; margin-left: 180px; font-size: 0.8em;" update="data growl">
                                         <f:attribute name="idPublicacion" value="#{publicacionDesplegada.publicacionId}" />
                                     </p:commandButton>
                                 </h:panelGrid>                            
-                                <h:panelGrid columns="3" styleClass="dataPrincipal" style="margin-top: 10px; vertical-align: middle">
+                                <div class="dataPrincipal" >
+                                    <h:panelGrid columns="3" style="margin: 0 auto" cellpadding="4">
                                     <h:outputLabel   value="Cantidad:" />
-                                    <p:inputText value="#{publicacionDesplegada.cantidadProductos}" required="true"
-                                                 style="width:30px"/>
+                                    <p:spinner value="#{publicacionDesplegada.cantidadProductos}" required="true" size="3"/>
                                     <p:commandButton value="Alquilar" action="#{publicacionDesplegada.actualizarFechas}" 
                                                      oncomplete="revisarDisponibilidad(xhr, status, args)" styleClass="buttom"
                                                      update="growl" />
                                 </h:panelGrid>
+                                </div>
                                 <p:growl id="growl" showDetail="true" globalOnly="true" />
 
                             </h:form>
@@ -200,7 +187,7 @@
                 </p:dialog>
 
                 <p:dialog  header="Confirmacion de alquiler" widgetVar="confirmRent" modal="true"
-                           showEffect="fade" width="450"  dynamic="true" >
+                           showEffect="fade" width="450" dynamic="true" >
                     <h:form id="rent" prependId="false">
                         <script type="text/javascript" >
                         jQuery(function () {
@@ -264,12 +251,25 @@
                 </p:dialog>
 
                 <p:dialog widgetVar="map" header="Ubicacion" modal="true" onShow="myMap.checkResize()"
-                          showEffect="fade" width="425" height="450" >
+                          showEffect="fade" width="425" height="450" resizable="false" >
                     <p:gmap center="#{publicacionDesplegada.publicacion.latitud + 0.007502},
                             #{publicacionDesplegada.publicacion.longitud - 0.008808}"
                             zoom="15" type="HYBRID" style="width:400px;height:400px;"
                             widgetVar="myMap" model="#{publicacionDesplegada.mapModel}" />
                 </p:dialog>
+                
+                <script>(function(d, s, id) {
+                    var js, fjs = d.getElementsByTagName(s)[0];
+                    if (d.getElementById(id)) return;
+                    js = d.createElement(s); js.id = id;
+                    js.src = "//connect.facebook.net/es_LA/all.js#xfbml=1\u0026appId=187196061385476";
+                    fjs.parentNode.insertBefore(js, fjs);
+                }(document, 'script', 'facebook-jssdk'));</script>
+                
+                <script type="text/javascript"
+                        src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAIvenuSuB8qlfz056q69ddMHJIdqra2sc&amp;sensor=false">
+                </script>
+                
 
             </ui:define>
         </ui:composition>       

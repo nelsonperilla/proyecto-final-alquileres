@@ -19,7 +19,7 @@
 
                 <h:form id="form">
                     <h1>Mis Publicidades</h1>
-
+                    <p:growl globalOnly="true" />
                     <p:dataTable var="publicidad" value="#{misPublicidades.publicidades}"
                                  selection="#{misPublicidades.selectedPublicidad}" rowKey="#{publicidad.id}"
                                  selectionMode="single" emptyMessage="No existen publicidades registradas"
@@ -72,7 +72,7 @@
                         </p:column>
 
                         <p:column headerText="Acciones">
-                            <p:button value="M" outcome="/vistas/pub/modificarRepublicarPublicidad" 
+                            <p:button icon="ui-icon-pencil" outcome="/vistas/pub/modificarRepublicarPublicidad" 
                                       title="Modificar" style="font-size: 10px"
                                       disabled="#{publicidad.estadoPublicidad eq 'ACTIVA'}" >
                                 <f:param name="id" value="#{publicidad.id}" />
@@ -84,6 +84,11 @@
                                 <f:param name="id" value="#{publicidad.id}" />
                                 <f:param name="tipo" value="republicar" />
                             </p:button>
+                            <p:commandButton icon="ui-icon-trash" oncomplete="confirmDlg.show()" 
+                                             title="Eliminar" style="font-size: 10px"
+                                             disabled="#{publicidad.estadoPublicidad eq 'ACTIVA'}" >
+                                <f:setPropertyActionListener value="#{publicidad}" target="#{misPublicidades.selectedPublicidad}" />
+                            </p:commandButton>
                         </p:column>
 
                         <f:facet name="footer">
@@ -120,6 +125,19 @@
 
                         </h:panelGrid>
                     </h:form>
+                </p:dialog>
+                
+                <p:dialog id="confirmarDlg" widgetVar="confirmDlg" header="Eliminar publicidad"
+                          modal="true" resizable="false" style="text-align: center" >
+                    <p>¿Está seguro que desea eliminar la publicidad seleccionada?</p>
+                    <br/>
+                    <f:facet name="footer" >
+                        <h:form>
+                            <p:commandButton value="Aceptar" actionListener="#{misPublicidades.eliminarPublicidad}"
+                                            oncomplete="confirmDlg.hide()" update=":form" />
+                            <p:commandButton value="Cancelar" onclick="confirmDlg.hide()" />
+                        </h:form>
+                    </f:facet>
                 </p:dialog>
 
             </ui:define>

@@ -9,6 +9,7 @@ import com.alquilacosas.dto.PublicacionDTO;
 import com.alquilacosas.ejb.entity.TipoDestacacion.NombreTipoDestacacion;
 import com.alquilacosas.ejb.entity.TipoPago.NombreTipoPago;
 import com.alquilacosas.ejb.session.DestacarPublicacionBeanLocal;
+import com.alquilacosas.ejb.session.PagosRecibidosBeanLocal;
 import com.alquilacosas.pagos.PaypalUtil;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class DestacarPublicacionMBean implements Serializable {
 
     @EJB
     private DestacarPublicacionBeanLocal destacarBean;
+    @EJB private PagosRecibidosBeanLocal pagoBean;
     @ManagedProperty(value = "#{login}")
     private ManejadorUsuarioMBean login;
     private List<SelectItem> tipos;
@@ -97,6 +99,9 @@ public class DestacarPublicacionMBean implements Serializable {
         return "";
     }
     
+    /**
+     * Destacar pagando a traves de Paypal
+     */
     public void destacar() {
         pagoId = destacarBean.iniciarCobroDestacacion(login.getUsuarioId(), 
                 publicacionId, tipoSeleccionado,  precio, NombreTipoPago.PAYPAL);
@@ -116,6 +121,26 @@ public class DestacarPublicacionMBean implements Serializable {
         }
     }
     
+    /**
+     * Destacar la publicacion inmediatamente, simulando que ya es recibio el pago
+     */
+    public String destacarInmediatamente() {
+        pagoId = destacarBean.iniciarCobroDestacacion(login.getUsuarioId(), 
+                publicacionId, tipoSeleccionado,  precio, NombreTipoPago.PAYPAL);
+        if(pagoId < 0) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                    "Error al registrar pago.", "");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return null;
+        }
+        pagoBean.confirmarPago(Integer.valueOf(pagoId));
+        System.out.println("pago confirmado!");
+        return "/vistas/pagoConfirmado2";
+    }
+    
+    /**
+     * Destacar pagando a traves de DineroMail
+     */
     public void destacarDm() {
         pagoId = destacarBean.iniciarCobroDestacacion(login.getUsuarioId(), 
                 publicacionId, tipoSeleccionado,  precio, NombreTipoPago.DINEROMAIL);

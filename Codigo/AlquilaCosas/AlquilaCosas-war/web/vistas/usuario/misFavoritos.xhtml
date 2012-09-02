@@ -40,7 +40,7 @@
                         <div class="artPrecio" >
                             <div class="accionesContenedor">
                                 <div class="artAcciones">
-                                    <p:commandButton value="Eliminar" icon="ui-icon-close" onclick="confirmarDlg.show()" >
+                                    <p:commandButton value="Eliminar" icon="ui-icon-close" onclick="eliminarFavDlg.show()" >
                                         <f:setPropertyActionListener value="#{item.id}" target="#{misFavoritos.publicacionId}"/>
                                     </p:commandButton>
                                 </div>
@@ -80,17 +80,17 @@
                 </p:column>
             </p:dataGrid>
 
-            <p:dialog widgetVar="confirmarDlg" header="Eliminar publicacion" modal="true" 
+            <p:dialog widgetVar="eliminarFavDlg" header="Eliminar favorito" modal="true" 
                       resizable="false" style="text-align: center;" >
                 <p>
-                    Esta seguro que desea borrar esta publicacion de Mis Favoritos?
+                    ¿Está seguro que desea borrar esta publicación de Mis Favoritos?
                 </p>
                 <br/>
                 <f:facet name="footer" >
                     <p:commandButton value="Aceptar" action="#{misFavoritos.eliminarFavorito}"
-                                     oncomplete="confirmarDlg.hide()" update=":tab:formFavorito:grid"> 
+                                     oncomplete="eliminarFavDlg.hide()" update=":tab:formFavorito:grid"> 
                     </p:commandButton>
-                    <p:commandButton value="Cancelar" onclick="confirmarDlg.hide()" />
+                    <p:commandButton value="Cancelar" onclick="eliminarFavDlg.hide()" />
                 </f:facet>
 
 

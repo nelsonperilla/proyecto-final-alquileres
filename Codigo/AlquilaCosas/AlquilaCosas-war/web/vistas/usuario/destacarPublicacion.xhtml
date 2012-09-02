@@ -37,12 +37,11 @@
                     <h:panelGrid columns="3" >
                         <h:outputLabel value="Duracion:" />
                         <h:selectOneMenu value="#{destacarBean.tipoSeleccionado}"
-                                         id="duracion" required="true"
-                                         readonly="Seleccione una duracion" >
+                                         id="duracion" required="true" >
                             <f:selectItem itemLabel="Seleccione una duracion..." />
                             <f:selectItems value="#{destacarBean.tipos}" />
                             <p:ajax event="change" listener="#{destacarBean.tipoSeleccionado}"
-                                    update="precio pagoPaypal pagoDm" />
+                                    update="precio botones" />
                         </h:selectOneMenu>
                         <p:message for="duracion" />
                         <h:outputLabel value="Precio:" />
@@ -54,7 +53,9 @@
                         </p:outputPanel>
                     </h:panelGrid>
 
-                    <h:panelGrid columns="3" columnClasses="leftCol,rightCol" style="width: 100%" >
+                    <h:panelGrid columns="4" id="botones" columnClasses="leftCol,rightCol" style="width: 100%" >
+                        <p:commandButton id="pagoYa" value="Destacar ya!" action="#{destacarBean.destacarInmediatamente}" 
+                                         ajax="false" disabled="#{empty destacarBean.tipoSeleccionado}" />
                         <p:commandLink id="pagoPaypal" actionListener="#{destacarBean.destacar}" 
                                        disabled="#{empty destacarBean.tipoSeleccionado}" >
                             <h:graphicImage value="#{resource['images:pagoPaypal.gif']}" />
@@ -64,7 +65,7 @@
                                        disabled="#{empty destacarBean.tipoSeleccionado}" >
                             <h:graphicImage value="#{resource['images:pagoDineroMail.gif']}" />
                         </p:commandLink>
-                        <p:button value="No, gracias" outcome="/vistas/usuario/misPublicaciones" />
+                        <p:button value="No, gracias" outcome="/vistas/usuario/articulos" />
                     </h:panelGrid>
 
                     <p:growl id="growl" globalOnly="true" />

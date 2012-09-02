@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui" 
+      xmlns:f="http://java.sun.com/jsf/core" >
+    <h:head>
+        <title>Simular Paso Tiempo</title>
+    </h:head>
+    <h:body style="background: black">
+        <h:outputStylesheet library="css" name="layout.css" />
+        <p:growl id="growl" showDetail="true" showSummary="true" />
+
+        <div style="width: 330px; margin: 50px auto">
+            <div style="background: aliceblue; border-radius: 10px; padding: 5px 10px;" >
+                <h3>Simular paso del Tiempo</h3>
+                <h:form>
+                    <h:panelGrid columns="2" >
+                        <h:outputLabel value="Cantidad de días" />
+                        <p:spinner value="#{simular.dias}" />
+                        <f:facet name="footer" >
+                            <p:commandButton value="Simular" actionListener="#{simular.simular}"
+                                             update=":growl" />
+                        </f:facet>
+                    </h:panelGrid>
+                </h:form>
+            </div>
+        </div>
+
+    </h:body>
+</html>
+

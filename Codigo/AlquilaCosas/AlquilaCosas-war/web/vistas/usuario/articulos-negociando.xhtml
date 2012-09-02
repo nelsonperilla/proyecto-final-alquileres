@@ -3,14 +3,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui" 
-      xmlns:f="http://java.sun.com/jsf/core" >
+      xmlns:f="http://java.sun.com/jsf/core" 
+      xmlns:ui="http://java.sun.com/jsf/facelets">
 
     <h:body>
         <h:form id="formNegociando">
             
-            <div class="leyendaTipoImg" style="background: green" /> 
+            <div class="leyendaTipoImg" style="background: #CCFFCC" /> 
             <div class="leyendaTipoTxt" ><h:outputText value="Enviados" /></div>
-            <div class="leyendaTipoImg" style="background: orange" /> 
+            <div class="leyendaTipoImg" style="background: moccasin" /> 
             <div class="leyendaTipoTxt"><h:outputText value="Recibidos" /></div>
             <br/><br/>
             <p:dataGrid id="grid" value="#{pedidosBean.pedidos}" var="alq" columns="1" 
@@ -19,8 +20,8 @@
                         emptyMessage="No hay articulos siendo negociados" >
                 <p:column>
 
-                    <div class="artContenedor" >
-                        <div class="artTipo" style="background: #{alq.tomado ? 'green':'orange'}" ></div>
+                    <div class="artContenedor #{alq.tomado ? 'tomado':'enviado'}" >
+                        <ui:remove><div class="artTipo" style="background: #{alq.tomado ? 'green':'orange'}" ></div></ui:remove>
                         <div class="artImagen" >
                             <h:graphicImage value="/image?id=#{alq.imagenId}" 
                                             style="max-width: 120px; max-height: 100px"

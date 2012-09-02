@@ -10,9 +10,11 @@ import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import org.apache.log4j.Logger;
 
 /**
@@ -42,11 +44,28 @@ public class MisPublicidadesMBean implements Serializable {
            publicidades = publicidadBean.getPublicidades(usuarioLogueado.getUsuarioId());
         }
     }
+    
+    public void eliminarPublicidad() {
+        try {
+            publicidadBean.eliminarPublicidad(selectedPublicidad.getId());
+            publicidades.remove(selectedPublicidad);
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, 
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al eliminar publicidad", e.getMessage()));
+        }
+    }
+    
+    public String republicar(){
+        return "pregistrarPublicidad";
+    }
+    
+    /*
+     * Getters & Setters
+     */
 
     public List<PublicidadDTO> getPublicidades() {
         return publicidades;
-    }
-    
+    }    
     
     public void setPublicidades(List<PublicidadDTO> publicidades) {
         this.publicidades = publicidades;
@@ -67,13 +86,8 @@ public class MisPublicidadesMBean implements Serializable {
     public void setSelectedPublicidad(PublicidadDTO selectedPublicidad) {
         this.selectedPublicidad = selectedPublicidad;
     }
-    
-    public String republicar(){
-        return "pregistrarPublicidad";
-    }
 
     public Integer getPublicidadId() {
-        System.out.println("id: " + publicidadId);
         return publicidadId;
     }
 

@@ -47,7 +47,7 @@
                                     <p:button value="Editar" outcome="/vistas/usuario/modificarPublicacion" icon="ui-icon-pencil" >
                                         <f:param name="id" value="#{item.id}" />
                                     </p:button>
-                                    <p:commandButton value="Eliminar" icon="ui-icon-close" onclick="confirmarDlg.show()" process="@this" >
+                                    <p:commandButton value="Eliminar" icon="ui-icon-close" onclick="eliminarPubDlg.show()" process="@this" >
                                         <f:setPropertyActionListener value="#{item.id}" target="#{misPublicaciones.publicacionId}" />
                                     </p:commandButton>
                                 </div>
@@ -90,7 +90,7 @@
                 </p:column>
             </p:dataGrid>
 
-            <p:dialog widgetVar="confirmarDlg" header="Eliminar publicacion" modal="true" 
+            <p:dialog widgetVar="eliminarPubDlg" header="Eliminar publicacion" modal="true" 
                       resizable="false" style="text-align: center;" >
                 <p>
                     Esta seguro que desea eliminar esta publicacion?
@@ -98,9 +98,9 @@
                 <br/>
                 <f:facet name="footer" >
                     <p:commandButton value="Aceptar" action="#{misPublicaciones.borrarPublicacion}"
-                                     oncomplete="confirmarDlg.hide()" ajax="false" >    
+                                     oncomplete="eliminarPubDlg.hide()" ajax="false" >    
                     </p:commandButton>
-                    <p:commandButton value="Cancelar" onclick="confirmarDlg.hide()" />
+                    <p:commandButton value="Cancelar" onclick="eliminarPubDlg.hide()" />
                 </f:facet>
 
 

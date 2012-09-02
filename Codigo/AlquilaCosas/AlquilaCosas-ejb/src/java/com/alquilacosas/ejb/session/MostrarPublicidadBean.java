@@ -27,14 +27,12 @@ public class MostrarPublicidadBean implements MostrarPublicidadBeanLocal {
     public List<PublicidadDTO> getPublicidades(UbicacionPublicidad ubicacion, int cantidad) {
         
         List<Publicidad> publicidades = publicidadFacade.getPublicidadesPorUbicacion(ubicacion);
-        
         int n = publicidades.size();
         while(n > cantidad) {
             int indice = (int) (Math.random() * n);
             publicidades.remove(indice);
             n--;
         }
-        
         List<PublicidadDTO> dtos = new ArrayList<PublicidadDTO>();
         for(Publicidad p: publicidades) {
             dtos.add(new PublicidadDTO(p.getServicioId(), p.getTitulo(), p.getCaption(), p.getUrl()));

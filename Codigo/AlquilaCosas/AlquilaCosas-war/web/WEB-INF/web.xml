@@ -85,6 +85,14 @@
     <welcome-file-list>
         <welcome-file>index.xhtml</welcome-file>
     </welcome-file-list>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/vistas/procesando.jsf</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/vistas/noEncontrado.jsf</location>
+    </error-page>
     <!--    <error-page>
         <error-code>403</error-code>
         <location>/vistas/noEncontrado.xhtml</location>
