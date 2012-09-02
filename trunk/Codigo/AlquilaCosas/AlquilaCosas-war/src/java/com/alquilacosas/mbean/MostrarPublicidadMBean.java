@@ -13,9 +13,6 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
-import org.apache.log4j.Logger;
 
 /**
  *
@@ -36,6 +33,7 @@ public class MostrarPublicidadMBean implements Serializable {
     public MostrarPublicidadMBean() {
     }
     
+    @PostConstruct
     public void cargarPublicidades() {
         publicidadesCarrusel = publicidadBean.getPublicidades(UbicacionPublicidad.CARRUSEL, 5);
         publicidadesIzq = publicidadBean.getPublicidades(UbicacionPublicidad.LATERAL_IZQUIERDA, 1);

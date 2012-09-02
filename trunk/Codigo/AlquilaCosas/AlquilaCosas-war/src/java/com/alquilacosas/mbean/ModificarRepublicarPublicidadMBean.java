@@ -235,7 +235,7 @@ public class ModificarRepublicarPublicidadMBean implements Serializable{
     public void ubicacionCambio() {
         if (duracionSeleccionada != null && ubicacionSeleccionada != null) {
             precio = publicidadBean.getPrecio(duracionSeleccionada, ubicacionSeleccionada);
-            fechas = publicidadBean.getFechasSinStock(ubicacionSeleccionada);
+            fechas = publicidadBean.getFechasSinDisponibilidad(ubicacionSeleccionada);
             this.createDictionary();
         } else {
             precio = null;

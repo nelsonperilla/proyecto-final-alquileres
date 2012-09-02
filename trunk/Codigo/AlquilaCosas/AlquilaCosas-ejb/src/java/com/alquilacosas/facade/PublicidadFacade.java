@@ -81,4 +81,11 @@ public class PublicidadFacade extends AbstractFacade<Publicidad> {
         publicidades = query.getResultList();
         return publicidades;
     }
+    
+    public boolean eliminarPublicidad(Integer publicidadId) {
+        Query query = em.createQuery("DELETE FROM Publicidad p WHERE p.servicioId = :id");
+        query.setParameter("id", publicidadId);
+        int filas = query.executeUpdate();
+        return filas > 0;
+    }
 }

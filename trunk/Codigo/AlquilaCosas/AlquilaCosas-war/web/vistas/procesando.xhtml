@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:comps="http://java.sun.com/jsf/composite/comps"
-      xmlns:h="http://java.sun.com/jsf/html" >
+      xmlns:p="http://primefaces.org/ui"  >
 
     <body>
 
@@ -14,8 +14,11 @@
             </ui:define>
 
             <ui:define name="principal">
-                <h1>Página no encontrada</h1>
-                <p>La página solicitada no existe. Por favor utilice los links de la página para evitar este tipo de errores.</p>
+                <h3>Aguarde por favor</h3>
+                <p>
+                    Su consulta aun se esta procesando. Esto puede deberse a una conexion lenta. Intente nuevamente.
+                </p>
+
             </ui:define>
 
         </ui:composition>

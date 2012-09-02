@@ -9,6 +9,7 @@ import com.alquilacosas.dto.PublicidadDTO;
 import com.alquilacosas.ejb.entity.TipoPago.NombreTipoPago;
 import com.alquilacosas.ejb.entity.TipoPublicidad.DuracionPublicidad;
 import com.alquilacosas.ejb.entity.TipoPublicidad.UbicacionPublicidad;
+import com.alquilacosas.ejb.session.PagosRecibidosBeanLocal;
 import com.alquilacosas.ejb.session.PublicidadBeanLocal;
 import com.alquilacosas.pagos.PaypalUtil;
 import java.io.Serializable;
@@ -39,6 +40,7 @@ public class RegistrarPublicidadMBean implements Serializable {
 
     @EJB
     private PublicidadBeanLocal publicidadBean;
+    @EJB private PagosRecibidosBeanLocal pagoBean;
     @ManagedProperty(value = "#{login}")
     private ManejadorUsuarioMBean loginMBean;
     private String titulo, url, caption;
@@ -189,6 +191,87 @@ public class RegistrarPublicidadMBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
     }
+    
+    public String registrarPublicidadInmediatamente() {
+        if (imagen == null) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Debe cargar una imagen", "");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return null;
+        }
+
+        if(!url.startsWith("http://")) {
+            url = "http://" + url;
+        }
+        
+        Integer pagoId = null;
+        String http = "";
+        try {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(fechaDesde);
+            DuracionPublicidad duracion = duracionSeleccionada;
+            if (duracion == DuracionPublicidad.SEMANAL) {
+                cal.add(Calendar.DAY_OF_YEAR, 7);
+                this.setFechaHasta(cal.getTime());
+            } else if (duracion == DuracionPublicidad.BISEMANAL) {
+                cal.add(Calendar.DAY_OF_YEAR, 14);
+                this.setFechaHasta(cal.getTime());
+            } else if (duracion == DuracionPublicidad.MENSUAL) {
+                cal.add(Calendar.MONTH, 1);
+                this.setFechaHasta(cal.getTime());
+            } else if (duracion == DuracionPublicidad.BIMENSUAL) {
+                cal.add(Calendar.MONTH, 2);
+                this.setFechaHasta(cal.getTime());
+            }
+
+            Iterator<Date> itFechasSinStock = fechas.iterator();
+            boolean noStockFlag = false;
+            Calendar fecha = Calendar.getInstance();
+            //Recorro la lista de fechas sin stock fijandome si alguna cae
+            //en el periodo seleccionado
+            while (!noStockFlag && itFechasSinStock.hasNext()) {
+                fecha.setTime(itFechasSinStock.next());
+                if (fechaDesde.before(fecha.getTime()) 
+                        && fechaHasta.after(fecha.getTime()))//la fecha sin stock cae en el periodo
+                {
+                    noStockFlag = true;
+                }
+            }
+
+            if (noStockFlag) {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "Hay fechas sin stock en el periodo seleccionado", ""));
+            } else {
+                
+                if( !(url.equals("http://")) ){
+                http = "http://" + url;
+                }
+                
+                pagoId = publicidadBean.registrarPublicidad(loginMBean.getUsuarioId(),
+                        titulo, http, caption, ubicacionSeleccionada,
+                        duracionSeleccionada, imagen, fechaDesde, fechaHasta, precio,
+                        NombreTipoPago.PAYPAL);
+            }
+
+        } catch (AlquilaCosasException e) {
+            Logger.getLogger(RegistrarPublicidadMBean.class).
+                    error("registrarPublicidad(). Excepcion al invocar registrarPublicidad(): "
+                    + e + ": " + e.getMessage());
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Error al registrar publicidad", e.getMessage());
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return null;
+        }
+        if (pagoId == null) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Error al registrar publicidad", "");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return null;
+        }
+        pagoBean.confirmarPago(Integer.valueOf(pagoId));
+        return "pagoConfirmado2";
+    }
 
     public void duracionCambio() {
         if (duracionSeleccionada != null && ubicacionSeleccionada != null) {
@@ -201,7 +284,7 @@ public class RegistrarPublicidadMBean implements Serializable {
     public void ubicacionCambio() {
         if (duracionSeleccionada != null && ubicacionSeleccionada != null) {
             precio = publicidadBean.getPrecio(duracionSeleccionada, ubicacionSeleccionada);
-            fechas = publicidadBean.getFechasSinStock(ubicacionSeleccionada);
+            fechas = publicidadBean.getFechasSinDisponibilidad(ubicacionSeleccionada);
             this.createDictionary();
             if( ubicacionSeleccionada.name().equals("CARRUSEL") ){
                 label = CARRUSEL;

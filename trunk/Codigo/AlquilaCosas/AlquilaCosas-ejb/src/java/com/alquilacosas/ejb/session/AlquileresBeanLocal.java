@@ -46,4 +46,6 @@ public interface AlquileresBeanLocal {
 
     public AlquilerDTO responderPedidoCambio(int pedidoCambioId, AlquilerDTO alquilerDTO, Date fechaHasta, double monto, boolean aceptado) throws com.alquilacosas.common.AlquilaCosasException;
     
+    public void simularPasoTiempoAlquiler(Date fecha);
+    
 }

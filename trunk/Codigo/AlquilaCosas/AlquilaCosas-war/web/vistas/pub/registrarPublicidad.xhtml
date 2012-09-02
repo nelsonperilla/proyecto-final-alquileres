@@ -17,8 +17,6 @@
 
             <ui:define name="principal">
 
-                <h:outputScript library="javascript" name="util.js" />
-
                 <h:outputScript library="javascript" name="timePicker.js" />
 
                 <p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide();"/>
@@ -103,6 +101,8 @@
                         </p:fieldset>
 
                         <f:facet name="footer" >
+                            <p:commandButton value="Pagar ya!" ajax="false"
+                                             action="#{publicidadBean.registrarPublicidadInmediatamente}" />
                             <p:commandLink actionListener="#{publicidadBean.registrarPublicidad}" update="growl">
                                 <h:graphicImage value="#{resource['images:pagoPaypal.gif']}" />
                             </p:commandLink>

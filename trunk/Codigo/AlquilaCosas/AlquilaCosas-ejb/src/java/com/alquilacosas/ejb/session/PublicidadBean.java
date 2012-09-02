@@ -60,18 +60,18 @@ public class PublicidadBean implements PublicidadBeanLocal {
             UbicacionPublicidad ubicacion, DuracionPublicidad duracion, byte[] imagen,
             Date fechaDesde, Date fechaHasta, Double precio, NombreTipoPago nombreTipoPago)
             throws AlquilaCosasException {
-        
+
         Usuario usuario = usuarioFacade.find(usuarioId);
-        
+
         TipoPago tipoPago = tipoPagoFacade.findByNombre(nombreTipoPago);
         Pago pago = new Pago();
         pago.setFechaInicio(new Date());
         pago.setMonto(precio);
         pago.setTipoPagoFk(tipoPago);
         pago.setUsuarioFk(usuario);
-        
+
         TipoPublicidad tipo = tipoPubFacade.findByUbicacionYDuracion(ubicacion, duracion);
-        
+
         if (tipo == null) {
             throw new AlquilaCosasException("No se encontro el tipo de publicidad correspondiente en la base de datos.");
         }
@@ -100,17 +100,18 @@ public class PublicidadBean implements PublicidadBeanLocal {
             return null;
         }
     }
-    
+
     @Override
-    public void actualizarPublicidad(Integer publicidadId, 
+    public void actualizarPublicidad(Integer publicidadId,
             String titulo, String url, String caption, byte[] imagen)
             throws AlquilaCosasException {
-        
+
         Publicidad p = publicidadFacade.find(publicidadId);
-        
-        if( p == null )
+
+        if (p == null) {
             throw new AlquilaCosasException("La publicidad no pudo ser encontrada");
-        
+        }
+
         p.setTitulo(titulo);
         p.setUrl(url);
         p.setCaption(caption);
@@ -119,12 +120,21 @@ public class PublicidadBean implements PublicidadBeanLocal {
         publicidadFacade.edit(p);
     }
     
-    
+    @Override
+    public void eliminarPublicidad(Integer publicidadId) throws AlquilaCosasException {
+        Publicidad pub = publicidadFacade.find(publicidadId);
+        if(pub != null) {
+            publicidadFacade.remove(pub);
+        } else {
+            throw new AlquilaCosasException("No se pudo eliminar la publicidad");
+        }
+    }
 
     /**
      * Devuelve las publicidadesDTO de un usuario
+     *
      * @param usuarioId
-     * @return lista 
+     * @return lista
      */
     @Override
     @PermitAll
@@ -134,26 +144,30 @@ public class PublicidadBean implements PublicidadBeanLocal {
         List<PublicidadDTO> lista = new ArrayList<PublicidadDTO>();
         PublicidadDTO publicidadDto = null;
 
-        
-            for (Publicidad p : publicidades) {
-                try {
+        Date hoy = new Date();
+        for (Publicidad p : publicidades) {
+            try {
                 Pago pago = p.getPagoList().get(0);
                 TipoPublicidad tp = p.getTipoPublicidadFk();
-                if (pago.getFechaConfirmado() == null || p.getFechaDesde().after(new Date())) {
+                if (pago.getFechaConfirmado() == null) {
                     publicidadDto = new PublicidadDTO(p.getServicioId(), p.getTitulo(), p.getUrl(),
                             p.getCaption(), p.getFechaDesde(), p.getFechaHasta(), pago.getMonto(),
                             EstadoPublicidad.PENDIENTE, p.getImagen(), tp.getDuracion(), tp.getUbicacion());
+                } else if (p.getFechaDesde().after(hoy) || p.getFechaHasta().before(hoy)) {
+                    publicidadDto = new PublicidadDTO(p.getServicioId(), p.getTitulo(), p.getUrl(),
+                            p.getCaption(), p.getFechaDesde(), p.getFechaHasta(), pago.getMonto(),
+                            EstadoPublicidad.INACTIVA, p.getImagen(), tp.getDuracion(), tp.getUbicacion());
                 } else {
                     publicidadDto = new PublicidadDTO(p.getServicioId(), p.getTitulo(), p.getUrl(),
                             p.getCaption(), p.getFechaDesde(), p.getFechaHasta(), pago.getMonto(),
                             EstadoPublicidad.ACTIVA, p.getImagen(), tp.getDuracion(), tp.getUbicacion());
                 }
                 lista.add(publicidadDto);
-                } catch (Exception e) {
-                        System.out.println("La publicidad no tiene un pago creado" + e.getMessage());
-                    }
+            } catch (Exception e) {
+                System.out.println("La publicidad no tiene un pago creado" + e.getMessage());
             }
-            return lista;
+        }
+        return lista;
     }
 
     @Override
@@ -162,7 +176,7 @@ public class PublicidadBean implements PublicidadBeanLocal {
 
         Publicidad p = publicidadFacade.find(publicidadId);
         TipoPublicidad tp = p.getTipoPublicidadFk();
-        
+
         PublicidadDTO publicidad = new PublicidadDTO(publicidadId, p.getTitulo(), p.getUrl(),
                 p.getCaption(), p.getFechaDesde(), p.getFechaHasta(), publicidadId,
                 EstadoPublicidad.ACTIVA, p.getImagen(), tp.getDuracion(), tp.getUbicacion());
@@ -171,13 +185,14 @@ public class PublicidadBean implements PublicidadBeanLocal {
     }
 
     /**
-     * Devuelve las fechas que no tienen stock.
-     * Se considera como fecha final de control 60 dias a partir de hoy.
+     * Devuelve las fechas que no tienen stock. Se considera como fecha final de
+     * control 60 dias a partir de hoy.
+     *
      * @return respuesta
      */
     @Override
     @PermitAll
-    public List<Date> getFechasSinStock(UbicacionPublicidad ubicacion) {
+    public List<Date> getFechasSinDisponibilidad(UbicacionPublicidad ubicacion) {
 
         int disponibles = 0;
 

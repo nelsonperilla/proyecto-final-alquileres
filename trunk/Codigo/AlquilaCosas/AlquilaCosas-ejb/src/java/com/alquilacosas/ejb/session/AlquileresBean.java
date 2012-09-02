@@ -21,7 +21,6 @@ import com.alquilacosas.ejb.entity.PedidoCambio;
 import com.alquilacosas.ejb.entity.PedidoCambioXEstado;
 import com.alquilacosas.ejb.entity.Periodo;
 import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
-import com.alquilacosas.ejb.entity.Precio;
 import com.alquilacosas.ejb.entity.Publicacion;
 import com.alquilacosas.ejb.entity.Puntuacion;
 import com.alquilacosas.ejb.entity.Usuario;
@@ -656,6 +655,18 @@ public class AlquileresBean implements AlquileresBeanLocal {
             
         }
     }
-
+    
+    @Override
+    public void simularPasoTiempoAlquiler(Date fecha) {
+        Alquiler alquiler = alquilerFacade.getUltimoAlquiler();
+        
+        AlquilerXEstado axeViejo = axeFacade.findByAlquiler(alquiler.getAlquilerId());
+        axeViejo.setFechaHasta(new Date());
+        
+        EstadoAlquiler nuevoEstado = estadoFacade.findByNombre(NombreEstadoAlquiler.FINALIZADO);
+        AlquilerXEstado axe = new AlquilerXEstado(alquiler, nuevoEstado, fecha);
+        alquiler.agregarAlquilerXEstado(axe);
+        alquilerFacade.edit(alquiler);
+    }
    
 }

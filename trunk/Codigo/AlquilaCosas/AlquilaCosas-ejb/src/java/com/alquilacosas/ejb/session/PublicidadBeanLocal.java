@@ -8,7 +8,6 @@ import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.dto.PublicidadDTO;
 import com.alquilacosas.ejb.entity.TipoPago.NombreTipoPago;
 import com.alquilacosas.ejb.entity.TipoPublicidad;
-import com.alquilacosas.ejb.entity.TipoPublicidad.DuracionPublicidad;
 import com.alquilacosas.ejb.entity.TipoPublicidad.UbicacionPublicidad;
 import java.util.Date;
 import java.util.List;
@@ -31,13 +30,15 @@ public interface PublicidadBeanLocal {
     public void actualizarPublicidad(Integer publicidadId, 
             String titulo, String url, String caption, byte[] imagen)
             throws AlquilaCosasException ;
+    
+    public void eliminarPublicidad(Integer publicidadId) throws AlquilaCosasException;
 
     public Double getPrecio(TipoPublicidad.DuracionPublicidad duracion, 
             TipoPublicidad.UbicacionPublicidad ubicacion);
     
     public List<PublicidadDTO> getPublicidades(int usuarioId);
     
-    public List<Date> getFechasSinStock( UbicacionPublicidad ubicacion );
+    public List<Date> getFechasSinDisponibilidad( UbicacionPublicidad ubicacion );
 
     PublicidadDTO getPublicidad(Integer publicidadId);
     

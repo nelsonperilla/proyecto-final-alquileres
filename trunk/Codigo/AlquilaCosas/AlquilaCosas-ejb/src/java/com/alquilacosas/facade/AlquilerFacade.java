@@ -4,33 +4,15 @@
  */
 package com.alquilacosas.facade;
 
-import com.alquilacosas.ejb.entity.Alquiler;
-import com.alquilacosas.ejb.entity.AlquilerXEstado;
-import com.alquilacosas.ejb.entity.EstadoAlquiler;
 import com.alquilacosas.ejb.entity.EstadoAlquiler.NombreEstadoAlquiler;
-import com.alquilacosas.ejb.entity.PedidoCambio;
-import com.alquilacosas.ejb.entity.Publicacion;
-import com.alquilacosas.ejb.entity.Usuario;
-import java.util.ArrayList;
-import java.util.Calendar;
-
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
+import com.alquilacosas.ejb.entity.*;
+import java.util.*;
+import javax.ejb.*;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.*;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
 
@@ -161,7 +143,6 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
                 + "AND a.publicacion_Fk = " + publicacionId + " "
                 + "AND a.alquiler_id <> " + id + " ", Alquiler.class);
           
-
         alquileres = query.getResultList();
 
         return alquileres;
@@ -400,4 +381,12 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
         alquileres = query.getResultList();
         return alquileres;
     }
+    
+    public Alquiler getUltimoAlquiler() {
+        TypedQuery<Alquiler> query = em.createQuery("SELECT a FROM Alquiler a ORDER BY a.alquilerId DESC", Alquiler.class);
+        query.setMaxResults(1);
+        Alquiler alquiler = query.getResultList().get(0);
+        return alquiler;
+    }
+    
 }

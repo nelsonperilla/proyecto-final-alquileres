@@ -13,10 +13,6 @@
             
             <ui:define name="logInfo">
                 
-                <f:metadata>
-                    <f:event type="preRenderView" listener="#{mostrarPublicidad.cargarPublicidades}" />
-                </f:metadata>
-                
                 <p:outputPanel rendered="#{not login.logueado}" >
                     <a onclick="login.show()" style="cursor:pointer">Acceso/Registrarse</a> 
                 </p:outputPanel>

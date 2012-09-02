@@ -26,11 +26,11 @@
                         
                         var name = getUrlVars()["tipo"];
                          
-                         jQuery( function(){
-                             if( name == 'modificar' ){
-                                 jQuery("h1").html("Modificar Publicidad");
-                             }
-                         })
+                        jQuery( function(){
+                            if( name == 'modificar' ){
+                                jQuery("h1").html("Modificar Publicidad");
+                            }
+                        })
                     </script>
                 </p:outputPanel>
 
@@ -92,22 +92,22 @@
                         </h:panelGrid>
                     </p:fieldset>
 
-                    
+
 
                     <p:fieldset legend="Imagen" styleClass="fieldset" >
-                        
+
                         <p:outputPanel id="out">
-                        <div id="div1" >
-                            <h:panelGrid id="panelImagen" columns="1" style="width:100%;" rendered="#{editarMBean.existeImagen == true}">
-                                <h:graphicImage id="imgId" value="/imagenpub?id=#{editarMBean.imagenId}" 
-                                                width="200" height="185" styleClass="img"/> 
-                                <p:commandLink title="Eliminar" update="out" 
-                                               actionListener="#{editarMBean.removerImagen}" rendered="#{editarMBean.existeImagen == true}"
-                                               >
-                                    <p:graphicImage value="#{resource['images:icono_borrar.gif']}"/> 
-                                </p:commandLink>
-                            </h:panelGrid>
-                        </div>
+                            <div id="div1" >
+                                <h:panelGrid id="panelImagen" columns="1" style="width:100%;" rendered="#{editarMBean.existeImagen == true}">
+                                    <h:graphicImage id="imgId" value="/imagenpub?id=#{editarMBean.imagenId}" 
+                                                    width="200" height="185" styleClass="img"/> 
+                                    <p:commandLink title="Eliminar" update="out" 
+                                                   actionListener="#{editarMBean.removerImagen}" rendered="#{editarMBean.existeImagen == true}"
+                                                   >
+                                        <p:graphicImage value="#{resource['images:icono_borrar.gif']}"/> 
+                                    </p:commandLink>
+                                </h:panelGrid>
+                            </div>
                         </p:outputPanel>
 
 
@@ -116,11 +116,7 @@
                                       fileUploadListener="#{editarMBean.handleFileUpload}"
                                       mode="advanced" cancelLabel="Cancelar" uploadLabel="Subir"
                                       allowTypes="/(\.|\/)(gif|jpe?g|png)$/" 
-                                        />
-<!--                        <h:outputLink value="#" title="Subir archivo" onclick="uploader.upload();" 
-                                      style="font-weight:bold;color:#616D7E">
-                            Cambiar Imagen
-                        </h:outputLink>  -->
+                                      />
 
                     </p:fieldset>
 
@@ -141,16 +137,16 @@
 
                     <p:outputPanel id="script" >
                         <script type="text/javascript" >
-                                     jQuery(function () {
-                                             window.setTimeout('bindEventsHighlights()',500);
-                                     });
+                            jQuery(function () {
+                                window.setTimeout('bindEventsHighlights()',500);
+                            });
 
-                                     function bindEventsHighlights() {
-                                             var specialDays = <h:outputText value="#{publicidadBean.fechas}" /> ;
-                                             jQuery(".hasDatepicker").datepicker("option", "beforeShowDay", function (date) {
-                                                       return highlightCalendar(specialDays, date, 'highlight-calendar');
-                                             });
-                                     };
+                            function bindEventsHighlights() {
+                                var specialDays = <h:outputText value="#{publicidadBean.fechas}" /> ;
+                                jQuery(".hasDatepicker").datepicker("option", "beforeShowDay", function (date) {
+                                    return highlightCalendar(specialDays, date, 'highlight-calendar');
+                                });
+                            };
                         </script>
                     </p:outputPanel>
 
