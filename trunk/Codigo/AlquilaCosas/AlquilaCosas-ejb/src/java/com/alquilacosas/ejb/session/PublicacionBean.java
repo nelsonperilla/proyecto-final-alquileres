@@ -7,21 +7,10 @@ package com.alquilacosas.ejb.session;
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.common.NotificacionEmail;
 import com.alquilacosas.dto.*;
-import com.alquilacosas.ejb.entity.*;
 import com.alquilacosas.ejb.entity.EstadoPublicacion.NombreEstadoPublicacion;
 import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
-import com.alquilacosas.facade.AlquilerFacade;
-import com.alquilacosas.facade.AlquilerXEstadoFacade;
-import com.alquilacosas.facade.CalificacionFacade;
-import com.alquilacosas.facade.CategoriaFacade;
-import com.alquilacosas.facade.ComentarioFacade;    
-import com.alquilacosas.facade.EstadoPublicacionFacade;
-import com.alquilacosas.facade.ImagenPublicacionFacade;
-import com.alquilacosas.facade.PeriodoFacade;
-import com.alquilacosas.facade.PrecioFacade;
-import com.alquilacosas.facade.PublicacionFacade;
-import com.alquilacosas.facade.PublicacionXEstadoFacade;
-import com.alquilacosas.facade.UsuarioFacade;
+import com.alquilacosas.ejb.entity.*;
+import com.alquilacosas.facade.*;
 import java.util.*;
 import javax.annotation.Resource;
 import javax.annotation.security.PermitAll;
@@ -596,7 +585,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
             throws AlquilaCosasException {
         Publicacion publicacion = publicacionFacade.find(publicationId);
         if (publicacion == null) {
-            throw new AlquilaCosasException("Publicacion inexistente.");
+            throw new AlquilaCosasException("Publicación inexistente.");
         }
         List<Date> respuesta = new ArrayList<Date>();
         List<Alquiler> alquileres = alquilerFacade.getAlquileresByPublicacionFromToday(publicacion);
@@ -610,7 +599,7 @@ public class PublicacionBean implements PublicacionBeanLocal {
 
         int disponibles = publicacion.getCantidad();
 
-        HashMap<String, Integer> dataCounter = new HashMap(60);//probablemente no existan pedidos mas haya de 60 dias desde hoy
+        HashMap<String, Integer> dataCounter = new HashMap(60);//probablemente no existan pedidos mas alla de 60 dias desde hoy
         Calendar lastDate = Calendar.getInstance();
         lastDate.setTime(new Date());
 

@@ -75,25 +75,25 @@
                                                   styleClass="itemInfo"/> 
                                     <p:commandButton icon="ui-icon-plusthick" value="Favoritos" rendered="#{not publicacionDesplegada.addedToFavorito}" 
                                                      title="Agregar a Favoritos" actionListener="#{publicacionDesplegada.agregarFavorito}" 
-                                                     style="background-color: #3E58F6; margin-left: 180px; font-size: 0.8em;" update="data growl">
+                                                     style="background-color: #3E58F6; margin-left: 80px; font-size: 0.8em;" update="data growl">
                                         <f:attribute name="idPublicacion" value="#{publicacionDesplegada.publicacionId}" />
                                     </p:commandButton>
                                 </h:panelGrid>                            
                                 <div class="dataPrincipal" >
                                     <h:panelGrid columns="3" style="margin: 0 auto" cellpadding="4">
-                                    <h:outputLabel   value="Cantidad:" />
-                                    <p:spinner value="#{publicacionDesplegada.cantidadProductos}" required="true" size="3"/>
-                                    <p:commandButton value="Alquilar" action="#{publicacionDesplegada.actualizarFechas}" 
-                                                     oncomplete="revisarDisponibilidad(xhr, status, args)" styleClass="buttom"
-                                                     update="growl" />
-                                </h:panelGrid>
+                                        <h:outputLabel   value="Cantidad:" />
+                                        <p:spinner value="#{publicacionDesplegada.cantidadProductos}" required="true" size="3"/>
+                                        <p:commandButton value="Alquilar" action="#{publicacionDesplegada.actualizarFechas}" 
+                                                         oncomplete="revisarDisponibilidad(xhr, status, args)" styleClass="buttom"
+                                                         update="growl :rent" />
+                                    </h:panelGrid>
                                 </div>
                                 <p:growl id="growl" showDetail="true" globalOnly="true" />
 
                             </h:form>
                         </td>
                         <td width="400" style="text-align: right">
-                            
+
                             <div class="fb-like" data-send="false" data-width="300" data-show-faces="false" data-font="arial"></div>
                             <br/><br/>
                             <p:galleria value="#{publicacionDesplegada.idImagenes}" var="image"
@@ -106,12 +106,12 @@
                                             rendered="#{publicacionDesplegada.idImagenes.size() == 1}" width="320" height="300" /> 
                             <h:graphicImage value="#{resource['images:noImage.png']}" width="320" height="300"
                                             rendered="#{empty publicacionDesplegada.idImagenes}" style="border: 1px solid black;" />
-                            
+
                         </td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: right">
-                            <p:commandButton type="button" value="Ver ubicación del articulo" onclick="map.show()"/> 
+                            <p:commandButton type="button" value="Ver ubicación del artículo" onclick="map.show()"/> 
                         </td>                    
                     </tr>
 
@@ -156,11 +156,10 @@
                             <h:link value="Denunciar esta publicacion"
                                     outcome="/vistas/usuario/denunciaDePregunta"
                                     rendered="#{publicacionDesplegada.ownerLogged == false}"
-                                    >
+                                    style="color: black; font-size: 12px" >
                                 <f:param name="motivo" value="1" />
                                 <f:param name="id" value="#{publicacionDesplegada.publicacion.id}" />                        
                             </h:link>
-                            
                         </td>                    
                     </tr>                    
                 </table>
@@ -186,30 +185,30 @@
                     </h:form>
                 </p:dialog>
 
-                <p:dialog  header="Confirmacion de alquiler" widgetVar="confirmRent" modal="true"
-                           showEffect="fade" width="450" dynamic="true" >
+                <p:dialog  header="Enviar pedido de alquiler" widgetVar="confirmRent" modal="true"
+                           resizable="false" showEffect="fade" width="450" >
                     <h:form id="rent" prependId="false">
                         <script type="text/javascript" >
-                        jQuery(function () {
-                            window.setTimeout('bindEventsHighlights()',500);
-                        });
-
-                        function bindEventsHighlights() {
-                            var specialDays = <h:outputText value="#{publicacionDesplegada.fechas}" /> ;
-                            jQuery(".hasDatepicker").datepicker("option", "beforeShowDay", function (date) {
-                                return highlightCalendar(specialDays, date, 'highlight-calendar');
+                            jQuery(function () {
+                                window.setTimeout('bindEventsHighlights()',500);
                             });
-                        };
+
+                            function bindEventsHighlights() {
+                                var specialDays = <h:outputText value="#{publicacionDesplegada.fechas}" /> ;
+                                jQuery(".hasDatepicker").datepicker("option", "beforeShowDay", function (date) {
+                                    return highlightCalendar(specialDays, date, 'highlight-calendar');
+                                });
+                            };
                         </script>
                         <h:panelGrid  columns="3" cellpadding="2" cellspacing="4" >
-                            <h:outputLabel value="Periodo minimo:"/>
+                            <h:outputLabel value="Periodo mínimo:"/>
                             <h:panelGroup>
                                 <h:outputLabel value="#{publicacionDesplegada.publicacion.periodoMinimoValor} "/>
                                 <h:outputLabel value="#{publicacionDesplegada.publicacion.periodoMinimo.nombre}"/>
                             </h:panelGroup>
                             <p/>
 
-                            <h:outputLabel value="Periodo maximo:"/>
+                            <h:outputLabel value="Periodo máximo:"/>
                             <h:panelGroup>
                                 <h:outputLabel value="#{publicacionDesplegada.publicacion.periodoMaximoValor} "/>
                                 <h:outputLabel value="#{publicacionDesplegada.publicacion.periodoMaximo.nombre}"/>
@@ -250,14 +249,14 @@
                     </h:form>                              
                 </p:dialog>
 
-                <p:dialog widgetVar="map" header="Ubicacion" modal="true" onShow="myMap.checkResize()"
+                <p:dialog widgetVar="map" header="Ubicación" modal="true" onShow="myMap.checkResize()"
                           showEffect="fade" width="425" height="450" resizable="false" >
                     <p:gmap center="#{publicacionDesplegada.publicacion.latitud + 0.007502},
                             #{publicacionDesplegada.publicacion.longitud - 0.008808}"
                             zoom="15" type="HYBRID" style="width:400px;height:400px;"
                             widgetVar="myMap" model="#{publicacionDesplegada.mapModel}" />
                 </p:dialog>
-                
+
                 <script>(function(d, s, id) {
                     var js, fjs = d.getElementsByTagName(s)[0];
                     if (d.getElementById(id)) return;
@@ -265,11 +264,11 @@
                     js.src = "//connect.facebook.net/es_LA/all.js#xfbml=1\u0026appId=187196061385476";
                     fjs.parentNode.insertBefore(js, fjs);
                 }(document, 'script', 'facebook-jssdk'));</script>
-                
+
                 <script type="text/javascript"
                         src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAIvenuSuB8qlfz056q69ddMHJIdqra2sc&amp;sensor=false">
                 </script>
-                
+
 
             </ui:define>
         </ui:composition>       

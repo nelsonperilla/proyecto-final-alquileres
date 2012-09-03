@@ -12,6 +12,7 @@ import com.alquilacosas.ejb.session.FavoritoBeanLocal;
 import com.alquilacosas.ejb.session.PublicacionBeanLocal;
 import java.io.Serializable;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -25,7 +26,6 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.DateSelectEvent;
@@ -76,7 +76,9 @@ public class DesplieguePublicacionMBean implements Serializable {
     private FavoritoBeanLocal favoritoBean;
     private boolean addedToFavorito;
 
-    /** Creates a new instance of DesplieguePublicacionMBean */
+    /**
+     * Creates a new instance of DesplieguePublicacionMBean
+     */
     public DesplieguePublicacionMBean() {
     }
 
@@ -90,8 +92,6 @@ public class DesplieguePublicacionMBean implements Serializable {
             return;
         }
 
-        //((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getSession(true).setAttribute("param", "id=" + id);
-
         try {
             publicacionId = Integer.parseInt(id);
         } catch (NumberFormatException e) {
@@ -100,14 +100,17 @@ public class DesplieguePublicacionMBean implements Serializable {
             return;
         }
 
-        setPublicacion(publicationBean.getPublicacion(publicacionId));
+        publicacion = publicationBean.getPublicacion(publicacionId);
+        cantidadProductos = publicacion.getCantidad();
 
         if (usuarioLogueado.getUsuarioId() != null && publicacionId != null) {
-            if (favoritoBean.getFavorito(usuarioLogueado.getUsuarioId(), publicacionId) != null) 
+            if (favoritoBean.getFavorito(usuarioLogueado.getUsuarioId(), publicacionId) != null) {
                 this.addedToFavorito = true;
+            }
             ownerLogged = false;
-            if (usuarioLogueado.getUsuarioId() == publicacion.getPropietario().getId()) 
+            if (usuarioLogueado.getUsuarioId() == publicacion.getPropietario().getId()) {
                 ownerLogged = true;
+            }
         }
 
         setNuevaPregunta(new ComentarioDTO());
@@ -115,27 +118,17 @@ public class DesplieguePublicacionMBean implements Serializable {
         setMapModel(new DefaultMapModel());
         LatLng position = new LatLng(publicacion.getLatitud(), publicacion.getLongitud());
         getMapModel().addOverlay(new Marker(position, publicacion.getTitulo()));
-
-        try {
-            fechas = publicationBean.getFechasSinStock(publicacionId, cantidadProductos);
-        } catch (AlquilaCosasException e) {
-            Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al ejecutar getFechasSinStock(): " + e.getMessage());
-            redirect();
-            return;
-        }
         if (publicacion != null && publicacion.getFechaHasta() != null) {
-            setFecha_hasta(DateFormat.getDateInstance(DateFormat.SHORT).format(publicacion.getFechaHasta()));
+            fecha_hasta = DateFormat.getDateInstance(DateFormat.SHORT).format(publicacion.getFechaHasta());
         }
         userRating = publicationBean.getUserRate(publicacion.getPropietario());
-
-        createDictionary();
+        myJson = "";
         cantidadProductos = 1;
         fechaInicio = new Date();
         effect = "fade";
         today = new Date();
         periodos = new ArrayList<SelectItem>();
         periodoAlquiler = 1;
-        //horaInicioAlquiler = "00:00";
         List<Periodo> listaPeriodos = publicationBean.getPeriodos();
         periodoSeleccionado = 2; //alto hardCode, para que por defecto este seleccionado dia y no hora (Jorge)
         for (Periodo periodo : listaPeriodos) {
@@ -150,6 +143,11 @@ public class DesplieguePublicacionMBean implements Serializable {
             context.addCallbackParam("noLogueado", true);
             context.execute("login.show();");
             return;
+        } else if (usuarioLogueado.getUsuarioId() == publicacion.getPropietario().getId()) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "No puedes agregar un producto propio a favoritos.", ""));
+            return;
         }
 
         try {
@@ -159,13 +157,13 @@ public class DesplieguePublicacionMBean implements Serializable {
             if (agregado) {
                 addedToFavorito = true;
                 FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
-                        "Publicacion agregada a Mis Favoritos", "");
+                        "Publicación agregada a Mis Favoritos", "");
                 FacesContext.getCurrentInstance().addMessage(null, msg);
             }
         } catch (Exception e) {
-            Logger.getLogger(DesplieguePublicacionMBean.class).error("No se pudo agregar el articulo a mis favoritos");
+            Logger.getLogger(DesplieguePublicacionMBean.class).error("No se pudo agregar el artículo a Mis Favoritos");
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Error al grabar un favorito", e.getMessage());
+                    "Error al agregar favorito", e.getMessage());
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
     }
@@ -176,10 +174,6 @@ public class DesplieguePublicacionMBean implements Serializable {
         } catch (Exception e) {
             Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al ejecutar redirect().");
         }
-    }
-
-    public String denunciarComentario() {
-        return "denunciarComentario";
     }
 
     public void actualizarPreguntas() {
@@ -193,10 +187,11 @@ public class DesplieguePublicacionMBean implements Serializable {
             disponibilidad = false;
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "La disponibilidad maxima es de " + publicacion.getCantidad() + " producto/s", ""));
+                    "La disponibilidad máxima es de " + publicacion.getCantidad() + " producto/s", ""));
         } else {
             try {
                 fechas = publicationBean.getFechasSinStock(publicacion.getId(), cantidadProductos);
+                createDictionary();
             } catch (AlquilaCosasException e) {
                 Logger.getLogger(DesplieguePublicacionMBean.class).error("Excepcion al ejecutar getFechasSinStock(): " + e.getMessage());
             }
@@ -224,10 +219,10 @@ public class DesplieguePublicacionMBean implements Serializable {
             if (usuarioLogueado.getUsuarioId() == publicacion.getPropietario().getId()) {
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "Usted no puede realizar preguntas en su propio productos", ""));
+                        "Usted no puede realizar preguntas en su propio producto", ""));
                 ownerLogged = true;
             }
-        }        
+        }
         RequestContext context = RequestContext.getCurrentInstance();
         context.addCallbackParam("logueado", logueado);
         context.addCallbackParam("ownerLogged", ownerLogged);
@@ -460,7 +455,8 @@ public class DesplieguePublicacionMBean implements Serializable {
             yearJson.putOpt(Integer.toString(y), monthJson);
             myJson = yearJson.toString();
         } catch (Exception e) {
-            //Logger.getLogger(this).error("Exception creating JSON dictionary: " + e);
+            Logger.getLogger(DesplieguePublicacionMBean.class).error("Exception creating JSON dictionary: " + e);
+            System.out.println("error armando json: " + e);
         }
     }
 

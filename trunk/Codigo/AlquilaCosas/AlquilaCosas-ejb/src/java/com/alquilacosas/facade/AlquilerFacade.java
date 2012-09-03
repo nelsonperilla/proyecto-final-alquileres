@@ -85,7 +85,6 @@ public class AlquilerFacade extends AbstractFacade<Alquiler> {
 
         List<Alquiler> respuesta = query.getResultList();
         return respuesta;
-
     }
     
     public List<Alquiler> getAlquileres(Usuario usuario) {

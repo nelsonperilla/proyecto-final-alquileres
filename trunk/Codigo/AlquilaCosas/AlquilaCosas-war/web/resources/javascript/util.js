@@ -77,9 +77,8 @@ function highlightCalendar(specialDays, date, cssClass) {
 
 function revisarDisponibilidad(xhr, status, args){
     if(args.logueado){
-        if(!args.ownerLogged){
-            if(args.hayDisponibilidad)
-                confirmRent.show();
+        if(!args.ownerLogged && args.hayDisponibilidad){
+            confirmRent.show();
         }
     }
     else
