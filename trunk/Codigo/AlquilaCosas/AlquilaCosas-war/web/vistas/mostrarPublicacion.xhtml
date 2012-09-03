@@ -218,11 +218,11 @@
                             <h:outputLabel  value="Tiempo solicitado:" />
                             <h:panelGroup>
                                 <p:inputText id="tiempoSolicitado" value="#{publicacionDesplegada.periodoAlquiler}" 
-                                             required="true"  style="width:40px; text-align: right" 
+                                             required="true"  style="width:40px; text-align: right; vertical-align: middle" 
                                              requiredMessage="Valor requerido"/>
 
                                 <p:selectOneMenu value="#{publicacionDesplegada.periodoSeleccionado}"
-                                                 style="width: 100px; margin-left: 10px" >
+                                                 style="width: 100px; margin-left: 10px; vertical-align: middle" >
                                     <f:selectItems value="#{publicacionDesplegada.periodos}" />
                                     <p:ajax event="change" update="rent" />
                                 </p:selectOneMenu>                                            

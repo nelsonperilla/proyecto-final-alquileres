@@ -270,7 +270,7 @@ public class RegistrarPublicidadMBean implements Serializable {
             return null;
         }
         pagoBean.confirmarPago(Integer.valueOf(pagoId));
-        return "pagoConfirmado2";
+        return "/vistas/pagoConfirmado2";
     }
 
     public void duracionCambio() {
