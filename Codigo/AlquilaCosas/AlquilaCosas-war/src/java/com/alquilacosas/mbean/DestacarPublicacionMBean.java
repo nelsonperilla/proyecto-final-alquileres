@@ -110,13 +110,13 @@ public class DestacarPublicacionMBean implements Serializable {
                     "Error al registrar pago.", "");
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
-        descripcion = "Destacacion" + tipoSeleccionado.toString() + ". Publicacion: " + publicacion.getTitulo();
+        descripcion = "Destacación" + tipoSeleccionado.toString() + ". Publicacion: " + publicacion.getTitulo();
         String url = PaypalUtil.setExpressCheckout(descripcion, Integer.toString(pagoId), 
                 Integer.toString(publicacionId), precio.toString());
         if (url != null) {
             redirect(url);
         } else {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al comunicarse con paypal", "");
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al comunicarse con PayPal", "");
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
     }

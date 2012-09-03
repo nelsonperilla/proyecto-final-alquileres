@@ -2,8 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:comps="http://java.sun.com/jsf/composite/comps"
-      xmlns:h="http://java.sun.com/jsf/html" >
+      xmlns:comps="http://java.sun.com/jsf/composite/comps" >
 
     <body>
 
@@ -14,8 +13,11 @@
             </ui:define>
 
             <ui:define name="principal">
-                <h1>Página no encontrada</h1>
-                <p>La página solicitada no existe. Por favor utilice los links de la página para evitar este tipo de errores.</p>
+                <div style="margin: 0 20px" >
+                    <h1>Página no encontrada</h1>
+                    <p>La página solicitada no existe. 
+                        Por favor utilice los links de la página para evitar este tipo de errores.</p>
+                </div>
             </ui:define>
 
         </ui:composition>

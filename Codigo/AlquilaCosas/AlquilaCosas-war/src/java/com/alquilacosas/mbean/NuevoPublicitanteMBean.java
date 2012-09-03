@@ -46,7 +46,8 @@ public class NuevoPublicitanteMBean implements Serializable {
     
     public String registrar() {
         usuarioBean.registrarPublicitante(loginBean.getUsuarioId());
-        return "pinicio";
+        loginBean.setPublicitante(true);
+        return "/vistas/inicio";
     }
 
     public ManejadorUsuarioMBean getLoginBean() {
