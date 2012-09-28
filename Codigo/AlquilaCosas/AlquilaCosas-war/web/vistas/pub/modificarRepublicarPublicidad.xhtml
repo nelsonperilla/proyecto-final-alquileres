@@ -58,8 +58,8 @@
 
                             <h:outputLabel value="Duración" />
                             <h:selectOneMenu id="duracion" value="#{editarMBean.duracionSeleccionada}" 
-                                             required="#{not editarMBean.modificar == 'modificar'}" requiredMessage="Valor requerido" 
-                                             disabled="#{editarMBean.modificar == 'modificar'}">
+                                             required="#{not editarMBean.modificar}" requiredMessage="Valor requerido" 
+                                             disabled="#{editarMBean.modificar}">
                                 <f:selectItem itemLabel="Seleccione una duracion.." />
                                 <f:selectItems value="#{editarMBean.duraciones}" />
                                 <p:ajax event="change" update="precio" listener="#{editarMBean.duracionCambio}" />
@@ -67,8 +67,8 @@
                             <p:message for="duracion" />
                             <h:outputLabel value="Ubicación" />
                             <h:selectOneMenu id="ubicacion" value="#{editarMBean.ubicacionSeleccionada}"
-                                             required="#{editarMBean.modificar == 'modificar'}" requiredMessage="Valor requerido" 
-                                             disabled="#{editarMBean.modificar == 'modificar'}">
+                                             required="#{editarMBean.modificar}" requiredMessage="Valor requerido" 
+                                             disabled="#{editarMBean.modificar}">
                                 <f:selectItem itemLabel="Seleccione una ubicacion.." />
                                 <f:selectItems value="#{editarMBean.ubicaciones}" />
                                 <p:ajax event="change" update="fecha script precio" listener="#{editarMBean.ubicacionCambio}" />
@@ -77,17 +77,17 @@
                             <h:outputLabel value="Precio:" />
                             <p:outputPanel id="precio" >
                                 <h:outputText value="U$D #{editarMBean.precio}"
-                                              rendered="#{not empty publicidadBean.precio}"/>
+                                              rendered="#{not empty editarMBean.precio}"/>
                                 <h:outputText value="(Seleccione ubicacion y duracion)" 
-                                              rendered="#{empty publicidadBean.precio and param.tipo == 'modificar'}"
+                                              rendered="#{empty editarMBean.precio and editarMBean.modificar}"
                                               />
                             </p:outputPanel>
                             <p:message for="precio" />
                             <h:outputLabel value="Fecha desde" />
                             <p:calendar id="fecha" value="#{editarMBean.fechaDesde}" 
-                                        pattern="dd/MM/yyyy" locale="es"
+                                        pattern="dd/MM/yyyy" locale="es" showOn="button"
                                         required="true" requiredMessage="Valor requerido" 
-                                        disabled="#{editarMBean.modificar == 'modificar'}"/>
+                                        disabled="#{editarMBean.modificar}"/>
                             <p:message for="fecha" />
                         </h:panelGrid>
                     </p:fieldset>
@@ -97,41 +97,55 @@
                     <p:fieldset legend="Imagen" styleClass="fieldset" >
 
                         <p:outputPanel id="out">
-                            <div id="div1" >
-                                <h:panelGrid id="panelImagen" columns="1" style="width:100%;" rendered="#{editarMBean.existeImagen == true}">
+                            <div id="div1" style="width: 100%; text-align: center;" >
                                     <h:graphicImage id="imgId" value="/imagenpub?id=#{editarMBean.imagenId}" 
-                                                    width="200" height="185" styleClass="img"/> 
-                                    <p:commandLink title="Eliminar" update="out" 
-                                                   actionListener="#{editarMBean.removerImagen}" rendered="#{editarMBean.existeImagen == true}"
-                                                   >
-                                        <p:graphicImage value="#{resource['images:icono_borrar.gif']}"/> 
-                                    </p:commandLink>
-                                </h:panelGrid>
+                                                    style="max-width: 200px; max-height: 185px" styleClass="img"/>
                             </div>
                         </p:outputPanel>
 
-
-                        <h:outputText value="Elija una imagen de hasta 2 MB:" /><br/>
-                        <p:fileUpload widgetVar="uploader" 
-                                      fileUploadListener="#{editarMBean.handleFileUpload}"
-                                      mode="advanced" cancelLabel="Cancelar" uploadLabel="Subir"
+                        <h:outputText value="Reemplazar la imagen actual por otra imagen: (elija una imagen de hasta 2 MB)" /><br/>
+                        <p:fileUpload widgetVar="uploader" label="Seleccionar" uploadLabel="Subir"
+                                      fileUploadListener="#{editarMBean.handleFileUpload}" auto="true"
+                                      mode="advanced" cancelLabel="Cancelar" multiple="false"
                                       allowTypes="/(\.|\/)(gif|jpe?g|png)$/" 
-                                      />
+                                      invalidFileMessage="Archivo inválido" style="margin-top: 10px" />
 
                     </p:fieldset>
 
                     <h:panelGrid columns="2" columnClasses="leftCol,rightCol" style="width: 100%" 
-                                 rendered="#{not editarMBean.modificar == 'modificar'}">
+                                 rendered="#{not editarMBean.modificar}">
+                        <ui:remove>
                         <p:commandLink actionListener="#{editarMBean.registrarPublicidad}" update="growl">
                             <h:graphicImage value="#{resource['images:pagoPaypal.gif']}" />
                         </p:commandLink>
-                        <p:commandButton value="Limpiar" type="reset" />
+                        </ui:remove>
+                        <p:commandButton value="Aceptar" update="@form" actionListener="#{editarMBean.validarImagen}" />
+                        <p:button value="Cancelar" outcome="/vistas/pub/misPublicidades" />
                     </h:panelGrid>
 
-                    <h:panelGrid columns="2" columnClasses="leftCol,rightCol" style="width: 100%" >
+                    <h:panelGrid columns="2" columnClasses="leftCol,rightCol" style="width: 100%"
+                                 rendered="#{editarMBean.modificar}" >
                         <p:commandButton value="Guardar" action="#{editarMBean.actualizarPublicidad}" ajax="false" />
-                        <p:commandButton value="Limpiar" type="reset" />
+                        <p:button value="Cancelar" outcome="/vistas/pub/misPublicidades" />
                     </h:panelGrid>
+                    
+                    
+                    <p:dialog widgetVar="metodoPagoDlg" header="Seleccione método de pago" modal="true" resizable="false" >
+                        <h:panelGrid columns="3" >
+                            <p:commandLink title="Paypal Inmediato" actionListener="#{editarMBean.registrarPublicidadInmediatamente}" 
+                                           onclick="window.open('pagarPublicidadPaypal.png')" update="growl" styleClass="btnMetodoPago">
+                                <h:graphicImage value="#{resource['images:botonPaypal-inmediato.jpg']}" />
+                            </p:commandLink>
+                            <p:commandLink title="Paypal Regular" actionListener="#{editarMBean.registrarPublicidad}" 
+                                           styleClass="btnMetodoPago" update="growl" >
+                                <h:graphicImage value="#{resource['images:botonPaypal.jpg']}" />
+                            </p:commandLink>
+                            <p:commandLink title="DineroMail" actionListener="#{editarMBean.registrarPublicidadDm}" 
+                                           styleClass="btnMetodoPago" update=":dm growl" oncomplete="submitForm(xhr, status, args)" >
+                                <h:graphicImage value="#{resource['images:botonDineromail.jpg']}" />
+                            </p:commandLink>
+                        </h:panelGrid>
+                    </p:dialog>
 
                     <p:growl id="growl" showDetail="true" globalOnly="true" />
 
@@ -142,7 +156,7 @@
                             });
 
                             function bindEventsHighlights() {
-                                var specialDays = <h:outputText value="#{publicidadBean.fechas}" /> ;
+                                var specialDays = <h:outputText value="#{editarMBean.fechas}" /> ;
                                 jQuery(".hasDatepicker").datepicker("option", "beforeShowDay", function (date) {
                                     return highlightCalendar(specialDays, date, 'highlight-calendar');
                                 });
@@ -151,6 +165,21 @@
                     </p:outputPanel>
 
                 </h:form>
+                
+                <p:outputPanel id="dm" >
+                    <form id="dmForm" action='https://argentina.dineromail.com/Shop/Shop_Ingreso.asp' method='post'>
+                        <input type='hidden' name='NombreItem' value='#{editarMBean.descripcion}'/>
+                        <input type='hidden' name='TipoMoneda' value='2'/>
+                        <input type='hidden' name='PrecioItem' value='#{editarMBean.precio}'/>
+                        <input type='hidden' name='E_Comercio' value='2421574'/>
+                        <input type='hidden' name='NroItem' value='#{editarMBean.pagoId}'/>
+                        <input type='hidden' name='DireccionExito' value='http://localhost.com:8080/AlquilaCosas-war/vistas/pub/misPublicidades.jsf'/>
+                        <input type='hidden' name='DireccionFracaso' value='http://localhost.com:8080/AlquilaCosas-war/vistas/pub/misPublicidades.jsf'/>
+                        <input type='hidden' name='DireccionEnvio' value='0'/>
+                        <input type='hidden' name='Mensaje' value='0'/>
+                        <input type='hidden' name='MediosPago' value='4,2,7,13'/>
+                    </form>
+                </p:outputPanel>
 
             </ui:define>
 

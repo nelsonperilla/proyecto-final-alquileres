@@ -27,6 +27,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.json.JSONObject;
 
@@ -40,10 +41,11 @@ public class RegistrarPublicidadMBean implements Serializable {
 
     @EJB
     private PublicidadBeanLocal publicidadBean;
-    @EJB private PagosRecibidosBeanLocal pagoBean;
+    @EJB
+    private PagosRecibidosBeanLocal pagoBean;
     @ManagedProperty(value = "#{login}")
     private ManejadorUsuarioMBean loginMBean;
-    private String titulo, url, caption;
+    private String titulo, url, caption, descripcion;
     private Double precio;
     private Date fechaDesde;
     private List<SelectItem> duraciones, ubicaciones;
@@ -53,13 +55,15 @@ public class RegistrarPublicidadMBean implements Serializable {
     private List<Date> fechas;
     private String myJson;
     private Date fechaHasta;
-    private Integer publicidadId;
+    private Integer publicidadId, pagoId;
     private static final String CARRUSEL = "La imagen debe ser de 600 x 130 pixels";
     private static final String LAT_IZQ = "La imagen debe ser de 140 x 400 pixels";
     private static final String LAT_DER = "La imagen debe ser de 140 x 200 pixels";
     private String label = "";
 
-    /** Creates a new instance of RegistrarPublicidadMBean */
+    /**
+     * Creates a new instance of RegistrarPublicidadMBean
+     */
     public RegistrarPublicidadMBean() {
     }
 
@@ -67,9 +71,9 @@ public class RegistrarPublicidadMBean implements Serializable {
     public void init() {
         Logger.getLogger(RegistrarPublicidadMBean.class).debug("RegistrarPublicidadMBean: postconstruct.");
         String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
-        if(id != null) {
+        if (id != null) {
             publicidadId = Integer.parseInt(id);
-        
+
             PublicidadDTO publicidad = publicidadBean.getPublicidad(publicidadId);
 
             this.setTitulo(publicidad.getTitulo());
@@ -78,8 +82,8 @@ public class RegistrarPublicidadMBean implements Serializable {
             this.setPrecio(publicidad.getCosto());
             this.setFechaDesde(publicidad.getFechaDesde());
         }
-        
-        fechas = new ArrayList<Date>(); 
+
+        fechas = new ArrayList<Date>();
         this.createDictionary();
 
         duraciones = new ArrayList<SelectItem>();
@@ -99,22 +103,26 @@ public class RegistrarPublicidadMBean implements Serializable {
 
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
-
-    public void registrarPublicidad() {
-
+    
+    public void validarImagen() {
         if (imagen == null) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Debe cargar una imagen", "");
             FacesContext.getCurrentInstance().addMessage(null, msg);
+        } else {
+            RequestContext.getCurrentInstance().execute("metodoPagoDlg.show()");
+        }
+    }
+
+    public void registrarPublicidad() {
+        if (imagen == null) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Debe cargar una imagen", "");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            RequestContext.getCurrentInstance().execute("metodoPagoDlg.hide()");
             return;
         }
-
-        if(!url.startsWith("http://")) {
-            url = "http://" + url;
-        }
-        
-        Integer pagoId = null;
-        String http = "";
+        pagoId = null;
         try {
             Calendar cal = Calendar.getInstance();
             cal.setTime(fechaDesde);
@@ -149,15 +157,16 @@ public class RegistrarPublicidadMBean implements Serializable {
             if (noStockFlag) {
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "Hay fechas sin stock en el periodo seleccionado", ""));
+                        "Hay fechas sin disponibilidad en el periodo seleccionado", ""));
+                RequestContext.getCurrentInstance().execute("metodoPagoDlg.hide()");
             } else {
-                
-                if( !(url.equals("http://")) ){
-                http = "http://" + url;
+
+                if (!(url.contains("http://"))) {
+                    url = "http://" + url;
                 }
-                
+
                 pagoId = publicidadBean.registrarPublicidad(loginMBean.getUsuarioId(),
-                        titulo, http, caption, ubicacionSeleccionada,
+                        titulo, url, caption, ubicacionSeleccionada,
                         duracionSeleccionada, imagen, fechaDesde, fechaHasta, precio,
                         NombreTipoPago.PAYPAL);
             }
@@ -169,15 +178,17 @@ public class RegistrarPublicidadMBean implements Serializable {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Error al registrar publicidad", e.getMessage());
             FacesContext.getCurrentInstance().addMessage(null, msg);
+            RequestContext.getCurrentInstance().execute("metodoPagoDlg.hide()");
             return;
         }
         if (pagoId == null) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Error al registrar publicidad", "");
             FacesContext.getCurrentInstance().addMessage(null, msg);
+            RequestContext.getCurrentInstance().execute("metodoPagoDlg.hide()");
             return;
         }
-        String descripcion = "Publicar anuncio: " + titulo;
+        descripcion = "Publicar anuncio: " + titulo;
         String redirectUrl = PaypalUtil.setExpressCheckout(descripcion, Integer.toString(pagoId), null, precio.toString());
         if (redirectUrl != null) {
             try {
@@ -187,25 +198,22 @@ public class RegistrarPublicidadMBean implements Serializable {
             }
         } else {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Error al comunicarse con paypal", "");
+                    "Error al comunicarse con Paypal", "");
             FacesContext.getCurrentInstance().addMessage(null, msg);
+            RequestContext.getCurrentInstance().execute("metodoPagoDlg.hide()");
         }
     }
-    
-    public String registrarPublicidadInmediatamente() {
+
+    public void registrarPublicidadInmediatamente() {
         if (imagen == null) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Debe cargar una imagen", "");
             FacesContext.getCurrentInstance().addMessage(null, msg);
-            return null;
+            RequestContext.getCurrentInstance().execute("metodoPagoDlg.hide()");
+            return;
         }
 
-        if(!url.startsWith("http://")) {
-            url = "http://" + url;
-        }
-        
-        Integer pagoId = null;
-        String http = "";
+        pagoId = null;
         try {
             Calendar cal = Calendar.getInstance();
             cal.setTime(fechaDesde);
@@ -231,7 +239,7 @@ public class RegistrarPublicidadMBean implements Serializable {
             //en el periodo seleccionado
             while (!noStockFlag && itFechasSinStock.hasNext()) {
                 fecha.setTime(itFechasSinStock.next());
-                if (fechaDesde.before(fecha.getTime()) 
+                if (fechaDesde.before(fecha.getTime())
                         && fechaHasta.after(fecha.getTime()))//la fecha sin stock cae en el periodo
                 {
                     noStockFlag = true;
@@ -241,15 +249,16 @@ public class RegistrarPublicidadMBean implements Serializable {
             if (noStockFlag) {
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "Hay fechas sin stock en el periodo seleccionado", ""));
+                        "Hay fechas sin disponibilidad en el periodo seleccionado", ""));
+                RequestContext.getCurrentInstance().execute("metodoPagoDlg.hide()");
             } else {
-                
-                if( !(url.equals("http://")) ){
-                http = "http://" + url;
+
+                if (!(url.contains("http://"))) {
+                    url = "http://" + url;
                 }
-                
+
                 pagoId = publicidadBean.registrarPublicidad(loginMBean.getUsuarioId(),
-                        titulo, http, caption, ubicacionSeleccionada,
+                        titulo, url, caption, ubicacionSeleccionada,
                         duracionSeleccionada, imagen, fechaDesde, fechaHasta, precio,
                         NombreTipoPago.PAYPAL);
             }
@@ -261,16 +270,47 @@ public class RegistrarPublicidadMBean implements Serializable {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Error al registrar publicidad", e.getMessage());
             FacesContext.getCurrentInstance().addMessage(null, msg);
-            return null;
+            RequestContext.getCurrentInstance().execute("metodoPagoDlg.hide()");
+            return;
         }
         if (pagoId == null) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Error al registrar publicidad", "");
             FacesContext.getCurrentInstance().addMessage(null, msg);
-            return null;
+            RequestContext.getCurrentInstance().execute("metodoPagoDlg.hide()");
+            return;
         }
         pagoBean.confirmarPago(Integer.valueOf(pagoId));
-        return "/vistas/pagoConfirmado2";
+        try {
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            facesContext.getApplication().getNavigationHandler().
+                    handleNavigation(facesContext, null,
+                    "/vistas/pagoConfirmado2?faces-redirect=true");
+        } catch (Exception e) {
+        }
+    }
+
+    /*
+     * Registrar una nueva publicidad y su pago asociado, utilizando el metodo
+     * de pago DineroMail
+     */
+    public void registrarPublicidadDm() {
+        try {
+            pagoId = publicidadBean.registrarPublicidad(loginMBean.getUsuarioId(),
+                    titulo, url, caption, ubicacionSeleccionada,
+                    duracionSeleccionada, imagen, fechaDesde, fechaHasta, precio,
+                    NombreTipoPago.PAYPAL);
+        } catch (Exception e) {
+        }
+        if (pagoId == null || pagoId < 0) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Error al registrar pago.", "");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            RequestContext.getCurrentInstance().addCallbackParam("registrado", false);
+            return;
+        }
+        descripcion = "Publicar anuncio: " + titulo;
+        RequestContext.getCurrentInstance().addCallbackParam("registrado", true);
     }
 
     public void duracionCambio() {
@@ -286,11 +326,11 @@ public class RegistrarPublicidadMBean implements Serializable {
             precio = publicidadBean.getPrecio(duracionSeleccionada, ubicacionSeleccionada);
             fechas = publicidadBean.getFechasSinDisponibilidad(ubicacionSeleccionada);
             this.createDictionary();
-            if( ubicacionSeleccionada.name().equals("CARRUSEL") ){
+            if (ubicacionSeleccionada.name().equals("CARRUSEL")) {
                 label = CARRUSEL;
-            }else if( ubicacionSeleccionada.name().equals("LATERAL_IZQUIERDA") ){
+            } else if (ubicacionSeleccionada.name().equals("LATERAL_IZQUIERDA")) {
                 label = LAT_IZQ;
-            }else{
+            } else {
                 label = LAT_DER;
             }
         } else {
@@ -448,5 +488,21 @@ public class RegistrarPublicidadMBean implements Serializable {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public Integer getPagoId() {
+        return pagoId;
+    }
+
+    public void setPagoId(Integer pagoId) {
+        this.pagoId = pagoId;
     }
 }

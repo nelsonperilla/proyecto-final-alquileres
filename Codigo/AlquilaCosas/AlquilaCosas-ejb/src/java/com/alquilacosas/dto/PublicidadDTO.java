@@ -15,7 +15,22 @@ import java.util.Date;
  */
 public class PublicidadDTO implements Serializable {
     
-    public enum EstadoPublicidad { ACTIVA, PENDIENTE, INACTIVA };
+    public enum EstadoPublicidad { 
+        PAGO_PENDIENTE("Pago pendiente"), 
+        PAGO_CONFIRMADO("Pago confirmado"), 
+        ACTIVA("Activa"),
+        VENCIDA("Vencida");
+        
+        String label;
+
+        private EstadoPublicidad(String label) {
+            this.label = label;
+        }
+        @Override
+        public String toString() {
+            return label;
+        }
+    };
     
     private int id;
     private String titulo, caption, url;

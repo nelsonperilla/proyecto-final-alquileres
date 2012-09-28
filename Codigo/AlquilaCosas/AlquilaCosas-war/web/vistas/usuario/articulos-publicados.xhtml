@@ -11,7 +11,7 @@
             <p:dataGrid value="#{misPublicaciones.publicacionesDto}" var="item" columns="1" 
                         styleClass="itemsTable" id="grid" rowIndexVar="row" paginator="true" 
                         paginatorPosition="bottom" paginatorAlwaysVisible="false"
-                        emptyMessage="No hay articulos publicados." >
+                        emptyMessage="No hay artículos publicados." >
                 <p:column>
 
                     <div class="artContenedor" >
@@ -39,6 +39,7 @@
                                           rendered="#{not item.destacada}" style="background: palegreen" >
                                     <f:param name="id" value="#{item.id}" />
                                 </p:button>
+                                <h:outputText value="¡Artículo Destacado!" rendered="#{item.destacada}" style="font-weight: bold; color: darkslateblue;" />
                             </div>
                         </div>  
                         <div class="artPrecio" >
@@ -74,7 +75,7 @@
                                     <h:outputLabel value="/Hora" styleClass="detPeriodo" 
                                                    rendered="#{not empty item.precioHora}" />
                                     <h:outputText value="$ #{item.precioDia}" styleClass="detPrecio" />
-                                    <h:outputLabel value="/Dia" styleClass="detPeriodo"/>
+                                    <h:outputLabel value="/Día" styleClass="detPeriodo"/>
                                     <h:outputText value="$ #{item.precioSemana}" styleClass="detPrecio"
                                                   rendered="#{not empty item.precioSemana}" />
                                     <h:outputLabel value="/Semana" styleClass="detPeriodo" 
@@ -90,10 +91,10 @@
                 </p:column>
             </p:dataGrid>
 
-            <p:dialog widgetVar="eliminarPubDlg" header="Eliminar publicacion" modal="true" 
+            <p:dialog widgetVar="eliminarPubDlg" header="Eliminar publicación" modal="true" 
                       resizable="false" style="text-align: center;" >
                 <p>
-                    Esta seguro que desea eliminar esta publicacion?
+                    ¿Está seguro que desea eliminar esta publicación?
                 </p>
                 <br/>
                 <f:facet name="footer" >

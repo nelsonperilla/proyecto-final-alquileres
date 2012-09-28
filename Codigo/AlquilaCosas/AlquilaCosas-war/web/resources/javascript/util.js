@@ -52,8 +52,8 @@ function revisarLogueo(xhr, status, args) {
 
 function revisarLogueo2(xhr, status, args) {
     if(args.logueado) {
-       var url = window.location;
-       window.location = url;
+        var url = window.location;
+        window.location = url;
     }
 }
 
@@ -121,19 +121,21 @@ var currentMarker = null;
 var currentMarkerBis = null;
 
 function loadMarker() {  
-        if (currentMarker == null)
-        {
-            var address = document.getElementById("registro:numero").value + ' ';
-            address = address + document.getElementById("registro:calle").value + ',';
-            address = address + document.getElementById("registro:ciudad").value + ',';
+    if (currentMarker == null)
+    {
+        var address = document.getElementById("registro:numero").value + ' ';
+        address = address + document.getElementById("registro:calle").value + ',';
+        address = address + document.getElementById("registro:ciudad").value + ',';
 
-            var selectedIndex = document.getElementById("registro:provincia_input").selectedIndex;
-            address = address + document.getElementById("registro:provincia_input").options[selectedIndex].text + ',';
-            selectedIndex = document.getElementById("registro:pais_input").selectedIndex;
-            address = address + document.getElementById("registro:pais_input").options[selectedIndex].text;
-            var geocoder = new google.maps.Geocoder();
-            geocoder.geocode( { 'address': address}, function(results, status) {
-              if (status == google.maps.GeocoderStatus.OK) {
+        var selectedIndex = document.getElementById("registro:provincia_input").selectedIndex;
+        address = address + document.getElementById("registro:provincia_input").options[selectedIndex].text + ',';
+        selectedIndex = document.getElementById("registro:pais_input").selectedIndex;
+        address = address + document.getElementById("registro:pais_input").options[selectedIndex].text;
+        var geocoder = new google.maps.Geocoder();
+        geocoder.geocode( {
+            'address': address
+        }, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
                 var gmap = myMap.getMap(); 
                 gmap.setCenter(results[0].geometry.location);
                 currentMarker = new google.maps.Marker({
@@ -144,18 +146,18 @@ function loadMarker() {
 
                 document.getElementById('lat').value = results[0].geometry.location.lat();  
                 document.getElementById('lng').value = results[0].geometry.location.lng();         
-                }
-            });
-            google.maps.event.addListener(
-                currentMarker,
-                'drag',
-                function(event) {
-                    document.getElementById('lat').value = currentMarker.position.lat();
-                    document.getElementById('lng').value = currentMarker.position.lng();
-                }
+            }
+        });
+        google.maps.event.addListener(
+            currentMarker,
+            'drag',
+            function(event) {
+                document.getElementById('lat').value = currentMarker.position.lat();
+                document.getElementById('lng').value = currentMarker.position.lng();
+            }
             );
-        }
     }
+}
 
 
 
@@ -198,9 +200,9 @@ function markerAddComplete() {
     dlg.hide();   
 }*/  
 
-  function getLocationFromAdress() {
-      if (currentMarkerBis == null)
-      {
+function getLocationFromAdress() {
+    if (currentMarkerBis == null)
+    {
         var address = document.getElementById("tab:numero").value + ' ';
         address = address + document.getElementById("tab:calle").value + ',';
         address = address + document.getElementById("tab:ciudad").value + ',';
@@ -210,43 +212,45 @@ function markerAddComplete() {
         address = address + document.getElementById("tab:pais_input").options[selectedIndex].text;
         //document.getElementById("tab:piso").value = address;
         var geocoder = new google.maps.Geocoder();
-        geocoder.geocode( { 'address': address}, geoListener);
-            google.maps.event.addListener(
-                currentMarkerBis,
-                'drag',
-                function(event) {
-                    document.getElementById('tab:lat').value = currentMarkerBis.position.lat();
-                    document.getElementById('tab:lng').value = currentMarkerBis.position.lng();
-                }
+        geocoder.geocode( {
+            'address': address
+        }, geoListener);
+        google.maps.event.addListener(
+            currentMarkerBis,
+            'drag',
+            function(event) {
+                document.getElementById('tab:lat').value = currentMarkerBis.position.lat();
+                document.getElementById('tab:lng').value = currentMarkerBis.position.lng();
+            }
             );        
-      }
-  }
-
-    function pedirPosicion(pos) {
-        var gmap = myMap.getMap();
-        var centro = new google.maps.LatLng(pos.coords.latitude,pos.coords.longitude);
-        gmap.setCenter(centro); //pedimos que centre el mapa..
-        gmap.setZoom(15);
-     }
-
-    function geolocalizame(){
-        navigator.geolocation.getCurrentPosition(pedirPosicion);
     }
+}
+
+function pedirPosicion(pos) {
+    var gmap = myMap.getMap();
+    var centro = new google.maps.LatLng(pos.coords.latitude,pos.coords.longitude);
+    gmap.setCenter(centro); //pedimos que centre el mapa..
+    gmap.setZoom(15);
+}
+
+function geolocalizame(){
+    navigator.geolocation.getCurrentPosition(pedirPosicion);
+}
 
 function geoListener(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-            var gmap = myMap.getMap(); 
-            gmap.setCenter(results[0].geometry.location);
-            currentMarkerBis = new google.maps.Marker({
-                position: results[0].geometry.location,
-                draggable: true
-            });
-            myMap.addOverlay(currentMarkerBis);
+    if (status == google.maps.GeocoderStatus.OK) {
+        var gmap = myMap.getMap(); 
+        gmap.setCenter(results[0].geometry.location);
+        currentMarkerBis = new google.maps.Marker({
+            position: results[0].geometry.location,
+            draggable: true
+        });
+        myMap.addOverlay(currentMarkerBis);
 
         document.getElementById('tab:lat').value = results[0].geometry.location.lat();  
         document.getElementById('tab:lng').value = results[0].geometry.location.lng(); 
-      }
     }
+}
 
 function cancel() {  
     dlg.hide();  
@@ -265,7 +269,7 @@ function onMarkerDrag(event){
 function updateCoordinates(){
     document.getElementById('lng').value = currentMarker.position.lng();
     document.getElementById('lat').value = currentMarker.position.lat();
-    /*document.getElementById('lat').value = event.latLng.lat();  
+/*document.getElementById('lat').value = event.latLng.lat();  
     document.getElementById('lng').value = event.latLng.lng();          */
 }
 
@@ -319,3 +323,8 @@ PrimeFaces.locales['es'] = {
     day: 'Día',
     allDayText : 'Todo el día'
 };
+
+function submitForm(xhr, status, args) {
+    if(args.registrado)
+        document.forms["dmForm"].submit();
+}

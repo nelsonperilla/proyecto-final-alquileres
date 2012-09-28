@@ -43,7 +43,7 @@
                             <f:facet name="header">
                                 <h:outputText value="Estado" />
                             </f:facet>
-                            <h:outputText value="#{publicidad.estado}" />
+                            <h:outputText value="#{publicidad.estado.toString()}" />
                         </p:column>
 
                         <p:column>
@@ -120,7 +120,7 @@
                             <h:outputText value="Descripción:" />
                             <h:outputText value="#{misPublicidades.selectedPublicidad.caption}" />
 
-                            <h:outputText value="Dir Web:" />
+                            <h:outputText value="URL:" />
                             <a href="#{misPublicidades.selectedPublicidad.url}" >#{misPublicidades.selectedPublicidad.url}</a>
 
                         </h:panelGrid>
