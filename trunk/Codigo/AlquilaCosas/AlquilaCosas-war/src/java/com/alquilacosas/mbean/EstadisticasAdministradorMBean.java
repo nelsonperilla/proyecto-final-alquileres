@@ -66,6 +66,7 @@ public class EstadisticasAdministradorMBean implements Serializable {
         //crearUsuarios();
         //crearPublicaciones();
         //crearAlquileres();
+        //this.crearDomicilios();
     }
 
     public void itemSelect(ItemSelectEvent event) {
@@ -238,6 +239,10 @@ public class EstadisticasAdministradorMBean implements Serializable {
 
     public void crearAlquileres() {
         estadisticasAdministradorBean.crearAlquileres();
+    }
+    
+    public void crearDomicilios(){
+        estadisticasAdministradorBean.crearDomicilios();
     }
 
     public CartesianChartModel getUsuarioCantidadModel() {

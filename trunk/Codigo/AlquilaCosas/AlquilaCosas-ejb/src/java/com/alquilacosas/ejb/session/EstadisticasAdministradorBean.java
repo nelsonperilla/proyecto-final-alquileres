@@ -50,6 +50,8 @@ public class EstadisticasAdministradorBean implements EstadisticasAdministradorB
     private AlquilerFacade alquilerFacade;
     @EJB
     private CategoriaBeanLocal categoriaEjb;
+    @EJB 
+    private DomicilioFacade domicilioFacade;
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
@@ -76,7 +78,7 @@ public class EstadisticasAdministradorBean implements EstadisticasAdministradorB
         for (UsuarioXEstado e : estados) {
             if (e.getFechaDesde().after(fecha.getTime())) {
                 for (EstadisticaAdminUsuarios est : listEstadistica) {
-                    Calendar mes = Calendar.getInstance();
+                    Calendar mes = Calendar.getInstance();  
                     mes.setTime(est.getMes());
                     if (est.getEstado() == e.getEstadoUsuario().getNombre() && e.getFechaDesde().after(est.getMes()) && e.getFechaDesde().before(getUltimoDiaDelMes(mes))) {
                         est.incrementarCantidad();
@@ -166,12 +168,14 @@ public class EstadisticasAdministradorBean implements EstadisticasAdministradorB
 
         fecha = Calendar.getInstance();
         fecha.add(Calendar.MONTH, -12);
-        for (AlquilerXEstado e : estados) {
+        for (AlquilerXEstado e : estados) {     
             if (e.getFechaDesde().after(fecha.getTime())) {
                 for (EstadisticaAdminAlquiler est : listEstadistica) {
                     Calendar mes = Calendar.getInstance();
                     mes.setTime(est.getMes());
-                    if (est.getEstado() == e.getEstadoAlquilerFk().getNombre() && e.getFechaDesde().after(est.getMes()) && e.getFechaDesde().before(getUltimoDiaDelMes(mes))) {
+                    if (est.getEstado() == e.getEstadoAlquilerFk().getNombre() 
+                            && e.getFechaDesde().after(est.getMes()) 
+                            && e.getFechaDesde().before(getUltimoDiaDelMes(mes))) {
                         est.incrementarCantidad();
                     }
                     if (est.getEstado() == e.getEstadoAlquilerFk().getNombre() && e.getFechaDesde().before(getUltimoDiaDelMes(mes))) {
@@ -235,7 +239,7 @@ public class EstadisticasAdministradorBean implements EstadisticasAdministradorB
             Usuario usuario = new Usuario();
             usuario.setNombre("Juan" + i);
             usuario.setApellido("Ortega" + i);
-            usuario.setEmail("juanortega " + i + "@gmail.com");
+            usuario.setEmail("juanortega" + i + "@gmail.com");
 
             Date fecha = dates.get(new Double(Math.random() * 100).intValue());
 
@@ -268,7 +272,7 @@ public class EstadisticasAdministradorBean implements EstadisticasAdministradorB
             Usuario usuario = new Usuario();
             usuario.setNombre("Miguel" + i);
             usuario.setApellido("Jose" + i);
-            usuario.setEmail("migueljose " + i + "@gmail.com");
+            usuario.setEmail("migueljose" + i + "@gmail.com");
 
             Date fecha = dates.get(new Double(Math.random() * 100).intValue());
 
@@ -301,7 +305,7 @@ public class EstadisticasAdministradorBean implements EstadisticasAdministradorB
             Usuario usuario = new Usuario();
             usuario.setNombre("omar" + i);
             usuario.setApellido("santamaria" + i);
-            usuario.setEmail("omarsantamaria " + i + "@gmail.com");
+            usuario.setEmail("omarsantamaria" + i + "@gmail.com");
 
             Date fecha = dates.get(new Double(Math.random() * 100).intValue());
 
@@ -449,6 +453,17 @@ public class EstadisticasAdministradorBean implements EstadisticasAdministradorB
 
         estadoAlquiler.saveStateFurioso(alquiler, estado);
 
+    }
+    
+    @Override
+    public void crearDomicilios(){
+        Provincia prov = entityManager.find(Provincia.class, 28);
+        for(int i = 9; i < 150; i++){
+            Usuario usuario = entityManager.find(Usuario.class, i);
+            Domicilio domicilio = new Domicilio("felix" + i, 33, 1, "A", "Jardín", "Córdoba", prov);
+            domicilio.setUsuarioFk(usuario);
+            domicilioFacade.create(domicilio);
+        }
     }
 
     /**
