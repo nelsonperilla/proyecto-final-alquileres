@@ -10,6 +10,7 @@ import com.alquilacosas.common.UsuarioLogueado;
 import com.alquilacosas.ejb.entity.*;
 import com.alquilacosas.ejb.entity.EstadoUsuario.NombreEstadoUsuario;
 import com.alquilacosas.facade.*;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

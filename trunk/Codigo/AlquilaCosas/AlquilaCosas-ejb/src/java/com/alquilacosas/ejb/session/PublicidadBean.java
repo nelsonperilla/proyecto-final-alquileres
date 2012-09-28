@@ -149,19 +149,19 @@ public class PublicidadBean implements PublicidadBeanLocal {
             try {
                 Pago pago = p.getPagoList().get(0);
                 TipoPublicidad tp = p.getTipoPublicidadFk();
+                EstadoPublicidad estado = null;
                 if (pago.getFechaConfirmado() == null) {
-                    publicidadDto = new PublicidadDTO(p.getServicioId(), p.getTitulo(), p.getUrl(),
-                            p.getCaption(), p.getFechaDesde(), p.getFechaHasta(), pago.getMonto(),
-                            EstadoPublicidad.PENDIENTE, p.getImagen(), tp.getDuracion(), tp.getUbicacion());
-                } else if (p.getFechaDesde().after(hoy) || p.getFechaHasta().before(hoy)) {
-                    publicidadDto = new PublicidadDTO(p.getServicioId(), p.getTitulo(), p.getUrl(),
-                            p.getCaption(), p.getFechaDesde(), p.getFechaHasta(), pago.getMonto(),
-                            EstadoPublicidad.INACTIVA, p.getImagen(), tp.getDuracion(), tp.getUbicacion());
-                } else {
-                    publicidadDto = new PublicidadDTO(p.getServicioId(), p.getTitulo(), p.getUrl(),
-                            p.getCaption(), p.getFechaDesde(), p.getFechaHasta(), pago.getMonto(),
-                            EstadoPublicidad.ACTIVA, p.getImagen(), tp.getDuracion(), tp.getUbicacion());
+                    estado = EstadoPublicidad.PAGO_PENDIENTE;
+                } else if (p.getFechaDesde().after(hoy)) {
+                    estado = EstadoPublicidad.PAGO_CONFIRMADO;
+                } else if (p.getFechaHasta().before(hoy)) {
+                    estado = EstadoPublicidad.VENCIDA;
+                }  else if(p.getFechaDesde().before(hoy) && p.getFechaHasta().after(hoy)){
+                    estado = EstadoPublicidad.ACTIVA;
                 }
+                publicidadDto = new PublicidadDTO(p.getServicioId(), p.getTitulo(), p.getUrl(),
+                            p.getCaption(), p.getFechaDesde(), p.getFechaHasta(), pago.getMonto(),
+                            estado, p.getImagen(), tp.getDuracion(), tp.getUbicacion());
                 lista.add(publicidadDto);
             } catch (Exception e) {
                 System.out.println("La publicidad no tiene un pago creado" + e.getMessage());
@@ -176,9 +176,10 @@ public class PublicidadBean implements PublicidadBeanLocal {
 
         Publicidad p = publicidadFacade.find(publicidadId);
         TipoPublicidad tp = p.getTipoPublicidadFk();
-
+        PrecioTipoServicio precio = precioFacade.getPrecioPublicidad(tp);
+        
         PublicidadDTO publicidad = new PublicidadDTO(publicidadId, p.getTitulo(), p.getUrl(),
-                p.getCaption(), p.getFechaDesde(), p.getFechaHasta(), publicidadId,
+                p.getCaption(), p.getFechaDesde(), p.getFechaHasta(), precio.getPrecio(),
                 EstadoPublicidad.ACTIVA, p.getImagen(), tp.getDuracion(), tp.getUbicacion());
 
         return publicidad;

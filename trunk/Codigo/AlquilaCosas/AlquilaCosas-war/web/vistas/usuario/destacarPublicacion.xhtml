@@ -22,9 +22,10 @@
                     <p:graphicImage value="#{resource['images:ajaxLoadingBar.gif']}" />
                 </p:dialog>
 
-                <h:form style="text-align: center">
+                <div style="margin: 0 20px; text-align: center" >
+                <h:form>
                     <h1>Destacar Publicación</h1>
-                    <p>
+                    <p style="text-align: left">
                         De hacerlo, la misma aparecerá antes que otras publicaciones no destacadas, y de
                         esta forma usted está incrementando las posibilidades de que su producto sea alquilado.
                     </p>
@@ -34,42 +35,73 @@
                                         var="#{destacarBean.publicacion}" />
                     </div>
                     <br/>
-                    <h:panelGrid columns="3" >
+                    <h:panelGrid id="inputs" columns="3" cellpadding="4" style="text-align: left" >
                         <h:outputLabel value="Duracion:" />
                         <h:selectOneMenu value="#{destacarBean.tipoSeleccionado}"
-                                         id="duracion" required="true" >
+                                         id="duracion" required="true"
+                                         requiredMessage="Valor requerido" >
                             <f:selectItem itemLabel="Seleccione una duracion..." />
                             <f:selectItems value="#{destacarBean.tipos}" />
                             <p:ajax event="change" listener="#{destacarBean.tipoSeleccionado}"
                                     update="precio botones" />
                         </h:selectOneMenu>
                         <p:message for="duracion" />
+                        
                         <h:outputLabel value="Precio:" />
                         <p:outputPanel id="precio" >
-                            <h:outputText value="U$D #{destacarBean.precio}" 
+                            <h:outputText value="U$D #{destacarBean.precio}" style="font-size: 12px"
                                           rendered="#{not empty destacarBean.tipoSeleccionado}" />
-                            <h:outputText value="(Seleccione una duracion)" 
+                            <h:outputText value="-" style="font-size: 12px"
                                           rendered="#{empty destacarBean.tipoSeleccionado}" />
                         </p:outputPanel>
                     </h:panelGrid>
 
-                    <h:panelGrid columns="4" id="botones" columnClasses="leftCol,rightCol" style="width: 100%" >
-                        <p:commandButton id="pagoYa" value="Destacar ya!" action="#{destacarBean.destacarInmediatamente}" 
-                                         ajax="false" disabled="#{empty destacarBean.tipoSeleccionado}" />
-                        <p:commandLink id="pagoPaypal" actionListener="#{destacarBean.destacar}" 
-                                       disabled="#{empty destacarBean.tipoSeleccionado}" >
-                            <h:graphicImage value="#{resource['images:pagoPaypal.gif']}" />
+                    <h:panelGrid columns="4" id="botones" columnClasses="leftCol,rightCol" width="100%"
+                                 style="margin-top: 10px" >
+                        <ui:remove>
+                        <p:commandLink id="pagoYa" title="Destacar ya!" action="#{destacarBean.destacarInmediatamente}" 
+                                       ajax="false" disabled="#{empty destacarBean.tipoSeleccionado}"
+                                       onclick="window.open('paypal.png')" style="margin: 0 10px" >
+                            <h:graphicImage value="#{resource['images:pagarAhora.gif']}" />
                         </p:commandLink>
                         <p:commandLink id="pagoDm" actionListener="#{destacarBean.destacarDm}" 
                                        update=":dm growl" oncomplete="submitForm(xhr, status, args)"
-                                       disabled="#{empty destacarBean.tipoSeleccionado}" >
+                                       disabled="#{empty destacarBean.tipoSeleccionado}" style="margin: 0 10px" >
                             <h:graphicImage value="#{resource['images:pagoDineroMail.gif']}" />
                         </p:commandLink>
+                        <p:commandLink id="pagoPaypal" actionListener="#{destacarBean.destacar}" 
+                                       disabled="#{empty destacarBean.tipoSeleccionado}" style="margin: 0 10px" >
+                            <h:graphicImage value="#{resource['images:pagoPaypal.gif']}" />
+                        </p:commandLink>
+                        </ui:remove>
+                        <p:commandButton value="Aceptar" oncomplete="if(args &amp;&amp; !args.validationFailed) metodoPagoDlg.show()"
+                                         update="@form" disabled="#{empty destacarBean.tipoSeleccionado}" />
                         <p:button value="No, gracias" outcome="/vistas/usuario/articulos" />
                     </h:panelGrid>
 
                     <p:growl id="growl" globalOnly="true" />
+
+                    <p:dialog widgetVar="metodoPagoDlg" header="Seleccione método de pago" modal="true" resizable="false" >
+                        <h:panelGrid columns="3" >
+                            <p:commandLink title="Paypal Inmediato" action="#{destacarBean.destacarInmediatamente}" 
+                                           ajax="false" onclick="window.open('paypal.png')"
+                                           styleClass="btnMetodoPago">
+                                <h:graphicImage value="#{resource['images:botonPaypal-inmediato.jpg']}" />
+                            </p:commandLink>
+                            <p:commandLink title="Paypal Regular" actionListener="#{destacarBean.destacar}" 
+                                           styleClass="btnMetodoPago" >
+                                <h:graphicImage value="#{resource['images:botonPaypal.jpg']}" />
+                            </p:commandLink>
+                            <p:commandLink title="DineroMail" actionListener="#{destacarBean.destacarDm}" 
+                                           update=":dm growl" oncomplete="submitForm(xhr, status, args)"
+                                           styleClass="btnMetodoPago" >
+                                <h:graphicImage value="#{resource['images:botonDineromail.jpg']}" />
+                            </p:commandLink>
+                        </h:panelGrid>
+                    </p:dialog>
+
                 </h:form>
+                </div>
 
                 <p:outputPanel id="dm" >
                     <form id="dmForm" action='https://argentina.dineromail.com/Shop/Shop_Ingreso.asp' method='post'>
@@ -85,12 +117,7 @@
                         <input type='hidden' name='MediosPago' value='4,2,7,13'/>
                     </form>
                 </p:outputPanel>
-                <script type="text/javascript" >
-                    function submitForm(xhr, status, args) {
-                        if(args.registrado)
-                            document.forms["dmForm"].submit();
-                    }
-                </script>
+
             </ui:define>
 
         </ui:composition>

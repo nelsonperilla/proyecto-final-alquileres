@@ -110,7 +110,7 @@ public class DestacarPublicacionMBean implements Serializable {
                     "Error al registrar pago.", "");
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
-        descripcion = "Destacación" + tipoSeleccionado.toString() + ". Publicacion: " + publicacion.getTitulo();
+        descripcion = "Destacación " + tipoSeleccionado.toString().toLowerCase() + ". Publicación: '" + publicacion.getTitulo() + "'.";
         String url = PaypalUtil.setExpressCheckout(descripcion, Integer.toString(pagoId), 
                 Integer.toString(publicacionId), precio.toString());
         if (url != null) {

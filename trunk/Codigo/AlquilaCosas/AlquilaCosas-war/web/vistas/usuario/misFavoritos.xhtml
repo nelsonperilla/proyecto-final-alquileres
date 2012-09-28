@@ -12,7 +12,7 @@
             <p:dataGrid value="#{misFavoritos.publicacionesDto}" var="item" columns="1" 
                         styleClass="itemsTable" id="grid" rowIndexVar="row" paginator="true" 
                         paginatorPosition="bottom" paginatorAlwaysVisible="false"
-                        emptyMessage="No has agregado ningun favorito" >
+                        emptyMessage="No has agregado ningún favorito" >
                 <p:column>
 
                     <div class="artContenedor" >
@@ -63,7 +63,7 @@
                                     <h:outputLabel value="/Hora" styleClass="detPeriodo" 
                                                    rendered="#{not empty item.precioHora}" />
                                     <h:outputText value="$ #{item.precioDia}" styleClass="detPrecio" />
-                                    <h:outputLabel value="/Dia" styleClass="detPeriodo"/>
+                                    <h:outputLabel value="/Día" styleClass="detPeriodo"/>
                                     <h:outputText value="$ #{item.precioSemana}" styleClass="detPrecio"
                                                   rendered="#{not empty item.precioSemana}" />
                                     <h:outputLabel value="/Semana" styleClass="detPeriodo" 

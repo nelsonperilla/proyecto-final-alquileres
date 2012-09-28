@@ -1127,3 +1127,17 @@ a:hover.valor {
 .ui-panelgrid tr, .ui-panelgrid td {
 border:0 !important;
 }
+
+.btnMetodoPago {
+    margin: 0 10px;
+    border-radius: 5px;
+}
+
+.btnMetodoPago img {
+    border: 1px solid white;
+    border-radius: 5px;
+}
+
+.btnMetodoPago img:hover {
+    border: 1px solid lightgray;
+}

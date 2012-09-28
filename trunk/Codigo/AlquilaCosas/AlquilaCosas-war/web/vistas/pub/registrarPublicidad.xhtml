@@ -53,7 +53,7 @@
                                 <h:outputLabel value="Duración" />
                                 <h:selectOneMenu id="duracion" value="#{publicidadBean.duracionSeleccionada}" 
                                                  required="true" requiredMessage="Valor requerido" >
-                                    <f:selectItem itemLabel="Seleccione una duracion.." />
+                                    <f:selectItem itemLabel="Seleccione una duración" />
                                     <f:selectItems value="#{publicidadBean.duraciones}" />
                                     <p:ajax event="change" update="precio" listener="#{publicidadBean.duracionCambio}" />
                                 </h:selectOneMenu>
@@ -63,7 +63,7 @@
                                 <h:outputLabel value="Ubicación" />
                                 <h:selectOneMenu id="ubicacion" value="#{publicidadBean.ubicacionSeleccionada}"
                                                  required="true" requiredMessage="Valor requerido" >
-                                    <f:selectItem itemLabel="Seleccione una ubicacion.." />
+                                    <f:selectItem itemLabel="Seleccione una ubicación" />
                                     <f:selectItems value="#{publicidadBean.ubicaciones}" />
                                     <p:ajax event="change" update="fecha script precio label" listener="#{publicidadBean.ubicacionCambio}" />
                                 </h:selectOneMenu>
@@ -74,7 +74,7 @@
                                 <p:outputPanel id="precio" >
                                     <h:outputText value="U$D #{publicidadBean.precio}"
                                                   rendered="#{not empty publicidadBean.precio}"/>
-                                    <h:outputText value="(Seleccione ubicacion y duracion)" 
+                                    <h:outputText value="-" 
                                                   rendered="#{empty publicidadBean.precio}"/>
                                 </p:outputPanel>
                                 <p:message for="precio" />
@@ -82,53 +82,88 @@
 
                                 <h:outputLabel value="Fecha desde" />
                                 <p:calendar id="fecha" value="#{publicidadBean.fechaDesde}" 
-                                            pattern="dd/MM/yyyy" locale="es"
+                                            pattern="dd/MM/yyyy" locale="es" showOn="button"
                                             required="true" requiredMessage="Valor requerido" />
                                 <p:message for="fecha" />
                                 <p/>
                             </h:panelGrid>
                         </p:fieldset>
 
-                        <p:fieldset legend="Imagen" styleClass="fieldset" >
-                            <p:fileUpload widgetVar="uploader" label="Seleccionar" fileLimit="5" 
+                        <p:fieldset legend="Imagen" styleClass="fieldset" style="margin-bottom: 10px" >
+                            <p:fileUpload id="imagen" widgetVar="uploader" label="Seleccionar" required="true" 
                                           uploadLabel="Subir" cancelLabel="Cancelar"
                                           fileUploadListener="#{publicidadBean.handleFileUpload}"
                                           allowTypes="/(\.|\/)(gif|jpe?g|png)$/" 
-                                          mode="advanced" multiple="true" auto="true"
-                                          invalidFileMessage="Archivo inválido"/>
+                                          mode="advanced" multiple="false" auto="true" 
+                                          invalidFileMessage="Archivo inválido"
+                                          requiredMessage="Debe subir una imagen"  />
                             <h:outputLabel id="label" value="#{publicidadBean.label}" style="font-size: 10px" />
-
+                            <p:message for="imagen" />
                         </p:fieldset>
 
                         <f:facet name="footer" >
-                            <p:commandButton value="Pagar ya!" ajax="false"
-                                             action="#{publicidadBean.registrarPublicidadInmediatamente}" />
-                            <p:commandLink actionListener="#{publicidadBean.registrarPublicidad}" update="growl">
-                                <h:graphicImage value="#{resource['images:pagoPaypal.gif']}" />
-                            </p:commandLink>
-                            <p:commandButton value="Limpiar" type="reset" />
+                            <ui:remove>
+                                <p:commandButton value="Pagar ya!" ajax="false"
+                                                 action="#{publicidadBean.registrarPublicidadInmediatamente}" />
+                                <p:commandLink actionListener="#{publicidadBean.registrarPublicidad}" update="growl">
+                                    <h:graphicImage value="#{resource['images:pagoPaypal.gif']}" />
+                                </p:commandLink>
+                            </ui:remove>
+                            <p:commandButton value="Aceptar" update="@form" actionListener="#{publicidadBean.validarImagen}" />
+                            <p:button value="Cancelar" outcome="/vistas/pub/misPublicidades" style="margin-left: 10px" />
                         </f:facet>
-
                     </h:panelGrid>
+
+                    <p:dialog widgetVar="metodoPagoDlg" header="Seleccione método de pago" modal="true" resizable="false" >
+                        <h:panelGrid columns="3" >
+                            <p:commandLink title="Paypal Inmediato" actionListener="#{publicidadBean.registrarPublicidadInmediatamente}" 
+                                           onclick="window.open('pagarPublicidadPaypal.png')" update="growl" styleClass="btnMetodoPago">
+                                <h:graphicImage value="#{resource['images:botonPaypal-inmediato.jpg']}" />
+                            </p:commandLink>
+                            <p:commandLink title="Paypal Regular" actionListener="#{publicidadBean.registrarPublicidad}" 
+                                           styleClass="btnMetodoPago" update="growl" >
+                                <h:graphicImage value="#{resource['images:botonPaypal.jpg']}" />
+                            </p:commandLink>
+                            <p:commandLink title="DineroMail" actionListener="#{publicidadBean.registrarPublicidadDm}" 
+                                           styleClass="btnMetodoPago" update=":dm growl" oncomplete="submitForm(xhr, status, args)" >
+                                <h:graphicImage value="#{resource['images:botonDineromail.jpg']}" />
+                            </p:commandLink>
+                        </h:panelGrid>
+                    </p:dialog>                    
 
                     <p:growl id="growl" showDetail="true" globalOnly="true" />
 
                     <p:outputPanel id="script" >
                         <script type="text/javascript" >
-                             jQuery(function () {
-                                     window.setTimeout('bindEventsHighlights()',500);
-                             });
+                            jQuery(function () {
+                                window.setTimeout('bindEventsHighlights()',500);
+                            });
 
-                             function bindEventsHighlights() {
-                                     var specialDays = <h:outputText value="#{publicidadBean.fechas}" /> ;
-                                     jQuery(".hasDatepicker").datepicker("option", "beforeShowDay", function (date) {
-                                               return highlightCalendar(specialDays, date, 'highlight-calendar');
-                                     });
-                             };
+                            function bindEventsHighlights() {
+                                var specialDays = <h:outputText value="#{publicidadBean.fechas}" /> ;
+                                jQuery(".hasDatepicker").datepicker("option", "beforeShowDay", function (date) {
+                                    return highlightCalendar(specialDays, date, 'highlight-calendar');
+                                });
+                            };
                         </script>
                     </p:outputPanel>
 
                 </h:form>
+
+                <p:outputPanel id="dm" >
+                    <form id="dmForm" action='https://argentina.dineromail.com/Shop/Shop_Ingreso.asp' method='post'>
+                        <input type='hidden' name='NombreItem' value='#{publicidadBean.descripcion}'/>
+                        <input type='hidden' name='TipoMoneda' value='2'/>
+                        <input type='hidden' name='PrecioItem' value='#{publicidadBean.precio}'/>
+                        <input type='hidden' name='E_Comercio' value='2421574'/>
+                        <input type='hidden' name='NroItem' value='#{publicidadBean.pagoId}'/>
+                        <input type='hidden' name='DireccionExito' value='http://localhost.com:8080/AlquilaCosas-war/vistas/pub/misPublicidades.jsf'/>
+                        <input type='hidden' name='DireccionFracaso' value='http://localhost.com:8080/AlquilaCosas-war/vistas/pub/misPublicidades.jsf'/>
+                        <input type='hidden' name='DireccionEnvio' value='0'/>
+                        <input type='hidden' name='Mensaje' value='0'/>
+                        <input type='hidden' name='MediosPago' value='4,2,7,13'/>
+                    </form>
+                </p:outputPanel>
 
             </ui:define>
 

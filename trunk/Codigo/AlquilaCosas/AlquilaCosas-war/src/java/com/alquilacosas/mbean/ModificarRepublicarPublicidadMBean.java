@@ -9,14 +9,11 @@ import com.alquilacosas.dto.PublicidadDTO;
 import com.alquilacosas.ejb.entity.TipoPago.NombreTipoPago;
 import com.alquilacosas.ejb.entity.TipoPublicidad.DuracionPublicidad;
 import com.alquilacosas.ejb.entity.TipoPublicidad.UbicacionPublicidad;
+import com.alquilacosas.ejb.session.PagosRecibidosBeanLocal;
 import com.alquilacosas.ejb.session.PublicidadBeanLocal;
 import com.alquilacosas.pagos.PaypalUtil;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -26,6 +23,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.json.JSONObject;
 
@@ -33,16 +31,17 @@ import org.primefaces.json.JSONObject;
  *
  * @author ignaciogiagante
  */
-@ManagedBean ( name="editarMBean" )
+@ManagedBean(name = "editarMBean")
 @ViewScoped
-public class ModificarRepublicarPublicidadMBean implements Serializable{
+public class ModificarRepublicarPublicidadMBean implements Serializable {
 
-    
     @EJB
     private PublicidadBeanLocal publicidadBean;
+    @EJB
+    private PagosRecibidosBeanLocal pagoBean;
     @ManagedProperty(value = "#{login}")
     private ManejadorUsuarioMBean loginMBean;
-    private String titulo, url, caption;
+    private String titulo, url, caption, descripcion;
     private Double precio;
     private Date fechaDesde;
     private List<SelectItem> duraciones, ubicaciones;
@@ -52,29 +51,26 @@ public class ModificarRepublicarPublicidadMBean implements Serializable{
     private List<Date> fechas;
     private String myJson;
     private Date fechaHasta;
-    private Integer publicidadId;
-    private Integer imagenId;
-    private boolean existeImagen;
-    private String modificar;
-    
-    
-    /** Creates a new instance of ModificarRepublicarPublicidadMBean */
+    private Integer publicidadId, imagenId, pagoId;
+    private boolean modificar;
+
+    /**
+     * Creates a new instance of ModificarRepublicarPublicidadMBean
+     */
     public ModificarRepublicarPublicidadMBean() {
     }
 
     @PostConstruct
     public void init() {
-        
         Logger.getLogger(RegistrarPublicidadMBean.class).info("RegistrarPublicidadMBean: postconstruct.");
-        
         String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
-        
-        modificar = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("tipo");
-        
-        if(id != null) {
-            
+        String accion = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("tipo");
+        if (accion != null && accion.equals("modificar")) {
+            modificar = true;
+        }
+
+        if (id != null) {
             publicidadId = Integer.parseInt(id);
-        
             PublicidadDTO publicidad = publicidadBean.getPublicidad(publicidadId);
 
             this.setTitulo(publicidad.getTitulo());
@@ -86,11 +82,9 @@ public class ModificarRepublicarPublicidadMBean implements Serializable{
             this.setUbicacionSeleccionada(publicidad.getUbicacion());
             this.setImagen(publicidad.getImagen());
             this.imagenId = publicidadId;
-            this.existeImagen = true;
-            
         }
-        
-        fechas = new ArrayList<Date>(); 
+
+        fechas = new ArrayList<Date>();
         this.createDictionary();
 
         duraciones = new ArrayList<SelectItem>();
@@ -110,12 +104,6 @@ public class ModificarRepublicarPublicidadMBean implements Serializable{
 
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
-    
-    public void removerImagen() {
-        this.setImagen(null);
-        imagenId = null;
-        existeImagen = false;
-    }
 
     public String actualizarPublicidad() {
         String http = "";
@@ -127,7 +115,7 @@ public class ModificarRepublicarPublicidadMBean implements Serializable{
         }
 
         try {
-            if( !(url.startsWith("http://")) ){
+            if (!(url.startsWith("http://"))) {
                 url = "http://" + url;
             }
             publicidadBean.actualizarPublicidad(publicidadId, titulo, url, caption, imagen);
@@ -137,20 +125,28 @@ public class ModificarRepublicarPublicidadMBean implements Serializable{
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return "";
         }
-        return "misPublicidades.jsf?faces-redirect=true";
+        return "/vistas/pub/misPublicidades?faces-redirect=true";
     }
     
-    public void registrarPublicidad() {
-
+    public void validarImagen() {
         if (imagen == null) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Debe cargar una imagen", "");
             FacesContext.getCurrentInstance().addMessage(null, msg);
+        } else {
+            RequestContext.getCurrentInstance().execute("metodoPagoDlg.show()");
+        }
+    }
+
+    public void registrarPublicidad() {
+        if (imagen == null) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Debe cargar una imagen", "");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            RequestContext.getCurrentInstance().execute("metodoPagoDlg.hide()");
             return;
         }
-
-        Integer pagoId = null;
-
+        pagoId = null;
         try {
             Calendar cal = Calendar.getInstance();
             cal.setTime(fechaDesde);
@@ -185,8 +181,14 @@ public class ModificarRepublicarPublicidadMBean implements Serializable{
             if (noStockFlag) {
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "Hay fechas sin stock en el periodo seleccionado", ""));
+                        "Hay fechas sin disponibilidad en el periodo seleccionado", ""));
+                RequestContext.getCurrentInstance().execute("metodoPagoDlg.hide()");
             } else {
+
+                if (!(url.contains("http://"))) {
+                    url = "http://" + url;
+                }
+
                 pagoId = publicidadBean.registrarPublicidad(loginMBean.getUsuarioId(),
                         titulo, url, caption, ubicacionSeleccionada,
                         duracionSeleccionada, imagen, fechaDesde, fechaHasta, precio,
@@ -200,28 +202,189 @@ public class ModificarRepublicarPublicidadMBean implements Serializable{
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Error al registrar publicidad", e.getMessage());
             FacesContext.getCurrentInstance().addMessage(null, msg);
+            RequestContext.getCurrentInstance().execute("metodoPagoDlg.hide()");
             return;
         }
         if (pagoId == null) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Error al registrar publicidad", "");
             FacesContext.getCurrentInstance().addMessage(null, msg);
+            RequestContext.getCurrentInstance().execute("metodoPagoDlg.hide()");
             return;
         }
-        String descripcion = "Publicar anuncio: " + titulo;
+        descripcion = "Publicar anuncio: " + titulo;
         String redirectUrl = PaypalUtil.setExpressCheckout(descripcion, Integer.toString(pagoId), null, precio.toString());
         if (redirectUrl != null) {
             try {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("inicio.jsf");
-                FacesContext.getCurrentInstance().responseComplete();
+                FacesContext.getCurrentInstance().getExternalContext().redirect(redirectUrl);
             } catch (Exception e) {
                 Logger.getLogger(RegistrarPublicidadMBean.class).error("Excepcion al ejecutar redirect().");
             }
         } else {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Error al comunicarse con paypal", "");
+                    "Error al comunicarse con Paypal", "");
             FacesContext.getCurrentInstance().addMessage(null, msg);
+            RequestContext.getCurrentInstance().execute("metodoPagoDlg.hide()");
         }
+    }
+
+    public void registrarPublicidadInmediatamente() {
+        if (imagen == null) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Debe cargar una imagen", "");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            RequestContext.getCurrentInstance().execute("metodoPagoDlg.hide()");
+            return;
+        }
+
+        pagoId = null;
+        try {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(fechaDesde);
+            DuracionPublicidad duracion = duracionSeleccionada;
+            if (duracion == DuracionPublicidad.SEMANAL) {
+                cal.add(Calendar.DAY_OF_YEAR, 7);
+                this.setFechaHasta(cal.getTime());
+            } else if (duracion == DuracionPublicidad.BISEMANAL) {
+                cal.add(Calendar.DAY_OF_YEAR, 14);
+                this.setFechaHasta(cal.getTime());
+            } else if (duracion == DuracionPublicidad.MENSUAL) {
+                cal.add(Calendar.MONTH, 1);
+                this.setFechaHasta(cal.getTime());
+            } else if (duracion == DuracionPublicidad.BIMENSUAL) {
+                cal.add(Calendar.MONTH, 2);
+                this.setFechaHasta(cal.getTime());
+            }
+
+            Iterator<Date> itFechasSinStock = fechas.iterator();
+            boolean noStockFlag = false;
+            Calendar fecha = Calendar.getInstance();
+            //Recorro la lista de fechas sin stock fijandome si alguna cae
+            //en el periodo seleccionado
+            while (!noStockFlag && itFechasSinStock.hasNext()) {
+                fecha.setTime(itFechasSinStock.next());
+                if (fechaDesde.before(fecha.getTime())
+                        && fechaHasta.after(fecha.getTime()))//la fecha sin stock cae en el periodo
+                {
+                    noStockFlag = true;
+                }
+            }
+
+            if (noStockFlag) {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "Hay fechas sin disponibilidad en el periodo seleccionado", ""));
+                RequestContext.getCurrentInstance().execute("metodoPagoDlg.hide()");
+            } else {
+
+                if (!(url.contains("http://"))) {
+                    url = "http://" + url;
+                }
+
+                pagoId = publicidadBean.registrarPublicidad(loginMBean.getUsuarioId(),
+                        titulo, url, caption, ubicacionSeleccionada,
+                        duracionSeleccionada, imagen, fechaDesde, fechaHasta, precio,
+                        NombreTipoPago.PAYPAL);
+            }
+
+        } catch (AlquilaCosasException e) {
+            Logger.getLogger(RegistrarPublicidadMBean.class).
+                    error("registrarPublicidad(). Excepcion al invocar registrarPublicidad(): "
+                    + e + ": " + e.getMessage());
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Error al registrar publicidad", e.getMessage());
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            RequestContext.getCurrentInstance().execute("metodoPagoDlg.hide()");
+            return;
+        }
+        if (pagoId == null) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Error al registrar publicidad", "");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            RequestContext.getCurrentInstance().execute("metodoPagoDlg.hide()");
+            return;
+        }
+        pagoBean.confirmarPago(Integer.valueOf(pagoId));
+        try {
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            facesContext.getApplication().getNavigationHandler().
+                    handleNavigation(facesContext, null,
+                    "/vistas/pagoConfirmado2?faces-redirect=true");
+        } catch (Exception e) {
+        }
+    }
+
+    /*
+     * Registrar una nueva publicidad y su pago asociado, utilizando el metodo
+     * de pago DineroMail
+     */
+    public void registrarPublicidadDm() {
+        if (imagen == null) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Debe cargar una imagen", "");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            RequestContext.getCurrentInstance().execute("metodoPagoDlg.hide()");
+            return;
+        }
+        try {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(fechaDesde);
+            DuracionPublicidad duracion = duracionSeleccionada;
+            if (duracion == DuracionPublicidad.SEMANAL) {
+                cal.add(Calendar.DAY_OF_YEAR, 7);
+                this.setFechaHasta(cal.getTime());
+            } else if (duracion == DuracionPublicidad.BISEMANAL) {
+                cal.add(Calendar.DAY_OF_YEAR, 14);
+                this.setFechaHasta(cal.getTime());
+            } else if (duracion == DuracionPublicidad.MENSUAL) {
+                cal.add(Calendar.MONTH, 1);
+                this.setFechaHasta(cal.getTime());
+            } else if (duracion == DuracionPublicidad.BIMENSUAL) {
+                cal.add(Calendar.MONTH, 2);
+                this.setFechaHasta(cal.getTime());
+            }
+
+            Iterator<Date> itFechasSinStock = fechas.iterator();
+            boolean noStockFlag = false;
+            Calendar fecha = Calendar.getInstance();
+            //Recorro la lista de fechas sin stock fijandome si alguna cae
+            //en el periodo seleccionado
+            while (!noStockFlag && itFechasSinStock.hasNext()) {
+                fecha.setTime(itFechasSinStock.next());
+                if (fechaDesde.before(fecha.getTime())
+                        && fechaHasta.after(fecha.getTime()))//la fecha sin stock cae en el periodo
+                {
+                    noStockFlag = true;
+                }
+            }
+
+            if (noStockFlag) {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "Hay fechas sin disponibilidad en el periodo seleccionado", ""));
+                RequestContext.getCurrentInstance().execute("metodoPagoDlg.hide()");
+            } else {
+
+                if (!(url.contains("http://"))) {
+                    url = "http://" + url;
+                }
+
+                pagoId = publicidadBean.registrarPublicidad(loginMBean.getUsuarioId(),
+                        titulo, url, caption, ubicacionSeleccionada,
+                        duracionSeleccionada, imagen, fechaDesde, fechaHasta, precio,
+                        NombreTipoPago.PAYPAL);
+            }
+        } catch (Exception e) {
+        }
+        if (pagoId == null || pagoId < 0) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Error al registrar pago.", "");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            RequestContext.getCurrentInstance().addCallbackParam("registrado", false);
+            return;
+        }
+        descripcion = "Publicar anuncio: " + titulo;
+        RequestContext.getCurrentInstance().addCallbackParam("registrado", true);
     }
 
     public void duracionCambio() {
@@ -386,15 +549,13 @@ public class ModificarRepublicarPublicidadMBean implements Serializable{
         this.publicidadId = publicidadId;
     }
 
-    public String getModificar() {
+    public boolean getModificar() {
         return modificar;
     }
 
-    public void setModificar(String modificar) {
+    public void setModificar(boolean modificar) {
         this.modificar = modificar;
     }
-
-    
 
     public Integer getImagenId() {
         return imagenId;
@@ -404,13 +565,19 @@ public class ModificarRepublicarPublicidadMBean implements Serializable{
         this.imagenId = imagenId;
     }
 
-    public boolean isExisteImagen() {
-        return existeImagen;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setExisteImagen(boolean existeImagen) {
-        this.existeImagen = existeImagen;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
-    
-    
+
+    public Integer getPagoId() {
+        return pagoId;
+    }
+
+    public void setPagoId(Integer pagoId) {
+        this.pagoId = pagoId;
+    }
 }
