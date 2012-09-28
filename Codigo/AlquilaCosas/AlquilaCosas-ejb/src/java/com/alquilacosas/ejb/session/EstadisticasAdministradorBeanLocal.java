@@ -28,5 +28,7 @@ public interface EstadisticasAdministradorBeanLocal {
     void crearPublicaciones()throws AlquilaCosasException ;
 
     void crearAlquileres();
+    
+    void crearDomicilios();
      
 }
