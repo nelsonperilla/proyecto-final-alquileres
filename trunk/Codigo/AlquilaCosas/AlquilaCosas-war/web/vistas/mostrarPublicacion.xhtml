@@ -241,7 +241,9 @@
 
                             <h:outputLabel value="Fecha de inicio: "/>
                             <p:calendar id="rentCalendar" mode="inline" value="#{publicacionDesplegada.fechaInicio}" 
-                                        pattern="dd/MM/yyyy" mindate="#{publicacionDesplegada.today}" />
+                                        pattern="dd/MM/yyyy" mindate="#{publicacionDesplegada.today}"
+                                        required="true" requiredMessage="Valor requerido" />
+                            <p:message for="rentCalendar" />
                             <p/>
                         </h:panelGrid>
                         <p:commandButton value="Confirmar" action="#{publicacionDesplegada.confirmarPedido}" 

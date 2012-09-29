@@ -20,170 +20,173 @@
             </ui:define>
 
             <ui:define name="principal">
+                <div style="margin: 0 20px">
+                    <h:form id="formPublicacion">
 
-                <h:form id="formPublicacion">
+                        <h1>Modificar Publicacion</h1>
 
-                    <h1>Modificar Publicacion</h1>
-                    <h:panelGrid columns="3" columnClasses="labelColumn" >                       
+                        <p:fieldset legend="Datos del producto" styleClass="fieldset" >
+                            <h:panelGrid columns="3" columnClasses="labelColumn" >                       
 
-                        <h:outputLabel value="Estado: " />
-                        <h:selectOneMenu id="estado" value="#{modPublicacion.selectedEstado}" required ="true"
-                                         requiredMessage="Valor requerido"> 
-                            <f:selectItems value="#{modPublicacion.estados}" />
-                        </h:selectOneMenu>
-                        <p/>
+                                <h:outputLabel value="Estado: " />
+                                <h:selectOneMenu id="estado" value="#{modPublicacion.selectedEstado}" required ="true"
+                                                 requiredMessage="Valor requerido"> 
+                                    <f:selectItems value="#{modPublicacion.estados}" />
+                                </h:selectOneMenu>
+                                <p/>
 
-                        <h:outputLabel value="Titulo: "/>
-                        <p:inputText id="titulo" value="#{modPublicacion.titulo}" required="true"
-                                     requiredMessage="Valor requerido" >
-                            <f:validateLength maximum="45" />
-                        </p:inputText>
-                        <p:message id="tituloVal" for="titulo" showSummary="false" />
+                                <h:outputLabel value="Título: "/>
+                                <p:inputText id="titulo" value="#{modPublicacion.titulo}" required="true"
+                                             requiredMessage="Valor requerido" >
+                                    <f:validateLength maximum="45" />
+                                </p:inputText>
+                                <p:message id="tituloVal" for="titulo" showSummary="false" />
 
-                        <h:outputLabel value="Cantidad: " />
-                        <p:inputText id="cantidad" value="#{modPublicacion.cantidad}" required ="true"
-                                     requiredMessage="Valor requerido" converterMessage="Debe ingresr un numero" >
-                        </p:inputText>
-                        <p:message id="cantidadVal" for="cantidad"/>
-                    </h:panelGrid>
+                                <h:outputLabel value="Cantidad: " />
+                                <p:inputText id="cantidad" value="#{modPublicacion.cantidad}" required ="true"
+                                             requiredMessage="Valor requerido" converterMessage="Debe ingresr un numero" >
+                                </p:inputText>
+                                <p:message id="cantidadVal" for="cantidad"/>
+                            </h:panelGrid>
+                            <p:outputPanel id="datos" >
+                                <h:panelGrid columns="3" columnClasses="labelColumn" >
 
-                    <p:outputPanel id="datos" >
-                        <h:panelGrid columns="3" columnClasses="labelColumn" >
+                                    <h:outputLabel value="Categoria: " />
+                                    <h:selectOneMenu id="categoria" value="#{modPublicacion.selectedCategoria}" required ="true"
+                                                     requiredMessage="Valor requerido"> 
+                                        <f:selectItem itemLabel="Categorias" itemValue=""/>
+                                        <f:selectItems value="#{modPublicacion.categorias}" />
+                                        <p:ajax event="change" update="datos growl" 
+                                                listener="#{modPublicacion.categoriaSeleccionadaCambio}" />
+                                    </h:selectOneMenu>
+                                    <p/>
 
-                            <h:outputLabel value="Categoria: " />
-                            <h:selectOneMenu id="categoria" value="#{modPublicacion.selectedCategoria}" required ="true"
-                                             requiredMessage="Valor requerido"> 
-                                <f:selectItem itemLabel="Categorias" itemValue=""/>
-                                <f:selectItems value="#{modPublicacion.categorias}" />
-                                <p:ajax event="change" update="datos growl" 
-                                        listener="#{modPublicacion.categoriaSeleccionadaCambio}" />
-                            </h:selectOneMenu>
-                            <p/>
+                                    <h:outputLabel id="labelSubCategoria1" value="Subcategoria: "
+                                                   rendered="#{modPublicacion.subcategoria1Render}" />
+                                    <h:selectOneMenu id="subcategoria1" value="#{modPublicacion.selectedSubcategoria1}" 
+                                                     rendered="#{modPublicacion.subcategoria1Render}" >
+                                        <f:selectItem itemLabel="Seleccione una subcategoria" itemValue="0" />
+                                        <f:selectItems value="#{modPublicacion.subcategorias1}" />
+                                        <p:ajax event="change" update="datos growl" 
+                                                listener="#{modPublicacion.subcategoria1SeleccionadaCambio}" />   
+                                    </h:selectOneMenu>
+                                    <p/>
 
-                            <h:outputLabel id="labelSubCategoria1" value="Subcategoria: "
-                                           rendered="#{modPublicacion.subcategoria1Render}" />
-                            <h:selectOneMenu id="subcategoria1" value="#{modPublicacion.selectedSubcategoria1}" 
-                                             rendered="#{modPublicacion.subcategoria1Render}" >
-                                <f:selectItem itemLabel="Seleccione una subcategoria" itemValue="0" />
-                                <f:selectItems value="#{modPublicacion.subcategorias1}" />
-                                <p:ajax event="change" update="datos growl" 
-                                        listener="#{modPublicacion.subcategoria1SeleccionadaCambio}" />   
-                            </h:selectOneMenu>
-                            <p/>
+                                    <h:outputLabel id="labelSubCategoria2" value="Subcategoria: "
+                                                   rendered="#{modPublicacion.subcategoria2Render}" />
+                                    <h:selectOneMenu id="subcategoria2" value="#{modPublicacion.selectedSubcategoria2}" 
+                                                     rendered="#{modPublicacion.subcategoria2Render}" >
+                                        <f:selectItem itemLabel="Seleccione una subcategoria" itemValue="0" />
+                                        <f:selectItems value="#{modPublicacion.subcategorias2}" />
+                                        <p:ajax event="change" update="datos growl" 
+                                                listener="#{modPublicacion.subcategoria2SeleccionadaCambio}" />   
+                                    </h:selectOneMenu>
+                                    <p/>
 
-                            <h:outputLabel id="labelSubCategoria2" value="Subcategoria: "
-                                           rendered="#{modPublicacion.subcategoria2Render}" />
-                            <h:selectOneMenu id="subcategoria2" value="#{modPublicacion.selectedSubcategoria2}" 
-                                             rendered="#{modPublicacion.subcategoria2Render}" >
-                                <f:selectItem itemLabel="Seleccione una subcategoria" itemValue="0" />
-                                <f:selectItems value="#{modPublicacion.subcategorias2}" />
-                                <p:ajax event="change" update="datos growl" 
-                                        listener="#{modPublicacion.subcategoria2SeleccionadaCambio}" />   
-                            </h:selectOneMenu>
-                            <p/>
+                                    <h:outputLabel id="labelSubCategoria3" value="Subcategoria: "
+                                                   rendered="#{modPublicacion.subcategoria3Render}" />
+                                    <h:selectOneMenu id="subcategoria3" value="#{modPublicacion.selectedSubcategoria3}" 
+                                                     rendered="#{modPublicacion.subcategoria3Render}" >
+                                        <f:selectItem itemLabel="Seleccione una subcategoria" itemValue="0" />
+                                        <f:selectItems value="#{modPublicacion.subcategorias3}" />
+                                    </h:selectOneMenu>
+                                    <p/>
 
-                            <h:outputLabel id="labelSubCategoria3" value="Subcategoria: "
-                                           rendered="#{modPublicacion.subcategoria3Render}" />
-                            <h:selectOneMenu id="subcategoria3" value="#{modPublicacion.selectedSubcategoria3}" 
-                                             rendered="#{modPublicacion.subcategoria3Render}" >
-                                <f:selectItem itemLabel="Seleccione una subcategoria" itemValue="0" />
-                                <f:selectItems value="#{modPublicacion.subcategorias3}" />
-                            </h:selectOneMenu>
-                            <p/>
+                                </h:panelGrid>
+                                <br/>
+                                <p:editor id="desc" value="#{modPublicacion.descripcion}" widgetVar="editor" width="540" 
+                                          required="true" requiredMessage="Ingrese una descripción"/>
+                                <p:message for="desc" />
+                            </p:outputPanel>
+                        </p:fieldset>
 
-                        </h:panelGrid>
-                    </p:outputPanel>
+                        <p:fieldset legend="Imágenes" styleClass="fieldset" >
 
-                    <br/>
+                            <p:dataGrid id="imagenes" styleClass="itemsTable" var="img" value="#{modPublicacion.imagenIds}" columns="3" emptyMessage="" >
+                                <p:column>
+                                    <div class="imagenesEdit" >
+                                        <h:panelGrid columns="1" style="width:100%;">
+                                            <h:graphicImage value="/image?id=#{img}"
+                                                            width="100" height="85" styleClass="img" /> 
+                                            <p:commandButton title="Remove" update="@form" icon="ui-icon-trash"
+                                                             actionListener="#{modPublicacion.removerImagen}" >
+                                                <f:attribute name="idBorrar" value="#{img}" />
+                                            </p:commandButton>
+                                        </h:panelGrid>
+                                    </div>
+                                </p:column>
+                            </p:dataGrid>
 
-                    <p:editor value="#{modPublicacion.descripcion}" widgetVar="editor" width="600" />
+                            <h:outputText value="Elija una imagen de hasta 2 MB:" /><br/>
+                            <p:fileUpload widgetVar="uploader" mode="advanced" multiple="true"
+                                          fileUploadListener="#{modPublicacion.handleFileUpload}"
+                                          allowTypes="/(\.|\/)(gif|jpe?g|png)$/" label="Seleccionar" 
+                                          cancelLabel="Cancelar" uploadLabel="Subir archivo" />
 
-                    <br/>
+                        </p:fieldset>
 
-                    <p:fieldset legend="Imagenes" styleClass="fieldset" >
+                        <p:fieldset legend="Periodos mínimo y máximo" styleClass="fieldset" >
+                            <h:panelGrid columns="4">
 
-                        <p:dataGrid id="imagenes" styleClass="itemsTable" var="img" value="#{modPublicacion.imagenIds}" columns="3" emptyMessage="" >
-                            <p:column>
-                                <div class="imagenesEdit" >
-                                    <h:panelGrid columns="1" style="width:100%;">
-                                        <h:graphicImage value="/image?id=#{img}"
-                                                        width="100" height="85" styleClass="img" /> 
-                                        <p:commandButton title="Remove" update="@form" icon="ui-icon-trash"
-                                                       actionListener="#{modPublicacion.removerImagen}" >
-                                            <f:attribute name="idBorrar" value="#{img}" />
-                                        </p:commandButton>
-                                    </h:panelGrid>
-                                </div>
-                            </p:column>
-                        </p:dataGrid>
+                                <h:outputLabel value="Mínimo: " /> 
+                                <p:inputText id="MinimoId" value="#{modPublicacion.periodoMinimo}" required="true"
+                                             requiredMessage="Valor requerido"/>
+                                <h:selectOneMenu id="minimo" value="#{modPublicacion.selectedPeriodoMinimo}" >
+                                    <f:selectItem itemLabel="Seleccione un periodo" />
+                                    <f:selectItems value="#{modPublicacion.periodoMinimos}" />
+                                </h:selectOneMenu>
+                                <p:message id="MinimoVal" for="MinimoId"/>
 
-                        <h:outputText value="Elija una imagen de hasta 2 MB:" /><br/>
-                        <p:fileUpload widgetVar="uploader" mode="advanced" multiple="true"
-                                      fileUploadListener="#{modPublicacion.handleFileUpload}"
-                                      allowTypes="/(\.|\/)(gif|jpe?g|png)$/" label="Seleccionar" 
-                                      cancelLabel="Cancelar" uploadLabel="Subir archivo" />
+                                <h:outputLabel value="Máximo: " /> 
+                                <p:inputText id="MaximoId" value="#{modPublicacion.periodoMaximo}"  />
+                                <h:selectOneMenu id="manimo" value="#{modPublicacion.selectedPeriodoMaximo}" >
+                                    <f:selectItem itemLabel="Seleccione un periodo" />
+                                    <f:selectItems value="#{modPublicacion.periodoMaximos}" />
+                                </h:selectOneMenu>
+                                <p/>
 
-                    </p:fieldset>
-
-                    <p:fieldset legend="Periodos minimo y maximo" styleClass="fieldset" >
-                        <h:panelGrid columns="4">
-
-                            <h:outputLabel value="Minimo: " /> 
-                            <p:inputText id="MinimoId" value="#{modPublicacion.periodoMinimo}" required="true"
-                                         requiredMessage="Valor requerido"/>
-                            <h:selectOneMenu id="minimo" value="#{modPublicacion.selectedPeriodoMinimo}" >
-                                <f:selectItem itemLabel="Seleccione un periodo" itemValue="" />
-                                <f:selectItems value="#{modPublicacion.periodoMinimos}" />
-                            </h:selectOneMenu>
-                            <p:message id="MinimoVal" for="MinimoId"/>
-
-                            <h:outputLabel value="Maximo: " /> 
-                            <p:inputText id="MaximoId" value="#{modPublicacion.periodoMaximo}"  />
-                            <h:selectOneMenu id="manimo" value="#{modPublicacion.selectedPeriodoMaximo}" >
-                                <f:selectItem itemLabel="Seleccione un periodo" itemValue="" />
-                                <f:selectItems value="#{modPublicacion.periodoMaximos}" />
-                            </h:selectOneMenu>
-                            <p/>
-
-                        </h:panelGrid>
-                    </p:fieldset>
+                            </h:panelGrid>
+                        </p:fieldset>
 
 
-                    <p:fieldset legend="Precios" styleClass="fieldset" >
+                        <p:fieldset legend="Precios" styleClass="fieldset" >
 
-                        <h:outputLabel value="Hora" for="hora" />
-                        <p:inputText id="hora" value="#{modPublicacion.precioHora}" style="text-align: right; margin-left: 3px; width: 50px"/>
-                        <p:spacer width="25" />
+                            <h:outputLabel value="Hora" for="hora" />
+                            <p:inputText id="hora" value="#{modPublicacion.precioHora}" style="text-align: right; margin-left: 3px; width: 50px"/>
+                            <p:spacer width="25" />
 
-                        <h:outputLabel value="Dia" for="dia" />
-                        <p:inputText id="dia" value="#{modPublicacion.precioDia}" required="true" requiredMessage="Precio diario requerido"
-                                     style="text-align: right; margin-left: 3px; width: 50px"/>
-                        <p:spacer width="25" />
+                            <h:outputLabel value="Día" for="dia" />
+                            <p:inputText id="dia" value="#{modPublicacion.precioDia}" required="true" requiredMessage="Precio diario requerido"
+                                         style="text-align: right; margin-left: 3px; width: 50px"/>
+                            <p:spacer width="25" />
 
-                        <h:outputLabel value="Semana" for="semana" />
-                        <p:inputText id="semana" value="#{modPublicacion.precioSemana}"
-                                     title="Si no ingresas un valor se calculara como Precio Diario * 7"
-                                     style="text-align: right; margin-left: 3px; width: 50px"/>
-                        <p:tooltip for="semana" showEvent="focus" hideEvent="blur" />
-                        <p:spacer width="25" />
+                            <h:outputLabel value="Semana" for="semana" />
+                            <p:inputText id="semana" value="#{modPublicacion.precioSemana}"
+                                         title="Si no ingresas un valor se calculara como Precio Diario * 7"
+                                         style="text-align: right; margin-left: 3px; width: 50px"/>
+                            <p:tooltip for="semana" showEvent="focus" hideEvent="blur" />
+                            <p:spacer width="25" />
 
-                        <h:outputLabel value="Mes" for="mes" />
-                        <p:inputText id="mes" value="#{modPublicacion.precioMes}" 
-                                     style="text-align: right; margin-left: 3px; width: 50px"
-                                     title="Si no ingresas un valor se calculara como Precio Diario * 30" />
-                        <p:tooltip for="mes" showEvent="focus" hideEvent="blur" />
+                            <h:outputLabel value="Mes" for="mes" />
+                            <p:inputText id="mes" value="#{modPublicacion.precioMes}" 
+                                         style="text-align: right; margin-left: 3px; width: 50px"
+                                         title="Si no ingresas un valor se calculará como Precio Diario * 30" />
+                            <p:tooltip for="mes" showEvent="focus" hideEvent="blur" />
 
-                    </p:fieldset>
+                        </p:fieldset>
 
-                    <br/>
+                        <br/>
 
-                    <p:commandButton value="Guardar" ajax="false"
-                                     action="#{modPublicacion.actualizarPublicacion}"  />
-                    <p:button value="Cancelar" outcome="/vistas/usuario/misPublicaciones" />
-                    <p:growl id="growl" showDetail="true" globalOnly="true" />
+                        <div style="width: 100%; text-align: center;">
+                            <p:commandButton value="Guardar" ajax="false"
+                                             action="#{modPublicacion.actualizarPublicacion}"  />
+                            <p:button value="Cancelar" outcome="/vistas/usuario/articulos" />
+                        </div>
 
-                </h:form>
+                        <p:growl id="growl" showDetail="true" globalOnly="true" />
 
+                    </h:form>
+                </div>
             </ui:define>
 
             <ui:define name="right">

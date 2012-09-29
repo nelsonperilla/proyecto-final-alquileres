@@ -89,7 +89,7 @@ public class ModificarPublicacionMBean implements Serializable {
         String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
         if(id == null) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-                    "Error al cargar pagina", "No se brindo el id de publicacion");
+                    "Error al cargar pagina", "No se brindó el id de publicacion");
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return;
         }
@@ -102,7 +102,6 @@ public class ModificarPublicacionMBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return;
         }
-
         titulo = pf.getTitulo();
         descripcion = pf.getDescripcion();
         fechaDesde = pf.getFechaDesde();
@@ -129,7 +128,6 @@ public class ModificarPublicacionMBean implements Serializable {
                 precioMes = p.getPrecio();
             }
         }
-
         today = new Date();
         categorias = new ArrayList<SelectItem>();
         subcategorias1 = new ArrayList<SelectItem>();
@@ -143,10 +141,12 @@ public class ModificarPublicacionMBean implements Serializable {
         this.periodoMaximo = pf.getPeriodoMaximoValor();
         this.selectedPeriodoMinimo = pf.getPeriodoMinimo().getPeriodoId();
         
-        if( !(pf.getPeriodoMaximo() == null) )
+        if(pf.getPeriodoMaximo() != null) {
             this.selectedPeriodoMaximo = pf.getPeriodoMaximo().getPeriodoId();
-        else
+        }
+        else {
             this.selectedPeriodoMaximo = 0;
+        }
         
         List<PeriodoDTO> periodos = periodosBean.getPeriodos();
         for ( PeriodoDTO p : periodos ){
@@ -167,7 +167,6 @@ public class ModificarPublicacionMBean implements Serializable {
                 estados.add( new SelectItem( ep, ep.toString() ));
             }
         }
-
         selectedEstado = pf.getEstado();
     }
 

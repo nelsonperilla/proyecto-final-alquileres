@@ -15,26 +15,28 @@
             </ui:define>
 
             <ui:define name="principal">
-                <h1>Registrar publicitante</h1>
-                <h:form>
-                    <p>
-                        El registrarse como publicitante no tiene ningún costo.
-                        Lo habilitará para publicar sus anuncios en AlquilaCosas.
-                        El precio del servicio varía en función de la 
-                        duración de la publicidad, y de la ubicación de la misma en la
-                        página.
-                    </p>
-                    <p>
-                        Una vez registrado como publicitante deberá desconectarse y volver
-                        a entrar para poder publicar sus anuncios.
-                    </p>
-                    ¿Está seguro que se desea registrar como publicitante? Esta acción
-                    no se puede deshacer.
-                    <h:panelGrid columns="2"  >
-                        <p:commandButton value="Si" action="#{nuevoPublicitante.registrar}" ajax="false" />
-                        <p:button value="No" outcome="/vistas/inicio" />
-                    </h:panelGrid>
-                </h:form>
+                <div style="margin: 0 20px">
+                    <h1>Registrar anunciante</h1>
+                    <h:form>
+                        <p>
+                            El registrarse como anunciante no tiene ningún costo.
+                            Lo habilitará para publicar sus anuncios en AlquilaCosas.
+                            El precio del servicio varía en función de la 
+                            duración de la publicidad, y de la ubicación de la misma en la
+                            página.
+                        </p>
+                        <p>
+                            Una vez registrado como anunciante deberá desconectarse y volver
+                            a entrar para poder publicar sus anuncios.
+                        </p>
+                        ¿Está seguro que se desea registrar como anunciante? Esta acción
+                        no se puede deshacer.
+                        <h:panelGrid columns="2" style="margin-top: 15px"  >
+                            <p:commandButton value="Aceptar" action="#{nuevoPublicitante.registrar}" ajax="false" />
+                            <p:button value="Cancelar" outcome="/vistas/inicio" />
+                        </h:panelGrid>
+                    </h:form>
+                </div>
             </ui:define>
 
         </ui:composition>

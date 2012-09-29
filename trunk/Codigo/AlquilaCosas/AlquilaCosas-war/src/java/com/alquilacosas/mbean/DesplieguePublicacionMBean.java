@@ -121,7 +121,13 @@ public class DesplieguePublicacionMBean implements Serializable {
         cantidadProductos = 1;
         fechaInicio = new Date();
         effect = "fade";
-        today = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        today = cal.getTime();
         periodos = new ArrayList<SelectItem>();
         periodoAlquiler = 1;
         List<Periodo> listaPeriodos = publicationBean.getPeriodos();

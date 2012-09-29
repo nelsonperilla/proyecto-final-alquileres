@@ -4,6 +4,7 @@
  */
 package com.alquilacosas.mbean;
 
+import com.alquilacosas.ejb.entity.Rol;
 import com.alquilacosas.ejb.session.AdministrarUsuariosBeanLocal;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
@@ -47,6 +48,7 @@ public class NuevoPublicitanteMBean implements Serializable {
     public String registrar() {
         usuarioBean.registrarPublicitante(loginBean.getUsuarioId());
         loginBean.setPublicitante(true);
+        loginBean.getUsuario().getRoles().add(Rol.NombreRol.PUBLICITANTE);
         return "/vistas/inicio";
     }
 

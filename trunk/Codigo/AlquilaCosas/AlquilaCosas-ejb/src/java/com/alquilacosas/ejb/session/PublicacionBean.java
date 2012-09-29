@@ -190,10 +190,9 @@ public class PublicacionBean implements PublicacionBeanLocal {
         Periodo periodo2 = null;
         try {
             periodo1 = periodoFacade.getPeriodo(p.getMinPeriodoAlquilerFk().getPeriodoId());
-            if (p.getMaxPeriodoAlquilerFk().getPeriodoId() != null) {
+            if(p.getMaxPeriodoAlquilerFk() != null && p.getMaxPeriodoAlquilerFk().getPeriodoId() != null) {
                 periodo2 = periodoFacade.getPeriodo(p.getMaxPeriodoAlquilerFk().getPeriodoId());
             }
-
         } catch (Exception e) {
             Logger.getLogger(PublicacionBean.class).error("getDatosPublicacion("
                     + publicacionId + "). El periodo es nulo.");
@@ -205,7 +204,6 @@ public class PublicacionBean implements PublicacionBeanLocal {
                 p.getCantidad(), p.getCategoriaFk(), p.getImagenPublicacionList(),
                 pxe.getEstadoPublicacion().getNombre(), p.getMinValor(), periodo1,
                 p.getMaxValor(), periodo2);
-
 
         for (Precio precio : precioFacade.buscarActualesPorPublicacion(p)) {
             if (precio != null) {
