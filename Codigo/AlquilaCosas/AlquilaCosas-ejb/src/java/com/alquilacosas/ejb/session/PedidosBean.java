@@ -7,26 +7,10 @@ package com.alquilacosas.ejb.session;
 import com.alquilacosas.common.AlquilaCosasException;
 import com.alquilacosas.common.NotificacionEmail;
 import com.alquilacosas.dto.AlquilerDTO;
-import com.alquilacosas.ejb.entity.Alquiler;
-import com.alquilacosas.ejb.entity.AlquilerXEstado;
-import com.alquilacosas.ejb.entity.Domicilio;
-import com.alquilacosas.ejb.entity.EstadoAlquiler;
-import com.alquilacosas.ejb.entity.EstadoPedidoCambio;
 import com.alquilacosas.ejb.entity.EstadoPedidoCambio.NombreEstadoPedidoCambio;
-import com.alquilacosas.ejb.entity.ImagenPublicacion;
-import com.alquilacosas.ejb.entity.PedidoCambio;
-import com.alquilacosas.ejb.entity.PedidoCambioXEstado;
 import com.alquilacosas.ejb.entity.Periodo.NombrePeriodo;
-import com.alquilacosas.ejb.entity.Publicacion;
-import com.alquilacosas.ejb.entity.Usuario;
-import com.alquilacosas.facade.AlquilerFacade;
-import com.alquilacosas.facade.AlquilerXEstadoFacade;
-import com.alquilacosas.facade.EstadoAlquilerFacade;
-import com.alquilacosas.facade.EstadoPedidoCambioFacade;
-import com.alquilacosas.facade.PedidoCambioFacade;
-import com.alquilacosas.facade.PedidoCambioXEstadoFacade;
-import com.alquilacosas.facade.PublicacionFacade;
-import com.alquilacosas.facade.UsuarioFacade;
+import com.alquilacosas.ejb.entity.*;
+import com.alquilacosas.facade.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,19 +19,8 @@ import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.annotation.security.PermitAll;
-import javax.ejb.Stateless;
-import javax.ejb.EJB;
-import javax.ejb.SessionContext;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
-import javax.jms.Connection;
-import javax.jms.Destination;
-import javax.jms.ConnectionFactory;
-import javax.jms.MessageProducer;
-import javax.jms.ObjectMessage;
-import javax.jms.Session;
+import javax.ejb.*;
+import javax.jms.*;
 import org.apache.log4j.Logger;
 /**
  *
@@ -85,7 +58,7 @@ public class PedidosBean implements PedidosBeanLocal {
    
     @Override
     public void confirmarPedidoDeAlquiler( int alquilerId ) throws AlquilaCosasException{
-        
+        System.out.println("confirmando alquiler..");
         try {
             Alquiler alquiler = alquilerFacade.find(alquilerId);
         
@@ -101,12 +74,12 @@ public class PedidosBean implements PedidosBeanLocal {
             Domicilio domicilio = usuarioDuenio.getDomicilioList().get(0);
             
             // Se envía un mail a la persona que alquiló el producto con los datos del dueño del producto
-            
+            System.out.println("enviando emails");
             String asunto = "Tu alquiler por el producto " + publicacion.getTitulo() + " ha sido CONFIRMADO ";
             Integer p = domicilio.getPiso();
             String piso = p != null ? Integer.toString(p) : "";
             String depto = domicilio.getDepto() != null ? domicilio.getDepto() : "";
-            String mensaje = "<html>Hola " + usuario.getNombre() + ", <br/><br/>"
+            String mensaje = "<html><body>Hola " + usuario.getNombre() + ", <br/><br/>"
                     + "El usuario <b>" + usuarioDuenio.getNombre() + "</b> ha <b> CONFIRMADO </b> el pedido de alquiler de "
                     +  alquiler.getCantidad() + " articulo/s solicitado/s para la fecha " + fechaIncio + " " 
                     + "hasta la fecha " + fechaFin + ". <br/>"
@@ -115,24 +88,25 @@ public class PedidosBean implements PedidosBeanLocal {
                     + "<b>Dirección: </b>" + domicilio.getCalle() + " " + domicilio.getNumero() + " " + piso + " " + depto + ", Barrio " + domicilio.getBarrio() + "<br/>"
                     + "<b>Ciudad: </b>" + domicilio.getCiudad()+ ", " + domicilio.getProvinciaFk().getNombre() + "<br/>"
                     + "<b>Telefono: </b>" + usuarioDuenio.getTelefono() + "<br/><br/>"
-                    + "Atentamente, <br/> <b>AlquilaCosas </b>";
+                    + "Atentamente, <br/> <b>AlquilaCosas </b></body></html>";
             NotificacionEmail email = new NotificacionEmail(usuario.getEmail(), asunto, mensaje);
             enviarEmail(email);
+            System.out.println("email1: " + mensaje);
             
             // Se envía un mail al duenio del producto con los datos de la persona que alquilo producto.
             
             String mensajeDomicilio = "";
             if(!usuario.getDomicilioList().isEmpty()) {
                 domicilio = usuario.getDomicilioList().get(0);
+                p = domicilio.getPiso();
+                piso = p != null ? Integer.toString(p) : "";
+                depto = domicilio.getDepto() != null ? domicilio.getDepto() : "";
                 mensajeDomicilio = "<b>Dirección:</b> " + domicilio.getCalle() + " " + domicilio.getNumero() + " " + piso + " " + depto + ", Barrio " + domicilio.getBarrio() + "<br/>"
                     + "<b>Ciudad: </b>" + domicilio.getCiudad()+ ", " + domicilio.getProvinciaFk().getNombre() + "<br/>";
             }
             
             asunto = "Usted ha CONFIRMADO el alquiler de " + publicacion.getTitulo();
-            p = domicilio.getPiso();
-            piso = p != null ? Integer.toString(p) : "";
-            depto = domicilio.getDepto() != null ? domicilio.getDepto() : "";
-            String texto = "<html>Hola " + usuarioDuenio.getNombre() + ", <br/><br/>"
+            String texto = "<html><body>Hola " + usuarioDuenio.getNombre() + ", <br/><br/>"
                     + "Usted ha <b> CONFIRMADO </b> el pedido de alquiler de "
                     +  alquiler.getCantidad() + " articulos solicitados para la fecha " + fechaIncio + " " 
                     + "hasta la fecha " + fechaFin + ". <br/>"
@@ -140,9 +114,10 @@ public class PedidosBean implements PedidosBeanLocal {
                     + "<b>Nombre Completo:</b> " + usuario.getApellido() + ", " + usuario.getNombre() + "<br/>"
                     + mensajeDomicilio
                     + "<b>Telefono: </b>" + usuario.getTelefono() + "<br/><br/>"
-                    + "Atentamente, <br/> <b>AlquilaCosas </b>";
+                    + "Atentamente, <br/> <b>AlquilaCosas </b></body></html>";
             email = new NotificacionEmail(usuarioDuenio.getEmail(), asunto, texto);
             enviarEmail(email);
+            System.out.println("email2: " + texto);
             
             this.revisarPedidos(alquiler); 
         } catch (Exception e) {
