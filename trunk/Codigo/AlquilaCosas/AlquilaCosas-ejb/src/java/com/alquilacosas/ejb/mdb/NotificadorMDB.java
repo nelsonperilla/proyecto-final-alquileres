@@ -14,14 +14,8 @@ import javax.ejb.MessageDrivenContext;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
-import javax.mail.Authenticator;
-import javax.mail.BodyPart;
 import javax.mail.Message.RecipientType;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
+import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
@@ -82,10 +76,9 @@ public class NotificadorMDB implements MessageListener {
             mail.addRecipient(RecipientType.TO, new InternetAddress(destinatario));
             mail.setSubject(asunto);
             mail.setSentDate(new Date());
-            //mail.setText(texto);
             
             BodyPart mdp = new MimeBodyPart ();
-            mdp.setContent (texto, "text/html");
+            mdp.setContent (texto, "text/html; charset=utf-8");
             Multipart mm = new MimeMultipart ();
             mm.addBodyPart (mdp);
             
