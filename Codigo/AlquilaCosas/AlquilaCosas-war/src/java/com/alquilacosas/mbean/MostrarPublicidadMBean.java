@@ -8,6 +8,7 @@ import com.alquilacosas.dto.PublicidadDTO;
 import com.alquilacosas.ejb.entity.TipoPublicidad.UbicacionPublicidad;
 import com.alquilacosas.ejb.session.MostrarPublicidadBeanLocal;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -37,7 +38,7 @@ public class MostrarPublicidadMBean implements Serializable {
     public void cargarPublicidades() {
         publicidadesCarrusel = publicidadBean.getPublicidades(UbicacionPublicidad.CARRUSEL, 5);
         publicidadesIzq = publicidadBean.getPublicidades(UbicacionPublicidad.LATERAL_IZQUIERDA, 1);
-        publicidadesDer = publicidadBean.getPublicidades(UbicacionPublicidad.LATERAL_DERECHA, 3);
+        publicidadesDer = new ArrayList<PublicidadDTO>();
     }
     
     public List<PublicidadDTO> getPublicidadesCarrusel() {

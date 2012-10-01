@@ -211,8 +211,6 @@ public class PublicidadBean implements PublicidadBeanLocal {
             disponibles = 4;
         } else if (ubicacion.equals(UbicacionPublicidad.LATERAL_IZQUIERDA)) {
             disponibles = 50;
-        } else if (ubicacion.equals(UbicacionPublicidad.LATERAL_DERECHA)) {
-            disponibles = 100;
         }
 
 
