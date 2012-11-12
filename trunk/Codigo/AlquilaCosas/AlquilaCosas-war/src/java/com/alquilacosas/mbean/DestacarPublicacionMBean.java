@@ -151,7 +151,7 @@ public class DestacarPublicacionMBean implements Serializable {
             RequestContext.getCurrentInstance().addCallbackParam("registrado", false);
             return;
         }
-        descripcion = "Destacacion" + tipoSeleccionado.toString() + ". Publicacion: " + publicacion.getTitulo();
+        descripcion = "Destacación " + tipoSeleccionado.toString() + ". Publicación: " + publicacion.getTitulo();
         RequestContext.getCurrentInstance().addCallbackParam("registrado", true);
     }
     
@@ -162,7 +162,7 @@ public class DestacarPublicacionMBean implements Serializable {
             precio = destacarBean.getPrecioDestacacion(tipoSeleccionado);
             if(precio == null) {
                 FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-                        "No se encontro el precio del servicio", "");
+                        "No se encontró el precio del servicio", "");
                 FacesContext.getCurrentInstance().addMessage(null, msg);
             }
         }

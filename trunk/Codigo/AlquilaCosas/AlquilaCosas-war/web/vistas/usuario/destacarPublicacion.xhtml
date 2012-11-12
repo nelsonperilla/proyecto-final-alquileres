@@ -49,7 +49,7 @@
                         
                         <h:outputLabel value="Precio:" />
                         <p:outputPanel id="precio" >
-                            <h:outputText value="U$D #{destacarBean.precio}" style="font-size: 12px"
+                            <h:outputText value="$ #{destacarBean.precio}" style="font-size: 12px"
                                           rendered="#{not empty destacarBean.tipoSeleccionado}" />
                             <h:outputText value="-" style="font-size: 12px"
                                           rendered="#{empty destacarBean.tipoSeleccionado}" />
@@ -83,12 +83,7 @@
 
                     <p:dialog widgetVar="metodoPagoDlg" header="Seleccione método de pago" modal="true" resizable="false" >
                         <h:panelGrid columns="3" >
-                            <p:commandLink title="Paypal Inmediato" action="#{destacarBean.destacarInmediatamente}" 
-                                           ajax="false" onclick="window.open('paypal.png')"
-                                           styleClass="btnMetodoPago">
-                                <h:graphicImage value="#{resource['images:botonPaypal-inmediato.jpg']}" />
-                            </p:commandLink>
-                            <p:commandLink title="Paypal Regular" actionListener="#{destacarBean.destacar}" 
+                            <p:commandLink title="Paypal" actionListener="#{destacarBean.destacar}" 
                                            styleClass="btnMetodoPago" >
                                 <h:graphicImage value="#{resource['images:botonPaypal.jpg']}" />
                             </p:commandLink>
@@ -96,6 +91,11 @@
                                            update=":dm growl" oncomplete="submitForm(xhr, status, args)"
                                            styleClass="btnMetodoPago" >
                                 <h:graphicImage value="#{resource['images:botonDineromail.jpg']}" />
+                            </p:commandLink>
+                            <p:commandLink title="DineroMail Inmediato" action="#{destacarBean.destacarInmediatamente}" 
+                                           ajax="false" onclick="window.open('pago-dineromail.png')"
+                                           styleClass="btnMetodoPago">
+                                <h:graphicImage value="#{resource['images:botonDineromail-inmediato.jpg']}" />
                             </p:commandLink>
                         </h:panelGrid>
                     </p:dialog>
@@ -106,7 +106,7 @@
                 <p:outputPanel id="dm" >
                     <form id="dmForm" action='https://argentina.dineromail.com/Shop/Shop_Ingreso.asp' method='post'>
                         <input type='hidden' name='NombreItem' value='#{destacarBean.descripcion}'/>
-                        <input type='hidden' name='TipoMoneda' value='2'/>
+                        <input type='hidden' name='TipoMoneda' value='1'/>
                         <input type='hidden' name='PrecioItem' value='#{destacarBean.precio}'/>
                         <input type='hidden' name='E_Comercio' value='2421574'/>
                         <input type='hidden' name='NroItem' value='#{destacarBean.pagoId}'/>
