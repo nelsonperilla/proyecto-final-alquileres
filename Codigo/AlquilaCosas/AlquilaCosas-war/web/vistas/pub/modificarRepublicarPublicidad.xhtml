@@ -76,7 +76,7 @@
                             <p:message for="ubicacion" />
                             <h:outputLabel value="Precio:" />
                             <p:outputPanel id="precio" >
-                                <h:outputText value="U$D #{editarMBean.precio}"
+                                <h:outputText value="$ #{editarMBean.precio}"
                                               rendered="#{not empty editarMBean.precio}"/>
                                 <h:outputText value="(Seleccione ubicacion y duracion)" 
                                               rendered="#{empty editarMBean.precio and editarMBean.modificar}"
@@ -132,10 +132,6 @@
                     
                     <p:dialog widgetVar="metodoPagoDlg" header="Seleccione método de pago" modal="true" resizable="false" >
                         <h:panelGrid columns="3" >
-                            <p:commandLink title="Paypal Inmediato" actionListener="#{editarMBean.registrarPublicidadInmediatamente}" 
-                                           onclick="window.open('pagarPublicidadPaypal.png')" update="growl" styleClass="btnMetodoPago">
-                                <h:graphicImage value="#{resource['images:botonPaypal-inmediato.jpg']}" />
-                            </p:commandLink>
                             <p:commandLink title="Paypal Regular" actionListener="#{editarMBean.registrarPublicidad}" 
                                            styleClass="btnMetodoPago" update="growl" >
                                 <h:graphicImage value="#{resource['images:botonPaypal.jpg']}" />
@@ -143,6 +139,10 @@
                             <p:commandLink title="DineroMail" actionListener="#{editarMBean.registrarPublicidadDm}" 
                                            styleClass="btnMetodoPago" update=":dm growl" oncomplete="submitForm(xhr, status, args)" >
                                 <h:graphicImage value="#{resource['images:botonDineromail.jpg']}" />
+                            </p:commandLink>
+                            <p:commandLink title="Dineromail Inmediato" actionListener="#{editarMBean.registrarPublicidadInmediatamente}" 
+                                           onclick="window.open('pagarPublicidadDm.png')" update="growl" styleClass="btnMetodoPago">
+                                <h:graphicImage value="#{resource['images:botonDineromail-inmediato.jpg']}" />
                             </p:commandLink>
                         </h:panelGrid>
                     </p:dialog>
@@ -169,7 +169,7 @@
                 <p:outputPanel id="dm" >
                     <form id="dmForm" action='https://argentina.dineromail.com/Shop/Shop_Ingreso.asp' method='post'>
                         <input type='hidden' name='NombreItem' value='#{editarMBean.descripcion}'/>
-                        <input type='hidden' name='TipoMoneda' value='2'/>
+                        <input type='hidden' name='TipoMoneda' value='1'/>
                         <input type='hidden' name='PrecioItem' value='#{editarMBean.precio}'/>
                         <input type='hidden' name='E_Comercio' value='2421574'/>
                         <input type='hidden' name='NroItem' value='#{editarMBean.pagoId}'/>
