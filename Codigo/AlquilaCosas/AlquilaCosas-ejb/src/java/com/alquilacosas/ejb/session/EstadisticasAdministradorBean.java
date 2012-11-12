@@ -474,8 +474,8 @@ public class EstadisticasAdministradorBean implements EstadisticasAdministradorB
         List<Date> dates = new ArrayList<Date>();
         try {
             RandomDateGenerator rdg = new RandomDateGenerator();
-            rdg.setSebelum(new SimpleDateFormat("dd MM yyyy").parse("01 06 2011"));
-            rdg.setSesudah(new SimpleDateFormat("dd MM yyyy").parse("01 05 2012"));
+            rdg.setSebelum(new SimpleDateFormat("dd MM yyyy").parse("01 05 2012"));
+            rdg.setSesudah(new SimpleDateFormat("dd MM yyyy").parse("30 11 2012"));
             rdg.setRepetition(100);
 
             for (int i = 0; i < 100; i++) {
