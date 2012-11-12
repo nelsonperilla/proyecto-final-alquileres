@@ -36,7 +36,7 @@
                     </div>
                     <br/>
                     <h:panelGrid id="inputs" columns="3" cellpadding="4" style="text-align: left" >
-                        <h:outputLabel value="Duracion:" />
+                        <h:outputLabel value="Duración:" />
                         <h:selectOneMenu value="#{destacarBean.tipoSeleccionado}"
                                          id="duracion" required="true"
                                          requiredMessage="Valor requerido" >
@@ -82,11 +82,16 @@
                     <p:growl id="growl" globalOnly="true" />
 
                     <p:dialog widgetVar="metodoPagoDlg" header="Seleccione método de pago" modal="true" resizable="false" >
-                        <h:panelGrid columns="3" >
-                            <p:commandLink title="Paypal" actionListener="#{destacarBean.destacar}" 
-                                           styleClass="btnMetodoPago" >
-                                <h:graphicImage value="#{resource['images:botonPaypal.jpg']}" />
-                            </p:commandLink>
+                            <ui:remove>
+                                <p:commandLink title="Paypal" actionListener="#{destacarBean.destacar}" 
+                                               styleClass="btnMetodoPago" >
+                                    <h:graphicImage value="#{resource['images:botonPaypal.jpg']}" />
+                                </p:commandLink>
+                            </ui:remove>
+                            <a href="http://www.mercadopago.com.ar" title="Mercado pago"
+                               class="btnMetodoPago" >
+                                <h:graphicImage value="#{resource['images:boton-mercadopago.jpg']}" height="114" />
+                            </a>
                             <p:commandLink title="DineroMail" actionListener="#{destacarBean.destacarDm}" 
                                            update=":dm growl" oncomplete="submitForm(xhr, status, args)"
                                            styleClass="btnMetodoPago" >
@@ -97,7 +102,6 @@
                                            styleClass="btnMetodoPago">
                                 <h:graphicImage value="#{resource['images:botonDineromail-inmediato.jpg']}" />
                             </p:commandLink>
-                        </h:panelGrid>
                     </p:dialog>
 
                 </h:form>

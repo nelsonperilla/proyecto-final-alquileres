@@ -1131,6 +1131,8 @@ border:0 !important;
 .btnMetodoPago {
     margin: 0 10px;
     border-radius: 5px;
+    display: inline-block;
+    
 }
 
 .btnMetodoPago img {

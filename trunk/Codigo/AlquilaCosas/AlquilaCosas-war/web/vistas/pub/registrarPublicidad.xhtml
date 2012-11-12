@@ -115,20 +115,24 @@
                     </h:panelGrid>
 
                     <p:dialog widgetVar="metodoPagoDlg" header="Seleccione método de pago" modal="true" resizable="false" >
-                        <h:panelGrid columns="3" >
-                            <p:commandLink title="Paypal Regular" actionListener="#{publicidadBean.registrarPublicidad}" 
+                        <ui:remove>
+                            <p:commandLink title="Paypal" actionListener="#{publicidadBean.registrarPublicidad}" 
                                            styleClass="btnMetodoPago" update="growl" >
-                                <h:graphicImage value="#{resource['images:botonPaypal.jpg']}" />
+                                <h:graphicImage value="#{resource['images:botonPaypal.jpg']}" height="114" />
                             </p:commandLink>
-                            <p:commandLink title="DineroMail" actionListener="#{publicidadBean.registrarPublicidadDm}" 
-                                           styleClass="btnMetodoPago" update=":dm growl" oncomplete="submitForm(xhr, status, args)" >
-                                <h:graphicImage value="#{resource['images:botonDineromail.jpg']}" />
-                            </p:commandLink>
-                            <p:commandLink title="Dineromail Inmediato" actionListener="#{publicidadBean.registrarPublicidadInmediatamente}" 
-                                           onclick="window.open('pagarPublicidadDm.png')" update="growl" styleClass="btnMetodoPago">
-                                <h:graphicImage value="#{resource['images:botonDineromail-inmediato.jpg']}" />
-                            </p:commandLink>
-                        </h:panelGrid>
+                        </ui:remove>
+                        <a href="http://www.mercadopago.com.ar" title="Mercado pago"
+                           class="btnMetodoPago" >
+                            <h:graphicImage value="#{resource['images:boton-mercadopago.jpg']}" height="114" />
+                        </a>
+                        <p:commandLink title="DineroMail" actionListener="#{publicidadBean.registrarPublicidadDm}" 
+                                       styleClass="btnMetodoPago" update=":dm growl" oncomplete="submitForm(xhr, status, args)" >
+                            <h:graphicImage value="#{resource['images:botonDineromail.jpg']}" />
+                        </p:commandLink>
+                        <p:commandLink title="Dineromail Inmediato" actionListener="#{publicidadBean.registrarPublicidadInmediatamente}" 
+                                       onclick="window.open('pagarPublicidadDm.png')" update="growl" styleClass="btnMetodoPago">
+                            <h:graphicImage value="#{resource['images:botonDineromail-inmediato.jpg']}" />
+                        </p:commandLink>
                     </p:dialog>                    
 
                     <p:growl id="growl" showDetail="true" globalOnly="true" />
